@@ -53,7 +53,7 @@ public class IndexCvTest {
 
   private static final String ES_DOCKER_SERVICE = "elastic_search";
 
-  /* 
+  /*
    * For å kunne kjøre denne testen må Linux rekonfigureres litt..
    * Lag en fil i /etc/sysctl.d/01-increase_vm_max_map_count.conf som inneholder følgende:
    * vm.max_map_count = 262144
@@ -98,7 +98,7 @@ public class IndexCvTest {
 
     Page<EsCv> all = esCvRepo.findAll(PageRequest.of(0, 100));
     assertThat(all.getContent()).asList().hasSize(1);
-    all.getContent().forEach(cv -> cv.getYrker().stream()
+    all.getContent().forEach(cv -> cv.getYrkeserfaring().stream()
         .forEach(yrke -> System.out.println("STYRK:" + yrke.getStyrkKode())));
 
     // Nested søk fungerer ikke.. Skjønner ikke hvorfor..
@@ -119,12 +119,14 @@ public class IndexCvTest {
         .map(esCv -> createIndexQuery(esCv)).collect(Collectors.toList());
     return queries;
   }
-
+//
   private Collection<CvEvent> personer() {
     return Arrays.asList(new CvEvent[] {new CvEvent("Hågen", "Hasle", "1975-10-07", "ARBS",
         "haagenhasle@gmail.com", "NO", 123456L, "Jeg jobber og jobber!", Collections.emptyList(),
-        Arrays.asList(new Yrkeserfaring("2010-01-01", "2012-12-30", "NAV", "Barnehageassistent",
-            "123403", "Barnehageassistent")),
+        Arrays.asList(new Yrkeserfaring(
+            "2010-01-01", "2012-12-30", "NAV", "123403", "Barnehageassistent",
+            "Barnehageassistent", "Utvikler", "54321", "STYRK KODE", "NACE KODE"
+        )),
         Collections.emptyList(), Collections.emptyList(), Collections.emptyList(),
         Collections.emptyList(), Collections.emptyList(), Collections.emptyList(),
         Collections.emptyList(), Collections.emptyList(), Collections.emptyList())});
