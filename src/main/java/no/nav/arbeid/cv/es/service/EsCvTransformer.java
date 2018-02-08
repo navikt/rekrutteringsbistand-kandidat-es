@@ -33,8 +33,14 @@ public class EsCvTransformer {
 
   public EsCv transform(CvEvent p) {
     EsCv esCv = new EsCv(
-        p.getFornavn(), p.getEtternavn(), toDate(p.getFodselsdato()), p.getFormidlingsgruppekode(),
-        p.getEpostadresse(), p.getStatsborgerskap(), p.getArenaId(), p.getBeskrivelse()
+        p.getFornavn(),
+        p.getEtternavn(),
+        toDate(p.getFodselsdato()),
+        p.getFormidlingsgruppekode(),
+        p.getEpostadresse(),
+        p.getStatsborgerskap(),
+        p.getArenaId(),
+        p.getBeskrivelse()
     );
     
     esCv.addYrkeserfaring(mapYrkeListe(p.getYrkeserfaring()));
