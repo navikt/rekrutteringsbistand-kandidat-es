@@ -20,15 +20,19 @@ public class EsKurs {
   private String arrangor;
 
   @Field(type = FieldType.text, store = true, index = true)
-  private String omfang;
+  private String omfangEnhet;
+
+  @Field(type = FieldType.text, store = true, index = true)
+  private Integer omfangVerdi;
 
   public EsKurs(LocalDate fraDato, LocalDate tilDato, String tittel, String arrangor,
-      String omfang) {
+      String omfangEnhet, Integer omfangVerdi) {
     this.fraDato = fraDato;
     this.tilDato = tilDato;
     this.tittel = tittel;
     this.arrangor = arrangor;
-    this.omfang = omfang;
+    this.omfangEnhet = omfangEnhet;
+    this.omfangVerdi = omfangVerdi;
   }
 
   public LocalDate getFraDato() {
@@ -47,8 +51,12 @@ public class EsKurs {
     return arrangor;
   }
 
-  public String getOmfang() {
-    return omfang;
+  public String getOmfangEnhet() {
+    return omfangEnhet;
+  }
+
+  public Integer getOmfangVerdi() {
+    return omfangVerdi;
   }
 
   @Override
@@ -64,13 +72,14 @@ public class EsKurs {
         Objects.equals(tilDato, esKurs.tilDato) &&
         Objects.equals(tittel, esKurs.tittel) &&
         Objects.equals(arrangor, esKurs.arrangor) &&
-        Objects.equals(omfang, esKurs.omfang);
+        Objects.equals(omfangEnhet, esKurs.omfangEnhet) &&
+        Objects.equals(omfangVerdi, esKurs.omfangVerdi);
   }
 
   @Override
   public int hashCode() {
 
-    return Objects.hash(fraDato, tilDato, tittel, arrangor, omfang);
+    return Objects.hash(fraDato, tilDato, tittel, arrangor, omfangEnhet, omfangVerdi);
   }
 
   @Override
@@ -80,7 +89,8 @@ public class EsKurs {
         ", tilDato=" + tilDato +
         ", tittel='" + tittel + '\'' +
         ", arrangor='" + arrangor + '\'' +
-        ", omfang='" + omfang + '\'' +
+        ", omfangEnhet='" + omfangEnhet + '\'' +
+        ", omfangVerdi='" + omfangVerdi + '\'' +
         '}';
   }
 

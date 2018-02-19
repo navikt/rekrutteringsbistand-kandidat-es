@@ -51,7 +51,7 @@ public class CvEventObjectMother {
     ArrayList<Yrkeserfaring> yrkeserfaringsListe = new ArrayList<>();
     yrkeserfaringsListe.add(yrkeserfaring);
 
-    Kompetanse kompetanse = new Kompetanse("navn");
+    Kompetanse kompetanse = new Kompetanse("navn kompetanse");
     ArrayList<Kompetanse> kompetanseList = new ArrayList<>();
     kompetanseList.add(kompetanse);
 
@@ -160,11 +160,11 @@ public class CvEventObjectMother {
     return new CvEvent(
         "Test",
         "Testersen",
-        "010101",
+        "2010-01-01",
         "020202",
         "test@test.no",
         "Norge",
-        0101L,
+        1L,
         "beskrivelse CvEvent",
         utdanningsListe,
         yrkeserfaringsListe,

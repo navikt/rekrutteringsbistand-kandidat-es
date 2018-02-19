@@ -50,6 +50,7 @@ import no.nav.arbeid.cv.events.Yrkeserfaring;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class IndexCvTest {
+
 /*
 
   private static final String ES_DOCKER_SERVICE = "elastic_search";
@@ -60,6 +61,7 @@ public class IndexCvTest {
    * Lag en fil i /etc/sysctl.d/01-increase_vm_max_map_count.conf som inneholder følgende:
    * vm.max_map_count = 262144
    *//*
+
 
   @ClassRule
   public static DockerComposeRule docker =
@@ -139,7 +141,6 @@ public class IndexCvTest {
     return new IndexQueryBuilder().withId(Long.toString(esCv.getPersonId())).withObject(esCv)
         .build();
   }
-
 */
 
 }

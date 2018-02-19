@@ -7,7 +7,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 public class EsKompetanse {
 
   @Field(type = FieldType.text, store = true, index = true)
-  public String navn;
+  private String navn;
 
   public EsKompetanse(String navn) {
     this.navn = navn;

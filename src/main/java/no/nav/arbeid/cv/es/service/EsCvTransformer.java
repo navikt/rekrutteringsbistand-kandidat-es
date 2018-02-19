@@ -2,7 +2,10 @@ package no.nav.arbeid.cv.es.service;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import no.nav.arbeid.cv.es.domene.EsAnnenErfaring;
 import no.nav.arbeid.cv.es.domene.EsCv;
@@ -43,21 +46,24 @@ public class EsCvTransformer {
         p.getBeskrivelse()
     );
     
-    esCv.addYrkeserfaring(mapYrkeListe(p.getYrkeserfaring()));
-    esCv.addUtdanning(mapUtdanningListe(p.getUtdanning()));
-    esCv.addKompetanse(mapKompetanseListe(p.getKompetanse()));
-    esCv.addAnnenErfaring(mapAnnenErfaringListe(p.getAnnenerfaring()));
-    esCv.addSertifikat(mapSertifikatListe(p.getSertifikat()));
-    esCv.addForerkort(mapForerkortListe(p.getForerkort()));
-    esCv.addSprak(mapSprakListe(p.getSprak()));
-    esCv.addKurs(mapKursListe(p.getKurs()));
-    esCv.addVerv(mapVervListe(p.getVerv()));
+    esCv.addYrkeserfaring(mapList(p.getYrkeserfaring(), this::mapYrke));
+    esCv.addUtdanning(mapList(p.getUtdanning(), this::mapUtdanning));
+    esCv.addKompetanse(mapList(p.getKompetanse(), this::mapKompetanse));
+    esCv.addAnnenErfaring(mapList(p.getAnnenerfaring(), this::mapAnnenErfaring));
+    esCv.addSertifikat(mapList(p.getSertifikat(), this::mapSertifikat));
+    esCv.addForerkort(mapList(p.getForerkort(), this::mapForerkort));
+    esCv.addSprak(mapList(p.getSprak(), this::mapSprak));
+    esCv.addKurs(mapList(p.getKurs(), this::mapKurs));
+    esCv.addVerv(mapList(p.getVerv(), this::mapVerv));
 
     return esCv;
   }
 
-  private Collection<EsYrkeserfaring> mapYrkeListe(List<Yrkeserfaring> yrkeserfaringListe) {
-    return yrkeserfaringListe.stream().map(this::mapYrke).collect(Collectors.toList());
+  private <T, U> List<T> mapList(List<U> startListe, Function<U, T> mapper) {
+    if (startListe == null) {
+      return Collections.emptyList();
+    }
+    return startListe.stream().map(mapper).collect(Collectors.toList());
   }
 
   private EsYrkeserfaring mapYrke(Yrkeserfaring yrke) {
@@ -75,9 +81,6 @@ public class EsCvTransformer {
     );
   }
 
-  private Collection<EsUtdanning> mapUtdanningListe(List<Utdanning> utdanningListe) {
-    return utdanningListe.stream().map(this::mapUtdanning).collect(Collectors.toList());
-  }
 
   private EsUtdanning mapUtdanning(Utdanning utdanning) {
     return new EsUtdanning(
@@ -92,18 +95,10 @@ public class EsCvTransformer {
     );
   }
 
-  private Collection<EsKompetanse> mapKompetanseListe(List<Kompetanse> kompetanseListe) {
-    return kompetanseListe.stream().map(this::mapKompetanse).collect(Collectors.toList());
-  }
-
   private EsKompetanse mapKompetanse(Kompetanse kompetanse) {
     return new EsKompetanse(
         kompetanse.getNavn()
     );
-  }
-
-  private Collection<EsAnnenErfaring> mapAnnenErfaringListe(List<Annenerfaring> annenerfaringListe) {
-    return annenerfaringListe.stream().map(this::mapAnnenErfaring).collect(Collectors.toList());
   }
 
   private EsAnnenErfaring mapAnnenErfaring(Annenerfaring annenerfaring) {
@@ -112,10 +107,6 @@ public class EsCvTransformer {
         toDate(annenerfaring.getFraDato()),
         annenerfaring.getBeskrivelse()
     );
-  }
-
-  private Collection<EsSertifikat> mapSertifikatListe(List<Sertifikat> sertifikatListe) {
-    return sertifikatListe.stream().map(this::mapSertifikat).collect(Collectors.toList());
   }
 
   private EsSertifikat mapSertifikat(Sertifikat sertifikat) {
@@ -128,10 +119,6 @@ public class EsCvTransformer {
     );
   }
 
-  private Collection<EsForerkort> mapForerkortListe(List<Forerkort> forerkortListe) {
-      return forerkortListe.stream().map(this::mapForerkort).collect(Collectors.toList());
-    }
-
   private EsForerkort mapForerkort(Forerkort forerkort) {
     return new EsForerkort(
         toDate(forerkort.getFraDato()),
@@ -141,10 +128,6 @@ public class EsCvTransformer {
         forerkort.getDisponerer()
     );
   }
-  
-  private Collection<EsSprak> mapSprakListe(List<Sprak> sprakListe) {
-      return sprakListe.stream().map(this::mapSprak).collect(Collectors.toList());
-    }
 
   private EsSprak mapSprak(Sprak sprak) {
     return new EsSprak(
@@ -154,10 +137,6 @@ public class EsCvTransformer {
         sprak.getSkriftlig()
     );
   }
-  
-  private Collection<EsKurs> mapKursListe(List<Kurs> kursListe) {
-    return kursListe.stream().map(this::mapKurs).collect(Collectors.toList());
-  }
 
   private EsKurs mapKurs(Kurs kurs) {
     return new EsKurs(
@@ -165,12 +144,9 @@ public class EsCvTransformer {
         toDate(kurs.getTilDato()),
         kurs.getTittel(),
         kurs.getArrangor(),
-        kurs.getArrangor()
+        kurs.getOmfang().getEnhet(),
+        kurs.getOmfang().getVerdi()
     );
-  }
-  
-  private Collection<EsVerv> mapVervListe(List<Verv> vervListe) {
-    return vervListe.stream().map(this::mapVerv).collect(Collectors.toList());
   }
 
   private EsVerv mapVerv(Verv verv) {
