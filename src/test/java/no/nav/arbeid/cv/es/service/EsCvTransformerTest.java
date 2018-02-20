@@ -15,7 +15,6 @@ import no.nav.arbeid.cv.es.domene.EsUtdanning;
 import no.nav.arbeid.cv.es.domene.EsVerv;
 import no.nav.arbeid.cv.es.domene.EsYrkeserfaring;
 import no.nav.arbeid.cv.events.CvEvent;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 public class EsCvTransformerTest {
@@ -24,10 +23,11 @@ public class EsCvTransformerTest {
 
   @Test
   public void toDateShouldConvertToLocalDateWithoutErrors() {
+
     CvEvent cvEvent = CvEventObjectMother.giveMeCvEvent();
-    cvEvent.setFodselsdato("2000-01-01");
+    cvEvent.setFodselsdato("2000-01-15");
     EsCv esCv = esCvTransformer.transform(cvEvent);
-    assertThat(esCv.getFodselsdato()).isEqualTo("2000-01-01");
+    assertThat(esCv.getFodselsdato()).isEqualTo("2000-01-15");
   }
 
   @Test
@@ -45,7 +45,7 @@ public class EsCvTransformerTest {
 
     final String FORNAVN = "Test";
     final String ETTERNAVN = "Testersen";
-//    final String FODSELSDATO = "2010-01-01";
+    final String FODSELSDATO = "2000-01-15";
     final String FORMIDLINGSGRUPPEKODE = "020202";
     final String EPOSTADRESSE = "test@test.no";
     final String STATSBORGERSKAP = "Norge";
@@ -55,18 +55,15 @@ public class EsCvTransformerTest {
     CvEvent cvEvent = CvEventObjectMother.giveMeCvEvent();
     EsCv esCv = esCvTransformer.transform(cvEvent);
 
-    assertEquals(FORNAVN, esCv.getFornavn());
-    assertEquals(ETTERNAVN, esCv.getEtternavn());
-//    assertEquals(FODSELSDATO, esCv.getFodselsdato());
-    assertEquals(FORMIDLINGSGRUPPEKODE, esCv.getFormidlingsgruppekode());
-    assertEquals(EPOSTADRESSE, esCv.getEpostadresse());
-    assertEquals(STATSBORGERSKAP, esCv.getStatsborgerskap());
-    assertEquals(ARENA_ID, esCv.getArenaId());
-    assertEquals(BESKRIVELSE, esCv.getBeskrivelse());
+    assertThat(esCv.getFornavn()).isEqualTo(FORNAVN);
+    assertThat(esCv.getEtternavn()).isEqualTo(ETTERNAVN);
+    assertThat(esCv.getFodselsdato()).isEqualTo(FODSELSDATO);
+    assertThat(esCv.getFormidlingsgruppekode()).isEqualTo(FORMIDLINGSGRUPPEKODE);
+    assertThat(esCv.getEpostadresse()).isEqualTo(EPOSTADRESSE);
+    assertThat(esCv.getStatsborgerskap()).isEqualTo(STATSBORGERSKAP);
+    assertThat(esCv.getArenaId()).isEqualTo(ARENA_ID);
+    assertThat(esCv.getBeskrivelse()).isEqualTo(BESKRIVELSE);
   }
-
-  //TODO: LocalDate klarer ikke å parse datoene i CvEvent object mother
-
 
   @Test
   public void esCvTransformerShouldConvertCvEventToEsCvWithCorrectYrkeserfaring() {
@@ -77,8 +74,8 @@ public class EsCvTransformerTest {
     List<EsYrkeserfaring> yrkeserfaring = esCv.getYrkeserfaring();
 
     assertThat(yrkeserfaring).hasSize(1);
-//    Assertions.assertThat(yrkeserfaring.get(0).getFraDato()).isEqualTo("01-01-2000");
-//    Assertions.assertThat(yrkeserfaring.get(0).getTilDato()).isEqualTo("01-01-2000");
+    assertThat(yrkeserfaring.get(0).getFraDato()).isEqualTo("2000-01-15");
+    assertThat(yrkeserfaring.get(0).getTilDato()).isEqualTo("2000-01-15");
     assertThat(yrkeserfaring.get(0).getArbeidsgiver()).isEqualTo("Yrkeserfaring arbeidsgiver");
     assertThat(yrkeserfaring.get(0).getBeskrivelse()).isEqualTo("Yrkeserfaring beskrivelse");
     assertThat(yrkeserfaring.get(0).getNaceKode()).isEqualTo("Yrkeserfaring nacekode");
@@ -99,17 +96,17 @@ public class EsCvTransformerTest {
 
     List<EsUtdanning> utdanning = esCv.getUtdanning();
 
-    Assertions.assertThat(utdanning.size()).isEqualTo(1);
-//    Assertions.assertThat(utdanning.get(0).getFraDato()).isEqualTo("01-01-2000");
-//    Assertions.assertThat(utdanning.get(0).getTilDato()).isEqualTo("01-01-2001");
-    Assertions.assertThat(utdanning.get(0).getGrad()).isEqualTo("grad");
-    Assertions.assertThat(utdanning.get(0).getStudiepoeng()).isEqualTo("1");
-    Assertions.assertThat(utdanning.get(0).getUtdannelsessted())
+    assertThat(utdanning).hasSize(1);
+    assertThat(utdanning.get(0).getFraDato()).isEqualTo("2000-01-15");
+    assertThat(utdanning.get(0).getTilDato()).isEqualTo("2001-01-15");
+    assertThat(utdanning.get(0).getGrad()).isEqualTo("grad");
+    assertThat(utdanning.get(0).getStudiepoeng()).isEqualTo("1");
+    assertThat(utdanning.get(0).getUtdannelsessted())
         .isEqualTo("Utdanning utdannelsessted");
-    Assertions.assertThat(utdanning.get(0).getGeografiskSted())
+    assertThat(utdanning.get(0).getGeografiskSted())
         .isEqualTo("Utdanning geografisk sted");
-    Assertions.assertThat(utdanning.get(0).getNusKode()).isEqualTo("Utdanning nusKode");
-    Assertions.assertThat(utdanning.get(0).getNusKodeTekst()).isEqualTo("Utdanning nusKodeTekst");
+    assertThat(utdanning.get(0).getNusKode()).isEqualTo("Utdanning nusKode");
+    assertThat(utdanning.get(0).getNusKodeTekst()).isEqualTo("Utdanning nusKodeTekst");
 
   }
   
@@ -121,8 +118,8 @@ public class EsCvTransformerTest {
 
     List<EsKompetanse> kompetanse = esCv.getKompetanse();
 
-    Assertions.assertThat(kompetanse).hasSize(1);
-    Assertions.assertThat(kompetanse.get(0).getNavn()).isEqualTo("navn kompetanse");
+    assertThat(kompetanse).hasSize(1);
+    assertThat(kompetanse.get(0).getNavn()).isEqualTo("navn kompetanse");
   }
 
   @Test
@@ -133,10 +130,10 @@ public class EsCvTransformerTest {
 
     List<EsAnnenErfaring> annenerfaring = esCv.getAnnenerfaring();
 
-    Assertions.assertThat(annenerfaring).hasSize(1);
-//    Assertions.assertThat(annenerfaring.get(0).getFraDato()).isEqualTo("01-01-2000");
-//    Assertions.assertThat(annenerfaring.get(0).getTilDato()).isEqualTo("01-01-2001");
-    Assertions.assertThat(annenerfaring.get(0).getBeskrivelse()).isEqualTo("Annen erfaring beskrivelse");
+    assertThat(annenerfaring).hasSize(1);
+    assertThat(annenerfaring.get(0).getFraDato()).isEqualTo("2000-01-15");
+    assertThat(annenerfaring.get(0).getTilDato()).isEqualTo("2001-01-15");
+    assertThat(annenerfaring.get(0).getBeskrivelse()).isEqualTo("Annen erfaring beskrivelse");
   }
   
   @Test
@@ -147,12 +144,12 @@ public class EsCvTransformerTest {
 
     List<EsSertifikat> sertifikat = esCv.getSertifikat();
 
-    Assertions.assertThat(sertifikat).hasSize(1);
-//    Assertions.assertThat(sertifikat.get(0).getFraDato()).isEqualTo("01-01-2000");
-//    Assertions.assertThat(sertifikat.get(0).getTilDato()).isEqualTo("01-01-2001");
-    Assertions.assertThat(sertifikat.get(0).getSertifikatKode()).isEqualTo("sertifikatkode");
-    Assertions.assertThat(sertifikat.get(0).getSertifikatKodeTekst()).isEqualTo("sertifikatkode tekst");
-    Assertions.assertThat(sertifikat.get(0).getUtsteder()).isEqualTo("Sertifikat utsteder");
+    assertThat(sertifikat).hasSize(1);
+    assertThat(sertifikat.get(0).getFraDato()).isEqualTo("2000-01-15");
+    assertThat(sertifikat.get(0).getTilDato()).isEqualTo("2001-01-15");
+    assertThat(sertifikat.get(0).getSertifikatKode()).isEqualTo("sertifikatkode");
+    assertThat(sertifikat.get(0).getSertifikatKodeTekst()).isEqualTo("sertifikatkode tekst");
+    assertThat(sertifikat.get(0).getUtsteder()).isEqualTo("Sertifikat utsteder");
   }
   
   @Test
@@ -163,12 +160,12 @@ public class EsCvTransformerTest {
 
     List<EsForerkort> Forerkort = esCv.getForerkort();
 
-    Assertions.assertThat(Forerkort).hasSize(1);
-//    Assertions.assertThat(Forerkort.get(0).getFraDato()).isEqualTo("01-01-2000");
-//    Assertions.assertThat(Forerkort.get(0).getTilDato()).isEqualTo("01-01-2001");
-    Assertions.assertThat(Forerkort.get(0).getKlasse()).isEqualTo("Forerkortklasse");
-    Assertions.assertThat(Forerkort.get(0).getUtsteder()).isEqualTo("Forerkort utsteder");
-    Assertions.assertThat(Forerkort.get(0).getDisponererKjoretoy()).isEqualTo(true);
+    assertThat(Forerkort).hasSize(1);
+    assertThat(Forerkort.get(0).getFraDato()).isEqualTo("2000-01-15");
+    assertThat(Forerkort.get(0).getTilDato()).isEqualTo("2001-01-15");
+    assertThat(Forerkort.get(0).getKlasse()).isEqualTo("Forerkortklasse");
+    assertThat(Forerkort.get(0).getUtsteder()).isEqualTo("Forerkort utsteder");
+    assertThat(Forerkort.get(0).getDisponererKjoretoy()).isEqualTo(true);
   }
   
   @Test
@@ -179,11 +176,11 @@ public class EsCvTransformerTest {
 
     List<EsSprak> Sprak = esCv.getSprak();
 
-    Assertions.assertThat(Sprak).hasSize(1);
-    Assertions.assertThat(Sprak.get(0).getSprakKode()).isEqualTo("Språk kode");
-    Assertions.assertThat(Sprak.get(0).getSprakKodeTekst()).isEqualTo("Språk kode tekst");
-    Assertions.assertThat(Sprak.get(0).getMuntlig()).isEqualTo("Språk muntlig");
-    Assertions.assertThat(Sprak.get(0).getSkriftlig()).isEqualTo("Språk skriftlig");
+    assertThat(Sprak).hasSize(1);
+    assertThat(Sprak.get(0).getSprakKode()).isEqualTo("Språk kode");
+    assertThat(Sprak.get(0).getSprakKodeTekst()).isEqualTo("Språk kode tekst");
+    assertThat(Sprak.get(0).getMuntlig()).isEqualTo("Språk muntlig");
+    assertThat(Sprak.get(0).getSkriftlig()).isEqualTo("Språk skriftlig");
   }
   
   @Test
@@ -194,16 +191,15 @@ public class EsCvTransformerTest {
 
     List<EsKurs> kurs = esCv.getKurs();
 
-    Assertions.assertThat(kurs).hasSize(1);
-//    Assertions.assertThat(kurs.get(0).getFraDato()).isEqualTo("01-01-2000");
-//    Assertions.assertThat(kurs.get(0).getTilDato()).isEqualTo("01-01-2001");
-    Assertions.assertThat(kurs.get(0).getTittel()).isEqualTo("Kurs tittel");
-    Assertions.assertThat(kurs.get(0).getArrangor()).isEqualTo("Kurs arrangør");
-    Assertions.assertThat(kurs.get(0).getOmfangEnhet()).isEqualTo("Omfang enhet");
-    Assertions.assertThat(kurs.get(0).getOmfangVerdi()).isEqualTo(1);
+    assertThat(kurs).hasSize(1);
+    assertThat(kurs.get(0).getFraDato()).isEqualTo("2000-01-15");
+    assertThat(kurs.get(0).getTilDato()).isEqualTo("2001-01-15");
+    assertThat(kurs.get(0).getTittel()).isEqualTo("Kurs tittel");
+    assertThat(kurs.get(0).getArrangor()).isEqualTo("Kurs arrangør");
+    assertThat(kurs.get(0).getOmfangEnhet()).isEqualTo("Omfang enhet");
+    assertThat(kurs.get(0).getOmfangVerdi()).isEqualTo(1);
   }
-  
-  
+
   @Test
   public void esCvTransformerShouldConvertCvEventToEsCvWithCorrectVerv() {
 
@@ -212,11 +208,11 @@ public class EsCvTransformerTest {
 
     List<EsVerv> verv = esCv.getVerv();
 
-    Assertions.assertThat(verv).hasSize(1);
-//    Assertions.assertThat(verv.get(0).getFraDato()).isEqualTo("01-01-2000");
-//    Assertions.assertThat(verv.get(0).getTilDato()).isEqualTo("01-01-2001");
-    Assertions.assertThat(verv.get(0).getOrganisasjon()).isEqualTo("Verv organisasjon");
-    Assertions.assertThat(verv.get(0).getTittel()).isEqualTo("verv tittel");
+    assertThat(verv).hasSize(1);
+    assertThat(verv.get(0).getFraDato()).isEqualTo("2000-01-15");
+    assertThat(verv.get(0).getTilDato()).isEqualTo("2001-01-15");
+    assertThat(verv.get(0).getOrganisasjon()).isEqualTo("Verv organisasjon");
+    assertThat(verv.get(0).getTittel()).isEqualTo("verv tittel");
   }
 
 }

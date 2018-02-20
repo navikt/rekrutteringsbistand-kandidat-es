@@ -23,8 +23,8 @@ public class CvEventObjectMother {
   public static CvEvent giveMeCvEvent() {
 
     Utdanning utdanning = new Utdanning(
-        "01-01-2000",
-        "01-01-2001",
+        "2000-01-15",
+        "2001-01-15",
         "grad",
         "1",
         "Utdanning utdannelsessted",
@@ -32,12 +32,13 @@ public class CvEventObjectMother {
         "Utdanning nusKode",
         "Utdanning nusKodeTekst"
     );
+
     ArrayList<Utdanning> utdanningsListe = new ArrayList<>();
     utdanningsListe.add(utdanning);
 
     Yrkeserfaring yrkeserfaring = new Yrkeserfaring(
-        "01-01-2000",
-        "01-01-2001",
+        "2000-01-15",
+        "2001-01-15",
         "Yrkeserfaring arbeidsgiver",
         "1",
         "Yrkeserfaring stillingstittel",
@@ -56,8 +57,8 @@ public class CvEventObjectMother {
     kompetanseList.add(kompetanse);
 
     Annenerfaring annenerfaring = new Annenerfaring(
-        "01-01-2000",
-        "01-01-2001",
+        "2000-01-15",
+        "2001-01-15",
         "Annen erfaring beskrivelse"
     );
 
@@ -65,18 +66,19 @@ public class CvEventObjectMother {
     annenerfaringListe.add(annenerfaring);
 
     Sertifikat sertifikat = new Sertifikat(
-        "01-01-2000",
-        "01-01-2001",
+        "2000-01-15",
+        "2001-01-15",
         "sertifikatkode",
         "sertifikatkode tekst",
         "Sertifikat utsteder"
     );
+
     ArrayList<Sertifikat> sertifikatListe = new ArrayList<>();
     sertifikatListe.add(sertifikat);
 
     Forerkort forerkort = new Forerkort(
-        "01-01-2000",
-        "01-01-2001",
+        "2000-01-15",
+        "2001-01-15",
         "Forerkortklasse",
         "Forerkort utsteder",
         true
@@ -96,8 +98,8 @@ public class CvEventObjectMother {
     sprakListe.add(sprak);
 
     Kurs kurs = new Kurs(
-        "01-01-2000",
-        "01-01-2001",
+        "2000-01-15",
+        "2001-01-15",
         "Kurs tittel",
         "Kurs arrangør",
         new Omfang(1, "Omfang enhet")
@@ -107,8 +109,8 @@ public class CvEventObjectMother {
     kursListe.add(kurs);
 
     Verv verv = new Verv(
-        "01-01-2000",
-        "01-01-2001",
+        "2000-01-15",
+        "2001-01-15",
         "Verv organisasjon",
         "verv tittel"
     );
@@ -136,7 +138,6 @@ public class CvEventObjectMother {
     HeltidDeltidJobbonsker heltidDeltidJobbonsker = new HeltidDeltidJobbonsker(
         "HeltidDeltidKode",
         "HeltidDeltidKode Tekst"
-
     );
 
     ArrayList<HeltidDeltidJobbonsker> heltidDeltidJobbonskerListe = new ArrayList<>();
@@ -154,13 +155,14 @@ public class CvEventObjectMother {
         "Arbeidstidsordning Kode",
         "Arbeidstidsordning Kode Tekst"
     );
+
     ArrayList<ArbeidstidsordningJobbonsker> arbeidstidsordningJobbonskerListe = new ArrayList<>();
     arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
     return new CvEvent(
         "Test",
         "Testersen",
-        "2010-01-01",
+        "2000-01-15",
         "020202",
         "test@test.no",
         "Norge",

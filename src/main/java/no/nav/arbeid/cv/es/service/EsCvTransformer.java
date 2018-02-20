@@ -1,7 +1,6 @@
 package no.nav.arbeid.cv.es.service;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -63,7 +62,7 @@ public class EsCvTransformer {
     if (startListe == null) {
       return Collections.emptyList();
     }
-    return startListe.stream().map(mapper).collect(Collectors.toList());
+    return startListe.stream().filter(Objects::nonNull).map(mapper).collect(Collectors.toList());
   }
 
   private EsYrkeserfaring mapYrke(Yrkeserfaring yrke) {
@@ -81,11 +80,10 @@ public class EsCvTransformer {
     );
   }
 
-
   private EsUtdanning mapUtdanning(Utdanning utdanning) {
     return new EsUtdanning(
         toDate(utdanning.getFraDato()),
-        toDate(utdanning.getFraDato()),
+        toDate(utdanning.getTilDato()),
         utdanning.getGrad(),
         utdanning.getStudiepoeng(),
         utdanning.getUtdannelsessted(),
@@ -104,7 +102,7 @@ public class EsCvTransformer {
   private EsAnnenErfaring mapAnnenErfaring(Annenerfaring annenerfaring) {
     return new EsAnnenErfaring(
         toDate(annenerfaring.getFraDato()),
-        toDate(annenerfaring.getFraDato()),
+        toDate(annenerfaring.getTilDato()),
         annenerfaring.getBeskrivelse()
     );
   }
