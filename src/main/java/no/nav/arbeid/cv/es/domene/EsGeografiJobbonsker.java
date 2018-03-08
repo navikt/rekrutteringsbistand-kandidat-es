@@ -12,6 +12,9 @@ public class EsGeografiJobbonsker {
   @Field(type = FieldType.text, store = true, index = true)
   private String geografiKode;
 
+  public EsGeografiJobbonsker() {
+  }
+
   public EsGeografiJobbonsker(String geografiKodeTekst, String geografiKode) {
     this.geografiKodeTekst = geografiKodeTekst;
     this.geografiKode = geografiKode;

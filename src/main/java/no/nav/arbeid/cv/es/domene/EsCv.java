@@ -1,16 +1,21 @@
 package no.nav.arbeid.cv.es.domene;
 
-import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 @Document(indexName = "cver", type = "cv")
 public class EsCv {
+
+  @Id
+  private Long personId;
 
   @Field(type = FieldType.text, store = true, index = true)
   private String fornavn;
@@ -19,7 +24,7 @@ public class EsCv {
   private String etternavn;
 
   @Field(type = FieldType.Date, store = true, index = true)
-  private LocalDate fodselsdato;
+  private Date fodselsdato;
 
   @Field(type = FieldType.keyword, store = true, index = true)
   private String formidlingsgruppekode;
@@ -83,10 +88,11 @@ public class EsCv {
 
   }
 
-  public EsCv(String fornavn, String etternavn, LocalDate fodselsdato,
-    String formidlingsgruppekode, String epostadresse, String statsborgerskap,
-    Long arenaId, String beskrivelse) {
-  this.fornavn = fornavn;
+  public EsCv(Long personId, String fornavn, String etternavn, Date fodselsdato,
+      String formidlingsgruppekode, String epostadresse, String statsborgerskap,
+      Long arenaId, String beskrivelse) {
+    this.personId = personId;
+    this.fornavn = fornavn;
   this.etternavn = etternavn;
   this.fodselsdato = fodselsdato;
   this.formidlingsgruppekode = formidlingsgruppekode;
@@ -137,7 +143,7 @@ public class EsCv {
   public void addSertifikat(Collection<EsSertifikat> sertifikatListe) {
     this.sertifikat.addAll(sertifikatListe);
   }
-  
+
   public void addForerkort(EsForerkort forerkort) {
     this.forerkort.add(forerkort);
   }
@@ -145,7 +151,7 @@ public class EsCv {
   public void addForerkort(Collection<EsForerkort> forerkortListe) {
     this.forerkort.addAll(forerkortListe);
   }
-  
+
   public void addSprak(EsSprak sprak) {
     this.sprak.add(sprak);
   }
@@ -153,7 +159,7 @@ public class EsCv {
   public void addSprak(Collection<EsSprak> sprakListe) {
     this.sprak.addAll(sprakListe);
   }
-  
+
   public void addKurs(EsKurs kurs) {
     this.kurs.add(kurs);
   }
@@ -170,7 +176,11 @@ public class EsCv {
     this.verv.addAll(vervListe);
   }
 
+
   //gettere
+  public Long getPersonId() {
+    return personId;
+  }
 
   public String getFornavn() {
     return fornavn;
@@ -180,7 +190,7 @@ public class EsCv {
     return etternavn;
   }
 
-  public LocalDate getFodselsdato() {
+  public Date getFodselsdato() {
     return fodselsdato;
   }
 
@@ -332,5 +342,4 @@ public class EsCv {
         ", arbeidstidsordningJobbonsker=" + arbeidstidsordningJobbonsker +
         '}';
   }
-
 }

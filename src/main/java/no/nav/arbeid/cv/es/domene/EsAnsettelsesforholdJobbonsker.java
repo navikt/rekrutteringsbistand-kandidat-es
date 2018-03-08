@@ -12,6 +12,9 @@ public class EsAnsettelsesforholdJobbonsker {
   @Field(type = FieldType.text, store = true, index = true)
   private String ansettelsesforholdKodeTekst;
 
+  public EsAnsettelsesforholdJobbonsker() {
+  }
+
   public EsAnsettelsesforholdJobbonsker(String ansettelsesforholdKode,
       String ansettelsesforholdKodeTekst) {
     this.ansettelsesforholdKode = ansettelsesforholdKode;

@@ -19,6 +19,9 @@ public class EsSprak {
   @Field(type = FieldType.text, store = true, index = true)
   private String skriftlig;
 
+  public EsSprak() {
+  }
+
   public EsSprak(String sprakKode, String sprakKodeTekst, String muntlig, String skriftlig) {
     this.sprakKode = sprakKode;
     this.sprakKodeTekst = sprakKodeTekst;

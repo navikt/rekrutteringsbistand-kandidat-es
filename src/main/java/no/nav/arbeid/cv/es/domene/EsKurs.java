@@ -1,6 +1,7 @@
 package no.nav.arbeid.cv.es.domene;
 
-import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.Date;
 import java.util.Objects;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
@@ -8,10 +9,10 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 public class EsKurs {
 
   @Field(type = FieldType.Date, store = true, index = true)
-  private LocalDate fraDato;
+  private Date fraDato;
 
   @Field(type = FieldType.Date, store = true, index = true)
-  private LocalDate tilDato;
+  private Date tilDato;
 
   @Field(type = FieldType.text, store = true, index = true)
   private String tittel;
@@ -25,7 +26,10 @@ public class EsKurs {
   @Field(type = FieldType.text, store = true, index = true)
   private Integer omfangVerdi;
 
-  public EsKurs(LocalDate fraDato, LocalDate tilDato, String tittel, String arrangor,
+  public EsKurs() {
+  }
+
+  public EsKurs(Date fraDato, Date tilDato, String tittel, String arrangor,
       String omfangEnhet, Integer omfangVerdi) {
     this.fraDato = fraDato;
     this.tilDato = tilDato;
@@ -35,11 +39,13 @@ public class EsKurs {
     this.omfangVerdi = omfangVerdi;
   }
 
-  public LocalDate getFraDato() {
+  @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+  public Date getFraDato() {
     return fraDato;
   }
 
-  public LocalDate getTilDato() {
+  @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+  public Date getTilDato() {
     return tilDato;
   }
 

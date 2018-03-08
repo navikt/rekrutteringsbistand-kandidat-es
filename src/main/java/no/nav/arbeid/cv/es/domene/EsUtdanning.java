@@ -1,6 +1,6 @@
 package no.nav.arbeid.cv.es.domene;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
@@ -8,9 +8,9 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 public class EsUtdanning {
 
   @Field(type = FieldType.Date, store = true, index = true)
-  private LocalDate fraDato;
+  private Date fraDato;
   @Field(type = FieldType.Date, store = true, index = true)
-  private LocalDate tilDato;
+  private Date tilDato;
   @Field(type = FieldType.text, store = true, index = true)
   private String grad;
   @Field(type = FieldType.text, store = true, index = true)
@@ -24,7 +24,10 @@ public class EsUtdanning {
   @Field(type = FieldType.text, store = true, index = true)
   private String nusKodeTekst;
 
-  public EsUtdanning(LocalDate fraDato, LocalDate tilDato, String grad, String studiepoeng,
+  public EsUtdanning() {
+  }
+
+  public EsUtdanning(Date fraDato, Date tilDato, String grad, String studiepoeng,
       String utdannelsessted, String geografiskSted, String nusKode, String nusKodeTekst) {
     this.fraDato = fraDato;
     this.tilDato = tilDato;
@@ -36,11 +39,11 @@ public class EsUtdanning {
     this.nusKodeTekst = nusKodeTekst;
   }
 
-  public LocalDate getFraDato() {
+  public Date getFraDato() {
     return fraDato;
   }
 
-  public LocalDate getTilDato() {
+  public Date getTilDato() {
     return tilDato;
   }
 

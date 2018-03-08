@@ -1,6 +1,6 @@
 package no.nav.arbeid.cv.es.domene;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
@@ -8,10 +8,10 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 public class EsSertifikat {
 
   @Field(type = FieldType.Date, store = true, index = true)
-  private LocalDate fraDato;
+  private Date fraDato;
 
   @Field(type = FieldType.Date, store = true, index = true)
-  private LocalDate tilDato;
+  private Date tilDato;
 
   @Field(type = FieldType.text, store = true, index = true)
   private String sertifikatKode;
@@ -22,7 +22,10 @@ public class EsSertifikat {
   @Field(type = FieldType.text, store = true, index = true)
   private String utsteder;
 
-  public EsSertifikat(LocalDate fraDato, LocalDate tilDato, String sertifikatKode,
+  public EsSertifikat() {
+  }
+
+  public EsSertifikat(Date fraDato, Date tilDato, String sertifikatKode,
       String sertifikatKodeTekst, String utsteder) {
     this.fraDato = fraDato;
     this.tilDato = tilDato;
@@ -31,11 +34,11 @@ public class EsSertifikat {
     this.utsteder = utsteder;
   }
 
-  public LocalDate getFraDato() {
+  public Date getFraDato() {
     return fraDato;
   }
 
-  public LocalDate getTilDato() {
+  public Date getTilDato() {
     return tilDato;
   }
 

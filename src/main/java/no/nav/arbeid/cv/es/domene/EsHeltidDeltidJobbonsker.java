@@ -12,6 +12,8 @@ public class EsHeltidDeltidJobbonsker {
   @Field(type = FieldType.text, store = true, index = true)
   private String heltidDeltidKodeTekst;
 
+  public EsHeltidDeltidJobbonsker() {
+  }
 
   public EsHeltidDeltidJobbonsker(String heltidDeltidKode, String heltidDeltidKodeTekst) {
     this.heltidDeltidKode = heltidDeltidKode;

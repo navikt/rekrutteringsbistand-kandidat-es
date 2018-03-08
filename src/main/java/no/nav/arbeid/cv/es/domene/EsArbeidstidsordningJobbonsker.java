@@ -12,6 +12,9 @@ public class EsArbeidstidsordningJobbonsker {
   @Field(type = FieldType.text, store = true, index = true)
   private String arbeidstidsordningKodeTekst;
 
+  public EsArbeidstidsordningJobbonsker() {
+  }
+
   public EsArbeidstidsordningJobbonsker(String arbeidstidsordningKode,
       String arbeidstidsordningKodeTekst) {
     this.arbeidstidsordningKode = arbeidstidsordningKode;

@@ -55,6 +55,7 @@ public class EsCvTransformerTest {
     CvEvent cvEvent = CvEventObjectMother.giveMeCvEvent();
     EsCv esCv = esCvTransformer.transform(cvEvent);
 
+    assertThat(esCv.getPersonId()).isEqualTo(ARENA_ID);
     assertThat(esCv.getFornavn()).isEqualTo(FORNAVN);
     assertThat(esCv.getEtternavn()).isEqualTo(ETTERNAVN);
     assertThat(esCv.getFodselsdato()).isEqualTo(FODSELSDATO);
@@ -109,10 +110,10 @@ public class EsCvTransformerTest {
     assertThat(utdanning.get(0).getNusKodeTekst()).isEqualTo("Utdanning nusKodeTekst");
 
   }
-  
+
   @Test
   public void esCvTransformerShouldConvertCvEventToEsCvWithCorrectKompetanse() {
-    
+
     CvEvent cvEvent = CvEventObjectMother.giveMeCvEvent();
     EsCv esCv = esCvTransformer.transform(cvEvent);
 
@@ -135,7 +136,7 @@ public class EsCvTransformerTest {
     assertThat(annenerfaring.get(0).getTilDato()).isEqualTo("2001-01-15");
     assertThat(annenerfaring.get(0).getBeskrivelse()).isEqualTo("Annen erfaring beskrivelse");
   }
-  
+
   @Test
   public void esCvTransformerShouldConvertCvEventToEsCvWithCorrectSertifikat() {
 
@@ -151,7 +152,7 @@ public class EsCvTransformerTest {
     assertThat(sertifikat.get(0).getSertifikatKodeTekst()).isEqualTo("sertifikatkode tekst");
     assertThat(sertifikat.get(0).getUtsteder()).isEqualTo("Sertifikat utsteder");
   }
-  
+
   @Test
   public void esCvTransformerShouldConvertCvEventToEsCvWithCorrectForerkort() {
 
@@ -167,7 +168,7 @@ public class EsCvTransformerTest {
     assertThat(Forerkort.get(0).getUtsteder()).isEqualTo("Forerkort utsteder");
     assertThat(Forerkort.get(0).getDisponererKjoretoy()).isEqualTo(true);
   }
-  
+
   @Test
   public void esCvTransformerShouldConvertCvEventToEsCvWithCorrectSprak() {
 
@@ -182,7 +183,7 @@ public class EsCvTransformerTest {
     assertThat(Sprak.get(0).getMuntlig()).isEqualTo("Språk muntlig");
     assertThat(Sprak.get(0).getSkriftlig()).isEqualTo("Språk skriftlig");
   }
-  
+
   @Test
   public void esCvTransformerShouldConvertCvEventToEsCvWithCorrectKurs() {
 

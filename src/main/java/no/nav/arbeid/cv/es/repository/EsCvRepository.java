@@ -12,10 +12,10 @@ import no.nav.arbeid.cv.es.domene.EsCv;
 @Repository
 public interface EsCvRepository extends ElasticsearchRepository<EsCv, String> {
 
-  public List<EsCv> findByYrkerStyrkKode(String styrk);
-  
-  public List<EsCv> findByYrkerStyrkBeskrivelse(String styrkBeskrivelse);
+  List<EsCv> findByYrkeserfaringStyrkKode(String styrk);
 
-  public Page<EsCv> findByYrkerStyrkKode(String styrk, Pageable pageable);
+  List<EsCv> findByYrkeserfaringStyrkKodeTekst(String styrkBeskrivelse);
+
+  Page<EsCv> findByYrkeserfaringStyrkKode(String styrk, Pageable pageable);
 
 }

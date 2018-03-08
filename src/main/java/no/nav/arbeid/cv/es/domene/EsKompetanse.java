@@ -9,6 +9,9 @@ public class EsKompetanse {
   @Field(type = FieldType.text, store = true, index = true)
   private String navn;
 
+  public EsKompetanse() {
+  }
+
   public EsKompetanse(String navn) {
     this.navn = navn;
   }

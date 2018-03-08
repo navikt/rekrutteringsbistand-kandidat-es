@@ -1,7 +1,9 @@
 package no.nav.arbeid.cv.es.service;
 
-import java.time.LocalDate;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -35,6 +37,7 @@ public class EsCvTransformer {
 
   public EsCv transform(CvEvent p) {
     EsCv esCv = new EsCv(
+        p.getArenaId(),
         p.getFornavn(),
         p.getEtternavn(),
         toDate(p.getFodselsdato()),
@@ -44,7 +47,7 @@ public class EsCvTransformer {
         p.getArenaId(),
         p.getBeskrivelse()
     );
-    
+
     esCv.addYrkeserfaring(mapList(p.getYrkeserfaring(), this::mapYrke));
     esCv.addUtdanning(mapList(p.getUtdanning(), this::mapUtdanning));
     esCv.addKompetanse(mapList(p.getKompetanse(), this::mapKompetanse));
@@ -156,9 +159,10 @@ public class EsCvTransformer {
     );
   }
 
-  private LocalDate toDate(String date) {
+  private Date toDate(String dateString) {
     try {
-      return LocalDate.parse(date);
+      DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+      return formatter.parse(dateString);
     } catch (Exception e) {
       LOGGER.warn("Feilet under parsing av dato", e);
     }

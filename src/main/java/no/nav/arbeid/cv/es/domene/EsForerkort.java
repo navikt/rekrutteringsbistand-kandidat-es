@@ -1,6 +1,6 @@
 package no.nav.arbeid.cv.es.domene;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
@@ -8,10 +8,10 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 public class EsForerkort {
 
   @Field(type = FieldType.Date, store = true, index = true)
-  private LocalDate fraDato;
+  private Date fraDato;
 
   @Field(type = FieldType.Date, store = true, index = true)
-  private LocalDate tilDato;
+  private Date tilDato;
 
   @Field(type = FieldType.text, store = true, index = true)
   private String klasse;
@@ -22,7 +22,10 @@ public class EsForerkort {
   @Field(type = FieldType.Boolean, store = true, index = true)
   private Boolean disponererKjoretoy;
 
-  public EsForerkort(LocalDate fraDato, LocalDate tilDato, String klasse, String utsteder,
+  public EsForerkort() {
+  }
+
+  public EsForerkort(Date fraDato, Date tilDato, String klasse, String utsteder,
       Boolean disponererKjoretoy) {
     this.fraDato = fraDato;
     this.tilDato = tilDato;
@@ -31,11 +34,11 @@ public class EsForerkort {
     this.disponererKjoretoy = disponererKjoretoy;
   }
 
-  public LocalDate getFraDato() {
+  public Date getFraDato() {
     return fraDato;
   }
 
-  public LocalDate getTilDato() {
+  public Date getTilDato() {
     return tilDato;
   }
 

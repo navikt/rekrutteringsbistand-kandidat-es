@@ -15,6 +15,9 @@ public class EsYrkeJobbonsker {
   @Field(type = FieldType.Boolean, store = true, index = true)
   private boolean primaertJobbonske;
 
+  public EsYrkeJobbonsker() {
+  }
+
   public EsYrkeJobbonsker(String styrkKode, String styrkBeskrivelse, boolean primaertJobbonske) {
     this.styrkKode = styrkKode;
     this.styrkBeskrivelse = styrkBeskrivelse;
