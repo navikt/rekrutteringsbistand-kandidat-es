@@ -1,71 +1,115 @@
 package no.nav.arbeid.cv.es.domene;
 
-import java.util.Optional;
-
+import java.util.Date;
+import java.util.Objects;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-
 public class EsUtdanning {
 
-  @Field(type = FieldType.Integer, store = true, index = true)
-  protected int cvleddnr;
+  @Field(type = FieldType.Date, store = true, index = true)
+  private Date fraDato;
+  @Field(type = FieldType.Date, store = true, index = true)
+  private Date tilDato;
   @Field(type = FieldType.text, store = true, index = true)
-  protected String leddtekst1;
+  private String grad;
   @Field(type = FieldType.text, store = true, index = true)
-  protected String leddtekst2;
-  @Field(type = FieldType.Integer, store = true, index = true)
-  protected Integer profilelementId;
-  @Field(type = FieldType.keyword, store = true, index = true)
-  protected String strukturkode;
+  private String studiepoeng;
   @Field(type = FieldType.text, store = true, index = true)
-  protected String elementOrd;
-  // protected String beskrivelse;
+  private String utdannelsessted;
+  @Field(type = FieldType.text, store = true, index = true)
+  private String geografiskSted;
+  @Field(type = FieldType.text, store = true, index = true)
+  private String nusKode;
+  @Field(type = FieldType.text, store = true, index = true)
+  private String nusKodeTekst;
 
   public EsUtdanning() {
-    
-  }
-  public EsUtdanning(int cvleddnr, String leddtekst1, String leddtekst2,
-      Optional<Integer> profilelementId, Optional<String> strukturkode,
-      Optional<String> elementOrd) {
-    this.cvleddnr = cvleddnr;
-    this.leddtekst1 = leddtekst1;
-    this.leddtekst2 = leddtekst2;
-    this.profilelementId = profilelementId.orElse(null);
-    this.strukturkode = strukturkode.orElse(null);
-    this.elementOrd = elementOrd.orElse(null);
   }
 
-  public int getCvleddnr() {
-    return cvleddnr;
+  public EsUtdanning(Date fraDato, Date tilDato, String grad, String studiepoeng,
+      String utdannelsessted, String geografiskSted, String nusKode, String nusKodeTekst) {
+    this.fraDato = fraDato;
+    this.tilDato = tilDato;
+    this.grad = grad;
+    this.studiepoeng = studiepoeng;
+    this.utdannelsessted = utdannelsessted;
+    this.geografiskSted = geografiskSted;
+    this.nusKode = nusKode;
+    this.nusKodeTekst = nusKodeTekst;
   }
 
-  public String getLeddtekst1() {
-    return leddtekst1;
+  public Date getFraDato() {
+    return fraDato;
   }
 
-  public String getLeddtekst2() {
-    return leddtekst2;
+  public Date getTilDato() {
+    return tilDato;
   }
 
-  public Integer getProfilelementId() {
-    return profilelementId;
+  public String getGrad() {
+    return grad;
   }
 
-  public String getStrukturkode() {
-    return strukturkode;
+  public String getStudiepoeng() {
+    return studiepoeng;
   }
 
-  public String getElementOrd() {
-    return elementOrd;
+  public String getUtdannelsessted() {
+    return utdannelsessted;
+  }
+
+  public String getGeografiskSted() {
+    return geografiskSted;
+  }
+
+  public String getNusKode() {
+    return nusKode;
+  }
+
+  public String getNusKodeTekst() {
+    return nusKodeTekst;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    EsUtdanning that = (EsUtdanning) o;
+    return Objects.equals(fraDato, that.fraDato) &&
+        Objects.equals(tilDato, that.tilDato) &&
+        Objects.equals(grad, that.grad) &&
+        Objects.equals(studiepoeng, that.studiepoeng) &&
+        Objects.equals(utdannelsessted, that.utdannelsessted) &&
+        Objects.equals(geografiskSted, that.geografiskSted) &&
+        Objects.equals(nusKode, that.nusKode) &&
+        Objects.equals(nusKodeTekst, that.nusKodeTekst);
+  }
+
+  @Override
+  public int hashCode() {
+
+    return Objects
+        .hash(fraDato, tilDato, grad, studiepoeng, utdannelsessted, geografiskSted, nusKode,
+            nusKodeTekst);
   }
 
   @Override
   public String toString() {
-    return "EsUtdanning [cvleddnr=" + cvleddnr + ", leddtekst1=" + leddtekst1 + ", leddtekst2="
-        + leddtekst2 + ", profilelementId=" + profilelementId + ", strukturkode=" + strukturkode
-        + ", elementOrd=" + elementOrd + "]";
+    return "EsUtdanning{" +
+        "fraDato=" + fraDato +
+        ", tilDato=" + tilDato +
+        ", grad='" + grad + '\'' +
+        ", studiepoeng='" + studiepoeng + '\'' +
+        ", utdannelsessted='" + utdannelsessted + '\'' +
+        ", geografiskSted='" + geografiskSted + '\'' +
+        ", nusKode='" + nusKode + '\'' +
+        ", nusKodeTekst='" + nusKodeTekst + '\'' +
+        '}';
   }
 
 }

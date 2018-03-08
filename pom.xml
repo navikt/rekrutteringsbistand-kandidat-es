@@ -26,7 +26,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 
 		<!-- NAVs -->
-		<pam-cv-avro.version>5</pam-cv-avro.version>
+		<pam-cv-avro.version>6</pam-cv-avro.version>
 
 		<!-- Tredjeparts -->
 		<!-- <mockito.version>2.7.22</mockito.version> -->

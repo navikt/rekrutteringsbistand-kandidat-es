@@ -4,12 +4,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 import static org.elasticsearch.index.query.QueryBuilders.nestedQuery;
 
-import java.util.Arrays;
+import com.palantir.docker.compose.DockerComposeRule;
+import com.palantir.docker.compose.connection.waiting.HealthChecks;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import no.nav.arbeid.cv.es.config.ServiceConfig;
+import no.nav.arbeid.cv.es.domene.EsCv;
+import no.nav.arbeid.cv.es.repository.EsCvRepository;
+import no.nav.arbeid.cv.es.service.CvEventObjectMother;
+import no.nav.arbeid.cv.es.service.EsCvTransformer;
+import no.nav.arbeid.cv.events.CvEvent;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.junit.Before;
@@ -37,31 +43,25 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilde
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.palantir.docker.compose.DockerComposeRule;
-import com.palantir.docker.compose.connection.waiting.HealthChecks;
-
-import no.nav.arbeid.cv.es.config.ServiceConfig;
-import no.nav.arbeid.cv.es.domene.EsCv;
-import no.nav.arbeid.cv.es.repository.EsCvRepository;
-import no.nav.arbeid.cv.es.service.EsCvTransformer;
-import no.nav.arbeid.cv.events.CvEvent;
-import no.nav.arbeid.cv.events.Yrkeserfaring;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class IndexCvTest {
 
+
   private static final String ES_DOCKER_SERVICE = "elastic_search";
 
-  /* 
+/*
    * For å kunne kjøre denne testen må Linux rekonfigureres litt..
    * Lag en fil i /etc/sysctl.d/01-increase_vm_max_map_count.conf som inneholder følgende:
    * vm.max_map_count = 262144
-   */
-  @ClassRule
-  public static DockerComposeRule docker =
-      DockerComposeRule.builder().file("src/test/resources/docker-compose-es.yml")
-          .waitingForService(ES_DOCKER_SERVICE, HealthChecks.toHaveAllPortsOpen()).build();
+*/
+
+//Kjører "docker-compose up" manuelt istedenfor denne ClassRule:
+
+//  @ClassRule
+//  public static DockerComposeRule docker =
+//      DockerComposeRule.builder().file("src/test/resources/docker-compose.yml")
+//          .waitingForService(ES_DOCKER_SERVICE, HealthChecks.toHaveAllPortsOpen()).build();
 
   @Configuration
   @OverrideAutoConfiguration(enabled = true)
@@ -98,16 +98,16 @@ public class IndexCvTest {
 
     Page<EsCv> all = esCvRepo.findAll(PageRequest.of(0, 100));
     assertThat(all.getContent()).asList().hasSize(1);
-    all.getContent().forEach(cv -> cv.getYrker().stream()
+    all.getContent().forEach(cv -> cv.getYrkeserfaring().stream()
         .forEach(yrke -> System.out.println("STYRK:" + yrke.getStyrkKode())));
 
     // Nested søk fungerer ikke.. Skjønner ikke hvorfor..
-    List<EsCv> cver = esCvRepo.findByYrkerStyrkBeskrivelse("Barnehageassistent");
+    //List<EsCv> cver = esCvRepo.findByYrkerStyrkBeskrivelse("Barnehageassistent");
     // assertThat(cver).hasSize(1);
 
     // Dette fungerer:
-    QueryBuilder builder3 = nestedQuery("yrker",
-        matchQuery("yrker.styrkBeskrivelse", "Barnehageassistent"), ScoreMode.None);
+    QueryBuilder builder3 = nestedQuery("yrkeserfaring",
+        matchQuery("yrkeserfaring.styrkKodeTekst", "Yrkeserfaring styrkkode tekst"), ScoreMode.None);
 
     SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(builder3).build();
     List<EsCv> list = elasticsearchTemplate.queryForList(searchQuery, EsCv.class);
@@ -119,21 +119,15 @@ public class IndexCvTest {
         .map(esCv -> createIndexQuery(esCv)).collect(Collectors.toList());
     return queries;
   }
-
+//
   private Collection<CvEvent> personer() {
-    return Arrays.asList(new CvEvent[] {new CvEvent("Hågen", "Hasle", "1975-10-07", "ARBS",
-        "haagenhasle@gmail.com", "NO", 123456L, "Jeg jobber og jobber!", Collections.emptyList(),
-        Arrays.asList(new Yrkeserfaring("2010-01-01", "2012-12-30", "NAV", "Barnehageassistent",
-            "123403", "Barnehageassistent")),
-        Collections.emptyList(), Collections.emptyList(), Collections.emptyList(),
-        Collections.emptyList(), Collections.emptyList(), Collections.emptyList(),
-        Collections.emptyList(), Collections.emptyList(), Collections.emptyList())});
+    return Collections.singletonList(CvEventObjectMother.giveMeCvEvent());
   }
 
+  //Usikker på hvilken ID som skal brukes her
   private IndexQuery createIndexQuery(EsCv esCv) {
-    return new IndexQueryBuilder().withId(Long.toString(esCv.getPersonId())).withObject(esCv)
+    return new IndexQueryBuilder().withId(Long.toString(1)).withObject(esCv)
         .build();
   }
-
 
 }
