@@ -1,19 +1,23 @@
 package no.nav.arbeid.cv.es.domene;
 
 import java.util.Objects;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import org.frekele.elasticsearch.mapping.annotations.ElasticKeywordField;
+import org.frekele.elasticsearch.mapping.annotations.ElasticTextField;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EsAnsettelsesforholdJobbonsker {
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticKeywordField
   private String ansettelsesforholdKode;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticTextField
+  @ElasticKeywordField
   private String ansettelsesforholdKodeTekst;
 
-  public EsAnsettelsesforholdJobbonsker() {
-  }
+  public EsAnsettelsesforholdJobbonsker() {}
 
   public EsAnsettelsesforholdJobbonsker(String ansettelsesforholdKode,
       String ansettelsesforholdKodeTekst) {
@@ -38,8 +42,8 @@ public class EsAnsettelsesforholdJobbonsker {
       return false;
     }
     EsAnsettelsesforholdJobbonsker that = (EsAnsettelsesforholdJobbonsker) o;
-    return Objects.equals(ansettelsesforholdKode, that.ansettelsesforholdKode) &&
-        Objects.equals(ansettelsesforholdKodeTekst, that.ansettelsesforholdKodeTekst);
+    return Objects.equals(ansettelsesforholdKode, that.ansettelsesforholdKode)
+        && Objects.equals(ansettelsesforholdKodeTekst, that.ansettelsesforholdKodeTekst);
   }
 
   @Override
@@ -50,9 +54,7 @@ public class EsAnsettelsesforholdJobbonsker {
 
   @Override
   public String toString() {
-    return "EsAnsettelsesforholdJobbonsker{" +
-        "ansettelsesforholdKode='" + ansettelsesforholdKode + '\'' +
-        ", ansettelsesforholdKodeTekst='" + ansettelsesforholdKodeTekst + '\'' +
-        '}';
+    return "EsAnsettelsesforholdJobbonsker{" + "ansettelsesforholdKode='" + ansettelsesforholdKode
+        + '\'' + ", ansettelsesforholdKodeTekst='" + ansettelsesforholdKodeTekst + '\'' + '}';
   }
 }

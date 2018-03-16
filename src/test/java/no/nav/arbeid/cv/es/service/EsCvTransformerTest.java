@@ -83,7 +83,7 @@ public class EsCvTransformerTest {
     assertThat(yrkeserfaring.get(0).getOrganisasjonsnummer()).isEqualTo("1");
     assertThat(yrkeserfaring.get(0).getSokekategori()).isEqualTo("Yrkeserfaring sokekategori");
     assertThat(yrkeserfaring.get(0).getStillingstittel())
-        .isEqualTo("Yrkeserfaring stillingstittel");
+        .isEqualTo("greenkeeper");
     assertThat(yrkeserfaring.get(0).getStyrkKode()).isEqualTo("Yrkeserfaring styrkkode");
     assertThat(yrkeserfaring.get(0).getStyrkKodeTekst()).isEqualTo("Yrkeserfaring styrkkode tekst");
 
@@ -107,7 +107,7 @@ public class EsCvTransformerTest {
     assertThat(utdanning.get(0).getGeografiskSted())
         .isEqualTo("Utdanning geografisk sted");
     assertThat(utdanning.get(0).getNusKode()).isEqualTo("Utdanning nusKode");
-    assertThat(utdanning.get(0).getNusKodeTekst()).isEqualTo("Utdanning nusKodeTekst");
+    assertThat(utdanning.get(0).getNusKodeTekst()).isEqualTo("nusKodeTekst");
 
   }
 

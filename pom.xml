@@ -35,6 +35,7 @@
 		<logstash-logback-encoder.version>4.10</logstash-logback-encoder.version>
 		<palantir.version>0.33.0</palantir.version>
 		<poi-ooxml.version>3.16</poi-ooxml.version>
+		<elasticsearch.version>6.2.2</elasticsearch.version>
 	</properties>
 
 	<dependencies>
@@ -69,10 +70,17 @@
 			<artifactId>avro</artifactId>
 			<version>${avro.version}</version>
 		</dependency>
+		<!-- 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-elasticsearch</artifactId>
+			<version>3.0.3.RELEASE</version>
+		</dependency> -->
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
@@ -106,7 +114,31 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
-
+		
+		<dependency>
+    		<groupId>org.elasticsearch.client</groupId>
+    		<artifactId>elasticsearch-rest-high-level-client</artifactId>
+		    <!-- <version>7.0.0-alpha1</version> -->
+		    <version>${elasticsearch.version}</version>
+		</dependency>
+		
+		<dependency>
+    		<groupId>org.elasticsearch</groupId>
+    		<artifactId>elasticsearch</artifactId>
+		    <!-- <version>7.0.0-alpha1</version> -->
+		    <version>${elasticsearch.version}</version>
+		</dependency>
+		
+		<dependency>
+    		<groupId>org.frekele.elasticsearch</groupId>
+    		<artifactId>elasticsearch-mapping-builder</artifactId>
+    		<version>1.0.3-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-hateoas</artifactId>
+		</dependency>
 
 		<!-- test -->
 		<dependency>

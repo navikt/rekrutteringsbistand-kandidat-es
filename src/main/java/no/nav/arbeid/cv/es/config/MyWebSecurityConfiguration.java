@@ -24,6 +24,7 @@ public class MyWebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     http.authorizeRequests()
         .requestMatchers(EndpointRequest.to("status", "info", "health", "prometheus")).permitAll()
         .antMatchers("/rest/internal/isAlive").permitAll()
+        .antMatchers("/rest/**").permitAll()
         .anyRequest().hasRole("USER").and()
         // Possibly more configuration ...
         .formLogin() // enable form based log in

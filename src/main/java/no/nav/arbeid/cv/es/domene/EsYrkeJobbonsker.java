@@ -1,22 +1,25 @@
 package no.nav.arbeid.cv.es.domene;
 
 import java.util.Objects;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import org.frekele.elasticsearch.mapping.annotations.ElasticKeywordField;
+import org.frekele.elasticsearch.mapping.annotations.ElasticTextField;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EsYrkeJobbonsker {
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticKeywordField
   private String styrkKode;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticTextField
+  @ElasticKeywordField
   private String styrkBeskrivelse;
 
-  @Field(type = FieldType.Boolean, store = true, index = true)
   private boolean primaertJobbonske;
 
-  public EsYrkeJobbonsker() {
-  }
+  public EsYrkeJobbonsker() {}
 
   public EsYrkeJobbonsker(String styrkKode, String styrkBeskrivelse, boolean primaertJobbonske) {
     this.styrkKode = styrkKode;
@@ -45,9 +48,8 @@ public class EsYrkeJobbonsker {
       return false;
     }
     EsYrkeJobbonsker that = (EsYrkeJobbonsker) o;
-    return primaertJobbonske == that.primaertJobbonske &&
-        Objects.equals(styrkKode, that.styrkKode) &&
-        Objects.equals(styrkBeskrivelse, that.styrkBeskrivelse);
+    return primaertJobbonske == that.primaertJobbonske && Objects.equals(styrkKode, that.styrkKode)
+        && Objects.equals(styrkBeskrivelse, that.styrkBeskrivelse);
   }
 
   @Override
@@ -58,10 +60,7 @@ public class EsYrkeJobbonsker {
 
   @Override
   public String toString() {
-    return "EsYrkeJobbonsker{" +
-        "styrkKode='" + styrkKode + '\'' +
-        ", styrkBeskrivelse='" + styrkBeskrivelse + '\'' +
-        ", primaertJobbonske=" + primaertJobbonske +
-        '}';
+    return "EsYrkeJobbonsker{" + "styrkKode='" + styrkKode + '\'' + ", styrkBeskrivelse='"
+        + styrkBeskrivelse + '\'' + ", primaertJobbonske=" + primaertJobbonske + '}';
   }
 }

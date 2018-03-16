@@ -1,0 +1,39 @@
+package no.nav.arbeid.cv.es.rest;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resources;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import no.nav.arbeid.cv.es.client.EsCvClient;
+import no.nav.arbeid.cv.es.domene.EsCv;
+
+@RestController
+@RequestMapping(path = "/rest/search/cv", produces = MediaType.APPLICATION_JSON_VALUE)
+public class SearchController {
+
+  @Autowired
+  private EsCvClient client;
+
+  @RequestMapping(path = "whatnot", method = RequestMethod.GET)
+  public HttpEntity<Resources<EsCvResource>> hentCverMedArbeidserfaring(
+      @RequestParam("styrk") String styrk) throws IOException {
+
+    List<EsCv> list = client.findByYrkeserfaringStyrkKode(styrk);
+    List<EsCvResource> resourceList =
+        list.stream().map(cv -> new EsCvResource(cv)).collect(Collectors.toList());
+    Resources<EsCvResource> resources = new Resources<>(resourceList);
+    // linkTo(methodOn(SearchController.class).listPersonsUtdanninger()).withSelfRel());
+    return new ResponseEntity<>(resources, HttpStatus.OK);
+  }
+}

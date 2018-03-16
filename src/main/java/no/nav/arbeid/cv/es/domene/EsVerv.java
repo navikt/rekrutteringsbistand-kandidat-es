@@ -2,25 +2,28 @@ package no.nav.arbeid.cv.es.domene;
 
 import java.util.Date;
 import java.util.Objects;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import org.frekele.elasticsearch.mapping.annotations.ElasticDateField;
+import org.frekele.elasticsearch.mapping.annotations.ElasticTextField;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EsVerv {
 
-  @Field(type = FieldType.Date, store = true, index = true)
+  @ElasticDateField
   private Date fraDato;
 
-  @Field(type = FieldType.Date, store = true, index = true)
+  @ElasticDateField
   private Date tilDato;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticTextField
   private String organisasjon;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticTextField
   private String tittel;
 
-  public EsVerv() {
-  }
+  public EsVerv() {}
 
   public EsVerv(Date fraDato, Date tilDato, String organisasjon, String tittel) {
     this.fraDato = fraDato;
@@ -54,10 +57,9 @@ public class EsVerv {
       return false;
     }
     EsVerv esVerv = (EsVerv) o;
-    return Objects.equals(fraDato, esVerv.fraDato) &&
-        Objects.equals(tilDato, esVerv.tilDato) &&
-        Objects.equals(organisasjon, esVerv.organisasjon) &&
-        Objects.equals(tittel, esVerv.tittel);
+    return Objects.equals(fraDato, esVerv.fraDato) && Objects.equals(tilDato, esVerv.tilDato)
+        && Objects.equals(organisasjon, esVerv.organisasjon)
+        && Objects.equals(tittel, esVerv.tittel);
   }
 
   @Override
@@ -68,12 +70,8 @@ public class EsVerv {
 
   @Override
   public String toString() {
-    return "EsVerv{" +
-        "fraDato=" + fraDato +
-        ", tilDato=" + tilDato +
-        ", organisasjon='" + organisasjon + '\'' +
-        ", tittel='" + tittel + '\'' +
-        '}';
+    return "EsVerv{" + "fraDato=" + fraDato + ", tilDato=" + tilDato + ", organisasjon='"
+        + organisasjon + '\'' + ", tittel='" + tittel + '\'' + '}';
   }
 
 }

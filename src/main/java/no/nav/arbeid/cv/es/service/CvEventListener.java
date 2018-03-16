@@ -1,11 +1,10 @@
-package no.nav.arbeid.cv.es.events;
+package no.nav.arbeid.cv.es.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 
 import no.nav.arbeid.cv.es.config.TopicNames;
-import no.nav.arbeid.cv.es.service.CvIndexerService;
 import no.nav.arbeid.cv.events.CvEvent;
 
 public class CvEventListener {

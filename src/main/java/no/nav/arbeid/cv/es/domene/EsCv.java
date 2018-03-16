@@ -1,87 +1,87 @@
 package no.nav.arbeid.cv.es.domene;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 
-@Document(indexName = "cver", type = "cv")
+import org.frekele.elasticsearch.mapping.annotations.ElasticDateField;
+import org.frekele.elasticsearch.mapping.annotations.ElasticDocument;
+import org.frekele.elasticsearch.mapping.annotations.ElasticKeywordField;
+import org.frekele.elasticsearch.mapping.annotations.ElasticLongField;
+import org.frekele.elasticsearch.mapping.annotations.ElasticNestedField;
+import org.frekele.elasticsearch.mapping.annotations.ElasticTextField;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@ElasticDocument
 public class EsCv {
 
-  @Id
+  @ElasticLongField
   private Long personId;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticTextField
   private String fornavn;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticTextField
   private String etternavn;
 
-  @Field(type = FieldType.Date, store = true, index = true)
+  @ElasticDateField
   private Date fodselsdato;
 
-  @Field(type = FieldType.keyword, store = true, index = true)
+  @ElasticKeywordField
   private String formidlingsgruppekode;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticTextField
+  @ElasticKeywordField
   private String epostadresse;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticKeywordField
   private String statsborgerskap;
 
-  @Field(type = FieldType.Long, store = true, index =true)
+  @ElasticLongField
   private Long arenaId;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticTextField
   private String beskrivelse;
 
-
-  @Field(type = FieldType.Nested, store = true, index = true)
+  @ElasticNestedField
   private List<EsUtdanning> utdanning = new ArrayList<>();
 
-  @Field(type = FieldType.Nested, store = true, index = true)
+  @ElasticNestedField
   private List<EsYrkeserfaring> yrkeserfaring = new ArrayList<>();
 
-  @Field(type = FieldType.Nested, store = true, index = true)
+  @ElasticNestedField
   private List<EsKompetanse> kompetanse = new ArrayList<>();
 
-  @Field(type = FieldType.Nested, store = true, index = true)
+  @ElasticNestedField
   private List<EsAnnenErfaring> annenerfaring = new ArrayList<>();
 
-  @Field(type = FieldType.Nested, store = true, index = true)
+  @ElasticNestedField
   private List<EsSertifikat> sertifikat = new ArrayList<>();
 
-  @Field(type = FieldType.Nested, store = true, index = true)
+  @ElasticNestedField
   private List<EsForerkort> forerkort = new ArrayList<>();
 
-  @Field(type = FieldType.Nested, store = true, index = true)
+  @ElasticNestedField
   private List<EsSprak> sprak = new ArrayList<>();
 
-  @Field(type = FieldType.Nested, store = true, index = true)
+  @ElasticNestedField
   private List<EsKurs> kurs = new ArrayList<>();
 
-  @Field(type = FieldType.Nested, store = true, index = true)
+  @ElasticNestedField
   private List<EsVerv> verv = new ArrayList<>();
 
-  @Field(type = FieldType.Nested, store = true, index = true)
   private List<EsGeografiJobbonsker> geografiJobbonsker = new ArrayList<>();
 
-  @Field(type = FieldType.Nested, store = true, index = true)
   private List<EsYrkeJobbonsker> yrkeJobbonsker = new ArrayList<>();
 
-  @Field(type = FieldType.Nested, store = true, index = true)
   private List<EsHeltidDeltidJobbonsker> heltidDeltidJobbonsker = new ArrayList<>();
 
-  @Field(type = FieldType.Nested, store = true, index = true)
   private List<EsAnsettelsesforholdJobbonsker> ansettelsesforholdJobbonsker = new ArrayList<>();
 
-  @Field(type = FieldType.Nested, store = true, index = true)
   private List<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonsker = new ArrayList<>();
 
   public EsCv() {
@@ -89,20 +89,20 @@ public class EsCv {
   }
 
   public EsCv(Long personId, String fornavn, String etternavn, Date fodselsdato,
-      String formidlingsgruppekode, String epostadresse, String statsborgerskap,
-      Long arenaId, String beskrivelse) {
+      String formidlingsgruppekode, String epostadresse, String statsborgerskap, Long arenaId,
+      String beskrivelse) {
     this.personId = personId;
     this.fornavn = fornavn;
-  this.etternavn = etternavn;
-  this.fodselsdato = fodselsdato;
-  this.formidlingsgruppekode = formidlingsgruppekode;
-  this.epostadresse = epostadresse;
-  this.statsborgerskap = statsborgerskap;
-  this.arenaId = arenaId;
-  this.beskrivelse = beskrivelse;
-}
+    this.etternavn = etternavn;
+    this.fodselsdato = fodselsdato;
+    this.formidlingsgruppekode = formidlingsgruppekode;
+    this.epostadresse = epostadresse;
+    this.statsborgerskap = statsborgerskap;
+    this.arenaId = arenaId;
+    this.beskrivelse = beskrivelse;
+  }
 
-  //Adderfunksjoner
+  // Adderfunksjoner
 
   public void addUtdanning(EsUtdanning utdanning) {
     this.utdanning.add(utdanning);
@@ -177,7 +177,7 @@ public class EsCv {
   }
 
 
-  //gettere
+  // gettere
   public Long getPersonId() {
     return personId;
   }
@@ -279,67 +279,48 @@ public class EsCv {
       return false;
     }
     EsCv esCv = (EsCv) o;
-    return Objects.equals(fornavn, esCv.fornavn) &&
-        Objects.equals(etternavn, esCv.etternavn) &&
-        Objects.equals(fodselsdato, esCv.fodselsdato) &&
-        Objects.equals(formidlingsgruppekode, esCv.formidlingsgruppekode) &&
-        Objects.equals(epostadresse, esCv.epostadresse) &&
-        Objects.equals(statsborgerskap, esCv.statsborgerskap) &&
-        Objects.equals(arenaId, esCv.arenaId) &&
-        Objects.equals(beskrivelse, esCv.beskrivelse) &&
-        Objects.equals(utdanning, esCv.utdanning) &&
-        Objects.equals(yrkeserfaring, esCv.yrkeserfaring) &&
-        Objects.equals(kompetanse, esCv.kompetanse) &&
-        Objects.equals(annenerfaring, esCv.annenerfaring) &&
-        Objects.equals(sertifikat, esCv.sertifikat) &&
-        Objects.equals(forerkort, esCv.forerkort) &&
-        Objects.equals(sprak, esCv.sprak) &&
-        Objects.equals(kurs, esCv.kurs) &&
-        Objects.equals(verv, esCv.verv) &&
-        Objects.equals(geografiJobbonsker, esCv.geografiJobbonsker) &&
-        Objects.equals(yrkeJobbonsker, esCv.yrkeJobbonsker) &&
-        Objects.equals(heltidDeltidJobbonsker, esCv.heltidDeltidJobbonsker) &&
-        Objects.equals(ansettelsesforholdJobbonsker, esCv.ansettelsesforholdJobbonsker) &&
-        Objects.equals(arbeidstidsordningJobbonsker, esCv.arbeidstidsordningJobbonsker);
+    return Objects.equals(fornavn, esCv.fornavn) && Objects.equals(etternavn, esCv.etternavn)
+        && Objects.equals(fodselsdato, esCv.fodselsdato)
+        && Objects.equals(formidlingsgruppekode, esCv.formidlingsgruppekode)
+        && Objects.equals(epostadresse, esCv.epostadresse)
+        && Objects.equals(statsborgerskap, esCv.statsborgerskap)
+        && Objects.equals(arenaId, esCv.arenaId) && Objects.equals(beskrivelse, esCv.beskrivelse)
+        && Objects.equals(utdanning, esCv.utdanning)
+        && Objects.equals(yrkeserfaring, esCv.yrkeserfaring)
+        && Objects.equals(kompetanse, esCv.kompetanse)
+        && Objects.equals(annenerfaring, esCv.annenerfaring)
+        && Objects.equals(sertifikat, esCv.sertifikat) && Objects.equals(forerkort, esCv.forerkort)
+        && Objects.equals(sprak, esCv.sprak) && Objects.equals(kurs, esCv.kurs)
+        && Objects.equals(verv, esCv.verv)
+        && Objects.equals(geografiJobbonsker, esCv.geografiJobbonsker)
+        && Objects.equals(yrkeJobbonsker, esCv.yrkeJobbonsker)
+        && Objects.equals(heltidDeltidJobbonsker, esCv.heltidDeltidJobbonsker)
+        && Objects.equals(ansettelsesforholdJobbonsker, esCv.ansettelsesforholdJobbonsker)
+        && Objects.equals(arbeidstidsordningJobbonsker, esCv.arbeidstidsordningJobbonsker);
   }
 
   @Override
   public int hashCode() {
 
-    return Objects
-        .hash(fornavn, etternavn, fodselsdato, formidlingsgruppekode, epostadresse, statsborgerskap,
-            arenaId, beskrivelse, utdanning, yrkeserfaring, kompetanse, annenerfaring, sertifikat,
-            forerkort, sprak, kurs, verv, geografiJobbonsker, yrkeJobbonsker,
-            heltidDeltidJobbonsker,
-            ansettelsesforholdJobbonsker, arbeidstidsordningJobbonsker);
+    return Objects.hash(fornavn, etternavn, fodselsdato, formidlingsgruppekode, epostadresse,
+        statsborgerskap, arenaId, beskrivelse, utdanning, yrkeserfaring, kompetanse, annenerfaring,
+        sertifikat, forerkort, sprak, kurs, verv, geografiJobbonsker, yrkeJobbonsker,
+        heltidDeltidJobbonsker, ansettelsesforholdJobbonsker, arbeidstidsordningJobbonsker);
   }
 
 
   @Override
   public String toString() {
-    return "EsCv{" +
-        "fornavn='" + fornavn + '\'' +
-        ", etternavn='" + etternavn + '\'' +
-        ", fodselsdato=" + fodselsdato +
-        ", formidlingsgruppekode='" + formidlingsgruppekode + '\'' +
-        ", epostadresse='" + epostadresse + '\'' +
-        ", statsborgerskap='" + statsborgerskap + '\'' +
-        ", arenaId=" + arenaId +
-        ", beskrivelse='" + beskrivelse + '\'' +
-        ", utdanning=" + utdanning +
-        ", yrkeserfaring=" + yrkeserfaring +
-        ", kompetanse=" + kompetanse +
-        ", annenerfaring=" + annenerfaring +
-        ", sertifikat=" + sertifikat +
-        ", forerkort=" + forerkort +
-        ", sprak=" + sprak +
-        ", kurs=" + kurs +
-        ", verv=" + verv +
-        ", geografiJobbonsker=" + geografiJobbonsker +
-        ", yrkeJobbonsker=" + yrkeJobbonsker +
-        ", heltidDeltidJobbonsker=" + heltidDeltidJobbonsker +
-        ", ansettelsesforholdJobbonsker=" + ansettelsesforholdJobbonsker +
-        ", arbeidstidsordningJobbonsker=" + arbeidstidsordningJobbonsker +
-        '}';
+    return "EsCv{" + "fornavn='" + fornavn + '\'' + ", etternavn='" + etternavn + '\''
+        + ", fodselsdato=" + fodselsdato + ", formidlingsgruppekode='" + formidlingsgruppekode
+        + '\'' + ", epostadresse='" + epostadresse + '\'' + ", statsborgerskap='" + statsborgerskap
+        + '\'' + ", arenaId=" + arenaId + ", beskrivelse='" + beskrivelse + '\'' + ", utdanning="
+        + utdanning + ", yrkeserfaring=" + yrkeserfaring + ", kompetanse=" + kompetanse
+        + ", annenerfaring=" + annenerfaring + ", sertifikat=" + sertifikat + ", forerkort="
+        + forerkort + ", sprak=" + sprak + ", kurs=" + kurs + ", verv=" + verv
+        + ", geografiJobbonsker=" + geografiJobbonsker + ", yrkeJobbonsker=" + yrkeJobbonsker
+        + ", heltidDeltidJobbonsker=" + heltidDeltidJobbonsker + ", ansettelsesforholdJobbonsker="
+        + ansettelsesforholdJobbonsker + ", arbeidstidsordningJobbonsker="
+        + arbeidstidsordningJobbonsker + '}';
   }
 }

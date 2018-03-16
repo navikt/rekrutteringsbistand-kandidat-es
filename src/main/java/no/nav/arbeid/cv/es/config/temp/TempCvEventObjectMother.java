@@ -1,4 +1,4 @@
-package no.nav.arbeid.cv.es.service;
+package no.nav.arbeid.cv.es.config.temp;
 
 import java.util.ArrayList;
 import no.nav.arbeid.cv.events.Annenerfaring;
@@ -18,7 +18,7 @@ import no.nav.arbeid.cv.events.Verv;
 import no.nav.arbeid.cv.events.YrkeJobbonsker;
 import no.nav.arbeid.cv.events.Yrkeserfaring;
 
-public class CvEventObjectMother {
+public class TempCvEventObjectMother {
 
   public static CvEvent giveMeCvEvent() {
 
@@ -44,7 +44,7 @@ public class CvEventObjectMother {
         "greenkeeper",
         "Yrkeserfaring beskrivelse",
         "Yrkeserfaring sokekategori",
-        "Yrkeserfaring styrkkode",
+        "2345.22",
         "Yrkeserfaring styrkkode tekst",
         "Yrkeserfaring nacekode"
     );

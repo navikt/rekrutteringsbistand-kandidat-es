@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import no.nav.arbeid.cv.es.domene.EsAnnenErfaring;
 import no.nav.arbeid.cv.es.domene.EsCv;
 import no.nav.arbeid.cv.es.domene.EsForerkort;
@@ -28,8 +32,6 @@ import no.nav.arbeid.cv.events.Sprak;
 import no.nav.arbeid.cv.events.Utdanning;
 import no.nav.arbeid.cv.events.Verv;
 import no.nav.arbeid.cv.events.Yrkeserfaring;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class EsCvTransformer {
 

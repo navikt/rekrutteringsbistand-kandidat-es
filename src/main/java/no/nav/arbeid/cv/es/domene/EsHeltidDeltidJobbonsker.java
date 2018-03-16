@@ -1,19 +1,23 @@
 package no.nav.arbeid.cv.es.domene;
 
 import java.util.Objects;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import org.frekele.elasticsearch.mapping.annotations.ElasticKeywordField;
+import org.frekele.elasticsearch.mapping.annotations.ElasticTextField;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EsHeltidDeltidJobbonsker {
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticKeywordField
   private String heltidDeltidKode;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticTextField
+  @ElasticKeywordField
   private String heltidDeltidKodeTekst;
 
-  public EsHeltidDeltidJobbonsker() {
-  }
+  public EsHeltidDeltidJobbonsker() {}
 
   public EsHeltidDeltidJobbonsker(String heltidDeltidKode, String heltidDeltidKodeTekst) {
     this.heltidDeltidKode = heltidDeltidKode;
@@ -37,8 +41,8 @@ public class EsHeltidDeltidJobbonsker {
       return false;
     }
     EsHeltidDeltidJobbonsker that = (EsHeltidDeltidJobbonsker) o;
-    return Objects.equals(heltidDeltidKode, that.heltidDeltidKode) &&
-        Objects.equals(heltidDeltidKodeTekst, that.heltidDeltidKodeTekst);
+    return Objects.equals(heltidDeltidKode, that.heltidDeltidKode)
+        && Objects.equals(heltidDeltidKodeTekst, that.heltidDeltidKodeTekst);
   }
 
   @Override
@@ -49,9 +53,7 @@ public class EsHeltidDeltidJobbonsker {
 
   @Override
   public String toString() {
-    return "EsHeltidDeltidJobbonsker{" +
-        "heltidDeltidKode='" + heltidDeltidKode + '\'' +
-        ", heltidDeltidKodeTekst='" + heltidDeltidKodeTekst + '\'' +
-        '}';
+    return "EsHeltidDeltidJobbonsker{" + "heltidDeltidKode='" + heltidDeltidKode + '\''
+        + ", heltidDeltidKodeTekst='" + heltidDeltidKodeTekst + '\'' + '}';
   }
 }

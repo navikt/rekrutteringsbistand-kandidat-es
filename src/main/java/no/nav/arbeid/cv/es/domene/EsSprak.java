@@ -1,26 +1,29 @@
 package no.nav.arbeid.cv.es.domene;
 
 import java.util.Objects;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import org.frekele.elasticsearch.mapping.annotations.ElasticKeywordField;
+import org.frekele.elasticsearch.mapping.annotations.ElasticTextField;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EsSprak {
 
-
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticKeywordField
   private String sprakKode;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticTextField
+  @ElasticKeywordField
   private String sprakKodeTekst;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticTextField
   private String muntlig;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticTextField
   private String skriftlig;
 
-  public EsSprak() {
-  }
+  public EsSprak() {}
 
   public EsSprak(String sprakKode, String sprakKodeTekst, String muntlig, String skriftlig) {
     this.sprakKode = sprakKode;
@@ -54,10 +57,9 @@ public class EsSprak {
       return false;
     }
     EsSprak esSprak = (EsSprak) o;
-    return Objects.equals(sprakKode, esSprak.sprakKode) &&
-        Objects.equals(sprakKodeTekst, esSprak.sprakKodeTekst) &&
-        Objects.equals(muntlig, esSprak.muntlig) &&
-        Objects.equals(skriftlig, esSprak.skriftlig);
+    return Objects.equals(sprakKode, esSprak.sprakKode)
+        && Objects.equals(sprakKodeTekst, esSprak.sprakKodeTekst)
+        && Objects.equals(muntlig, esSprak.muntlig) && Objects.equals(skriftlig, esSprak.skriftlig);
   }
 
   @Override
@@ -68,12 +70,8 @@ public class EsSprak {
 
   @Override
   public String toString() {
-    return "EsSprak{" +
-        "sprakKode='" + sprakKode + '\'' +
-        ", sprakKodeTekst='" + sprakKodeTekst + '\'' +
-        ", muntlig='" + muntlig + '\'' +
-        ", skriftlig='" + skriftlig + '\'' +
-        '}';
+    return "EsSprak{" + "sprakKode='" + sprakKode + '\'' + ", sprakKodeTekst='" + sprakKodeTekst
+        + '\'' + ", muntlig='" + muntlig + '\'' + ", skriftlig='" + skriftlig + '\'' + '}';
   }
 
 }

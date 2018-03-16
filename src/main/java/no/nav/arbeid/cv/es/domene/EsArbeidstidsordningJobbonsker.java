@@ -1,19 +1,23 @@
 package no.nav.arbeid.cv.es.domene;
 
 import java.util.Objects;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import org.frekele.elasticsearch.mapping.annotations.ElasticKeywordField;
+import org.frekele.elasticsearch.mapping.annotations.ElasticTextField;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EsArbeidstidsordningJobbonsker {
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticKeywordField
   private String arbeidstidsordningKode;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticTextField
+  @ElasticKeywordField
   private String arbeidstidsordningKodeTekst;
 
-  public EsArbeidstidsordningJobbonsker() {
-  }
+  public EsArbeidstidsordningJobbonsker() {}
 
   public EsArbeidstidsordningJobbonsker(String arbeidstidsordningKode,
       String arbeidstidsordningKodeTekst) {
@@ -38,8 +42,8 @@ public class EsArbeidstidsordningJobbonsker {
       return false;
     }
     EsArbeidstidsordningJobbonsker that = (EsArbeidstidsordningJobbonsker) o;
-    return Objects.equals(arbeidstidsordningKode, that.arbeidstidsordningKode) &&
-        Objects.equals(arbeidstidsordningKodeTekst, that.arbeidstidsordningKodeTekst);
+    return Objects.equals(arbeidstidsordningKode, that.arbeidstidsordningKode)
+        && Objects.equals(arbeidstidsordningKodeTekst, that.arbeidstidsordningKodeTekst);
   }
 
   @Override
@@ -50,10 +54,8 @@ public class EsArbeidstidsordningJobbonsker {
 
   @Override
   public String toString() {
-    return "EsArbeidstidsordningJobbonsker{" +
-        "arbeidstidsordningKode='" + arbeidstidsordningKode + '\'' +
-        ", arbeidstidsordningKodeTekst='" + arbeidstidsordningKodeTekst + '\'' +
-        '}';
+    return "EsArbeidstidsordningJobbonsker{" + "arbeidstidsordningKode='" + arbeidstidsordningKode
+        + '\'' + ", arbeidstidsordningKodeTekst='" + arbeidstidsordningKodeTekst + '\'' + '}';
   }
 
 }

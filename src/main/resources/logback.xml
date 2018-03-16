@@ -7,6 +7,11 @@
 		</encoder>
 		<!-- <encoder class="net.logstash.logback.encoder.LogstashEncoder" /> -->
 	</appender>
+	
+	<logger name="org.springframework.data.elasticsearch.core.ElasticsearchTemplate" level="trace">
+		<appender-ref ref="stdout_json" />
+	</logger>
+	
 
 	<root level="debug">
 		<appender-ref ref="stdout_json" />

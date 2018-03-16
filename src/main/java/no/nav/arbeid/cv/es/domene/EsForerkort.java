@@ -2,28 +2,33 @@ package no.nav.arbeid.cv.es.domene;
 
 import java.util.Date;
 import java.util.Objects;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import org.frekele.elasticsearch.mapping.annotations.ElasticBooleanField;
+import org.frekele.elasticsearch.mapping.annotations.ElasticDateField;
+import org.frekele.elasticsearch.mapping.annotations.ElasticKeywordField;
+import org.frekele.elasticsearch.mapping.annotations.ElasticTextField;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EsForerkort {
 
-  @Field(type = FieldType.Date, store = true, index = true)
+  @ElasticDateField
   private Date fraDato;
 
-  @Field(type = FieldType.Date, store = true, index = true)
+  @ElasticDateField
   private Date tilDato;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticKeywordField
   private String klasse;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticTextField
   private String utsteder;
 
-  @Field(type = FieldType.Boolean, store = true, index = true)
+  @ElasticBooleanField
   private Boolean disponererKjoretoy;
 
-  public EsForerkort() {
-  }
+  public EsForerkort() {}
 
   public EsForerkort(Date fraDato, Date tilDato, String klasse, String utsteder,
       Boolean disponererKjoretoy) {
@@ -63,11 +68,9 @@ public class EsForerkort {
       return false;
     }
     EsForerkort that = (EsForerkort) o;
-    return Objects.equals(fraDato, that.fraDato) &&
-        Objects.equals(tilDato, that.tilDato) &&
-        Objects.equals(klasse, that.klasse) &&
-        Objects.equals(utsteder, that.utsteder) &&
-        Objects.equals(disponererKjoretoy, that.disponererKjoretoy);
+    return Objects.equals(fraDato, that.fraDato) && Objects.equals(tilDato, that.tilDato)
+        && Objects.equals(klasse, that.klasse) && Objects.equals(utsteder, that.utsteder)
+        && Objects.equals(disponererKjoretoy, that.disponererKjoretoy);
   }
 
   @Override
@@ -78,13 +81,9 @@ public class EsForerkort {
 
   @Override
   public String toString() {
-    return "EsForerkort{" +
-        "fraDato=" + fraDato +
-        ", tilDato=" + tilDato +
-        ", klasse='" + klasse + '\'' +
-        ", utsteder='" + utsteder + '\'' +
-        ", disponererKjoretoy=" + disponererKjoretoy +
-        '}';
+    return "EsForerkort{" + "fraDato=" + fraDato + ", tilDato=" + tilDato + ", klasse='" + klasse
+        + '\'' + ", utsteder='" + utsteder + '\'' + ", disponererKjoretoy=" + disponererKjoretoy
+        + '}';
   }
 
 }

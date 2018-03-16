@@ -2,22 +2,25 @@ package no.nav.arbeid.cv.es.domene;
 
 import java.util.Date;
 import java.util.Objects;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import org.frekele.elasticsearch.mapping.annotations.ElasticDateField;
+import org.frekele.elasticsearch.mapping.annotations.ElasticTextField;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EsAnnenErfaring {
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticDateField
   private Date fraDato;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticDateField
   private Date tilDato;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticTextField
   private String beskrivelse;
 
-  public EsAnnenErfaring() {
-  }
+  public EsAnnenErfaring() {}
 
   public EsAnnenErfaring(Date fraDato, Date tilDato, String beskrivelse) {
     this.fraDato = fraDato;
@@ -46,9 +49,8 @@ public class EsAnnenErfaring {
       return false;
     }
     EsAnnenErfaring that = (EsAnnenErfaring) o;
-    return Objects.equals(fraDato, that.fraDato) &&
-        Objects.equals(tilDato, that.tilDato) &&
-        Objects.equals(beskrivelse, that.beskrivelse);
+    return Objects.equals(fraDato, that.fraDato) && Objects.equals(tilDato, that.tilDato)
+        && Objects.equals(beskrivelse, that.beskrivelse);
   }
 
   @Override
@@ -59,11 +61,8 @@ public class EsAnnenErfaring {
 
   @Override
   public String toString() {
-    return "EsAnnenErfaring{" +
-        "fraDato=" + fraDato +
-        ", tilDato=" + tilDato +
-        ", beskrivelse='" + beskrivelse + '\'' +
-        '}';
+    return "EsAnnenErfaring{" + "fraDato=" + fraDato + ", tilDato=" + tilDato + ", beskrivelse='"
+        + beskrivelse + '\'' + '}';
   }
 
 }

@@ -2,30 +2,42 @@ package no.nav.arbeid.cv.es.domene;
 
 import java.util.Date;
 import java.util.Objects;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import org.frekele.elasticsearch.mapping.annotations.ElasticDateField;
+import org.frekele.elasticsearch.mapping.annotations.ElasticKeywordField;
+import org.frekele.elasticsearch.mapping.annotations.ElasticTextField;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EsUtdanning {
 
-  @Field(type = FieldType.Date, store = true, index = true)
+  @ElasticDateField
   private Date fraDato;
-  @Field(type = FieldType.Date, store = true, index = true)
+
+  @ElasticDateField
   private Date tilDato;
-  @Field(type = FieldType.text, store = true, index = true)
+
+  @ElasticTextField
   private String grad;
-  @Field(type = FieldType.text, store = true, index = true)
+
+  @ElasticTextField
   private String studiepoeng;
-  @Field(type = FieldType.text, store = true, index = true)
+
+  @ElasticTextField
   private String utdannelsessted;
-  @Field(type = FieldType.text, store = true, index = true)
+
+  @ElasticTextField
   private String geografiskSted;
-  @Field(type = FieldType.text, store = true, index = true)
+
+  @ElasticKeywordField
   private String nusKode;
-  @Field(type = FieldType.text, store = true, index = true)
+
+  @ElasticTextField
+  @ElasticKeywordField
   private String nusKodeTekst;
 
-  public EsUtdanning() {
-  }
+  public EsUtdanning() {}
 
   public EsUtdanning(Date fraDato, Date tilDato, String grad, String studiepoeng,
       String utdannelsessted, String geografiskSted, String nusKode, String nusKodeTekst) {
@@ -80,36 +92,26 @@ public class EsUtdanning {
       return false;
     }
     EsUtdanning that = (EsUtdanning) o;
-    return Objects.equals(fraDato, that.fraDato) &&
-        Objects.equals(tilDato, that.tilDato) &&
-        Objects.equals(grad, that.grad) &&
-        Objects.equals(studiepoeng, that.studiepoeng) &&
-        Objects.equals(utdannelsessted, that.utdannelsessted) &&
-        Objects.equals(geografiskSted, that.geografiskSted) &&
-        Objects.equals(nusKode, that.nusKode) &&
-        Objects.equals(nusKodeTekst, that.nusKodeTekst);
+    return Objects.equals(fraDato, that.fraDato) && Objects.equals(tilDato, that.tilDato)
+        && Objects.equals(grad, that.grad) && Objects.equals(studiepoeng, that.studiepoeng)
+        && Objects.equals(utdannelsessted, that.utdannelsessted)
+        && Objects.equals(geografiskSted, that.geografiskSted)
+        && Objects.equals(nusKode, that.nusKode) && Objects.equals(nusKodeTekst, that.nusKodeTekst);
   }
 
   @Override
   public int hashCode() {
 
-    return Objects
-        .hash(fraDato, tilDato, grad, studiepoeng, utdannelsessted, geografiskSted, nusKode,
-            nusKodeTekst);
+    return Objects.hash(fraDato, tilDato, grad, studiepoeng, utdannelsessted, geografiskSted,
+        nusKode, nusKodeTekst);
   }
 
   @Override
   public String toString() {
-    return "EsUtdanning{" +
-        "fraDato=" + fraDato +
-        ", tilDato=" + tilDato +
-        ", grad='" + grad + '\'' +
-        ", studiepoeng='" + studiepoeng + '\'' +
-        ", utdannelsessted='" + utdannelsessted + '\'' +
-        ", geografiskSted='" + geografiskSted + '\'' +
-        ", nusKode='" + nusKode + '\'' +
-        ", nusKodeTekst='" + nusKodeTekst + '\'' +
-        '}';
+    return "EsUtdanning{" + "fraDato=" + fraDato + ", tilDato=" + tilDato + ", grad='" + grad + '\''
+        + ", studiepoeng='" + studiepoeng + '\'' + ", utdannelsessted='" + utdannelsessted + '\''
+        + ", geografiskSted='" + geografiskSted + '\'' + ", nusKode='" + nusKode + '\''
+        + ", nusKodeTekst='" + nusKodeTekst + '\'' + '}';
   }
 
 }

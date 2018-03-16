@@ -1,50 +1,54 @@
 package no.nav.arbeid.cv.es.domene;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import java.util.Date;
 import java.util.Objects;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import org.frekele.elasticsearch.mapping.annotations.ElasticDateField;
+import org.frekele.elasticsearch.mapping.annotations.ElasticKeywordField;
+import org.frekele.elasticsearch.mapping.annotations.ElasticTextField;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EsYrkeserfaring {
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticDateField
   private Date fraDato;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticDateField
   private Date tilDato;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticTextField
   private String arbeidsgiver;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticKeywordField
   private String organisasjonsnummer;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticTextField
   private String stillingstittel;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticTextField
   private String beskrivelse;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticTextField
+  @ElasticKeywordField
   private String sokekategori;
 
-  @Field(type = FieldType.keyword, store = true, index = true)
+  @ElasticKeywordField
   private String styrkKode;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticTextField
+  @ElasticKeywordField
   private String styrkKodeTekst;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticKeywordField
   private String naceKode;
 
-  public EsYrkeserfaring() {
-  }
+  public EsYrkeserfaring() {}
 
   public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver,
-      String organisasjonsnummer, String stillingstittel, String beskrivelse,
-      String sokekategori, String styrkKode, String styrkKodeTekst, String naceKode) {
+      String organisasjonsnummer, String stillingstittel, String beskrivelse, String sokekategori,
+      String styrkKode, String styrkKodeTekst, String naceKode) {
     this.fraDato = fraDato;
     this.tilDato = tilDato;
     this.arbeidsgiver = arbeidsgiver;
@@ -106,40 +110,31 @@ public class EsYrkeserfaring {
       return false;
     }
     EsYrkeserfaring that = (EsYrkeserfaring) o;
-    return Objects.equals(fraDato, that.fraDato) &&
-        Objects.equals(tilDato, that.tilDato) &&
-        Objects.equals(arbeidsgiver, that.arbeidsgiver) &&
-        Objects.equals(organisasjonsnummer, that.organisasjonsnummer) &&
-        Objects.equals(stillingstittel, that.stillingstittel) &&
-        Objects.equals(beskrivelse, that.beskrivelse) &&
-        Objects.equals(sokekategori, that.sokekategori) &&
-        Objects.equals(styrkKode, that.styrkKode) &&
-        Objects.equals(styrkKodeTekst, that.styrkKodeTekst) &&
-        Objects.equals(naceKode, that.naceKode);
+    return Objects.equals(fraDato, that.fraDato) && Objects.equals(tilDato, that.tilDato)
+        && Objects.equals(arbeidsgiver, that.arbeidsgiver)
+        && Objects.equals(organisasjonsnummer, that.organisasjonsnummer)
+        && Objects.equals(stillingstittel, that.stillingstittel)
+        && Objects.equals(beskrivelse, that.beskrivelse)
+        && Objects.equals(sokekategori, that.sokekategori)
+        && Objects.equals(styrkKode, that.styrkKode)
+        && Objects.equals(styrkKodeTekst, that.styrkKodeTekst)
+        && Objects.equals(naceKode, that.naceKode);
   }
 
   @Override
   public int hashCode() {
 
-    return Objects
-        .hash(fraDato, tilDato, arbeidsgiver, organisasjonsnummer, stillingstittel, beskrivelse,
-            sokekategori, styrkKode, styrkKodeTekst, naceKode);
+    return Objects.hash(fraDato, tilDato, arbeidsgiver, organisasjonsnummer, stillingstittel,
+        beskrivelse, sokekategori, styrkKode, styrkKodeTekst, naceKode);
   }
 
   @Override
   public String toString() {
-    return "EsYrkeserfaring{" +
-        "fraDato=" + fraDato +
-        ", tilDato=" + tilDato +
-        ", arbeidsgiver='" + arbeidsgiver + '\'' +
-        ", organisasjonsnummer='" + organisasjonsnummer + '\'' +
-        ", stillingstittel='" + stillingstittel + '\'' +
-        ", beskrivelse='" + beskrivelse + '\'' +
-        ", sokekategori='" + sokekategori + '\'' +
-        ", styrkKode='" + styrkKode + '\'' +
-        ", styrkKodeTekst='" + styrkKodeTekst + '\'' +
-        ", naceKode='" + naceKode + '\'' +
-        '}';
+    return "EsYrkeserfaring{" + "fraDato=" + fraDato + ", tilDato=" + tilDato + ", arbeidsgiver='"
+        + arbeidsgiver + '\'' + ", organisasjonsnummer='" + organisasjonsnummer + '\''
+        + ", stillingstittel='" + stillingstittel + '\'' + ", beskrivelse='" + beskrivelse + '\''
+        + ", sokekategori='" + sokekategori + '\'' + ", styrkKode='" + styrkKode + '\''
+        + ", styrkKodeTekst='" + styrkKodeTekst + '\'' + ", naceKode='" + naceKode + '\'' + '}';
   }
 
 }

@@ -1,19 +1,23 @@
 package no.nav.arbeid.cv.es.domene;
 
 import java.util.Objects;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import org.frekele.elasticsearch.mapping.annotations.ElasticKeywordField;
+import org.frekele.elasticsearch.mapping.annotations.ElasticTextField;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EsGeografiJobbonsker {
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticTextField
+  @ElasticKeywordField
   private String geografiKodeTekst;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticKeywordField
   private String geografiKode;
 
-  public EsGeografiJobbonsker() {
-  }
+  public EsGeografiJobbonsker() {}
 
   public EsGeografiJobbonsker(String geografiKodeTekst, String geografiKode) {
     this.geografiKodeTekst = geografiKodeTekst;
@@ -37,13 +41,12 @@ public class EsGeografiJobbonsker {
       return false;
     }
     EsGeografiJobbonsker that = (EsGeografiJobbonsker) o;
-    return Objects.equals(geografiKodeTekst, that.geografiKodeTekst) &&
-        Objects.equals(geografiKode, that.geografiKode);
+    return Objects.equals(geografiKodeTekst, that.geografiKodeTekst)
+        && Objects.equals(geografiKode, that.geografiKode);
   }
 
   @Override
   public int hashCode() {
-
     return Objects.hash(geografiKodeTekst, geografiKode);
   }
 

@@ -2,31 +2,36 @@ package no.nav.arbeid.cv.es.domene;
 
 import java.util.Date;
 import java.util.Objects;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import org.frekele.elasticsearch.mapping.annotations.ElasticDateField;
+import org.frekele.elasticsearch.mapping.annotations.ElasticKeywordField;
+import org.frekele.elasticsearch.mapping.annotations.ElasticTextField;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EsSertifikat {
 
-  @Field(type = FieldType.Date, store = true, index = true)
+  @ElasticDateField
   private Date fraDato;
 
-  @Field(type = FieldType.Date, store = true, index = true)
+  @ElasticDateField
   private Date tilDato;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticKeywordField
   private String sertifikatKode;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticTextField
+  @ElasticKeywordField
   private String sertifikatKodeTekst;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticTextField
   private String utsteder;
 
-  public EsSertifikat() {
-  }
+  public EsSertifikat() {}
 
-  public EsSertifikat(Date fraDato, Date tilDato, String sertifikatKode,
-      String sertifikatKodeTekst, String utsteder) {
+  public EsSertifikat(Date fraDato, Date tilDato, String sertifikatKode, String sertifikatKodeTekst,
+      String utsteder) {
     this.fraDato = fraDato;
     this.tilDato = tilDato;
     this.sertifikatKode = sertifikatKode;
@@ -63,11 +68,10 @@ public class EsSertifikat {
       return false;
     }
     EsSertifikat that = (EsSertifikat) o;
-    return Objects.equals(fraDato, that.fraDato) &&
-        Objects.equals(tilDato, that.tilDato) &&
-        Objects.equals(sertifikatKode, that.sertifikatKode) &&
-        Objects.equals(sertifikatKodeTekst, that.sertifikatKodeTekst) &&
-        Objects.equals(utsteder, that.utsteder);
+    return Objects.equals(fraDato, that.fraDato) && Objects.equals(tilDato, that.tilDato)
+        && Objects.equals(sertifikatKode, that.sertifikatKode)
+        && Objects.equals(sertifikatKodeTekst, that.sertifikatKodeTekst)
+        && Objects.equals(utsteder, that.utsteder);
   }
 
   @Override
@@ -78,13 +82,9 @@ public class EsSertifikat {
 
   @Override
   public String toString() {
-    return "EsSertifikat{" +
-        "fraDato=" + fraDato +
-        ", tilDato=" + tilDato +
-        ", sertifikatKode='" + sertifikatKode + '\'' +
-        ", sertifikatKodeTekst='" + sertifikatKodeTekst + '\'' +
-        ", utsteder='" + utsteder + '\'' +
-        '}';
+    return "EsSertifikat{" + "fraDato=" + fraDato + ", tilDato=" + tilDato + ", sertifikatKode='"
+        + sertifikatKode + '\'' + ", sertifikatKodeTekst='" + sertifikatKodeTekst + '\''
+        + ", utsteder='" + utsteder + '\'' + '}';
   }
 
 }

@@ -9,13 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class StatusController {
 
-//  @Autowired
-//  private KafkaTemplate<String, Cv> template;
-
   @RequestMapping(method = {RequestMethod.GET}, value = "/rest/internal/isAlive")
   public ResponseEntity<String> isAlive() {
-
-    // template.send("mytopic", new Cv(1L, "Helsesjekk er kjørt!"));
 
     return new ResponseEntity<String>("OK", HttpStatus.OK);
   }

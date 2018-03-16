@@ -1,36 +1,40 @@
 package no.nav.arbeid.cv.es.domene;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.Objects;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import org.frekele.elasticsearch.mapping.annotations.ElasticDateField;
+import org.frekele.elasticsearch.mapping.annotations.ElasticIntegerField;
+import org.frekele.elasticsearch.mapping.annotations.ElasticKeywordField;
+import org.frekele.elasticsearch.mapping.annotations.ElasticTextField;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EsKurs {
 
-  @Field(type = FieldType.Date, store = true, index = true)
+  @ElasticDateField
   private Date fraDato;
 
-  @Field(type = FieldType.Date, store = true, index = true)
+  @ElasticDateField
   private Date tilDato;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticTextField
   private String tittel;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticTextField
   private String arrangor;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticKeywordField
   private String omfangEnhet;
 
-  @Field(type = FieldType.text, store = true, index = true)
+  @ElasticIntegerField
   private Integer omfangVerdi;
 
-  public EsKurs() {
-  }
+  public EsKurs() {}
 
-  public EsKurs(Date fraDato, Date tilDato, String tittel, String arrangor,
-      String omfangEnhet, Integer omfangVerdi) {
+  public EsKurs(Date fraDato, Date tilDato, String tittel, String arrangor, String omfangEnhet,
+      Integer omfangVerdi) {
     this.fraDato = fraDato;
     this.tilDato = tilDato;
     this.tittel = tittel;
@@ -39,12 +43,10 @@ public class EsKurs {
     this.omfangVerdi = omfangVerdi;
   }
 
-  @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
   public Date getFraDato() {
     return fraDato;
   }
 
-  @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
   public Date getTilDato() {
     return tilDato;
   }
@@ -74,12 +76,10 @@ public class EsKurs {
       return false;
     }
     EsKurs esKurs = (EsKurs) o;
-    return Objects.equals(fraDato, esKurs.fraDato) &&
-        Objects.equals(tilDato, esKurs.tilDato) &&
-        Objects.equals(tittel, esKurs.tittel) &&
-        Objects.equals(arrangor, esKurs.arrangor) &&
-        Objects.equals(omfangEnhet, esKurs.omfangEnhet) &&
-        Objects.equals(omfangVerdi, esKurs.omfangVerdi);
+    return Objects.equals(fraDato, esKurs.fraDato) && Objects.equals(tilDato, esKurs.tilDato)
+        && Objects.equals(tittel, esKurs.tittel) && Objects.equals(arrangor, esKurs.arrangor)
+        && Objects.equals(omfangEnhet, esKurs.omfangEnhet)
+        && Objects.equals(omfangVerdi, esKurs.omfangVerdi);
   }
 
   @Override
@@ -90,14 +90,9 @@ public class EsKurs {
 
   @Override
   public String toString() {
-    return "EsKurs{" +
-        "fraDato=" + fraDato +
-        ", tilDato=" + tilDato +
-        ", tittel='" + tittel + '\'' +
-        ", arrangor='" + arrangor + '\'' +
-        ", omfangEnhet='" + omfangEnhet + '\'' +
-        ", omfangVerdi='" + omfangVerdi + '\'' +
-        '}';
+    return "EsKurs{" + "fraDato=" + fraDato + ", tilDato=" + tilDato + ", tittel='" + tittel + '\''
+        + ", arrangor='" + arrangor + '\'' + ", omfangEnhet='" + omfangEnhet + '\''
+        + ", omfangVerdi='" + omfangVerdi + '\'' + '}';
   }
 
 }

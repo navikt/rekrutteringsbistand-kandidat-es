@@ -2,7 +2,8 @@
 version: '3'
 services:
   elastic_search:
-    image: docker.adeo.no:5000/pires/docker-elasticsearch:5.6.0
+    #image: docker.adeo.no:5000/pires/docker-elasticsearch:6.0.1
+    image: ssense/elasticsearch:latest
     volumes:
       - $PWD/target/data:/data
     privileged: true
