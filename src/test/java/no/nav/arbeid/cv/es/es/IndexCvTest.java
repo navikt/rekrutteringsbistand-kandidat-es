@@ -5,6 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.http.HttpHost;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +20,7 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.boot.test.autoconfigure.OverrideAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -58,10 +62,10 @@ public class IndexCvTest {
   @Import({ServiceConfig.class})
   static class TestConfig {
 
-    // @Bean
-    // public RestHighLevelClient restHighLevelClient() {
-    // return new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9200, "http")));
-    // }
+    @Bean
+    public RestHighLevelClient restHighLevelClient() {
+      return new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9200, "http")));
+    }
   }
 
 
