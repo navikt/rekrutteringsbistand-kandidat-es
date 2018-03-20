@@ -19,7 +19,7 @@ import no.nav.arbeid.cv.es.client.EsCvClient;
 import no.nav.arbeid.cv.es.domene.EsCv;
 
 @RestController
-@RequestMapping(path = "/rest/search/cv", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/rest/kandidatsok", produces = MediaType.APPLICATION_JSON_VALUE)
 public class SearchController {
 
   @Autowired
@@ -36,7 +36,7 @@ public class SearchController {
     return new ResponseEntity<>(resources, HttpStatus.OK);
   }
 
-  @RequestMapping(path = "whatnot", method = RequestMethod.GET)
+  @RequestMapping(path = "sok", method = RequestMethod.GET)
   public HttpEntity<Resources<EsCvResource>> hentCverMedArbeidserfaring(
       @RequestParam(name = "yrkeserfaring", required = false) String yrkeserfaring,
       @RequestParam(name = "kompetanse", required = false) String kompetanse) throws IOException {
