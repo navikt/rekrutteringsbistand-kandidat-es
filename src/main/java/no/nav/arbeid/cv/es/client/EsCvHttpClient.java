@@ -110,7 +110,6 @@ public class EsCvHttpClient implements EsCvClient {
     SearchRequest searchRequest = new SearchRequest(CV_INDEX);
     searchRequest.types(CV_TYPE);
     SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-    // SuggestionBuilder termSuggestionBuilder =
     CompletionSuggestionBuilder suggestionBuilder = SuggestBuilders
         .completionSuggestion("kompetanse.navn.completion").text(prefix).skipDuplicates(true);
 
