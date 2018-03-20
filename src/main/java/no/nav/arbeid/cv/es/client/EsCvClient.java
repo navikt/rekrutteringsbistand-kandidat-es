@@ -18,4 +18,6 @@ public interface EsCvClient {
   void deleteIndex() throws IOException;
 
   List<EsCv> findByEtternavnAndUtdanningNusKodeTekst(String etternavn, String utdanningNusKodeTekst) throws IOException;
+
+  List<String> typeAheadKompetanse(String prefix) throws IOException;
 }

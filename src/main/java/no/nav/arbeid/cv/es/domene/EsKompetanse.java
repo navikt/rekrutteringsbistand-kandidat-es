@@ -2,6 +2,7 @@ package no.nav.arbeid.cv.es.domene;
 
 import java.util.Objects;
 
+import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
 import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
 import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 
@@ -12,6 +13,7 @@ public class EsKompetanse {
 
   @ElasticTextField
   @ElasticKeywordField
+  @ElasticCompletionField
   private String navn;
 
   public EsKompetanse() {}

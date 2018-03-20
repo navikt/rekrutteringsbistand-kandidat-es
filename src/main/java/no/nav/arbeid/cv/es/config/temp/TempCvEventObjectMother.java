@@ -52,9 +52,16 @@ public class TempCvEventObjectMother {
     ArrayList<Yrkeserfaring> yrkeserfaringsListe = new ArrayList<>();
     yrkeserfaringsListe.add(yrkeserfaring);
 
-    Kompetanse kompetanse = new Kompetanse("navn kompetanse");
     ArrayList<Kompetanse> kompetanseList = new ArrayList<>();
-    kompetanseList.add(kompetanse);
+    kompetanseList.add(new Kompetanse("navn kompetanse"));
+    kompetanseList.add(new Kompetanse("navn kompetanse2"));
+    kompetanseList.add(new Kompetanse("min kompetanse"));
+    kompetanseList.add(new Kompetanse("min andre kompetanse"));
+    kompetanseList.add(new Kompetanse("min andre kompetanse"));
+    kompetanseList.add(new Kompetanse("mindre biter"));
+    kompetanseList.add(new Kompetanse("minstemål"));
+    kompetanseList.add(new Kompetanse("minst er best"));
+    kompetanseList.add(new Kompetanse("minstemann"));
 
     Annenerfaring annenerfaring = new Annenerfaring(
         "2000-01-15",

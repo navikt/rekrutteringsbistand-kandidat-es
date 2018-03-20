@@ -1,6 +1,7 @@
 package no.nav.arbeid.cv.es.client;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -36,6 +37,11 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.ScoreSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
+import org.elasticsearch.search.suggest.SuggestBuilder;
+import org.elasticsearch.search.suggest.SuggestBuilders;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestion.Entry.Option;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,6 +105,28 @@ public class EsCvHttpClient implements EsCvClient {
   }
 
   @Override
+  public List<String> typeAheadKompetanse(String prefix) throws IOException {
+
+    SearchRequest searchRequest = new SearchRequest(CV_INDEX);
+    searchRequest.types(CV_TYPE);
+    SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+    // SuggestionBuilder termSuggestionBuilder =
+    CompletionSuggestionBuilder suggestionBuilder = SuggestBuilders
+        .completionSuggestion("kompetanse.navn.completion").text(prefix).skipDuplicates(true);
+
+    SuggestBuilder suggestBuilder = new SuggestBuilder();
+    suggestBuilder.addSuggestion("komp-suggest", suggestionBuilder);
+    searchSourceBuilder.suggest(suggestBuilder);
+
+    searchRequest.source(searchSourceBuilder);
+    SearchResponse searchResponse = client.search(searchRequest);
+    LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
+    CompletionSuggestion compSuggestion = searchResponse.getSuggest().getSuggestion("komp-suggest");
+    return compSuggestion.getOptions().stream().map(option -> option.getText().string())
+        .collect(Collectors.toList());
+  }
+
+  @Override
   public List<EsCv> findByStillingstittelAndKompetanse(String stillingstittel, String kompetanse)
       throws IOException {
     AbstractQueryBuilder<?> queryBuilder = null;
@@ -120,7 +148,7 @@ public class EsCvHttpClient implements EsCvClient {
         boolQueryBuilder.must(kompetanseQueryBuilder);
         System.out.println("ADDING kompetanse");
       }
-      queryBuilder  = boolQueryBuilder;
+      queryBuilder = boolQueryBuilder;
     }
 
     SearchResponse searchResponse = search(queryBuilder, 0, 1000);

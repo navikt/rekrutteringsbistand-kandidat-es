@@ -25,9 +25,20 @@ public class SearchController {
   @Autowired
   private EsCvClient client;
 
+  @RequestMapping(path = "typeahead", method = RequestMethod.GET)
+  public HttpEntity<Resources<StringResource>> typeAheadKompetanse(
+      @RequestParam(name = "komp", required = true) String komp) throws IOException {
+
+    List<String> list = client.typeAheadKompetanse(komp);
+    List<StringResource> resourceList =
+        list.stream().map(str -> new StringResource(str)).collect(Collectors.toList());
+    Resources<StringResource> resources = new Resources<>(resourceList);
+    return new ResponseEntity<>(resources, HttpStatus.OK);
+  }
+
   @RequestMapping(path = "whatnot", method = RequestMethod.GET)
   public HttpEntity<Resources<EsCvResource>> hentCverMedArbeidserfaring(
-      @RequestParam(name = "yrkeserfaring", required = false) String yrkeserfaring, 
+      @RequestParam(name = "yrkeserfaring", required = false) String yrkeserfaring,
       @RequestParam(name = "kompetanse", required = false) String kompetanse) throws IOException {
 
     List<EsCv> list = client.findByStillingstittelAndKompetanse(yrkeserfaring, kompetanse);
