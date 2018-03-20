@@ -6,12 +6,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import org.frekele.elasticsearch.mapping.annotations.ElasticDateField;
-import org.frekele.elasticsearch.mapping.annotations.ElasticDocument;
-import org.frekele.elasticsearch.mapping.annotations.ElasticKeywordField;
-import org.frekele.elasticsearch.mapping.annotations.ElasticLongField;
-import org.frekele.elasticsearch.mapping.annotations.ElasticNestedField;
-import org.frekele.elasticsearch.mapping.annotations.ElasticTextField;
+import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
+import no.nav.elasticsearch.mapping.annotations.ElasticDocument;
+import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
+import no.nav.elasticsearch.mapping.annotations.ElasticLongField;
+import no.nav.elasticsearch.mapping.annotations.ElasticNestedField;
+import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

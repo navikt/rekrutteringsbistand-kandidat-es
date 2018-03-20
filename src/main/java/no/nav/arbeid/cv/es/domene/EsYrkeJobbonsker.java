@@ -2,8 +2,8 @@ package no.nav.arbeid.cv.es.domene;
 
 import java.util.Objects;
 
-import org.frekele.elasticsearch.mapping.annotations.ElasticKeywordField;
-import org.frekele.elasticsearch.mapping.annotations.ElasticTextField;
+import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
+import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

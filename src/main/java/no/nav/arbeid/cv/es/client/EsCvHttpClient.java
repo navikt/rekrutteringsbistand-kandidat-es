@@ -36,9 +36,9 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.ScoreSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
-import org.frekele.elasticsearch.mapping.MappingBuilder;
-import org.frekele.elasticsearch.mapping.MappingBuilderImpl;
-import org.frekele.elasticsearch.mapping.ObjectMapping;
+import no.nav.elasticsearch.mapping.MappingBuilder;
+import no.nav.elasticsearch.mapping.MappingBuilderImpl;
+import no.nav.elasticsearch.mapping.ObjectMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

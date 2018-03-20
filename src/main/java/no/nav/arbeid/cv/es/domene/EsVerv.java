@@ -3,8 +3,8 @@ package no.nav.arbeid.cv.es.domene;
 import java.util.Date;
 import java.util.Objects;
 
-import org.frekele.elasticsearch.mapping.annotations.ElasticDateField;
-import org.frekele.elasticsearch.mapping.annotations.ElasticTextField;
+import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
+import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
