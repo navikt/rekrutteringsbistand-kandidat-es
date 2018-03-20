@@ -9,10 +9,14 @@ import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 
 import javax.annotation.PostConstruct;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -80,22 +84,22 @@ public class ServiceConfig {
               @Override
               public HttpAsyncClientBuilder customizeHttpClient(
                   HttpAsyncClientBuilder httpClientBuilder) {
-                
+
                 final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
                 credentialsProvider.setCredentials(AuthScope.ANY,
                     new UsernamePasswordCredentials(props.getUser(), props.getPassword()));
-                
+
                 httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
                 return httpClientBuilder.setSSLContext(sslContext);
               }
             });
         return new RestHighLevelClient(builder);
-        
+
       } else {
         RestClientBuilder builder = RestClient
             .builder(new HttpHost(props.getHostname(), props.getPort(), props.getScheme()));
         return new RestHighLevelClient(builder);
-        
+
       }
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -104,6 +108,11 @@ public class ServiceConfig {
 
   private SSLContext createSslContext() throws NoSuchAlgorithmException, KeyStoreException,
       KeyManagementException, IOException, CertificateException {
+    if (true) {
+      X509TrustManager trustAllX509Manager = mockX509TrustManager();
+      SSLContext sslContext = getSslContext(trustAllX509Manager);
+      return sslContext;
+    }
     if (props.getTrustStoreFilename() != null) {
 
       // Path keyStorePath = Paths.get(props.getKeyStoreFilename());
@@ -126,12 +135,37 @@ public class ServiceConfig {
       return SSLContexts.createDefault();
     }
   }
-  
+
+  private SSLContext getSslContext(X509TrustManager trustAllX509Manager)
+      throws NoSuchAlgorithmException, KeyManagementException {
+    SSLContext sc = SSLContext.getInstance("SSL");
+    sc.init(null, new TrustManager[] {trustAllX509Manager}, new SecureRandom());
+    return sc;
+  }
+
+  private X509TrustManager mockX509TrustManager() {
+    return new X509TrustManager() {
+      @Override
+      public void checkClientTrusted(X509Certificate[] x509Certificates, String s)
+          throws CertificateException {}
+
+      @Override
+      public void checkServerTrusted(X509Certificate[] x509Certificates, String s)
+          throws CertificateException {}
+
+      @Override
+      public X509Certificate[] getAcceptedIssuers() {
+        return new X509Certificate[0];
+      }
+    };
+  }
+
   @PostConstruct
   public void initIndex() throws IOException {
     try {
       esCvClient().deleteIndex();
-    } catch( Exception e ) {}
+    } catch (Exception e) {
+    }
     esCvClient().createIndex();
     esCvClient().index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent()));
   }
