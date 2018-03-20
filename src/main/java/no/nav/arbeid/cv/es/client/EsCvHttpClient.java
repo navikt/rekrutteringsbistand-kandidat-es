@@ -23,7 +23,7 @@ import org.elasticsearch.index.query.AbstractQueryBuilder;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.NestedQueryBuilder;
-import org.elasticsearch.index.query.TermQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
@@ -36,15 +36,15 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.ScoreSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
-import no.nav.elasticsearch.mapping.MappingBuilder;
-import no.nav.elasticsearch.mapping.MappingBuilderImpl;
-import no.nav.elasticsearch.mapping.ObjectMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import no.nav.arbeid.cv.es.domene.EsCv;
+import no.nav.elasticsearch.mapping.MappingBuilder;
+import no.nav.elasticsearch.mapping.MappingBuilderImpl;
+import no.nav.elasticsearch.mapping.ObjectMapping;
 
 public class EsCvHttpClient implements EsCvClient {
 
@@ -99,12 +99,31 @@ public class EsCvHttpClient implements EsCvClient {
   }
 
   @Override
-  public List<EsCv> findByYrkeserfaringStyrkKode(String styrk) throws IOException {
+  public List<EsCv> findByStillingstittelAndKompetanse(String stillingstittel, String kompetanse)
+      throws IOException {
+    AbstractQueryBuilder<?> queryBuilder = null;
+    if (stillingstittel == null && kompetanse == null) {
+      System.out.println("MATCH ALL!");
+      queryBuilder = QueryBuilders.matchAllQuery();
+    } else {
+      BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+      if (stillingstittel != null) {
+        NestedQueryBuilder yrkeserfaringQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
+            QueryBuilders.matchQuery("yrkeserfaring.stillingstittel", stillingstittel),
+            ScoreMode.None);
+        boolQueryBuilder.must(yrkeserfaringQueryBuilder);
+        System.out.println("ADDING yrkeserfaring");
+      }
+      if (kompetanse != null) {
+        NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
+            QueryBuilders.matchQuery("kompetanse.navn", kompetanse), ScoreMode.None);
+        boolQueryBuilder.must(kompetanseQueryBuilder);
+        System.out.println("ADDING kompetanse");
+      }
+      queryBuilder  = boolQueryBuilder;
+    }
 
-    NestedQueryBuilder yrkeserfaringQueryBuilder = new NestedQueryBuilder("yrkeserfaring",
-        new TermQueryBuilder("yrkeserfaring.styrkKode", styrk), ScoreMode.None);
-
-    SearchResponse searchResponse = search(yrkeserfaringQueryBuilder, 0, 1000);
+    SearchResponse searchResponse = search(queryBuilder, 0, 1000);
     return toList(searchResponse);
   }
 

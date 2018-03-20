@@ -7,7 +7,7 @@ import no.nav.arbeid.cv.es.domene.EsCv;
 
 public interface EsCvClient {
 
-  List<EsCv> findByYrkeserfaringStyrkKode(String styrk) throws IOException;
+  List<EsCv> findByStillingstittelAndKompetanse(String stillingstittel, String kompetanse) throws IOException;
 
   List<EsCv> findByYrkeserfaringStyrkKodeTekst(String styrkBeskrivelse) throws IOException;
 

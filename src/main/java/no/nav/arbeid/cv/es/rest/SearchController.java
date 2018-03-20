@@ -27,9 +27,10 @@ public class SearchController {
 
   @RequestMapping(path = "whatnot", method = RequestMethod.GET)
   public HttpEntity<Resources<EsCvResource>> hentCverMedArbeidserfaring(
-      @RequestParam("styrk") String styrk) throws IOException {
+      @RequestParam(name = "yrkeserfaring", required = false) String yrkeserfaring, 
+      @RequestParam(name = "kompetanse", required = false) String kompetanse) throws IOException {
 
-    List<EsCv> list = client.findByYrkeserfaringStyrkKode(styrk);
+    List<EsCv> list = client.findByStillingstittelAndKompetanse(yrkeserfaring, kompetanse);
     List<EsCvResource> resourceList =
         list.stream().map(cv -> new EsCvResource(cv)).collect(Collectors.toList());
     Resources<EsCvResource> resources = new Resources<>(resourceList);
