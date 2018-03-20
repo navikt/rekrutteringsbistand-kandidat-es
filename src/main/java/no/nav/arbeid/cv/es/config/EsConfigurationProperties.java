@@ -56,5 +56,33 @@ public class EsConfigurationProperties {
     return scheme;
   }
 
+  public void setUser(String user) {
+    this.user = user;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public void setTrustStoreFilename(String trustStoreFilename) {
+    this.trustStoreFilename = trustStoreFilename;
+  }
+
+  public void setTrustStorePass(String trustStorePass) {
+    this.trustStorePass = trustStorePass;
+  }
+
+  public void setHostname(String hostname) {
+    this.hostname = hostname;
+  }
+
+  public void setPort(int port) {
+    this.port = port;
+  }
+
+  public void setScheme(String scheme) {
+    this.scheme = scheme;
+  }
+  
 
 }
