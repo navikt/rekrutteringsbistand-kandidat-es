@@ -58,9 +58,12 @@ public class SearchController {
       @RequestParam(name = "fritekst", required = false) String fritekst,
       @RequestParam(name = "yrkeserfaring", required = false) String yrkeserfaring,
       @RequestParam(name = "kompetanse", required = false) String kompetanse,
+      @RequestParam(name = "utdanning", required = false) String utdanning,
+      @RequestParam(name = "styrkKode", required = false) String styrkKode,
       @RequestParam(name = "nusKode", required = false) String nusKode) throws IOException {
 
-    Sokeresultat sokeresultat = client.sok(fritekst, yrkeserfaring, kompetanse, nusKode);
+    Sokeresultat sokeresultat =
+        client.sok(fritekst, yrkeserfaring, kompetanse, utdanning, styrkKode, nusKode);
     SokeresultatResource sokeresultatResource = new SokeresultatResource(sokeresultat);
     return new ResponseEntity<>(sokeresultatResource, HttpStatus.OK);
   }

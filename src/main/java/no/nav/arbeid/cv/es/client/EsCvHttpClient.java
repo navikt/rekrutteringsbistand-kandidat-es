@@ -143,10 +143,11 @@ public class EsCvHttpClient implements EsCvClient {
 
   @Override
   public Sokeresultat sok(String fritekst, String stillingstittel, String kompetanse,
-      String nusKode) throws IOException {
+      String utdanning, String styrkKode, String nusKode) throws IOException {
     AbstractQueryBuilder<?> queryBuilder = null;
-    if (fritekst == null && stillingstittel == null && kompetanse == null && nusKode == null) {
-      System.out.println("MATCH ALL!");
+    if (fritekst == null && stillingstittel == null && kompetanse == null && utdanning == null
+        && styrkKode == null && nusKode == null) {
+      LOGGER.debug("MATCH ALL!");
       queryBuilder = QueryBuilders.matchAllQuery();
     } else {
       BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
@@ -155,7 +156,7 @@ public class EsCvHttpClient implements EsCvClient {
         MultiMatchQueryBuilder fritekstQueryBuilder =
             QueryBuilders.multiMatchQuery(fritekst, "fritekst");
         boolQueryBuilder.must(fritekstQueryBuilder);
-        System.out.println("ADDING fritekst");
+        LOGGER.debug("ADDING fritekst");
       }
 
       if (stillingstittel != null) {
@@ -163,21 +164,34 @@ public class EsCvHttpClient implements EsCvClient {
             QueryBuilders.matchQuery("yrkeserfaring.stillingstittel", stillingstittel),
             ScoreMode.None);
         boolQueryBuilder.must(yrkeserfaringQueryBuilder);
-        System.out.println("ADDING yrkeserfaring");
+        LOGGER.debug("ADDING yrkeserfaring");
       }
 
       if (kompetanse != null) {
         NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
             QueryBuilders.matchQuery("kompetanse.navn", kompetanse), ScoreMode.None);
         boolQueryBuilder.must(kompetanseQueryBuilder);
-        System.out.println("ADDING kompetanse");
+        LOGGER.debug("ADDING kompetanse");
+      }
+      
+      if (utdanning != null) {
+        NestedQueryBuilder utdanningQueryBuilder = QueryBuilders.nestedQuery("utdanning",
+            QueryBuilders.matchQuery("utdanning.nusKodeTekst", utdanning), ScoreMode.None);
+        boolQueryBuilder.must(utdanningQueryBuilder);
+        LOGGER.debug("ADDING utdanning");
       }
 
+      if (styrkKode != null) {
+        NestedQueryBuilder styrkKodeQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
+            QueryBuilders.termQuery("yrkeserfaring.styrkKode", styrkKode), ScoreMode.None);
+        boolQueryBuilder.must(styrkKodeQueryBuilder);
+        LOGGER.debug("ADDING styrkKode");
+      }
       if (nusKode != null) {
         NestedQueryBuilder nusKodeQueryBuilder = QueryBuilders.nestedQuery("utdanning",
             QueryBuilders.termQuery("utdanning.nusKode", nusKode), ScoreMode.None);
         boolQueryBuilder.must(nusKodeQueryBuilder);
-        System.out.println("ADDING nuskode");
+        LOGGER.debug("ADDING nuskode");
       }
       queryBuilder = boolQueryBuilder;
     }
@@ -232,7 +246,7 @@ public class EsCvHttpClient implements EsCvClient {
           .collect(Collectors.toList());
       aggs.add(new Aggregering(aggregationName, fields));
     }
-    
+
     return aggs;
 
   }

@@ -91,7 +91,8 @@ public class IndexCvTest {
 
   @Test
   public void test() throws IOException {
-    Sokeresultat sokeres = client.findByEtternavnAndUtdanningNusKodeTekst("Testersen", "nusKodeTekst");
+    Sokeresultat sokeres =
+        client.findByEtternavnAndUtdanningNusKodeTekst("Testersen", "nusKodeTekst");
     List<EsCv> list = sokeres.getCver();
     assertThat(list.size()).isEqualTo(1);
     EsCv esCv = list.get(0);
