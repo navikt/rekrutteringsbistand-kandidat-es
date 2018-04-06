@@ -4,6 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
+
+import org.junit.Test;
+
 import no.nav.arbeid.cv.es.domene.EsAnnenErfaring;
 import no.nav.arbeid.cv.es.domene.EsCv;
 import no.nav.arbeid.cv.es.domene.EsForerkort;
@@ -15,7 +18,6 @@ import no.nav.arbeid.cv.es.domene.EsUtdanning;
 import no.nav.arbeid.cv.es.domene.EsVerv;
 import no.nav.arbeid.cv.es.domene.EsYrkeserfaring;
 import no.nav.arbeid.cv.events.CvEvent;
-import org.junit.Test;
 
 public class EsCvTransformerTest {
 

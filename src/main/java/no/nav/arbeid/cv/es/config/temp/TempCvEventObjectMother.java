@@ -1,6 +1,7 @@
 package no.nav.arbeid.cv.es.config.temp;
 
 import java.util.ArrayList;
+
 import no.nav.arbeid.cv.events.Annenerfaring;
 import no.nav.arbeid.cv.events.AnsettelsesforholdJobbonsker;
 import no.nav.arbeid.cv.events.ArbeidstidsordningJobbonsker;
@@ -29,14 +30,14 @@ public class TempCvEventObjectMother {
         "1",
         "Utdanning utdannelsessted",
         "Utdanning geografisk sted",
-        "Utdanning nusKode",
+        "UtdanningNusKode",
         "nusKodeTekst"
     );
 
     ArrayList<Utdanning> utdanningsListe = new ArrayList<>();
     utdanningsListe.add(utdanning);
 
-    Yrkeserfaring yrkeserfaring = new Yrkeserfaring(
+    Yrkeserfaring yrkeserfaring1 = new Yrkeserfaring(
         "2000-01-15",
         "2001-01-15",
         "Yrkeserfaring arbeidsgiver",
@@ -48,9 +49,23 @@ public class TempCvEventObjectMother {
         "Yrkeserfaring styrkkode tekst",
         "Yrkeserfaring nacekode"
     );
+    
+    Yrkeserfaring yrkeserfaring2 = new Yrkeserfaring(
+        "2000-01-15",
+        "2001-01-15",
+        "Yrkeserfaring arbeidsgiver",
+        "1",
+        "greenkeeper",
+        "Yrkeserfaring beskrivelse",
+        "Yrkeserfaring sokekategori",
+        "2345.21",
+        "Yrkeserfaring styrkkode tekst",
+        "Yrkeserfaring nacekode"
+    );
 
     ArrayList<Yrkeserfaring> yrkeserfaringsListe = new ArrayList<>();
-    yrkeserfaringsListe.add(yrkeserfaring);
+    yrkeserfaringsListe.add(yrkeserfaring1);
+    yrkeserfaringsListe.add(yrkeserfaring2);
 
     ArrayList<Kompetanse> kompetanseList = new ArrayList<>();
     kompetanseList.add(new Kompetanse("navn kompetanse"));

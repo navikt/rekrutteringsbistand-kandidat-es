@@ -6,14 +6,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
 import no.nav.elasticsearch.mapping.annotations.ElasticDocument;
 import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
 import no.nav.elasticsearch.mapping.annotations.ElasticLongField;
 import no.nav.elasticsearch.mapping.annotations.ElasticNestedField;
 import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @ElasticDocument

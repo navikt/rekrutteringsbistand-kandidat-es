@@ -3,11 +3,12 @@ package no.nav.arbeid.cv.es.domene;
 import java.util.Date;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
 import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
 import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
 import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsYrkeserfaring {
@@ -24,7 +25,8 @@ public class EsYrkeserfaring {
   @ElasticKeywordField
   private String organisasjonsnummer;
 
-  @ElasticTextField
+  @ElasticTextField(copyTo="fritekst")
+  @ElasticCompletionField
   private String stillingstittel;
 
   @ElasticTextField
@@ -37,8 +39,8 @@ public class EsYrkeserfaring {
   @ElasticKeywordField
   private String styrkKode;
 
-  @ElasticTextField
-  @ElasticKeywordField
+  @ElasticTextField(copyTo="fritekst")  
+  @ElasticCompletionField
   private String styrkKodeTekst;
 
   @ElasticKeywordField

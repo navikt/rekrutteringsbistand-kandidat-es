@@ -2,11 +2,11 @@ package no.nav.arbeid.cv.es.domene;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
 import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
 import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsKompetanse {

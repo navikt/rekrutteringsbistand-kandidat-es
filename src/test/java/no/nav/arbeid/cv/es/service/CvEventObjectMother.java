@@ -1,6 +1,7 @@
 package no.nav.arbeid.cv.es.service;
 
 import java.util.ArrayList;
+
 import no.nav.arbeid.cv.events.Annenerfaring;
 import no.nav.arbeid.cv.events.AnsettelsesforholdJobbonsker;
 import no.nav.arbeid.cv.events.ArbeidstidsordningJobbonsker;

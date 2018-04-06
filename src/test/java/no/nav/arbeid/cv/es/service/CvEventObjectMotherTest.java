@@ -2,9 +2,10 @@ package no.nav.arbeid.cv.es.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.Test;
+
 import no.nav.arbeid.cv.es.domene.EsCv;
 import no.nav.arbeid.cv.events.CvEvent;
-import org.junit.Test;
 
 public class CvEventObjectMotherTest {
 
