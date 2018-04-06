@@ -27,6 +27,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import no.nav.arbeid.cv.es.client.EsCvClient;
 import no.nav.arbeid.cv.es.config.ServiceConfig;
 import no.nav.arbeid.cv.es.domene.EsCv;
+import no.nav.arbeid.cv.es.domene.Sokeresultat;
 import no.nav.arbeid.cv.es.service.CvEventObjectMother;
 import no.nav.arbeid.cv.es.service.EsCvTransformer;
 
@@ -90,7 +91,8 @@ public class IndexCvTest {
 
   @Test
   public void test() throws IOException {
-    List<EsCv> list = client.findByEtternavnAndUtdanningNusKodeTekst("Testersen", "nusKodeTekst");
+    Sokeresultat sokeres = client.findByEtternavnAndUtdanningNusKodeTekst("Testersen", "nusKodeTekst");
+    List<EsCv> list = sokeres.getCver();
     assertThat(list.size()).isEqualTo(1);
     EsCv esCv = list.get(0);
     assertThat(esCv).isEqualTo(transformer.transform(CvEventObjectMother.giveMeCvEvent()));
