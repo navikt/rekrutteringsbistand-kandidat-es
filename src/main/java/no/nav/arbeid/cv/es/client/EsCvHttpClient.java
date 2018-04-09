@@ -2,11 +2,15 @@ package no.nav.arbeid.cv.es.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+import no.nav.arbeid.cv.es.domene.Aggregering;
+import no.nav.arbeid.cv.es.domene.Aggregeringsfelt;
 import no.nav.arbeid.cv.es.domene.EsCv;
+import no.nav.arbeid.cv.es.domene.Sokeresultat;
 import no.nav.elasticsearch.mapping.MappingBuilder;
 import no.nav.elasticsearch.mapping.MappingBuilderImpl;
 import no.nav.elasticsearch.mapping.ObjectMapping;
@@ -26,6 +30,7 @@ import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.AbstractQueryBuilder;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.NestedQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -101,66 +106,110 @@ public class EsCvHttpClient implements EsCvClient {
 
   @Override
   public List<String> typeAheadKompetanse(String prefix) throws IOException {
+    return typeAhead(prefix, "kompetanse.navn.completion");
+  }
 
+  @Override
+  public List<String> typeAheadUtdanning(String prefix) throws IOException {
+    return typeAhead(prefix, "utdanning.nusKodeTekst.completion");
+  }
+
+  @Override
+  public List<String> typeAheadYrkeserfaring(String prefix) throws IOException {
+    return typeAhead(prefix, "yrkeserfaring.stillingstittel.completion");
+  }
+
+  private List<String> typeAhead(String prefix, String suggestionField) throws IOException {
     SearchRequest searchRequest = new SearchRequest(CV_INDEX);
     searchRequest.types(CV_TYPE);
     SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-    CompletionSuggestionBuilder suggestionBuilder = SuggestBuilders
-        .completionSuggestion("kompetanse.navn.completion").text(prefix).skipDuplicates(true);
+    CompletionSuggestionBuilder suggestionBuilder =
+        SuggestBuilders.completionSuggestion(suggestionField).text(prefix).skipDuplicates(true);
 
     SuggestBuilder suggestBuilder = new SuggestBuilder();
-    suggestBuilder.addSuggestion("komp-suggest", suggestionBuilder);
+    suggestBuilder.addSuggestion("typeahead", suggestionBuilder);
     searchSourceBuilder.suggest(suggestBuilder);
 
     searchRequest.source(searchSourceBuilder);
     SearchResponse searchResponse = client.search(searchRequest);
     LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
-    CompletionSuggestion compSuggestion = searchResponse.getSuggest().getSuggestion("komp-suggest");
+    CompletionSuggestion compSuggestion = searchResponse.getSuggest().getSuggestion("typeahead");
     return compSuggestion.getOptions().stream().map(option -> option.getText().string())
         .collect(Collectors.toList());
   }
 
   @Override
-  public List<EsCv> findByStillingstittelAndKompetanse(String stillingstittel, String kompetanse)
-      throws IOException {
+  public Sokeresultat sok(String fritekst, String stillingstittel, String kompetanse,
+      String utdanning, String styrkKode, String nusKode) throws IOException {
     AbstractQueryBuilder<?> queryBuilder = null;
-    if (stillingstittel == null && kompetanse == null) {
-      System.out.println("MATCH ALL!");
+    if (fritekst == null && stillingstittel == null && kompetanse == null && utdanning == null
+        && styrkKode == null && nusKode == null) {
+      LOGGER.debug("MATCH ALL!");
       queryBuilder = QueryBuilders.matchAllQuery();
     } else {
       BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+
+      if (fritekst != null) {
+        MultiMatchQueryBuilder fritekstQueryBuilder =
+            QueryBuilders.multiMatchQuery(fritekst, "fritekst");
+        boolQueryBuilder.must(fritekstQueryBuilder);
+        LOGGER.debug("ADDING fritekst");
+      }
+
       if (stillingstittel != null) {
         NestedQueryBuilder yrkeserfaringQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
             QueryBuilders.matchQuery("yrkeserfaring.stillingstittel", stillingstittel),
             ScoreMode.None);
         boolQueryBuilder.must(yrkeserfaringQueryBuilder);
-        System.out.println("ADDING yrkeserfaring");
+        LOGGER.debug("ADDING yrkeserfaring");
       }
+
       if (kompetanse != null) {
         NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
             QueryBuilders.matchQuery("kompetanse.navn", kompetanse), ScoreMode.None);
         boolQueryBuilder.must(kompetanseQueryBuilder);
-        System.out.println("ADDING kompetanse");
+        LOGGER.debug("ADDING kompetanse");
+      }
+
+      if (utdanning != null) {
+        NestedQueryBuilder utdanningQueryBuilder = QueryBuilders.nestedQuery("utdanning",
+            QueryBuilders.matchQuery("utdanning.nusKodeTekst", utdanning), ScoreMode.None);
+        boolQueryBuilder.must(utdanningQueryBuilder);
+        LOGGER.debug("ADDING utdanning");
+      }
+
+      if (styrkKode != null) {
+        NestedQueryBuilder styrkKodeQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
+            QueryBuilders.termQuery("yrkeserfaring.styrkKode", styrkKode), ScoreMode.None);
+        boolQueryBuilder.must(styrkKodeQueryBuilder);
+        LOGGER.debug("ADDING styrkKode");
+      }
+      if (nusKode != null) {
+        NestedQueryBuilder nusKodeQueryBuilder = QueryBuilders.nestedQuery("utdanning",
+            QueryBuilders.termQuery("utdanning.nusKode", nusKode), ScoreMode.None);
+        boolQueryBuilder.must(nusKodeQueryBuilder);
+        LOGGER.debug("ADDING nuskode");
       }
       queryBuilder = boolQueryBuilder;
     }
 
     SearchResponse searchResponse = search(queryBuilder, 0, 1000);
-    return toList(searchResponse);
+    return toSokeresultat(searchResponse);
   }
 
   @Override
-  public List<EsCv> findByYrkeserfaringStyrkKodeTekst(String styrkBeskrivelse) throws IOException {
+  public Sokeresultat findByYrkeserfaringStyrkKodeTekst(String styrkBeskrivelse)
+      throws IOException {
 
     NestedQueryBuilder yrkeserfaringQueryBuilder = new NestedQueryBuilder("yrkeserfaring",
         new MatchQueryBuilder("yrkeserfaring.styrkKodeTekst", styrkBeskrivelse), ScoreMode.None);
 
     SearchResponse searchResponse = search(yrkeserfaringQueryBuilder, 0, 1000);
-    return toList(searchResponse);
+    return toSokeresultat(searchResponse);
   }
 
   @Override
-  public List<EsCv> findByEtternavnAndUtdanningNusKodeGrad(String etternavn,
+  public Sokeresultat findByEtternavnAndUtdanningNusKodeGrad(String etternavn,
       String utdanningNusKodeGrad) throws IOException {
 
     MatchQueryBuilder etternavnQueryBuilder = new MatchQueryBuilder("etternavn", etternavn);
@@ -172,7 +221,37 @@ public class EsCvHttpClient implements EsCvClient {
     boolQueryBuilder.should(etternavnQueryBuilder);
 
     SearchResponse searchResponse = search(boolQueryBuilder, 0, 1000);
-    return toList(searchResponse);
+    return toSokeresultat(searchResponse);
+  }
+
+  private Sokeresultat toSokeresultat(SearchResponse searchResponse) {
+    List<EsCv> cver = toCvList(searchResponse);
+    List<Aggregering> aggregeringer = toAggregeringList(searchResponse);
+    return new Sokeresultat(cver, aggregeringer);
+  }
+
+  private List<Aggregering> toAggregeringList(SearchResponse searchResponse) {
+    Aggregations aggregations = searchResponse.getAggregations();
+
+    List<Aggregering> aggs = new ArrayList<>();
+    List<String> aggregationNames =
+        aggregations.asList().stream().map(agg -> agg.getName()).collect(Collectors.toList());
+    for (String aggregationName : aggregationNames) {
+      List<? extends Bucket> buckets = getBucketsForInnerAggregation(aggregations, aggregationName);
+      List<Aggregeringsfelt> fields = buckets.stream()
+          .map(bucket -> new Aggregeringsfelt(bucket.getKeyAsString(), bucket.getDocCount()))
+          .collect(Collectors.toList());
+      aggs.add(new Aggregering(aggregationName, fields));
+    }
+
+    return aggs;
+
+  }
+
+  private List<? extends Bucket> getBucketsForInnerAggregation(Aggregations aggregations,
+      String aggregationName) {
+    return ((Terms) ((Nested) aggregations.get(aggregationName)).getAggregations().get("nested"))
+        .getBuckets();
   }
 
   private SearchResponse search(AbstractQueryBuilder<?> queryBuilder, int from, int size)
@@ -185,12 +264,20 @@ public class EsCvHttpClient implements EsCvClient {
     searchSourceBuilder.sort(new ScoreSortBuilder().order(SortOrder.DESC));
     searchSourceBuilder.sort(new FieldSortBuilder("_uid").order(SortOrder.ASC));
 
-    TermsAggregationBuilder aggregation =
-        AggregationBuilders.terms("byStyrk").field("yrkeserfaring.styrkKode");
-    NestedAggregationBuilder nestedAggregation =
-        AggregationBuilders.nested("nestedAgg", "yrkeserfaring");
-    nestedAggregation.subAggregation(aggregation);
-    searchSourceBuilder.aggregation(nestedAggregation);
+    TermsAggregationBuilder yrkesAggregation =
+        AggregationBuilders.terms("nested").field("yrkeserfaring.styrkKode");
+    NestedAggregationBuilder nestedYrkesAggregation =
+        AggregationBuilders.nested("yrkeserfaring", "yrkeserfaring");
+    nestedYrkesAggregation.subAggregation(yrkesAggregation);
+    searchSourceBuilder.aggregation(nestedYrkesAggregation);
+
+    TermsAggregationBuilder utdanningAggregation =
+        AggregationBuilders.terms("nested").field("utdanning.nusKode");
+    NestedAggregationBuilder nestedUtdanningAggregation =
+        AggregationBuilders.nested("utdanning", "utdanning");
+    nestedUtdanningAggregation.subAggregation(utdanningAggregation);
+    searchSourceBuilder.aggregation(nestedUtdanningAggregation);
+
     SearchRequest searchRequest = new SearchRequest();
     searchRequest.indices(CV_INDEX);
     searchRequest.source(searchSourceBuilder);
@@ -199,17 +286,6 @@ public class EsCvHttpClient implements EsCvClient {
 
     SearchResponse searchResponse = client.search(searchRequest);
     LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
-
-    Aggregations aggregations = searchResponse.getAggregations();
-    System.out.println("AGGREG: " + aggregations.toString());
-    aggregations.asList().stream()
-        .forEach(agg -> System.out.println("AGGREGATIONS: " + agg.toString()));
-    Nested nestedAgg = aggregations.get("nestedAgg");
-    Terms byStyrkAgg = nestedAgg.getAggregations().get("byStyrk");
-    List<? extends Bucket> buckets = byStyrkAgg.getBuckets();
-    buckets.stream().forEach(bucket -> System.out
-        .println("BUCKETNAME: " + bucket.getKeyAsString() + " - COUNT: " + bucket.getDocCount()));
-
     return searchResponse;
   }
 
@@ -222,7 +298,7 @@ public class EsCvHttpClient implements EsCvClient {
     }
   }
 
-  private List<EsCv> toList(SearchResponse searchResponse) {
+  private List<EsCv> toCvList(SearchResponse searchResponse) {
     return StreamSupport.stream(searchResponse.getHits().spliterator(), false)
         .map(hit -> mapEsCv(hit)).filter(Objects::nonNull).collect(Collectors.toList());
   }

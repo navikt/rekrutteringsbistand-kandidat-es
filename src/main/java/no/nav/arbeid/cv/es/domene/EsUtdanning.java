@@ -3,6 +3,10 @@ package no.nav.arbeid.cv.es.domene;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
 import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
 import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
 import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
@@ -22,7 +26,8 @@ public class EsUtdanning {
   @ElasticKeywordField
   private String nusKode;
 
-  @ElasticTextField
+  @ElasticTextField(copyTo="fritekst")
+  @ElasticCompletionField
   private String nusKodeGrad;
 
   @ElasticTextField
