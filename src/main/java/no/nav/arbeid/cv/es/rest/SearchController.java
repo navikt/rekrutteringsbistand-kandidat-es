@@ -11,6 +11,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,6 +28,7 @@ public class SearchController {
   private EsCvClient client;
 
   @RequestMapping(path = "typeahead", method = RequestMethod.GET)
+  @CrossOrigin(origins = "http://localhost:9009")
   public HttpEntity<Resources<StringResource>> typeAheadKompetanse(
       @RequestParam(name = "komp", required = false) String komp,
       @RequestParam(name = "utd", required = false) String utd,
@@ -54,7 +56,8 @@ public class SearchController {
   }
 
   @RequestMapping(path = "sok", method = RequestMethod.GET)
-  public HttpEntity<SokeresultatResource> hentCverMedArbeidserfaring(
+  @CrossOrigin(origins = "http://localhost:9009")
+  public HttpEntity<SokeresultatResource> sok(
       @RequestParam(name = "fritekst", required = false) String fritekst,
       @RequestParam(name = "yrkeserfaring", required = false) String yrkeserfaring,
       @RequestParam(name = "kompetanse", required = false) String kompetanse,
