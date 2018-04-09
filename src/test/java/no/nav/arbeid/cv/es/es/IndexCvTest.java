@@ -10,6 +10,7 @@ import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.palantir.docker.compose.DockerComposeRule;
+import com.palantir.docker.compose.connection.waiting.HealthChecks;
+
 import no.nav.arbeid.cv.es.client.EsCvClient;
 import no.nav.arbeid.cv.es.config.ServiceConfig;
 import no.nav.arbeid.cv.es.domene.EsCv;
@@ -35,7 +39,7 @@ import no.nav.arbeid.cv.es.service.EsCvTransformer;
 @SpringBootTest
 public class IndexCvTest {
 
-  // private static final String ES_DOCKER_SERVICE = "elastic_search";
+  private static final String ES_DOCKER_SERVICE = "elastic_search";
 
   /*
    * For å kunne kjøre denne testen må Linux rekonfigureres litt.. Lag en fil i

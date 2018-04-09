@@ -1,6 +1,5 @@
 package no.nav.arbeid.cv.es.config;
 
-import org.springframework.boot.actuate.autoconfigure.security.EndpointRequest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,10 +21,12 @@ public class MyWebSecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.authorizeRequests()
-        .requestMatchers(EndpointRequest.to("status", "info", "health", "prometheus")).permitAll()
-        .antMatchers("/rest/internal/isAlive").permitAll()
-        .antMatchers("/rest/**").permitAll()
-        .anyRequest().hasRole("USER").and()
+        // .requestMatchers(EndpointRequest.to("metrics", "status", "info", "health",
+        // "prometheus")).permitAll()
+        .antMatchers("/rest/internal/isAlive").permitAll().antMatchers("/actuator/**").permitAll()
+        .antMatchers("/rest/**").permitAll().antMatchers("/api/**").permitAll()
+        .antMatchers("/public/**").permitAll().antMatchers("/monitoring/**").permitAll()
+        .antMatchers("/application/prometheus").permitAll().anyRequest().hasRole("USER").and()
         // Possibly more configuration ...
         .formLogin() // enable form based log in
         // set permitAll for all URLs associated with Form Login
@@ -37,9 +38,10 @@ public class MyWebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     // enable in memory based authentication with a user named "user" and "admin"
     auth.inMemoryAuthentication().withUser("user").password("password").roles("USER").and()
         .withUser("admin").password("password").roles("USER", "ADMIN");
-    
-    //auth.authenticationEventPublisher(new DefaultAuthenticationEventPublisher());
+
+    // auth.authenticationEventPublisher(new DefaultAuthenticationEventPublisher());
   }
 
   // Possibly more overridden methods ...
+
 }
