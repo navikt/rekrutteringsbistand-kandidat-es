@@ -2,7 +2,6 @@ package no.nav.arbeid.cv.es.client;
 
 import java.io.IOException;
 import java.util.List;
-
 import no.nav.arbeid.cv.es.domene.EsCv;
 
 public interface EsCvClient {
@@ -17,7 +16,7 @@ public interface EsCvClient {
 
   void deleteIndex() throws IOException;
 
-  List<EsCv> findByEtternavnAndUtdanningNusKodeTekst(String etternavn, String utdanningNusKodeTekst) throws IOException;
+  List<EsCv> findByEtternavnAndUtdanningNusKodeGrad(String etternavn, String utdanningNusKodeTekst) throws IOException;
 
   List<String> typeAheadKompetanse(String prefix) throws IOException;
 }

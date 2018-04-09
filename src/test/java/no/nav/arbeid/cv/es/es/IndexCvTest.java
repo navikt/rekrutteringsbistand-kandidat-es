@@ -4,7 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.util.List;
-
+import no.nav.arbeid.cv.es.client.EsCvClient;
+import no.nav.arbeid.cv.es.config.ServiceConfig;
+import no.nav.arbeid.cv.es.domene.EsCv;
+import no.nav.arbeid.cv.es.service.CvEventObjectMother;
+import no.nav.arbeid.cv.es.service.EsCvTransformer;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -23,12 +27,6 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import no.nav.arbeid.cv.es.client.EsCvClient;
-import no.nav.arbeid.cv.es.config.ServiceConfig;
-import no.nav.arbeid.cv.es.domene.EsCv;
-import no.nav.arbeid.cv.es.service.CvEventObjectMother;
-import no.nav.arbeid.cv.es.service.EsCvTransformer;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -90,7 +88,7 @@ public class IndexCvTest {
 
   @Test
   public void test() throws IOException {
-    List<EsCv> list = client.findByEtternavnAndUtdanningNusKodeTekst("Testersen", "nusKodeTekst");
+    List<EsCv> list = client.findByEtternavnAndUtdanningNusKodeGrad("NORDMANN", "Mekaniske fag, grunnkurs");
     assertThat(list.size()).isEqualTo(1);
     EsCv esCv = list.get(0);
     assertThat(esCv).isEqualTo(transformer.transform(CvEventObjectMother.giveMeCvEvent()));

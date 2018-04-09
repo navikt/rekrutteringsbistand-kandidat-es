@@ -26,8 +26,6 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 
 		<!-- NAVs -->
-		<pam-cv-avro.version>6</pam-cv-avro.version>
-
 		<!-- Tredjeparts -->
 		<!-- <mockito.version>2.7.22</mockito.version> -->
 		<confluent.version>3.3.0</confluent.version>
@@ -51,8 +49,8 @@
 		</dependency>
 		<dependency>
 			<groupId>no.nav.arbeid.cv.avro</groupId>
-			<artifactId>pam-cv-avro</artifactId>
-			<version>${pam-cv-avro.version}</version>
+			<artifactId>cv-event</artifactId>
+			<version>1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>io.confluent</groupId>
@@ -70,7 +68,7 @@
 			<artifactId>avro</artifactId>
 			<version>${avro.version}</version>
 		</dependency>
-		<!-- 
+		<!--
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
@@ -114,27 +112,27 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
-		
+
 		<dependency>
     		<groupId>org.elasticsearch.client</groupId>
     		<artifactId>elasticsearch-rest-high-level-client</artifactId>
 		    <!-- <version>7.0.0-alpha1</version> -->
 		    <version>${elasticsearch.version}</version>
 		</dependency>
-		
+
 		<dependency>
     		<groupId>org.elasticsearch</groupId>
     		<artifactId>elasticsearch</artifactId>
 		    <!-- <version>7.0.0-alpha1</version> -->
 		    <version>${elasticsearch.version}</version>
 		</dependency>
-		
+
 		<dependency>
     		<groupId>no.nav.elasticsearch</groupId>
     		<artifactId>elasticsearch-mapping-builder</artifactId>
-    		<version>1.0.0</version>
+    		<version>3</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-hateoas</artifactId>

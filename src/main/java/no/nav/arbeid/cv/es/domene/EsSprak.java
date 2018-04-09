@@ -1,35 +1,42 @@
 package no.nav.arbeid.cv.es.domene;
 
-import java.util.Objects;
-
-import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
-import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.Date;
+import java.util.Objects;
+import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
+import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsSprak {
 
-  @ElasticKeywordField
+  @ElasticDateField
+  private Date fraDato;
+
+  @ElasticTextField
   private String sprakKode;
 
   @ElasticTextField
-  @ElasticKeywordField
   private String sprakKodeTekst;
 
   @ElasticTextField
-  private String muntlig;
+  private String alternativTekst;
 
   @ElasticTextField
-  private String skriftlig;
+  private String beskrivelse;
 
   public EsSprak() {}
 
-  public EsSprak(String sprakKode, String sprakKodeTekst, String muntlig, String skriftlig) {
+  public EsSprak(Date fraDato, String sprakKode, String sprakKodeTekst,
+      String alternativTekst, String beskrivelse) {
+    this.fraDato = fraDato;
     this.sprakKode = sprakKode;
     this.sprakKodeTekst = sprakKodeTekst;
-    this.muntlig = muntlig;
-    this.skriftlig = skriftlig;
+    this.alternativTekst = alternativTekst;
+    this.beskrivelse = beskrivelse;
+  }
+
+  public Date getFraDato() {
+    return fraDato;
   }
 
   public String getSprakKode() {
@@ -40,12 +47,12 @@ public class EsSprak {
     return sprakKodeTekst;
   }
 
-  public String getMuntlig() {
-    return muntlig;
+  public String getAlternativTekst() {
+    return alternativTekst;
   }
 
-  public String getSkriftlig() {
-    return skriftlig;
+  public String getBeskrivelse() {
+    return beskrivelse;
   }
 
   @Override
@@ -57,21 +64,28 @@ public class EsSprak {
       return false;
     }
     EsSprak esSprak = (EsSprak) o;
-    return Objects.equals(sprakKode, esSprak.sprakKode)
-        && Objects.equals(sprakKodeTekst, esSprak.sprakKodeTekst)
-        && Objects.equals(muntlig, esSprak.muntlig) && Objects.equals(skriftlig, esSprak.skriftlig);
+    return Objects.equals(fraDato, esSprak.fraDato) &&
+        Objects.equals(sprakKode, esSprak.sprakKode) &&
+        Objects.equals(sprakKodeTekst, esSprak.sprakKodeTekst) &&
+        Objects.equals(alternativTekst, esSprak.alternativTekst) &&
+        Objects.equals(beskrivelse, esSprak.beskrivelse);
   }
 
   @Override
   public int hashCode() {
 
-    return Objects.hash(sprakKode, sprakKodeTekst, muntlig, skriftlig);
+    return Objects.hash(fraDato, sprakKode, sprakKodeTekst, alternativTekst, beskrivelse);
   }
 
   @Override
   public String toString() {
-    return "EsSprak{" + "sprakKode='" + sprakKode + '\'' + ", sprakKodeTekst='" + sprakKodeTekst
-        + '\'' + ", muntlig='" + muntlig + '\'' + ", skriftlig='" + skriftlig + '\'' + '}';
+    return "EsSprak{" +
+        "fraDato=" + fraDato +
+        ", sprakKode='" + sprakKode + '\'' +
+        ", sprakKodeTekst='" + sprakKodeTekst + '\'' +
+        ", alternativTekst='" + alternativTekst + '\'' +
+        ", beskrivelse='" + beskrivelse + '\'' +
+        '}';
   }
 
 }
