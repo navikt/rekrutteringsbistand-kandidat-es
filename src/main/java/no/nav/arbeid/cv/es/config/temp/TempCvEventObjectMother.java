@@ -112,7 +112,7 @@ public class TempCvEventObjectMother {
         "Maskin- og kranførerarbeid",
         null,
         null
-        );
+    );
 
     Kompetanse kompetanse2 = new Kompetanse(
         "2016-03-14",
@@ -120,7 +120,7 @@ public class TempCvEventObjectMother {
         "Mekanisk arbeid generelt",
         "Mekanisk arbeid generelt",
         null
-        );
+    );
 
     Kompetanse kompetanse3 = new Kompetanse(
         "2016-03-14",
@@ -128,7 +128,7 @@ public class TempCvEventObjectMother {
         "Landtransport generelt",
         "Landtransport generelt",
         null
-        );
+    );
 
     Kompetanse kompetanse4 = new Kompetanse(
         "2016-03-14",
@@ -136,7 +136,7 @@ public class TempCvEventObjectMother {
         "Industri (bransje)",
         "Mekanisk industri (bransje)",
         null
-        );
+    );
 
     ArrayList<Kompetanse> kompetanseList = new ArrayList<>();
     kompetanseList.add(kompetanse1);
@@ -241,7 +241,7 @@ public class TempCvEventObjectMother {
 
     Sprak sprak = new Sprak(
         "2012-12-01",
-        "Språk kode ",
+        "Språk kode",
         "Språk kode tekst",
         "Språk alternativ tekst",
         "Språk beskrivelse"
@@ -280,6 +280,8 @@ public class TempCvEventObjectMother {
 
     ArrayList<Kurs> kursListe = new ArrayList<>();
     kursListe.add(kurs1);
+    kursListe.add(kurs2);
+    kursListe.add(kurs3);
 
     Verv verv = new Verv(
         "2000-01-15",
@@ -353,9 +355,9 @@ public class TempCvEventObjectMother {
         "OSLO",
         "NO",
         301,
-        null,
         false,
-        true,
+        false,
+        false,
         "",
         utdanningsListe,
         yrkeserfaringsListe,
