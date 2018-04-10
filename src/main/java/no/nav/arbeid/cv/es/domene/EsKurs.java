@@ -1,10 +1,8 @@
 package no.nav.arbeid.cv.es.domene;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 import java.util.Objects;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
 import no.nav.elasticsearch.mapping.annotations.ElasticIntegerField;
 import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
@@ -31,16 +29,20 @@ public class EsKurs {
   @ElasticIntegerField
   private Integer omfangVerdi;
 
+  @ElasticTextField
+  private String beskrivelse;
+
   public EsKurs() {}
 
-  public EsKurs(Date fraDato, Date tilDato, String tittel, String arrangor, String omfangEnhet,
-      Integer omfangVerdi) {
+  public EsKurs(Date fraDato, Date tilDato, String tittel, String arrangor,
+      String omfangEnhet, Integer omfangVerdi, String beskrivelse) {
     this.fraDato = fraDato;
     this.tilDato = tilDato;
     this.tittel = tittel;
     this.arrangor = arrangor;
     this.omfangEnhet = omfangEnhet;
     this.omfangVerdi = omfangVerdi;
+    this.beskrivelse = beskrivelse;
   }
 
   public Date getFraDato() {
@@ -67,6 +69,10 @@ public class EsKurs {
     return omfangVerdi;
   }
 
+  public String getBeskrivelse() {
+    return beskrivelse;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -76,23 +82,32 @@ public class EsKurs {
       return false;
     }
     EsKurs esKurs = (EsKurs) o;
-    return Objects.equals(fraDato, esKurs.fraDato) && Objects.equals(tilDato, esKurs.tilDato)
-        && Objects.equals(tittel, esKurs.tittel) && Objects.equals(arrangor, esKurs.arrangor)
-        && Objects.equals(omfangEnhet, esKurs.omfangEnhet)
-        && Objects.equals(omfangVerdi, esKurs.omfangVerdi);
+    return Objects.equals(fraDato, esKurs.fraDato) &&
+        Objects.equals(tilDato, esKurs.tilDato) &&
+        Objects.equals(tittel, esKurs.tittel) &&
+        Objects.equals(arrangor, esKurs.arrangor) &&
+        Objects.equals(omfangEnhet, esKurs.omfangEnhet) &&
+        Objects.equals(omfangVerdi, esKurs.omfangVerdi) &&
+        Objects.equals(beskrivelse, esKurs.beskrivelse);
   }
 
   @Override
   public int hashCode() {
 
-    return Objects.hash(fraDato, tilDato, tittel, arrangor, omfangEnhet, omfangVerdi);
+    return Objects.hash(fraDato, tilDato, tittel, arrangor, omfangEnhet, omfangVerdi, beskrivelse);
   }
 
   @Override
   public String toString() {
-    return "EsKurs{" + "fraDato=" + fraDato + ", tilDato=" + tilDato + ", tittel='" + tittel + '\''
-        + ", arrangor='" + arrangor + '\'' + ", omfangEnhet='" + omfangEnhet + '\''
-        + ", omfangVerdi='" + omfangVerdi + '\'' + '}';
+    return "EsKurs{" +
+        "fraDato=" + fraDato +
+        ", tilDato=" + tilDato +
+        ", tittel='" + tittel + '\'' +
+        ", arrangor='" + arrangor + '\'' +
+        ", omfangEnhet='" + omfangEnhet + '\'' +
+        ", omfangVerdi=" + omfangVerdi +
+        ", beskrivelse='" + beskrivelse + '\'' +
+        '}';
   }
 
 }

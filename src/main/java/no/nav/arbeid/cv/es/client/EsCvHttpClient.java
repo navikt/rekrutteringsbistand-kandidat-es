@@ -1,12 +1,19 @@
 package no.nav.arbeid.cv.es.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-
+import no.nav.arbeid.cv.es.domene.Aggregering;
+import no.nav.arbeid.cv.es.domene.Aggregeringsfelt;
+import no.nav.arbeid.cv.es.domene.EsCv;
+import no.nav.arbeid.cv.es.domene.Sokeresultat;
+import no.nav.elasticsearch.mapping.MappingBuilder;
+import no.nav.elasticsearch.mapping.MappingBuilderImpl;
+import no.nav.elasticsearch.mapping.ObjectMapping;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
@@ -44,16 +51,6 @@ import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import no.nav.arbeid.cv.es.domene.Aggregering;
-import no.nav.arbeid.cv.es.domene.Aggregeringsfelt;
-import no.nav.arbeid.cv.es.domene.EsCv;
-import no.nav.arbeid.cv.es.domene.Sokeresultat;
-import no.nav.elasticsearch.mapping.MappingBuilder;
-import no.nav.elasticsearch.mapping.MappingBuilderImpl;
-import no.nav.elasticsearch.mapping.ObjectMapping;
 
 public class EsCvHttpClient implements EsCvClient {
 
@@ -100,7 +97,7 @@ public class EsCvHttpClient implements EsCvClient {
     String jsonString = mapper.writeValueAsString(esCv);
     LOGGER.debug("DOKUMENTET: " + jsonString);
 
-    IndexRequest request = new IndexRequest(CV_INDEX, CV_TYPE, Long.toString(esCv.getArenaId()));
+    IndexRequest request = new IndexRequest(CV_INDEX, CV_TYPE, Long.toString(esCv.getArenaPersonId()));
     request.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
     request.source(jsonString, XContentType.JSON);
     IndexResponse indexResponse = client.index(request);
@@ -173,7 +170,7 @@ public class EsCvHttpClient implements EsCvClient {
         boolQueryBuilder.must(kompetanseQueryBuilder);
         LOGGER.debug("ADDING kompetanse");
       }
-      
+
       if (utdanning != null) {
         NestedQueryBuilder utdanningQueryBuilder = QueryBuilders.nestedQuery("utdanning",
             QueryBuilders.matchQuery("utdanning.nusKodeTekst", utdanning), ScoreMode.None);
@@ -212,12 +209,12 @@ public class EsCvHttpClient implements EsCvClient {
   }
 
   @Override
-  public Sokeresultat findByEtternavnAndUtdanningNusKodeTekst(String etternavn,
-      String utdanningNusKodeTekst) throws IOException {
+  public Sokeresultat findByEtternavnAndUtdanningNusKodeGrad(String etternavn,
+      String utdanningNusKodeGrad) throws IOException {
 
     MatchQueryBuilder etternavnQueryBuilder = new MatchQueryBuilder("etternavn", etternavn);
     NestedQueryBuilder utdanningQueryBuilder = new NestedQueryBuilder("utdanning",
-        new MatchQueryBuilder("utdanning.nusKodeTekst", utdanningNusKodeTekst), ScoreMode.None);
+        new MatchQueryBuilder("utdanning.nusKodeGrad", utdanningNusKodeGrad), ScoreMode.None);
 
     BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
     boolQueryBuilder.must(utdanningQueryBuilder);

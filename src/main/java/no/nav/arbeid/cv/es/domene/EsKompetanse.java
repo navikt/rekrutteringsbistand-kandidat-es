@@ -1,29 +1,60 @@
 package no.nav.arbeid.cv.es.domene;
 
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
+import java.util.Date;
+import java.util.Objects;
+import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
 import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
 import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsKompetanse {
 
-  @ElasticTextField
+  @ElasticDateField
+  private Date fraDato;
+
   @ElasticKeywordField
-  @ElasticCompletionField
-  private String navn;
+  private String kompKode;
 
-  public EsKompetanse() {}
+  @ElasticTextField
+  private String kompKodeNavn;
 
-  public EsKompetanse(String navn) {
-    this.navn = navn;
+  @ElasticTextField
+  private String alternativtNavn;
+
+  @ElasticTextField
+  private String beskrivelse;
+
+  public EsKompetanse() {
   }
 
-  public String getNavn() {
-    return navn;
+  public EsKompetanse(Date fraDato, String kompKode, String kompKodeNavn,
+      String alternativtNavn, String beskrivelse) {
+    this.fraDato = fraDato;
+    this.kompKode = kompKode;
+    this.kompKodeNavn = kompKodeNavn;
+    this.alternativtNavn = alternativtNavn;
+    this.beskrivelse = beskrivelse;
+  }
+
+  public Date getFraDato() {
+    return fraDato;
+  }
+
+  public String getKompKode() {
+    return kompKode;
+  }
+
+  public String getKompKodeNavn() {
+    return kompKodeNavn;
+  }
+
+  public String getAlternativtNavn() {
+    return alternativtNavn;
+  }
+
+  public String getBeskrivelse() {
+    return beskrivelse;
   }
 
   @Override
@@ -35,18 +66,28 @@ public class EsKompetanse {
       return false;
     }
     EsKompetanse that = (EsKompetanse) o;
-    return Objects.equals(navn, that.navn);
+    return Objects.equals(fraDato, that.fraDato) &&
+        Objects.equals(kompKode, that.kompKode) &&
+        Objects.equals(kompKodeNavn, that.kompKodeNavn) &&
+        Objects.equals(alternativtNavn, that.alternativtNavn) &&
+        Objects.equals(beskrivelse, that.beskrivelse);
   }
 
   @Override
   public int hashCode() {
 
-    return Objects.hash(navn);
+    return Objects.hash(fraDato, kompKode, kompKodeNavn, alternativtNavn, beskrivelse);
   }
 
   @Override
   public String toString() {
-    return "EsKompetanse{" + "navn='" + navn + '\'' + '}';
+    return "EsKompetanse{" +
+        "fraDato=" + fraDato +
+        ", kompKode='" + kompKode + '\'' +
+        ", kompKodeNavn='" + kompKodeNavn + '\'' +
+        ", alternativtNavn='" + alternativtNavn + '\'' +
+        ", beskrivelse='" + beskrivelse + '\'' +
+        '}';
   }
 
 }

@@ -4,7 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.util.List;
-
+import no.nav.arbeid.cv.es.client.EsCvClient;
+import no.nav.arbeid.cv.es.config.ServiceConfig;
+import no.nav.arbeid.cv.es.domene.EsCv;
+import no.nav.arbeid.cv.es.service.CvEventObjectMother;
+import no.nav.arbeid.cv.es.service.EsCvTransformer;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -98,7 +102,7 @@ public class IndexCvTest {
   @Test
   public void test() throws IOException {
     Sokeresultat sokeres =
-        client.findByEtternavnAndUtdanningNusKodeTekst("Testersen", "nusKodeTekst");
+        client.findByEtternavnAndUtdanningNusKodeGrad("NORDMANN", "Mekaniske fag, grunnkurs");
     List<EsCv> list = sokeres.getCver();
     assertThat(list.size()).isEqualTo(1);
     EsCv esCv = list.get(0);
