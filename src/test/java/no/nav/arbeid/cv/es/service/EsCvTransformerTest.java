@@ -69,7 +69,7 @@ public class EsCvTransformerTest {
     final boolean DISP_BIL = false;
     final boolean AAP = false;
     final boolean SYFO = false;
-    final String TIDSSTEMPEL = "";
+    final Date TIDSSTEMPEL = null;
 
     CvEvent cvEvent = CvEventObjectMother.giveMeCvEvent();
     EsCv esCv = esCvTransformer.transform(cvEvent);

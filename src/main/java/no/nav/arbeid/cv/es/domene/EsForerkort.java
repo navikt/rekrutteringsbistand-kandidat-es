@@ -3,10 +3,6 @@ package no.nav.arbeid.cv.es.domene;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 import java.util.Objects;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import no.nav.elasticsearch.mapping.annotations.ElasticBooleanField;
 import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
 import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
 import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
@@ -20,7 +16,7 @@ public class EsForerkort {
   @ElasticDateField
   private Date tilDato;
 
-  @ElasticTextField
+  @ElasticKeywordField
   private String forerkortKode;
 
   @ElasticTextField

@@ -58,7 +58,7 @@ public class EsCvTransformer {
         p.getStatusDisponererBil(),
         p.getAap(),
         p.getSyfo(),
-        p.getTidsstempel()
+        this.toDate(p.getTidsstempel())
     );
 
     esCv.addYrkeserfaring(mapList(p.getYrkeserfaring(), this::mapYrke));
@@ -169,7 +169,7 @@ public class EsCvTransformer {
 
   private Date toDate(String dateString) {
 
-    if(dateString == null) {return null;}
+    if(dateString == null || dateString.equals("")) {return null;}
     try {
       DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
       return formatter.parse(dateString);

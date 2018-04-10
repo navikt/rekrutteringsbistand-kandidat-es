@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 import java.util.Objects;
 import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
+import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
 import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -12,7 +13,7 @@ public class EsSprak {
   @ElasticDateField
   private Date fraDato;
 
-  @ElasticTextField
+  @ElasticKeywordField
   private String sprakKode;
 
   @ElasticTextField

@@ -18,7 +18,7 @@ import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 @ElasticDocument
 public class EsCv {
 
-  @ElasticLongField
+  @ElasticTextField
   private String fodselsnummer;
 
   @ElasticTextField
@@ -45,7 +45,7 @@ public class EsCv {
   @ElasticLongField
   private Long arenaPersonId;
 
-  @ElasticLongField
+  @ElasticKeywordField
   private String arenaKandidatnr;
 
   @ElasticTextField
@@ -57,16 +57,16 @@ public class EsCv {
   @ElasticDateField
   private Date samtykkeDato;
 
-  @ElasticKeywordField
+  @ElasticTextField
   private String adresselinje1;
 
-  @ElasticKeywordField
+  @ElasticTextField
   private String adresselinje2;
 
-  @ElasticKeywordField
+  @ElasticTextField
   private String adresselinje3;
 
-  @ElasticLongField
+  @ElasticKeywordField
   private String postnummer;
 
   @ElasticKeywordField
@@ -78,7 +78,7 @@ public class EsCv {
   @ElasticLongField
   private Integer kommunenummer;
 
-  @ElasticTextField
+  @ElasticBooleanField
   private Boolean disponererBil;
 
   @ElasticBooleanField
@@ -87,9 +87,8 @@ public class EsCv {
   @ElasticBooleanField
   private Boolean syfo;
 
-  @ElasticTextField
-  private String tidsstempel;
-
+  @ElasticDateField
+  private Date tidsstempel;
 
   @ElasticNestedField
   private List<EsUtdanning> utdanning = new ArrayList<>();
@@ -138,7 +137,7 @@ public class EsCv {
       String beskrivelse, String samtykkeStatus, Date samtykkeDato, String adresselinje1,
       String adresselinje2, String adresselinje3, String postnummer, String poststed,
       String landkode, Integer kommunenummer, Boolean disponererBil, Boolean aap,
-      Boolean syfo, String tidsstempel) {
+      Boolean syfo, Date tidsstempel) {
     this.fodselsnummer = fodselsnummer;
     this.fornavn = fornavn;
     this.etternavn = etternavn;
@@ -165,7 +164,7 @@ public class EsCv {
     this.tidsstempel = tidsstempel;
   }
 
-  // Adderfunksjoner
+// Adderfunksjoner
 
   public void addUtdanning(EsUtdanning utdanning) {
     this.utdanning.add(utdanning);
@@ -334,7 +333,7 @@ public class EsCv {
     return syfo;
   }
 
-  public String getTidsstempel() {
+  public Date getTidsstempel() {
     return tidsstempel;
   }
 
@@ -483,7 +482,7 @@ public class EsCv {
         ", disponererBil=" + disponererBil +
         ", aap=" + aap +
         ", syfo=" + syfo +
-        ", tidsstempel='" + tidsstempel + '\'' +
+        ", tidsstempel=" + tidsstempel +
         ", utdanning=" + utdanning +
         ", yrkeserfaring=" + yrkeserfaring +
         ", kompetanse=" + kompetanse +
