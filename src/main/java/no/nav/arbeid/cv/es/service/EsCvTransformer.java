@@ -8,11 +8,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import no.nav.arbeid.cv.es.domene.EsAnnenErfaring;
 import no.nav.arbeid.cv.es.domene.EsCv;
 import no.nav.arbeid.cv.es.domene.EsForerkort;
 import no.nav.arbeid.cv.es.domene.EsKompetanse;
@@ -22,7 +17,6 @@ import no.nav.arbeid.cv.es.domene.EsSprak;
 import no.nav.arbeid.cv.es.domene.EsUtdanning;
 import no.nav.arbeid.cv.es.domene.EsVerv;
 import no.nav.arbeid.cv.es.domene.EsYrkeserfaring;
-import no.nav.arbeid.cv.events.Annenerfaring;
 import no.nav.arbeid.cv.events.CvEvent;
 import no.nav.arbeid.cv.events.Forerkort;
 import no.nav.arbeid.cv.events.Kompetanse;
@@ -32,6 +26,8 @@ import no.nav.arbeid.cv.events.Sprak;
 import no.nav.arbeid.cv.events.Utdanning;
 import no.nav.arbeid.cv.events.Verv;
 import no.nav.arbeid.cv.events.Yrkeserfaring;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EsCvTransformer {
 
@@ -39,21 +35,35 @@ public class EsCvTransformer {
 
   public EsCv transform(CvEvent p) {
     EsCv esCv = new EsCv(
-        p.getArenaId(),
+        p.getFodselsnummer(),
         p.getFornavn(),
         p.getEtternavn(),
-        toDate(p.getFodselsdato()),
+        this.toDate(p.getFodselsdato()),
+        p.getDnrStatus(),
         p.getFormidlingsgruppekode(),
         p.getEpostadresse(),
         p.getStatsborgerskap(),
-        p.getArenaId(),
-        p.getBeskrivelse()
+        p.getArenaPersonId(),
+        p.getArenaKandidatnr(),
+        p.getBeskrivelse(),
+        p.getSamtykkeStatus(),
+        this.toDate(p.getSamtykkeDato()),
+        p.getAdresselinje1(),
+        p.getAdresselinje2(),
+        p.getAdresselinje3(),
+        p.getPostnr(),
+        p.getPoststed(),
+        p.getLandkode(),
+        p.getKommunenr(),
+        p.getStatusDisponererBil(),
+        p.getAap(),
+        p.getSyfo(),
+        this.toDate(p.getTidsstempel())
     );
 
     esCv.addYrkeserfaring(mapList(p.getYrkeserfaring(), this::mapYrke));
     esCv.addUtdanning(mapList(p.getUtdanning(), this::mapUtdanning));
     esCv.addKompetanse(mapList(p.getKompetanse(), this::mapKompetanse));
-    esCv.addAnnenErfaring(mapList(p.getAnnenerfaring(), this::mapAnnenErfaring));
     esCv.addSertifikat(mapList(p.getSertifikat(), this::mapSertifikat));
     esCv.addForerkort(mapList(p.getForerkort(), this::mapForerkort));
     esCv.addSprak(mapList(p.getSprak(), this::mapSprak));
@@ -73,14 +83,12 @@ public class EsCvTransformer {
   private EsYrkeserfaring mapYrke(Yrkeserfaring yrke) {
     return new EsYrkeserfaring(
         toDate(yrke.getFraDato()),
-        toDate(yrke.getFraDato()),
+        toDate(yrke.getTilDato()),
         yrke.getArbeidsgiver(),
-        yrke.getOrganisasjonsnummer(),
-        yrke.getStillingstittel(),
-        yrke.getBeskrivelse(),
-        yrke.getSokekategori(),
         yrke.getStyrkKode(),
-        yrke.getStyrkKodeTekst(),
+        yrke.getStyrkKodeStillingstittel(),
+        yrke.getAlternativStillingstittel(),
+        yrke.getOrganisasjonsnummer(),
         yrke.getNaceKode()
     );
   }
@@ -89,26 +97,20 @@ public class EsCvTransformer {
     return new EsUtdanning(
         toDate(utdanning.getFraDato()),
         toDate(utdanning.getTilDato()),
-        utdanning.getGrad(),
-        utdanning.getStudiepoeng(),
         utdanning.getUtdannelsessted(),
-        utdanning.getGeografisksted(),
         utdanning.getNusKode(),
-        utdanning.getNusKodeTekst()
+        utdanning.getNusKodeGrad(),
+        utdanning.getAlternativGrad()
     );
   }
 
   private EsKompetanse mapKompetanse(Kompetanse kompetanse) {
     return new EsKompetanse(
-        kompetanse.getNavn()
-    );
-  }
-
-  private EsAnnenErfaring mapAnnenErfaring(Annenerfaring annenerfaring) {
-    return new EsAnnenErfaring(
-        toDate(annenerfaring.getFraDato()),
-        toDate(annenerfaring.getTilDato()),
-        annenerfaring.getBeskrivelse()
+        this.toDate(kompetanse.getFraDato()),
+        kompetanse.getKompKode(),
+        kompetanse.getKompKodeNavn(),
+        kompetanse.getAlternativtNavn(),
+        kompetanse.getBeskrivelse()
     );
   }
 
@@ -117,7 +119,8 @@ public class EsCvTransformer {
         toDate(sertifikat.getFraDato()),
         toDate(sertifikat.getTilDato()),
         sertifikat.getSertifikatKode(),
-        sertifikat.getSertifikatKodeTekst(),
+        sertifikat.getSertifikatKodeNavn(),
+        sertifikat.getAlternativtNavn(),
         sertifikat.getUtsteder()
     );
   }
@@ -126,18 +129,20 @@ public class EsCvTransformer {
     return new EsForerkort(
         toDate(forerkort.getFraDato()),
         toDate(forerkort.getTilDato()),
-        forerkort.getKlasse(),
-        forerkort.getUtsteder(),
-        forerkort.getDisponerer()
+        forerkort.getForerkortKode(),
+        forerkort.getForerkortKodeKlasse(),
+        forerkort.getAlternativKlasse(),
+        forerkort.getUtsteder()
     );
   }
 
   private EsSprak mapSprak(Sprak sprak) {
     return new EsSprak(
+        this.toDate(sprak.getFraDato()),
         sprak.getSprakKode(),
         sprak.getSprakKodeTekst(),
-        sprak.getMuntlig(),
-        sprak.getSkriftlig()
+        sprak.getAlternativTekst(),
+        sprak.getBeskrivelse()
     );
   }
 
@@ -148,7 +153,8 @@ public class EsCvTransformer {
         kurs.getTittel(),
         kurs.getArrangor(),
         kurs.getOmfang().getEnhet(),
-        kurs.getOmfang().getVerdi()
+        kurs.getOmfang().getVerdi(),
+        kurs.getBeskrivelse()
     );
   }
 
@@ -162,6 +168,8 @@ public class EsCvTransformer {
   }
 
   private Date toDate(String dateString) {
+
+    if(dateString == null || dateString.equals("")) {return null;}
     try {
       DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
       return formatter.parse(dateString);

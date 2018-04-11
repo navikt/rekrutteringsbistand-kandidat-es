@@ -1,13 +1,21 @@
 package no.nav.arbeid.cv.es.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+import no.nav.arbeid.cv.es.domene.Aggregering;
+import no.nav.arbeid.cv.es.domene.Aggregeringsfelt;
+import no.nav.arbeid.cv.es.domene.EsCv;
+import no.nav.arbeid.cv.es.domene.Sokeresultat;
+import no.nav.elasticsearch.mapping.MappingBuilder;
+import no.nav.elasticsearch.mapping.MappingBuilderImpl;
+import no.nav.elasticsearch.mapping.ObjectMapping;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
@@ -45,15 +53,6 @@ import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import no.nav.arbeid.cv.es.domene.Aggregering;
-import no.nav.arbeid.cv.es.domene.EsCv;
-import no.nav.arbeid.cv.es.domene.Sokeresultat;
-import no.nav.elasticsearch.mapping.MappingBuilder;
-import no.nav.elasticsearch.mapping.MappingBuilderImpl;
-import no.nav.elasticsearch.mapping.ObjectMapping;
 
 public class EsCvHttpClient implements EsCvClient {
 
@@ -100,7 +99,8 @@ public class EsCvHttpClient implements EsCvClient {
     String jsonString = mapper.writeValueAsString(esCv);
     LOGGER.debug("DOKUMENTET: " + jsonString);
 
-    IndexRequest request = new IndexRequest(CV_INDEX, CV_TYPE, Long.toString(esCv.getArenaId()));
+    IndexRequest request =
+        new IndexRequest(CV_INDEX, CV_TYPE, Long.toString(esCv.getArenaPersonId()));
     request.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
     request.source(jsonString, XContentType.JSON);
     IndexResponse indexResponse = client.index(request);
@@ -109,25 +109,25 @@ public class EsCvHttpClient implements EsCvClient {
 
   @Override
   public List<String> typeAheadKompetanse(String prefix) throws IOException {
-    return typeAhead(prefix, "kompetanse.navn.completion");
+    return typeAhead(prefix, "kompetanse.kompKodeNavn.completion");
   }
-  
+
   @Override
   public List<String> typeAheadUtdanning(String prefix) throws IOException {
-    return typeAhead(prefix, "utdanning.nusKodeTekst.completion");
+    return typeAhead(prefix, "utdanning.nusKodeGrad.completion");
   }
-  
+
   @Override
   public List<String> typeAheadYrkeserfaring(String prefix) throws IOException {
-    return typeAhead(prefix, "yrkeserfaring.stillingstittel.completion");
+    return typeAhead(prefix, "yrkeserfaring.styrkKodeStillingstittel.completion");
   }
 
   private List<String> typeAhead(String prefix, String suggestionField) throws IOException {
     SearchRequest searchRequest = new SearchRequest(CV_INDEX);
     searchRequest.types(CV_TYPE);
     SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-    CompletionSuggestionBuilder suggestionBuilder = SuggestBuilders
-        .completionSuggestion(suggestionField).text(prefix).skipDuplicates(true);
+    CompletionSuggestionBuilder suggestionBuilder =
+        SuggestBuilders.completionSuggestion(suggestionField).text(prefix).skipDuplicates(true);
 
     SuggestBuilder suggestBuilder = new SuggestBuilder();
     suggestBuilder.addSuggestion("typeahead", suggestionBuilder);
@@ -142,42 +142,70 @@ public class EsCvHttpClient implements EsCvClient {
   }
 
   @Override
-  public Sokeresultat sok(String fritekst, String stillingstittel, String kompetanse, String nusKode)
-      throws IOException {
+  public Sokeresultat sok(String fritekst, String stillingstittel, String kompetanse,
+      String utdanning, String styrkKode, String nusKode, List<String> styrkKoder,
+      List<String> nusKoder) throws IOException {
+
     AbstractQueryBuilder<?> queryBuilder = null;
-    if (fritekst == null && stillingstittel == null && kompetanse == null && nusKode == null) {
-      System.out.println("MATCH ALL!");
+    if (StringUtils.isBlank(fritekst) && StringUtils.isBlank(stillingstittel)
+        && StringUtils.isBlank(kompetanse) && StringUtils.isBlank(utdanning)
+        && StringUtils.isBlank(styrkKode) && StringUtils.isBlank(nusKode)
+        && (styrkKoder == null || styrkKoder.isEmpty())
+        && (nusKoder == null || nusKoder.isEmpty())) {
+      LOGGER.debug("MATCH ALL!");
       queryBuilder = QueryBuilders.matchAllQuery();
+
     } else {
+
       BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-      
-      if( fritekst != null ) {
-        MultiMatchQueryBuilder fritekstQueryBuilder = QueryBuilders.multiMatchQuery(fritekst, "fritekst" );
+
+      if (StringUtils.isNotBlank(fritekst)) {
+        MultiMatchQueryBuilder fritekstQueryBuilder =
+            QueryBuilders.multiMatchQuery(fritekst, "fritekst");
         boolQueryBuilder.must(fritekstQueryBuilder);
-        System.out.println("ADDING fritekst");
+        LOGGER.debug("ADDING fritekst");
       }
-      
-      if (stillingstittel != null) {
+
+      if (StringUtils.isNotBlank(stillingstittel)) {
         NestedQueryBuilder yrkeserfaringQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
-            QueryBuilders.matchQuery("yrkeserfaring.stillingstittel", stillingstittel),
+            QueryBuilders.matchQuery("yrkeserfaring.styrkKodeStillingstittel", stillingstittel),
             ScoreMode.None);
         boolQueryBuilder.must(yrkeserfaringQueryBuilder);
-        System.out.println("ADDING yrkeserfaring");
+        LOGGER.debug("ADDING yrkeserfaring");
       }
-      
-      if (kompetanse != null) {
+
+      if (StringUtils.isNotBlank(kompetanse)) {
         NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
-            QueryBuilders.matchQuery("kompetanse.navn", kompetanse), ScoreMode.None);
+            QueryBuilders.matchQuery("kompetanse.kompKodeNavn", kompetanse), ScoreMode.None);
         boolQueryBuilder.must(kompetanseQueryBuilder);
-        System.out.println("ADDING kompetanse");
+        LOGGER.debug("ADDING kompetanse");
       }
-      
-      if (nusKode != null) {
-        NestedQueryBuilder nusKodeQueryBuilder = QueryBuilders.nestedQuery("utdanning",
-            QueryBuilders.termQuery("utdanning.nusKode", nusKode), ScoreMode.None);
-        boolQueryBuilder.must(nusKodeQueryBuilder);
-        System.out.println("ADDING nuskode");
+
+      if (StringUtils.isNotBlank(utdanning)) {
+        NestedQueryBuilder utdanningQueryBuilder = QueryBuilders.nestedQuery("utdanning",
+            QueryBuilders.matchQuery("utdanning.nusKodeGrad", utdanning), ScoreMode.None);
+        boolQueryBuilder.must(utdanningQueryBuilder);
+        LOGGER.debug("ADDING utdanning");
       }
+
+      if (StringUtils.isNotBlank(styrkKode)) {
+        addStyrkKodeQuery(styrkKode, boolQueryBuilder);
+      }
+
+      if (StringUtils.isNotBlank(nusKode)) {
+        addNusKodeQuery(nusKode, boolQueryBuilder);
+      }
+
+      if (styrkKoder != null && !styrkKoder.isEmpty()) {
+        styrkKoder.stream().filter(StringUtils::isNotBlank)
+            .forEach(k -> addStyrkKodeQuery(k, boolQueryBuilder));
+      }
+
+      if (nusKoder != null) {
+        nusKoder.stream().filter(StringUtils::isNotBlank)
+            .forEach(k -> addNusKodeQuery(k, boolQueryBuilder));
+      }
+
       queryBuilder = boolQueryBuilder;
     }
 
@@ -185,24 +213,39 @@ public class EsCvHttpClient implements EsCvClient {
     return toSokeresultat(searchResponse);
   }
 
+  private void addNusKodeQuery(String nusKode, BoolQueryBuilder boolQueryBuilder) {
+    NestedQueryBuilder nusKodeQueryBuilder = QueryBuilders.nestedQuery("utdanning",
+        QueryBuilders.termQuery("utdanning.nusKode", nusKode), ScoreMode.None);
+    boolQueryBuilder.must(nusKodeQueryBuilder);
+    LOGGER.debug("ADDING nuskode");
+  }
+
+  private void addStyrkKodeQuery(String styrkKode, BoolQueryBuilder boolQueryBuilder) {
+    NestedQueryBuilder styrkKodeQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
+        QueryBuilders.termQuery("yrkeserfaring.styrkKode", styrkKode), ScoreMode.None);
+    boolQueryBuilder.must(styrkKodeQueryBuilder);
+    LOGGER.debug("ADDING styrkKode");
+  }
+
   @Override
   public Sokeresultat findByYrkeserfaringStyrkKodeTekst(String styrkBeskrivelse)
       throws IOException {
 
     NestedQueryBuilder yrkeserfaringQueryBuilder = new NestedQueryBuilder("yrkeserfaring",
-        new MatchQueryBuilder("yrkeserfaring.styrkKodeTekst", styrkBeskrivelse), ScoreMode.None);
+        new MatchQueryBuilder("yrkeserfaring.styrkKodeStillingstittel", styrkBeskrivelse),
+        ScoreMode.None);
 
     SearchResponse searchResponse = search(yrkeserfaringQueryBuilder, 0, 1000);
     return toSokeresultat(searchResponse);
   }
 
   @Override
-  public Sokeresultat findByEtternavnAndUtdanningNusKodeTekst(String etternavn,
-      String utdanningNusKodeTekst) throws IOException {
+  public Sokeresultat findByEtternavnAndUtdanningNusKodeGrad(String etternavn,
+      String utdanningNusKodeGrad) throws IOException {
 
     MatchQueryBuilder etternavnQueryBuilder = new MatchQueryBuilder("etternavn", etternavn);
     NestedQueryBuilder utdanningQueryBuilder = new NestedQueryBuilder("utdanning",
-        new MatchQueryBuilder("utdanning.nusKodeTekst", utdanningNusKodeTekst), ScoreMode.None);
+        new MatchQueryBuilder("utdanning.nusKodeGrad", utdanningNusKodeGrad), ScoreMode.None);
 
     BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
     boolQueryBuilder.must(utdanningQueryBuilder);
@@ -226,8 +269,9 @@ public class EsCvHttpClient implements EsCvClient {
         aggregations.asList().stream().map(agg -> agg.getName()).collect(Collectors.toList());
     for (String aggregationName : aggregationNames) {
       List<? extends Bucket> buckets = getBucketsForInnerAggregation(aggregations, aggregationName);
-      Map<String, Long> fields =
-          buckets.stream().collect(Collectors.toMap(Bucket::getKeyAsString, Bucket::getDocCount));
+      List<Aggregeringsfelt> fields = buckets.stream()
+          .map(bucket -> new Aggregeringsfelt(bucket.getKeyAsString(), bucket.getDocCount()))
+          .collect(Collectors.toList());
       aggs.add(new Aggregering(aggregationName, fields));
     }
 
@@ -235,7 +279,8 @@ public class EsCvHttpClient implements EsCvClient {
 
   }
 
-  private List<? extends Bucket> getBucketsForInnerAggregation(Aggregations aggregations, String aggregationName) {
+  private List<? extends Bucket> getBucketsForInnerAggregation(Aggregations aggregations,
+      String aggregationName) {
     return ((Terms) ((Nested) aggregations.get(aggregationName)).getAggregations().get("nested"))
         .getBuckets();
   }
@@ -256,14 +301,14 @@ public class EsCvHttpClient implements EsCvClient {
         AggregationBuilders.nested("yrkeserfaring", "yrkeserfaring");
     nestedYrkesAggregation.subAggregation(yrkesAggregation);
     searchSourceBuilder.aggregation(nestedYrkesAggregation);
-    
+
     TermsAggregationBuilder utdanningAggregation =
         AggregationBuilders.terms("nested").field("utdanning.nusKode");
     NestedAggregationBuilder nestedUtdanningAggregation =
         AggregationBuilders.nested("utdanning", "utdanning");
     nestedUtdanningAggregation.subAggregation(utdanningAggregation);
     searchSourceBuilder.aggregation(nestedUtdanningAggregation);
-    
+
     SearchRequest searchRequest = new SearchRequest();
     searchRequest.indices(CV_INDEX);
     searchRequest.source(searchSourceBuilder);

@@ -3,6 +3,7 @@ package no.nav.arbeid.cv.es.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
@@ -38,34 +39,65 @@ public class EsCvTransformerTest {
     CvEvent cvEvent = CvEventObjectMother.giveMeCvEvent();
     EsCv esCv = esCvTransformer.transform(cvEvent);
 
-    assertEquals("Test", esCv.getFornavn());
-    assertEquals("Testersen", esCv.getEtternavn());
+    assertEquals("OLA", esCv.getFornavn());
+    assertEquals("NORDMANN", esCv.getEtternavn());
   }
 
   @Test
   public void esCvTransformerShouldConvertCvEventToEsCvWithCorrectPersonalInformation() {
 
-    final String FORNAVN = "Test";
-    final String ETTERNAVN = "Testersen";
-    final String FODSELSDATO = "2000-01-15";
-    final String FORMIDLINGSGRUPPEKODE = "020202";
-    final String EPOSTADRESSE = "test@test.no";
-    final String STATSBORGERSKAP = "Norge";
+    final String FODSELSNUMMER = "01016012345";
+    final String FORNAVN = "OLA";
+    final String ETTERNAVN = "NORDMANN";
+    final String FODSELSDATO = "1960-01-01";
+    final boolean DNRSTATUS = false;
+    final String FORMIDLINGSGRUPPEKODE = "ARBS";
+    final String EPOSTADRESSE = "unnasluntrer@mailinator.com";
+    final String STATSBORGERSKAP = "NO";
+    final String arenaKandNr = null;
     final Long ARENA_ID = 1L;
-    final String BESKRIVELSE = "beskrivelse CvEvent";
+    final String BESKRIVELSE = "";
+    final String SAMTYKKESTATUS = "J";
+    final Date SAMTYKKEDATO = new Date(1464559200000L);
+    final String ADRESSELINJE_1 = "Minvei 1";
+    final String ADRESSELINJE_2 = "";
+    final String ADRESSELINJE_3 = "";
+    final String POSTNUMMER = "0654";
+    final String POSTSTED = "OSLO";
+    final String LANDKODE = "NO";
+    final Integer KOMMUNENUMMER = 301;
+    final boolean DISP_BIL = false;
+    final boolean AAP = false;
+    final boolean SYFO = false;
+    final Date TIDSSTEMPEL = null;
 
     CvEvent cvEvent = CvEventObjectMother.giveMeCvEvent();
     EsCv esCv = esCvTransformer.transform(cvEvent);
 
-    assertThat(esCv.getPersonId()).isEqualTo(ARENA_ID);
+    assertThat(esCv.getFodselsnummer()).isEqualTo(FODSELSNUMMER);
     assertThat(esCv.getFornavn()).isEqualTo(FORNAVN);
     assertThat(esCv.getEtternavn()).isEqualTo(ETTERNAVN);
     assertThat(esCv.getFodselsdato()).isEqualTo(FODSELSDATO);
+    assertThat(esCv.getDnrStatus()).isEqualTo(DNRSTATUS);
     assertThat(esCv.getFormidlingsgruppekode()).isEqualTo(FORMIDLINGSGRUPPEKODE);
     assertThat(esCv.getEpostadresse()).isEqualTo(EPOSTADRESSE);
     assertThat(esCv.getStatsborgerskap()).isEqualTo(STATSBORGERSKAP);
-    assertThat(esCv.getArenaId()).isEqualTo(ARENA_ID);
+    assertThat(esCv.getArenaPersonId()).isEqualTo(ARENA_ID);
+    assertThat(esCv.getArenaKandidatnr()).isEqualTo(arenaKandNr);
     assertThat(esCv.getBeskrivelse()).isEqualTo(BESKRIVELSE);
+    assertThat(esCv.getSamtykkeStatus()).isEqualTo(SAMTYKKESTATUS);
+    assertThat(esCv.getSamtykkeDato()).isEqualTo(SAMTYKKEDATO);
+    assertThat(esCv.getAdresselinje1()).isEqualTo(ADRESSELINJE_1);
+    assertThat(esCv.getAdresselinje2()).isEqualTo(ADRESSELINJE_2);
+    assertThat(esCv.getAdresselinje3()).isEqualTo(ADRESSELINJE_3);
+    assertThat(esCv.getPostnummer()).isEqualTo(POSTNUMMER);
+    assertThat(esCv.getPoststed()).isEqualTo(POSTSTED);
+    assertThat(esCv.getLandkode()).isEqualTo(LANDKODE);
+    assertThat(esCv.getKommunenummer()).isEqualTo(KOMMUNENUMMER);
+    assertThat(esCv.getDisponererBil()).isEqualTo(DISP_BIL);
+    assertThat(esCv.getAap()).isEqualTo(AAP);
+    assertThat(esCv.getSyfo()).isEqualTo(SYFO);
+    assertThat(esCv.getTidsstempel()).isEqualTo(TIDSSTEMPEL);
   }
 
   @Test
@@ -76,18 +108,16 @@ public class EsCvTransformerTest {
 
     List<EsYrkeserfaring> yrkeserfaring = esCv.getYrkeserfaring();
 
-    assertThat(yrkeserfaring).hasSize(1);
-    assertThat(yrkeserfaring.get(0).getFraDato()).isEqualTo("2000-01-15");
-    assertThat(yrkeserfaring.get(0).getTilDato()).isEqualTo("2000-01-15");
-    assertThat(yrkeserfaring.get(0).getArbeidsgiver()).isEqualTo("Yrkeserfaring arbeidsgiver");
-    assertThat(yrkeserfaring.get(0).getBeskrivelse()).isEqualTo("Yrkeserfaring beskrivelse");
-    assertThat(yrkeserfaring.get(0).getNaceKode()).isEqualTo("Yrkeserfaring nacekode");
-    assertThat(yrkeserfaring.get(0).getOrganisasjonsnummer()).isEqualTo("1");
-    assertThat(yrkeserfaring.get(0).getSokekategori()).isEqualTo("Yrkeserfaring sokekategori");
-    assertThat(yrkeserfaring.get(0).getStillingstittel())
-        .isEqualTo("greenkeeper");
-    assertThat(yrkeserfaring.get(0).getStyrkKode()).isEqualTo("Yrkeserfaring styrkkode");
-    assertThat(yrkeserfaring.get(0).getStyrkKodeTekst()).isEqualTo("Yrkeserfaring styrkkode tekst");
+    assertThat(yrkeserfaring).hasSize(6);
+    assertThat(yrkeserfaring.get(0).getFraDato()).isEqualTo("2000-01-01");
+    assertThat(yrkeserfaring.get(0).getTilDato()).isEqualTo("2002-01-01");
+    assertThat(yrkeserfaring.get(0).getArbeidsgiver()).isEqualTo("Stentransport, Kragerø");
+    assertThat(yrkeserfaring.get(0).getStyrkKode()).isEqualTo("8342.01");
+    assertThat(yrkeserfaring.get(0).getStyrkKodeStillingstittel()).isEqualTo("Anleggsmaskinfører");
+    assertThat(yrkeserfaring.get(0).getAlternativStillingstittel()).isEqualTo("maskinkjører og maskintransport");
+    assertThat(yrkeserfaring.get(0).getOrganisasjonsnummer()).isEqualTo("YRKE_ORGNR");
+    assertThat(yrkeserfaring.get(0).getNaceKode())
+        .isEqualTo("YRKE_NACEKODE");
 
   }
 
@@ -100,17 +130,12 @@ public class EsCvTransformerTest {
     List<EsUtdanning> utdanning = esCv.getUtdanning();
 
     assertThat(utdanning).hasSize(1);
-    assertThat(utdanning.get(0).getFraDato()).isEqualTo("2000-01-15");
-    assertThat(utdanning.get(0).getTilDato()).isEqualTo("2001-01-15");
-    assertThat(utdanning.get(0).getGrad()).isEqualTo("grad");
-    assertThat(utdanning.get(0).getStudiepoeng()).isEqualTo("1");
-    assertThat(utdanning.get(0).getUtdannelsessted())
-        .isEqualTo("Utdanning utdannelsessted");
-    assertThat(utdanning.get(0).getGeografiskSted())
-        .isEqualTo("Utdanning geografisk sted");
-    assertThat(utdanning.get(0).getNusKode()).isEqualTo("Utdanning nusKode");
-    assertThat(utdanning.get(0).getNusKodeTekst()).isEqualTo("nusKodeTekst");
-
+    assertThat(utdanning.get(0).getFraDato()).isEqualTo("1988-08-20");
+    assertThat(utdanning.get(0).getTilDato()).isEqualTo("1989-06-20");
+    assertThat(utdanning.get(0).getUtdannelsessted()).isEqualTo("Otta vgs. Otta");
+    assertThat(utdanning.get(0).getNusKode()).isEqualTo("355211");
+    assertThat(utdanning.get(0).getNusKodeGrad()).isEqualTo("Mekaniske fag, grunnkurs");
+    assertThat(utdanning.get(0).getAlternativGrad()).isEqualTo("GK maskin/mekaniker");
   }
 
   @Test
@@ -121,8 +146,12 @@ public class EsCvTransformerTest {
 
     List<EsKompetanse> kompetanse = esCv.getKompetanse();
 
-    assertThat(kompetanse).hasSize(1);
-    assertThat(kompetanse.get(0).getNavn()).isEqualTo("navn kompetanse");
+    assertThat(kompetanse).hasSize(4);
+    assertThat(kompetanse.get(0).getFraDato()).isEqualTo("2016-03-14");
+    assertThat(kompetanse.get(0).getKompKode()).isEqualTo("3020813");
+    assertThat(kompetanse.get(0).getKompKodeNavn()).isEqualTo("Maskin- og kranførerarbeid");
+    assertThat(kompetanse.get(0).getAlternativtNavn()).isEqualTo(null);
+    assertThat(kompetanse.get(0).getBeskrivelse()).isEqualTo(null);
   }
 
   @Test
@@ -130,13 +159,8 @@ public class EsCvTransformerTest {
 
     CvEvent cvEvent = CvEventObjectMother.giveMeCvEvent();
     EsCv esCv = esCvTransformer.transform(cvEvent);
-
     List<EsAnnenErfaring> annenerfaring = esCv.getAnnenerfaring();
-
-    assertThat(annenerfaring).hasSize(1);
-    assertThat(annenerfaring.get(0).getFraDato()).isEqualTo("2000-01-15");
-    assertThat(annenerfaring.get(0).getTilDato()).isEqualTo("2001-01-15");
-    assertThat(annenerfaring.get(0).getBeskrivelse()).isEqualTo("Annen erfaring beskrivelse");
+    assertThat(annenerfaring).hasSize(0);
   }
 
   @Test
@@ -147,12 +171,13 @@ public class EsCvTransformerTest {
 
     List<EsSertifikat> sertifikat = esCv.getSertifikat();
 
-    assertThat(sertifikat).hasSize(1);
-    assertThat(sertifikat.get(0).getFraDato()).isEqualTo("2000-01-15");
-    assertThat(sertifikat.get(0).getTilDato()).isEqualTo("2001-01-15");
-    assertThat(sertifikat.get(0).getSertifikatKode()).isEqualTo("sertifikatkode");
-    assertThat(sertifikat.get(0).getSertifikatKodeTekst()).isEqualTo("sertifikatkode tekst");
-    assertThat(sertifikat.get(0).getUtsteder()).isEqualTo("Sertifikat utsteder");
+    assertThat(sertifikat).hasSize(5);
+    assertThat(sertifikat.get(0).getFraDato()).isEqualTo("1994-08-01");
+    assertThat(sertifikat.get(0).getTilDato()).isEqualTo(null);
+    assertThat(sertifikat.get(0).getSertifikatKode()).isEqualTo("V1.6050");
+    assertThat(sertifikat.get(0).getSertifikatKodeNavn()).isEqualTo("Førerkort: Kl. A (tung motorsykkel)");
+    assertThat(sertifikat.get(0).getAlternativtNavn()).isEqualTo(null);
+    assertThat(sertifikat.get(0).getUtsteder()).isEqualTo("");
   }
 
   @Test
@@ -163,12 +188,13 @@ public class EsCvTransformerTest {
 
     List<EsForerkort> Forerkort = esCv.getForerkort();
 
-    assertThat(Forerkort).hasSize(1);
-    assertThat(Forerkort.get(0).getFraDato()).isEqualTo("2000-01-15");
-    assertThat(Forerkort.get(0).getTilDato()).isEqualTo("2001-01-15");
-    assertThat(Forerkort.get(0).getKlasse()).isEqualTo("Forerkortklasse");
-    assertThat(Forerkort.get(0).getUtsteder()).isEqualTo("Forerkort utsteder");
-    assertThat(Forerkort.get(0).getDisponererKjoretoy()).isEqualTo(true);
+    assertThat(Forerkort).hasSize(4);
+    assertThat(Forerkort.get(0).getFraDato()).isEqualTo("1994-08-01");
+    assertThat(Forerkort.get(0).getTilDato()).isEqualTo(null);
+    assertThat(Forerkort.get(0).getForerkortKode()).isEqualTo("V1.6050");
+    assertThat(Forerkort.get(0).getForerkortKodeKlasse()).isEqualTo("Førerkort: Kl. A (tung motorsykkel)");
+    assertThat(Forerkort.get(0).getAlternativKlasse()).isEqualTo(null);
+    assertThat(Forerkort.get(0).getUtsteder()).isEqualTo("");
   }
 
   @Test
@@ -180,10 +206,11 @@ public class EsCvTransformerTest {
     List<EsSprak> Sprak = esCv.getSprak();
 
     assertThat(Sprak).hasSize(1);
+    assertThat(Sprak.get(0).getFraDato()).isEqualTo("2012-12-01");
     assertThat(Sprak.get(0).getSprakKode()).isEqualTo("Språk kode");
     assertThat(Sprak.get(0).getSprakKodeTekst()).isEqualTo("Språk kode tekst");
-    assertThat(Sprak.get(0).getMuntlig()).isEqualTo("Språk muntlig");
-    assertThat(Sprak.get(0).getSkriftlig()).isEqualTo("Språk skriftlig");
+    assertThat(Sprak.get(0).getAlternativTekst()).isEqualTo("Språk alternativ tekst");
+    assertThat(Sprak.get(0).getBeskrivelse()).isEqualTo("Språk beskrivelse");
   }
 
   @Test
@@ -194,13 +221,14 @@ public class EsCvTransformerTest {
 
     List<EsKurs> kurs = esCv.getKurs();
 
-    assertThat(kurs).hasSize(1);
-    assertThat(kurs.get(0).getFraDato()).isEqualTo("2000-01-15");
-    assertThat(kurs.get(0).getTilDato()).isEqualTo("2001-01-15");
-    assertThat(kurs.get(0).getTittel()).isEqualTo("Kurs tittel");
-    assertThat(kurs.get(0).getArrangor()).isEqualTo("Kurs arrangør");
-    assertThat(kurs.get(0).getOmfangEnhet()).isEqualTo("Omfang enhet");
-    assertThat(kurs.get(0).getOmfangVerdi()).isEqualTo(1);
+    assertThat(kurs).hasSize(3);
+    assertThat(kurs.get(0).getFraDato()).isEqualTo("2012-12-01");
+    assertThat(kurs.get(0).getTilDato()).isEqualTo(null);
+    assertThat(kurs.get(0).getTittel()).isEqualTo("Akseloppretting");
+    assertThat(kurs.get(0).getArrangor()).isEqualTo("Easy-Laser");
+    assertThat(kurs.get(0).getOmfangEnhet()).isEqualTo(null);
+    assertThat(kurs.get(0).getOmfangVerdi()).isEqualTo(null);
+    assertThat(kurs.get(0).getBeskrivelse()).isEqualTo(null);
   }
 
   @Test

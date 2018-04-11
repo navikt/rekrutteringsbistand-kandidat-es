@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,6 +29,7 @@ public class SearchController {
   private EsCvClient client;
 
   @RequestMapping(path = "typeahead", method = RequestMethod.GET)
+  @CrossOrigin(origins = "http://localhost:9009")
   public HttpEntity<Resources<StringResource>> typeAheadKompetanse(
       @RequestParam(name = "komp", required = false) String komp,
       @RequestParam(name = "utd", required = false) String utd,
@@ -54,13 +57,19 @@ public class SearchController {
   }
 
   @RequestMapping(path = "sok", method = RequestMethod.GET)
-  public HttpEntity<SokeresultatResource> hentCverMedArbeidserfaring(
+  @CrossOrigin(origins = "http://localhost:9009")
+  public HttpEntity<SokeresultatResource> sok(
       @RequestParam(name = "fritekst", required = false) String fritekst,
       @RequestParam(name = "yrkeserfaring", required = false) String yrkeserfaring,
       @RequestParam(name = "kompetanse", required = false) String kompetanse,
-      @RequestParam(name = "nusKode", required = false) String nusKode) throws IOException {
+      @RequestParam(name = "utdanning", required = false) String utdanning,
+      @RequestParam(name = "styrkKode", required = false) String styrkKode,
+      @RequestParam(name = "nusKode", required = false) String nusKode,
+      @RequestParam(name = "styrkKoder", required = false) List<String> styrkKoder,
+      @RequestParam(name = "nusKoder", required = false) List<String> nusKoder) throws IOException {
 
-    Sokeresultat sokeresultat = client.sok(fritekst, yrkeserfaring, kompetanse, nusKode);
+    Sokeresultat sokeresultat =
+        client.sok(fritekst, yrkeserfaring, kompetanse, utdanning, styrkKode, nusKode, styrkKoder, nusKoder);
     SokeresultatResource sokeresultatResource = new SokeresultatResource(sokeresultat);
     return new ResponseEntity<>(sokeresultatResource, HttpStatus.OK);
   }

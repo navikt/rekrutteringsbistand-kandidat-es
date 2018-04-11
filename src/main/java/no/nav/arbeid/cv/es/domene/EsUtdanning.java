@@ -1,5 +1,6 @@
 package no.nav.arbeid.cv.es.domene;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 import java.util.Objects;
 
@@ -20,36 +21,28 @@ public class EsUtdanning {
   private Date tilDato;
 
   @ElasticTextField
-  private String grad;
-
-  @ElasticTextField
-  private String studiepoeng;
-
-  @ElasticTextField
   private String utdannelsessted;
-
-  @ElasticTextField
-  private String geografiskSted;
 
   @ElasticKeywordField
   private String nusKode;
 
   @ElasticTextField(copyTo="fritekst")
   @ElasticCompletionField
-  private String nusKodeTekst;
+  private String nusKodeGrad;
+
+  @ElasticTextField
+  private String alternativGrad;
 
   public EsUtdanning() {}
 
-  public EsUtdanning(Date fraDato, Date tilDato, String grad, String studiepoeng,
-      String utdannelsessted, String geografiskSted, String nusKode, String nusKodeTekst) {
+  public EsUtdanning(Date fraDato, Date tilDato, String utdannelsessted, String nusKode,
+      String nusKodeGrad, String alternativGrad) {
     this.fraDato = fraDato;
     this.tilDato = tilDato;
-    this.grad = grad;
-    this.studiepoeng = studiepoeng;
     this.utdannelsessted = utdannelsessted;
-    this.geografiskSted = geografiskSted;
     this.nusKode = nusKode;
-    this.nusKodeTekst = nusKodeTekst;
+    this.nusKodeGrad = nusKodeGrad;
+    this.alternativGrad = alternativGrad;
   }
 
   public Date getFraDato() {
@@ -60,28 +53,20 @@ public class EsUtdanning {
     return tilDato;
   }
 
-  public String getGrad() {
-    return grad;
-  }
-
-  public String getStudiepoeng() {
-    return studiepoeng;
-  }
-
   public String getUtdannelsessted() {
     return utdannelsessted;
-  }
-
-  public String getGeografiskSted() {
-    return geografiskSted;
   }
 
   public String getNusKode() {
     return nusKode;
   }
 
-  public String getNusKodeTekst() {
-    return nusKodeTekst;
+  public String getNusKodeGrad() {
+    return nusKodeGrad;
+  }
+
+  public String getAlternativGrad() {
+    return alternativGrad;
   }
 
   @Override
@@ -93,26 +78,30 @@ public class EsUtdanning {
       return false;
     }
     EsUtdanning that = (EsUtdanning) o;
-    return Objects.equals(fraDato, that.fraDato) && Objects.equals(tilDato, that.tilDato)
-        && Objects.equals(grad, that.grad) && Objects.equals(studiepoeng, that.studiepoeng)
-        && Objects.equals(utdannelsessted, that.utdannelsessted)
-        && Objects.equals(geografiskSted, that.geografiskSted)
-        && Objects.equals(nusKode, that.nusKode) && Objects.equals(nusKodeTekst, that.nusKodeTekst);
+    return Objects.equals(fraDato, that.fraDato) &&
+        Objects.equals(tilDato, that.tilDato) &&
+        Objects.equals(utdannelsessted, that.utdannelsessted) &&
+        Objects.equals(nusKode, that.nusKode) &&
+        Objects.equals(nusKodeGrad, that.nusKodeGrad) &&
+        Objects.equals(alternativGrad, that.alternativGrad);
   }
 
   @Override
   public int hashCode() {
 
-    return Objects.hash(fraDato, tilDato, grad, studiepoeng, utdannelsessted, geografiskSted,
-        nusKode, nusKodeTekst);
+    return Objects.hash(fraDato, tilDato, utdannelsessted, nusKode, nusKodeGrad, alternativGrad);
   }
 
   @Override
   public String toString() {
-    return "EsUtdanning{" + "fraDato=" + fraDato + ", tilDato=" + tilDato + ", grad='" + grad + '\''
-        + ", studiepoeng='" + studiepoeng + '\'' + ", utdannelsessted='" + utdannelsessted + '\''
-        + ", geografiskSted='" + geografiskSted + '\'' + ", nusKode='" + nusKode + '\''
-        + ", nusKodeTekst='" + nusKodeTekst + '\'' + '}';
+    return "EsUtdanning{" +
+        "fraDato=" + fraDato +
+        ", tilDato=" + tilDato +
+        ", utdannelsessted='" + utdannelsessted + '\'' +
+        ", nusKode='" + nusKode + '\'' +
+        ", nusKodeGrad='" + nusKodeGrad + '\'' +
+        ", alternativGrad='" + alternativGrad + '\'' +
+        '}';
   }
 
 }
