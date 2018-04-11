@@ -2,7 +2,6 @@ package no.nav.arbeid.cv.es.client;
 
 import java.io.IOException;
 import java.util.List;
-
 import no.nav.arbeid.cv.es.domene.EsCv;
 import no.nav.arbeid.cv.es.domene.Sokeresultat;
 
@@ -27,6 +26,6 @@ public interface EsCvClient {
   Sokeresultat findByYrkeserfaringStyrkKodeTekst(String styrkBeskrivelse) throws IOException;
 
   @Deprecated
-  Sokeresultat findByEtternavnAndUtdanningNusKodeTekst(String etternavn,
+  Sokeresultat findByEtternavnAndUtdanningNusKodeGrad(String etternavn,
       String utdanningNusKodeTekst) throws IOException;
 }
