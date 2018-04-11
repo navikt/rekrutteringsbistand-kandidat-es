@@ -14,6 +14,8 @@ import no.nav.arbeid.cv.es.domene.Sokeresultat;
 import no.nav.elasticsearch.mapping.MappingBuilder;
 import no.nav.elasticsearch.mapping.MappingBuilderImpl;
 import no.nav.elasticsearch.mapping.ObjectMapping;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
@@ -97,7 +99,8 @@ public class EsCvHttpClient implements EsCvClient {
     String jsonString = mapper.writeValueAsString(esCv);
     LOGGER.debug("DOKUMENTET: " + jsonString);
 
-    IndexRequest request = new IndexRequest(CV_INDEX, CV_TYPE, Long.toString(esCv.getArenaPersonId()));
+    IndexRequest request =
+        new IndexRequest(CV_INDEX, CV_TYPE, Long.toString(esCv.getArenaPersonId()));
     request.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
     request.source(jsonString, XContentType.JSON);
     IndexResponse indexResponse = client.index(request);
@@ -144,8 +147,10 @@ public class EsCvHttpClient implements EsCvClient {
       List<String> nusKoder) throws IOException {
 
     AbstractQueryBuilder<?> queryBuilder = null;
-    if (fritekst == null && stillingstittel == null && kompetanse == null && utdanning == null
-        && styrkKode == null && nusKode == null && (styrkKoder == null || styrkKoder.isEmpty())
+    if (StringUtils.isBlank(fritekst) && StringUtils.isBlank(stillingstittel)
+        && StringUtils.isBlank(kompetanse) && StringUtils.isBlank(utdanning)
+        && StringUtils.isBlank(styrkKode) && StringUtils.isBlank(nusKode)
+        && (styrkKoder == null || styrkKoder.isEmpty())
         && (nusKoder == null || nusKoder.isEmpty())) {
       LOGGER.debug("MATCH ALL!");
       queryBuilder = QueryBuilders.matchAllQuery();
@@ -154,14 +159,14 @@ public class EsCvHttpClient implements EsCvClient {
 
       BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-      if (fritekst != null) {
+      if (StringUtils.isNotBlank(fritekst)) {
         MultiMatchQueryBuilder fritekstQueryBuilder =
             QueryBuilders.multiMatchQuery(fritekst, "fritekst");
         boolQueryBuilder.must(fritekstQueryBuilder);
         LOGGER.debug("ADDING fritekst");
       }
 
-      if (stillingstittel != null) {
+      if (StringUtils.isNotBlank(stillingstittel)) {
         NestedQueryBuilder yrkeserfaringQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
             QueryBuilders.matchQuery("yrkeserfaring.styrkKodeStillingstittel", stillingstittel),
             ScoreMode.None);
@@ -169,34 +174,36 @@ public class EsCvHttpClient implements EsCvClient {
         LOGGER.debug("ADDING yrkeserfaring");
       }
 
-      if (kompetanse != null) {
+      if (StringUtils.isNotBlank(kompetanse)) {
         NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
             QueryBuilders.matchQuery("kompetanse.kompKodeNavn", kompetanse), ScoreMode.None);
         boolQueryBuilder.must(kompetanseQueryBuilder);
         LOGGER.debug("ADDING kompetanse");
       }
 
-      if (utdanning != null) {
+      if (StringUtils.isNotBlank(utdanning)) {
         NestedQueryBuilder utdanningQueryBuilder = QueryBuilders.nestedQuery("utdanning",
             QueryBuilders.matchQuery("utdanning.nusKodeGrad", utdanning), ScoreMode.None);
         boolQueryBuilder.must(utdanningQueryBuilder);
         LOGGER.debug("ADDING utdanning");
       }
 
-      if (styrkKode != null) {
+      if (StringUtils.isNotBlank(styrkKode)) {
         addStyrkKodeQuery(styrkKode, boolQueryBuilder);
       }
 
-      if (nusKode != null) {
+      if (StringUtils.isNotBlank(nusKode)) {
         addNusKodeQuery(nusKode, boolQueryBuilder);
       }
 
       if (styrkKoder != null && !styrkKoder.isEmpty()) {
-        styrkKoder.forEach(k -> addStyrkKodeQuery(k, boolQueryBuilder));
+        styrkKoder.stream().filter(StringUtils::isNotBlank)
+            .forEach(k -> addStyrkKodeQuery(k, boolQueryBuilder));
       }
 
       if (nusKoder != null) {
-        nusKoder.forEach(k -> addNusKodeQuery(k, boolQueryBuilder));
+        nusKoder.stream().filter(StringUtils::isNotBlank)
+            .forEach(k -> addStyrkKodeQuery(k, boolQueryBuilder));
       }
 
       queryBuilder = boolQueryBuilder;
@@ -225,7 +232,8 @@ public class EsCvHttpClient implements EsCvClient {
       throws IOException {
 
     NestedQueryBuilder yrkeserfaringQueryBuilder = new NestedQueryBuilder("yrkeserfaring",
-        new MatchQueryBuilder("yrkeserfaring.styrkKodeStillingstittel", styrkBeskrivelse), ScoreMode.None);
+        new MatchQueryBuilder("yrkeserfaring.styrkKodeStillingstittel", styrkBeskrivelse),
+        ScoreMode.None);
 
     SearchResponse searchResponse = search(yrkeserfaringQueryBuilder, 0, 1000);
     return toSokeresultat(searchResponse);
