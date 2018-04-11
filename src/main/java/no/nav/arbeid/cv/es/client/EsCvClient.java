@@ -9,7 +9,7 @@ import no.nav.arbeid.cv.es.domene.Sokeresultat;
 public interface EsCvClient {
 
   Sokeresultat sok(String fritekst, String stillingstittel, String kompetanse, String utdanning,
-      String styrkKode, String nusKode) throws IOException;
+      String styrkKode, String nusKode, List<String> styrkKoder, List<String> nusKoder) throws IOException;
 
   void index(EsCv esCv) throws IOException;
 

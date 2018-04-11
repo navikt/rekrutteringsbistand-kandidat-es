@@ -34,7 +34,7 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: '127.0.0.1:2181'
 
   elastic_search:
-    image: docker.adeo.no:5000/pires/docker-elasticsearch:5.6.0
+    image: ssense/elasticsearch:latest
     volumes:
       - $PWD/target/data:/data
     privileged: true
@@ -42,7 +42,7 @@ services:
     ports:
       - "9200:9200"
       - "9300:9300" 
-    #healthcheck:
-    #  test: "curl -f http://elastic:9200"
+    healthcheck:
+      test: "curl -f http://localhost:9200"
 
   

@@ -63,10 +63,12 @@ public class SearchController {
       @RequestParam(name = "kompetanse", required = false) String kompetanse,
       @RequestParam(name = "utdanning", required = false) String utdanning,
       @RequestParam(name = "styrkKode", required = false) String styrkKode,
-      @RequestParam(name = "nusKode", required = false) String nusKode) throws IOException {
+      @RequestParam(name = "nusKode", required = false) String nusKode,
+      @RequestParam(name = "styrkKoder", required = false) List<String> styrkKoder,
+      @RequestParam(name = "nusKoder", required = false) List<String> nusKoder) throws IOException {
 
     Sokeresultat sokeresultat =
-        client.sok(fritekst, yrkeserfaring, kompetanse, utdanning, styrkKode, nusKode);
+        client.sok(fritekst, yrkeserfaring, kompetanse, utdanning, styrkKode, nusKode, styrkKoder, nusKoder);
     SokeresultatResource sokeresultatResource = new SokeresultatResource(sokeresultat);
     return new ResponseEntity<>(sokeresultatResource, HttpStatus.OK);
   }

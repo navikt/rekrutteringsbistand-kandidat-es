@@ -143,13 +143,18 @@ public class EsCvHttpClient implements EsCvClient {
 
   @Override
   public Sokeresultat sok(String fritekst, String stillingstittel, String kompetanse,
-      String utdanning, String styrkKode, String nusKode) throws IOException {
+      String utdanning, String styrkKode, String nusKode, List<String> styrkKoder,
+      List<String> nusKoder) throws IOException {
+
     AbstractQueryBuilder<?> queryBuilder = null;
     if (fritekst == null && stillingstittel == null && kompetanse == null && utdanning == null
-        && styrkKode == null && nusKode == null) {
+        && styrkKode == null && nusKode == null && (styrkKoder == null || styrkKoder.isEmpty())
+        && (nusKoder == null || nusKoder.isEmpty())) {
       LOGGER.debug("MATCH ALL!");
       queryBuilder = QueryBuilders.matchAllQuery();
+
     } else {
+
       BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
       if (fritekst != null) {
@@ -173,7 +178,7 @@ public class EsCvHttpClient implements EsCvClient {
         boolQueryBuilder.must(kompetanseQueryBuilder);
         LOGGER.debug("ADDING kompetanse");
       }
-      
+
       if (utdanning != null) {
         NestedQueryBuilder utdanningQueryBuilder = QueryBuilders.nestedQuery("utdanning",
             QueryBuilders.matchQuery("utdanning.nusKodeTekst", utdanning), ScoreMode.None);
@@ -182,22 +187,40 @@ public class EsCvHttpClient implements EsCvClient {
       }
 
       if (styrkKode != null) {
-        NestedQueryBuilder styrkKodeQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
-            QueryBuilders.termQuery("yrkeserfaring.styrkKode", styrkKode), ScoreMode.None);
-        boolQueryBuilder.must(styrkKodeQueryBuilder);
-        LOGGER.debug("ADDING styrkKode");
+        addStyrkKodeQuery(styrkKode, boolQueryBuilder);
       }
+
       if (nusKode != null) {
-        NestedQueryBuilder nusKodeQueryBuilder = QueryBuilders.nestedQuery("utdanning",
-            QueryBuilders.termQuery("utdanning.nusKode", nusKode), ScoreMode.None);
-        boolQueryBuilder.must(nusKodeQueryBuilder);
-        LOGGER.debug("ADDING nuskode");
+        addNusKodeQuery(nusKode, boolQueryBuilder);
       }
+
+      if (styrkKoder != null && !styrkKoder.isEmpty()) {
+        styrkKoder.forEach(k -> addStyrkKodeQuery(k, boolQueryBuilder));
+      }
+
+      if (nusKoder != null) {
+        nusKoder.forEach(k -> addNusKodeQuery(k, boolQueryBuilder));
+      }
+
       queryBuilder = boolQueryBuilder;
     }
 
     SearchResponse searchResponse = search(queryBuilder, 0, 1000);
     return toSokeresultat(searchResponse);
+  }
+
+  private void addNusKodeQuery(String nusKode, BoolQueryBuilder boolQueryBuilder) {
+    NestedQueryBuilder nusKodeQueryBuilder = QueryBuilders.nestedQuery("utdanning",
+        QueryBuilders.termQuery("utdanning.nusKode", nusKode), ScoreMode.None);
+    boolQueryBuilder.must(nusKodeQueryBuilder);
+    LOGGER.debug("ADDING nuskode");
+  }
+
+  private void addStyrkKodeQuery(String styrkKode, BoolQueryBuilder boolQueryBuilder) {
+    NestedQueryBuilder styrkKodeQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
+        QueryBuilders.termQuery("yrkeserfaring.styrkKode", styrkKode), ScoreMode.None);
+    boolQueryBuilder.must(styrkKodeQueryBuilder);
+    LOGGER.debug("ADDING styrkKode");
   }
 
   @Override
