@@ -106,17 +106,17 @@ public class EsCvHttpClient implements EsCvClient {
 
   @Override
   public List<String> typeAheadKompetanse(String prefix) throws IOException {
-    return typeAhead(prefix, "kompetanse.navn.completion");
+    return typeAhead(prefix, "kompetanse.kompKodeNavn.completion");
   }
 
   @Override
   public List<String> typeAheadUtdanning(String prefix) throws IOException {
-    return typeAhead(prefix, "utdanning.nusKodeTekst.completion");
+    return typeAhead(prefix, "utdanning.nusKodeGrad.completion");
   }
 
   @Override
   public List<String> typeAheadYrkeserfaring(String prefix) throws IOException {
-    return typeAhead(prefix, "yrkeserfaring.stillingstittel.completion");
+    return typeAhead(prefix, "yrkeserfaring.styrkKodeStillingstittel.completion");
   }
 
   private List<String> typeAhead(String prefix, String suggestionField) throws IOException {
@@ -158,7 +158,7 @@ public class EsCvHttpClient implements EsCvClient {
 
       if (stillingstittel != null) {
         NestedQueryBuilder yrkeserfaringQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
-            QueryBuilders.matchQuery("yrkeserfaring.stillingstittel", stillingstittel),
+            QueryBuilders.matchQuery("yrkeserfaring.styrkKodeStillingstittel", stillingstittel),
             ScoreMode.None);
         boolQueryBuilder.must(yrkeserfaringQueryBuilder);
         LOGGER.debug("ADDING yrkeserfaring");
@@ -166,14 +166,14 @@ public class EsCvHttpClient implements EsCvClient {
 
       if (kompetanse != null) {
         NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
-            QueryBuilders.matchQuery("kompetanse.navn", kompetanse), ScoreMode.None);
+            QueryBuilders.matchQuery("kompetanse.kompKodeNavn", kompetanse), ScoreMode.None);
         boolQueryBuilder.must(kompetanseQueryBuilder);
         LOGGER.debug("ADDING kompetanse");
       }
 
       if (utdanning != null) {
         NestedQueryBuilder utdanningQueryBuilder = QueryBuilders.nestedQuery("utdanning",
-            QueryBuilders.matchQuery("utdanning.nusKodeTekst", utdanning), ScoreMode.None);
+            QueryBuilders.matchQuery("utdanning.nusKodeGrad", utdanning), ScoreMode.None);
         boolQueryBuilder.must(utdanningQueryBuilder);
         LOGGER.debug("ADDING utdanning");
       }
@@ -202,7 +202,7 @@ public class EsCvHttpClient implements EsCvClient {
       throws IOException {
 
     NestedQueryBuilder yrkeserfaringQueryBuilder = new NestedQueryBuilder("yrkeserfaring",
-        new MatchQueryBuilder("yrkeserfaring.styrkKodeTekst", styrkBeskrivelse), ScoreMode.None);
+        new MatchQueryBuilder("yrkeserfaring.styrkKodeStillingstittel", styrkBeskrivelse), ScoreMode.None);
 
     SearchResponse searchResponse = search(yrkeserfaringQueryBuilder, 0, 1000);
     return toSokeresultat(searchResponse);
