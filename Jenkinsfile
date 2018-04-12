@@ -6,7 +6,7 @@ def deployLib = new deploy()
 node {
     def application = "pam-cv-indexer"
 
-    def committer, committerEmail, changelog,pom, releaseVersion, isSnapshot, nextVersion // metadata
+    def committer, committerEmail, changelog, pom, releaseVersion, isSnapshot, nextVersion // metadata
 
     def mvnHome = tool "maven-3.3.9"
     def mvn = "${mvnHome}/bin/mvn"
@@ -15,7 +15,7 @@ node {
     def policies = "app-policies.xml"
     def notenforced = "not-enforced-urls.txt"
     def appConfig = "nais.yaml"
-    def dockerRepo = "docker.adeo.no:5000"
+    def dockerRepo = "repo.adeo.no:5443"
     def zone = 'sbs'
 
     def color
@@ -23,8 +23,13 @@ node {
     try {
 
         stage("checkout") {
-            git url: "ssh://git@stash.devillo.no:7999/pam/${application}.git"
-        }
+                    cleanWs()
+                    withCredentials([string(credentialsId: 'navikt-ci-oauthtoken', variable: 'token')]) {
+                     withEnv(['HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088']) {
+                            sh(script: "git clone https://${token}:x-oauth-basic@github.com/navikt/${application}.git .")
+                        }
+                    }
+                }
 
         stage("initialize") {
             pom = readMavenPom file: 'pom.xml'
@@ -53,11 +58,15 @@ node {
         }
 
         stage("release version") {
-            sh "${mvn} versions:set -B -DnewVersion=${releaseVersion} -DgenerateBackupPoms=false"
-            sh "git commit -am \"set version to ${releaseVersion} (from Jenkins pipeline)\""
-            sh "git push origin master"
-            sh "git tag -a ${application}-${releaseVersion} -m ${application}-${releaseVersion}"
-            sh "git push --tags"
+            withEnv(['HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088']) {
+                withCredentials([string(credentialsId: 'navikt-ci-oauthtoken', variable: 'token')]) {
+                    sh "${mvn} versions:set -B -DnewVersion=${releaseVersion} -DgenerateBackupPoms=false"
+                    sh "git commit -am \"set version to ${releaseVersion} (from Jenkins pipeline)\""
+                    sh ("git push https://${token}:x-oauth-basic@github.com/navikt/${application}.git")
+                    sh ("git tag -a ${application}-${releaseVersion} -m ${application}-${releaseVersion}")
+                    sh ("git push https://${token}:x-oauth-basic@github.com/navikt/${application}.git --tags")
+                }
+            }
         }
 
         stage("publish yaml") {
@@ -74,24 +83,28 @@ node {
             }
         }
 
-        stage("build and publish docker images") {
-            sh "docker build --build-arg JAR_FILE=${application}-${releaseVersion}.jar -t ${dockerRepo}/${application}:${releaseVersion} ."
-            sh "docker push ${dockerRepo}/${application}:${releaseVersion}"
+        stage("build and publish docker image") {
+            withCredentials([usernamePassword(credentialsId: 'nexusUploader', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+                sh "docker build --build-arg JAR_FILE=${application}-${releaseVersion}.jar -t ${dockerRepo}/${application}:${releaseVersion} ."
+                sh "docker login -u ${env.NEXUS_USERNAME} -p ${env.NEXUS_PASSWORD} ${dockerRepo} && docker push ${dockerRepo}/${application}:${releaseVersion}"
+            }
         }
 
         stage("new dev version") {
-            nextVersion = (releaseVersion.toInteger() + 1) + "-SNAPSHOT"
-            sh "${mvn} versions:set -B -DnewVersion=${nextVersion} -DgenerateBackupPoms=false"
-            sh "git commit -am \"updated to new dev-version ${nextVersion} after release by ${committer}\""
-            sh "git push origin master"
+            withEnv(['HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088']) {
+                withCredentials([string(credentialsId: 'navikt-ci-oauthtoken', variable: 'token')]) {
+                    nextVersion = (releaseVersion.toInteger() + 1) + "-SNAPSHOT"
+                    sh "${mvn} versions:set -B -DnewVersion=${nextVersion} -DgenerateBackupPoms=false"
+                    sh "git commit -am \"updated to new dev-version ${nextVersion} after release by ${committer}\""
+                    sh "git push https://${token}:x-oauth-basic@github.com/navikt/${application}.git"
+                }
+            }
         }
 
         stage("deploy to preprod") {
             callback = "${env.BUILD_URL}input/Deploy/"
-            deployLib.testCmd(releaseVersion)
-            deployLib.testCmd(committer)
 
-            def deploy = deployLib.deployNaisApp(application, releaseVersion, deployEnv, zone, namespace, callback, committer).key
+            def deploy = deployLib.deployNaisApp(application, releaseVersion, deployEnv, zone, namespace, callback, committer, false).key
 
             try {
                 timeout(time: 15, unit: 'MINUTES') {
