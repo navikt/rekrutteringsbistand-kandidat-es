@@ -18,6 +18,11 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother2;
+import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother3;
+import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother4;
+import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother5;
+import no.nav.arbeid.cv.events.CvEvent;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -168,5 +173,9 @@ public class ServiceConfig {
     }
     esCvClient().createIndex();
     esCvClient().index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent()));
+    esCvClient().index(esCvTransformer().transform(TempCvEventObjectMother2.giveMeCvEvent()));
+    esCvClient().index(esCvTransformer().transform(TempCvEventObjectMother3.giveMeCvEvent()));
+    esCvClient().index(esCvTransformer().transform(TempCvEventObjectMother4.giveMeCvEvent()));
+    esCvClient().index(esCvTransformer().transform(TempCvEventObjectMother5.giveMeCvEvent()));
   }
 }
