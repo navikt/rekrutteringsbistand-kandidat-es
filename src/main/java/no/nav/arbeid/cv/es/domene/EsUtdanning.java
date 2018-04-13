@@ -1,6 +1,5 @@
 package no.nav.arbeid.cv.es.domene;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 import java.util.Objects;
 
@@ -26,7 +25,7 @@ public class EsUtdanning {
   @ElasticKeywordField
   private String nusKode;
 
-  @ElasticTextField(copyTo="fritekst")
+  @ElasticTextField(copyTo = "fritekst")
   @ElasticCompletionField
   private String nusKodeGrad;
 
@@ -78,12 +77,10 @@ public class EsUtdanning {
       return false;
     }
     EsUtdanning that = (EsUtdanning) o;
-    return Objects.equals(fraDato, that.fraDato) &&
-        Objects.equals(tilDato, that.tilDato) &&
-        Objects.equals(utdannelsessted, that.utdannelsessted) &&
-        Objects.equals(nusKode, that.nusKode) &&
-        Objects.equals(nusKodeGrad, that.nusKodeGrad) &&
-        Objects.equals(alternativGrad, that.alternativGrad);
+    return Objects.equals(fraDato, that.fraDato) && Objects.equals(tilDato, that.tilDato)
+        && Objects.equals(utdannelsessted, that.utdannelsessted)
+        && Objects.equals(nusKode, that.nusKode) && Objects.equals(nusKodeGrad, that.nusKodeGrad)
+        && Objects.equals(alternativGrad, that.alternativGrad);
   }
 
   @Override
@@ -94,14 +91,9 @@ public class EsUtdanning {
 
   @Override
   public String toString() {
-    return "EsUtdanning{" +
-        "fraDato=" + fraDato +
-        ", tilDato=" + tilDato +
-        ", utdannelsessted='" + utdannelsessted + '\'' +
-        ", nusKode='" + nusKode + '\'' +
-        ", nusKodeGrad='" + nusKodeGrad + '\'' +
-        ", alternativGrad='" + alternativGrad + '\'' +
-        '}';
+    return "EsUtdanning{" + "fraDato=" + fraDato + ", tilDato=" + tilDato + ", utdannelsessted='"
+        + utdannelsessted + '\'' + ", nusKode='" + nusKode + '\'' + ", nusKodeGrad='" + nusKodeGrad
+        + '\'' + ", alternativGrad='" + alternativGrad + '\'' + '}';
   }
 
 }

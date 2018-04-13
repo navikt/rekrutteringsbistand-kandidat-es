@@ -9,7 +9,6 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 
 
 @SpringBootApplication
-//@EnableElasticsearchRepositories(basePackages = "no.nav.arbeid.cv.es.repository")
 @EnableAutoConfiguration(
     exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class, KafkaAutoConfiguration.class})
 public class PamCvIndexerApplication {

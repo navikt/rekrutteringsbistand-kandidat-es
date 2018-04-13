@@ -30,7 +30,7 @@ public class SearchController {
 
   @RequestMapping(path = "typeahead", method = RequestMethod.GET)
   @CrossOrigin(origins = "http://localhost:9009")
-  public HttpEntity<Resources<StringResource>> typeAheadKompetanse(
+  public HttpEntity<Resources<StringResource>> typeAhead(
       @RequestParam(name = "komp", required = false) String komp,
       @RequestParam(name = "utd", required = false) String utd,
       @RequestParam(name = "yrke", required = false) String yrke) throws IOException {
