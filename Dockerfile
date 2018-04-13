@@ -3,4 +3,4 @@ LABEL maintainer="Team Aasmund"
 
 COPY target/pam-cv-indexer-*.jar app.jar
 
-EXPOSE 8765
+EXPOSE 8080
