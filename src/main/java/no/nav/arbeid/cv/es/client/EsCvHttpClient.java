@@ -203,7 +203,7 @@ public class EsCvHttpClient implements EsCvClient {
 
       if (nusKoder != null) {
         nusKoder.stream().filter(StringUtils::isNotBlank)
-            .forEach(k -> addStyrkKodeQuery(k, boolQueryBuilder));
+            .forEach(k -> addNusKodeQuery(k, boolQueryBuilder));
       }
 
       queryBuilder = boolQueryBuilder;
