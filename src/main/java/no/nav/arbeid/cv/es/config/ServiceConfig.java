@@ -160,13 +160,4 @@ public class ServiceConfig {
     };
   }
 
-  @PostConstruct
-  public void initIndex() throws IOException {
-    try {
-      esCvClient().deleteIndex();
-    } catch (Exception e) {
-    }
-    esCvClient().createIndex();
-    esCvClient().index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent()));
-  }
 }
