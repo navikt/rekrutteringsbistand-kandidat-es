@@ -10,7 +10,6 @@ import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,6 +30,10 @@ import com.palantir.docker.compose.DockerComposeRule;
 import no.nav.arbeid.cv.es.client.EsCvClient;
 import no.nav.arbeid.cv.es.config.ServiceConfig;
 import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother;
+import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother2;
+import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother3;
+import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother4;
+import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother5;
 import no.nav.arbeid.cv.es.domene.EsCv;
 import no.nav.arbeid.cv.es.domene.Sokeresultat;
 import no.nav.arbeid.cv.es.service.CvEventObjectMother;
@@ -87,8 +90,11 @@ public class IndexCvTest {
 
     client.createIndex();
 
-    EsCv esCv = transformer.transform(CvEventObjectMother.giveMeCvEvent());
-    client.index(esCv);
+    client.index(transformer.transform(TempCvEventObjectMother.giveMeCvEvent()));
+    client.index(transformer.transform(TempCvEventObjectMother2.giveMeCvEvent()));
+    client.index(transformer.transform(TempCvEventObjectMother3.giveMeCvEvent()));
+    client.index(transformer.transform(TempCvEventObjectMother4.giveMeCvEvent()));
+    client.index(transformer.transform(TempCvEventObjectMother5.giveMeCvEvent()));
   }
 
   @After

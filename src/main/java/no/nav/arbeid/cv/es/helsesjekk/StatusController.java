@@ -15,4 +15,10 @@ public class StatusController {
     return new ResponseEntity<String>("OK", HttpStatus.OK);
   }
 
+  @RequestMapping(method = {RequestMethod.GET}, value = "/rest/internal/isReady")
+  public ResponseEntity<String> isReady() {
+
+    return new ResponseEntity<String>("OK", HttpStatus.OK);
+  }
+
 }

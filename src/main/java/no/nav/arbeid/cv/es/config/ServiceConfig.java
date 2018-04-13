@@ -13,7 +13,6 @@ import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
-import javax.annotation.PostConstruct;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
@@ -37,7 +36,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import no.nav.arbeid.cv.es.client.EsCvClient;
 import no.nav.arbeid.cv.es.client.EsCvHttpClient;
-import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother;
 import no.nav.arbeid.cv.es.service.CvEventListener;
 import no.nav.arbeid.cv.es.service.CvIndexerService;
 import no.nav.arbeid.cv.es.service.DefaultCvIndexerService;
