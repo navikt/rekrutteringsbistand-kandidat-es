@@ -1,0 +1,24 @@
+name: pam-cv-indexer
+image: repo.adeo.no:5443/pam-cv-indexer
+replicas:
+  min: 1
+  max: 1
+  cpuThresholdPercentage: 50
+prometheus:
+  enabled: false
+  path: pam-cv-indexer/application/prometheus
+port: 8765
+healthcheck:
+  liveness:
+    path: rest/internal/isAlive
+    initialDelay: 20
+  readiness:
+    path: rest/internal/isReady
+    initialDelay: 20
+resources:
+  limits:
+    cpu: 500m
+    memory: 1024Mi
+  requests:
+    cpu: 200m
+    memory: 512Mi
