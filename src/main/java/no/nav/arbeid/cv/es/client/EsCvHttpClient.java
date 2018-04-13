@@ -3,6 +3,7 @@ package no.nav.arbeid.cv.es.client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -268,16 +269,30 @@ public class EsCvHttpClient implements EsCvClient {
     List<Aggregering> aggs = new ArrayList<>();
     List<String> aggregationNames =
         aggregations.asList().stream().map(agg -> agg.getName()).collect(Collectors.toList());
+
     for (String aggregationName : aggregationNames) {
       List<? extends Bucket> buckets = getBucketsForInnerAggregation(aggregations, aggregationName);
-      List<Aggregeringsfelt> fields = buckets.stream()
-          .map(bucket -> new Aggregeringsfelt(bucket.getKeyAsString(), bucket.getDocCount()))
-          .collect(Collectors.toList());
+      List<Aggregeringsfelt> fields = getFields(buckets);
       aggs.add(new Aggregering(aggregationName, fields));
     }
 
     return aggs;
 
+  }
+
+  List<Aggregeringsfelt> getFields(List<? extends Bucket> buckets) {
+    if (!buckets.isEmpty()) {
+      return buckets.stream().map(bucket -> new Aggregeringsfelt(bucket.getKeyAsString(),
+          bucket.getDocCount(), getSubAggregation(bucket))).collect(Collectors.toList());
+    }
+    return Collections.emptyList();
+  }
+
+  private List<Aggregeringsfelt> getSubAggregation(Bucket bucket) {
+    List<? extends Bucket> buckets =
+        bucket.getAggregations().asList().stream().map(agg -> (Terms) agg).findFirst()
+            .map(terms -> terms.getBuckets()).orElse(Collections.emptyList());
+    return getFields(buckets);
   }
 
   private List<? extends Bucket> getBucketsForInnerAggregation(Aggregations aggregations,
@@ -296,12 +311,21 @@ public class EsCvHttpClient implements EsCvClient {
     searchSourceBuilder.sort(new ScoreSortBuilder().order(SortOrder.DESC));
     searchSourceBuilder.sort(new FieldSortBuilder("_uid").order(SortOrder.ASC));
 
-    TermsAggregationBuilder yrkesAggregation =
-        AggregationBuilders.terms("nested").field("yrkeserfaring.styrkKode");
-    NestedAggregationBuilder nestedYrkesAggregation =
+    TermsAggregationBuilder yrkesAggregation3Siffer =
+        AggregationBuilders.terms("nested").field("yrkeserfaring.styrkKode3Siffer");
+    NestedAggregationBuilder nestedYrkesAggregation3Siffer =
         AggregationBuilders.nested("yrkeserfaring", "yrkeserfaring");
-    nestedYrkesAggregation.subAggregation(yrkesAggregation);
-    searchSourceBuilder.aggregation(nestedYrkesAggregation);
+    nestedYrkesAggregation3Siffer.subAggregation(yrkesAggregation3Siffer);
+
+    TermsAggregationBuilder yrkesAggregation4Siffer =
+        AggregationBuilders.terms("4siffer").field("yrkeserfaring.styrkKode4Siffer");
+    yrkesAggregation3Siffer.subAggregation(yrkesAggregation4Siffer);
+
+    TermsAggregationBuilder yrkesAggregation6Siffer = AggregationBuilders.terms("6siffer")
+        .field("yrkeserfaring.styrkKodeStillingstittel.keyword");
+    yrkesAggregation4Siffer.subAggregation(yrkesAggregation6Siffer);
+
+    searchSourceBuilder.aggregation(nestedYrkesAggregation3Siffer);
 
     TermsAggregationBuilder utdanningAggregation =
         AggregationBuilders.terms("nested").field("utdanning.nusKode");

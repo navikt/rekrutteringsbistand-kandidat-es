@@ -36,8 +36,8 @@ public class TempCvEventObjectMother {
         "2000-01-01",
         "2002-01-01",
         "Stentransport, Kragerø",
-        "8342.01",
-        "Anleggsmaskinfører",
+        "8341.01",
+        "Anleggsmaskindrifter",
         "maskinkjører og maskintransport",
         "YRKE_ORGNR",
         "YRKE_NACEKODE"

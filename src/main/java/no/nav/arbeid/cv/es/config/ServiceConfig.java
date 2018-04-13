@@ -13,6 +13,7 @@ import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
+import javax.annotation.PostConstruct;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
@@ -36,6 +37,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import no.nav.arbeid.cv.es.client.EsCvClient;
 import no.nav.arbeid.cv.es.client.EsCvHttpClient;
+import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother;
+import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother2;
+import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother3;
+import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother4;
+import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother5;
 import no.nav.arbeid.cv.es.service.CvEventListener;
 import no.nav.arbeid.cv.es.service.CvIndexerService;
 import no.nav.arbeid.cv.es.service.DefaultCvIndexerService;
@@ -156,6 +162,21 @@ public class ServiceConfig {
         return new X509Certificate[0];
       }
     };
+  }
+
+  @PostConstruct
+  public void initES() throws IOException {
+    try {
+      esCvClient().deleteIndex();
+    } catch (Exception e) {
+    }
+    esCvClient().createIndex();
+
+    esCvClient().index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent()));
+    esCvClient().index(esCvTransformer().transform(TempCvEventObjectMother2.giveMeCvEvent()));
+    esCvClient().index(esCvTransformer().transform(TempCvEventObjectMother3.giveMeCvEvent()));
+    esCvClient().index(esCvTransformer().transform(TempCvEventObjectMother4.giveMeCvEvent()));
+    esCvClient().index(esCvTransformer().transform(TempCvEventObjectMother5.giveMeCvEvent()));
   }
 
 }

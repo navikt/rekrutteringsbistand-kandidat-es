@@ -34,6 +34,7 @@ import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother2;
 import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother3;
 import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother4;
 import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother5;
+import no.nav.arbeid.cv.es.domene.Aggregering;
 import no.nav.arbeid.cv.es.domene.EsCv;
 import no.nav.arbeid.cv.es.domene.Sokeresultat;
 import no.nav.arbeid.cv.es.service.CvEventObjectMother;
@@ -107,9 +108,11 @@ public class IndexCvTest {
     Sokeresultat sokeres =
         client.findByEtternavnAndUtdanningNusKodeGrad("NORDMANN", "Mekaniske fag, grunnkurs");
     List<EsCv> list = sokeres.getCver();
+    List<Aggregering> aggregeringer = sokeres.getAggregeringer();
+    
     assertThat(list.size()).isEqualTo(1);
     EsCv esCv = list.get(0);
-    assertThat(esCv).isEqualTo(transformer.transform(CvEventObjectMother.giveMeCvEvent()));
+    assertThat(esCv).isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent()));
   }
 
 }

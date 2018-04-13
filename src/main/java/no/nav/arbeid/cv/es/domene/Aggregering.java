@@ -26,7 +26,14 @@ public class Aggregering {
     return felt;
   }
 
-  public void addFelt(String feltnavn, Long antall) {
-    this.felt.add(new Aggregeringsfelt(feltnavn, antall));
+  @Override
+  public String toString() {
+    return "Aggregering [navn=" + navn + ", felt=" + felt + "]";
   }
+
+//  public void addFelt(String feltnavn, Long antall) {
+//    this.felt.add(new Aggregeringsfelt(feltnavn, antall));
+//  }
+  
+  
 }
