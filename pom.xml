@@ -202,9 +202,8 @@
 	</build>
 
 	<scm>
-		<connection>scm:git:ssh://git@stash.devillo.no:7999/pam/pam-cv-indexer.git</connection>
-		<developerConnection>scm:git:ssh://git@stash.devillo.no:7999/pam/pam-cv-indexer.git
-    </developerConnection>
+		<connection>scm:git:https://github.com/navikt/pam-cv-indexer.git</connection>
+		<developerConnection>scm:git:https://github.com/navikt/pam-cv-indexer.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 
@@ -212,12 +211,12 @@
 		<repository>
 			<id>m2internal</id>
 			<name>NAV Maven2 Internal Repository</name>
-			<url>http://maven.adeo.no/nexus/content/repositories/m2internal</url>
+			<url>https://repo.adeo.no/repository/maven-releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>m2snapshot</id>
 			<name>NAV Maven2 Snapshot Repository</name>
-			<url>http://maven.adeo.no/nexus/content/repositories/m2snapshot</url>
+			<url>https://repo.adeo.no/repository/maven-snapshots/</url>
 			<uniqueVersion>false</uniqueVersion>
 		</snapshotRepository>
 	</distributionManagement>
