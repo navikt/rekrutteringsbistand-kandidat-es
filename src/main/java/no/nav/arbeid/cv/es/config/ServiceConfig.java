@@ -38,10 +38,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.arbeid.cv.es.client.EsCvClient;
 import no.nav.arbeid.cv.es.client.EsCvHttpClient;
 import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother;
-import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother2;
-import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother3;
-import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother4;
-import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother5;
 import no.nav.arbeid.cv.es.service.CvEventListener;
 import no.nav.arbeid.cv.es.service.CvIndexerService;
 import no.nav.arbeid.cv.es.service.DefaultCvIndexerService;
@@ -173,10 +169,10 @@ public class ServiceConfig {
     esCvClient().createIndex();
 
     esCvClient().index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent()));
-    esCvClient().index(esCvTransformer().transform(TempCvEventObjectMother2.giveMeCvEvent()));
-    esCvClient().index(esCvTransformer().transform(TempCvEventObjectMother3.giveMeCvEvent()));
-    esCvClient().index(esCvTransformer().transform(TempCvEventObjectMother4.giveMeCvEvent()));
-    esCvClient().index(esCvTransformer().transform(TempCvEventObjectMother5.giveMeCvEvent()));
+    esCvClient().index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent2()));
+    esCvClient().index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent3()));
+    esCvClient().index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent4()));
+    esCvClient().index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent5()));
   }
 
 }

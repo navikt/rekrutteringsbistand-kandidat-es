@@ -30,10 +30,6 @@ import com.palantir.docker.compose.DockerComposeRule;
 import no.nav.arbeid.cv.es.client.EsCvClient;
 import no.nav.arbeid.cv.es.config.ServiceConfig;
 import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother;
-import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother2;
-import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother3;
-import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother4;
-import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother5;
 import no.nav.arbeid.cv.es.domene.Aggregering;
 import no.nav.arbeid.cv.es.domene.EsCv;
 import no.nav.arbeid.cv.es.domene.Sokeresultat;
@@ -92,10 +88,10 @@ public class IndexCvTest {
     client.createIndex();
 
     client.index(transformer.transform(TempCvEventObjectMother.giveMeCvEvent()));
-    client.index(transformer.transform(TempCvEventObjectMother2.giveMeCvEvent()));
-    client.index(transformer.transform(TempCvEventObjectMother3.giveMeCvEvent()));
-    client.index(transformer.transform(TempCvEventObjectMother4.giveMeCvEvent()));
-    client.index(transformer.transform(TempCvEventObjectMother5.giveMeCvEvent()));
+    client.index(transformer.transform(TempCvEventObjectMother.giveMeCvEvent2()));
+    client.index(transformer.transform(TempCvEventObjectMother.giveMeCvEvent3()));
+    client.index(transformer.transform(TempCvEventObjectMother.giveMeCvEvent4()));
+    client.index(transformer.transform(TempCvEventObjectMother.giveMeCvEvent5()));
   }
 
   @After
@@ -109,10 +105,54 @@ public class IndexCvTest {
         client.findByEtternavnAndUtdanningNusKodeGrad("NORDMANN", "Mekaniske fag, grunnkurs");
     List<EsCv> list = sokeres.getCver();
     List<Aggregering> aggregeringer = sokeres.getAggregeringer();
-    
+
     assertThat(list.size()).isEqualTo(1);
     EsCv esCv = list.get(0);
     assertThat(esCv).isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent()));
+  }
+
+  @Test
+  public void testUtenSokekriterierReturnererAllePersoner() throws IOException {
+    Sokeresultat sokeresultat =
+        client.sok(null, null, null, null, null, null, null, null);
+
+    List<EsCv> cver = sokeresultat.getCver();
+
+    assertThat(cver.size()).isEqualTo(5);
+  }
+
+  @Test
+  public void testFlereInputFritekstGirBredereResultat() throws IOException {
+    Sokeresultat sokeresultat1 =
+        client.sok("javautvikler", null, null, null, null, null, null, null);
+    Sokeresultat sokeresultat =
+        client.sok("industrimekaniker javautvikler", null, null, null, null, null, null, null);
+
+    List<EsCv> cver1 = sokeresultat1.getCver();
+    List<EsCv> cver = sokeresultat.getCver();
+
+    assertThat(cver1.size()).isLessThan(cver.size());
+    assertThat(cver1.size()).isEqualTo(1);
+    assertThat(cver.size()).isEqualTo(3);
+  }
+
+  @Test
+  public void testSokPaNorskeStoppordGirIkkeResultat() throws IOException {
+    Sokeresultat sokeresultatYrke =
+        client.sok(null, "og", null, null, null, null, null, null);
+    Sokeresultat sokeresultatUtdanning =
+        client.sok(null, null, null, "og", null, null, null, null);
+    Sokeresultat sokeresultatKomp =
+        client.sok(null, null, "og", null, null, null, null, null);
+
+
+    List<EsCv> cverYrke = sokeresultatYrke.getCver();
+    List<EsCv> cverUtdanning = sokeresultatUtdanning.getCver();
+    List<EsCv> cverKomp = sokeresultatKomp.getCver();
+
+    assertThat(cverYrke.size()).isEqualTo(0);
+    assertThat(cverUtdanning.size()).isEqualTo(0);
+    assertThat(cverKomp.size()).isEqualTo(0);
   }
 
 }
