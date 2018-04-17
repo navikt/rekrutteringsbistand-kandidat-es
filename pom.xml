@@ -52,7 +52,7 @@
 		<dependency>
 			<groupId>no.nav.arbeid.cv.avro</groupId>
 			<artifactId>cv-event</artifactId>
-			<version>1-SNAPSHOT</version>
+			<version>5</version>
 		</dependency>
 		<dependency>
 			<groupId>io.confluent</groupId>
@@ -70,8 +70,8 @@
 			<artifactId>avro</artifactId>
 			<version>${avro.version}</version>
 		</dependency>
-		<!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-data-elasticsearch</artifactId> 
-			</dependency> <dependency> <groupId>org.springframework.data</groupId> <artifactId>spring-data-elasticsearch</artifactId> 
+		<!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+			</dependency> <dependency> <groupId>org.springframework.data</groupId> <artifactId>spring-data-elasticsearch</artifactId>
 			<version>3.0.3.RELEASE</version> </dependency> -->
 
 		<dependency>
@@ -125,7 +125,7 @@
 		<dependency>
 			<groupId>no.nav.elasticsearch</groupId>
 			<artifactId>elasticsearch-mapping-builder</artifactId>
-			<version>3</version>
+			<version>6</version>
 		</dependency>
 
 		<dependency>

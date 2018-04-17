@@ -39,7 +39,7 @@ public class EsCvTransformer {
         p.getFornavn(),
         p.getEtternavn(),
         this.toDate(p.getFodselsdato()),
-        p.getDnrStatus(),
+        p.getFodselsdatoErDnr(),
         p.getFormidlingsgruppekode(),
         p.getEpostadresse(),
         p.getStatsborgerskap(),
@@ -55,9 +55,7 @@ public class EsCvTransformer {
         p.getPoststed(),
         p.getLandkode(),
         p.getKommunenr(),
-        p.getStatusDisponererBil(),
-        p.getAap(),
-        p.getSyfo(),
+        p.getDisponererBil(),
         this.toDate(p.getTidsstempel())
     );
 

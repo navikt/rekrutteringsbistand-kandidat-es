@@ -31,7 +31,7 @@ public class EsCv {
   private Date fodselsdato;
 
   @ElasticBooleanField
-  private Boolean dnrStatus;
+  private Boolean fodselsdatoErDnr;
 
   @ElasticKeywordField
   private String formidlingsgruppekode;
@@ -81,12 +81,6 @@ public class EsCv {
   @ElasticBooleanField
   private Boolean disponererBil;
 
-  @ElasticBooleanField
-  private Boolean aap;
-
-  @ElasticBooleanField
-  private Boolean syfo;
-
   @ElasticDateField
   private Date tidsstempel;
 
@@ -132,17 +126,16 @@ public class EsCv {
   }
 
   public EsCv(String fodselsnummer, String fornavn, String etternavn, Date fodselsdato,
-      Boolean dnrStatus, String formidlingsgruppekode, String epostadresse,
+      Boolean fodselsdatoErDnr, String formidlingsgruppekode, String epostadresse,
       String statsborgerskap, Long arenaPersonId, String arenaKandidatnr,
       String beskrivelse, String samtykkeStatus, Date samtykkeDato, String adresselinje1,
       String adresselinje2, String adresselinje3, String postnummer, String poststed,
-      String landkode, Integer kommunenummer, Boolean disponererBil, Boolean aap,
-      Boolean syfo, Date tidsstempel) {
+      String landkode, Integer kommunenummer, Boolean disponererBil, Date tidsstempel) {
     this.fodselsnummer = fodselsnummer;
     this.fornavn = fornavn;
     this.etternavn = etternavn;
     this.fodselsdato = fodselsdato;
-    this.dnrStatus = dnrStatus;
+    this.fodselsdatoErDnr = fodselsdatoErDnr;
     this.formidlingsgruppekode = formidlingsgruppekode;
     this.epostadresse = epostadresse;
     this.statsborgerskap = statsborgerskap;
@@ -159,12 +152,10 @@ public class EsCv {
     this.landkode = landkode;
     this.kommunenummer = kommunenummer;
     this.disponererBil = disponererBil;
-    this.aap = aap;
-    this.syfo = syfo;
     this.tidsstempel = tidsstempel;
   }
 
-// Adderfunksjoner
+  // Adderfunksjoner
 
   public void addUtdanning(EsUtdanning utdanning) {
     this.utdanning.add(utdanning);
@@ -257,8 +248,8 @@ public class EsCv {
     return fodselsdato;
   }
 
-  public Boolean getDnrStatus() {
-    return dnrStatus;
+  public Boolean getFodselsdatoErDnr() {
+    return fodselsdatoErDnr;
   }
 
   public String getFormidlingsgruppekode() {
@@ -323,14 +314,6 @@ public class EsCv {
 
   public Boolean getDisponererBil() {
     return disponererBil;
-  }
-
-  public Boolean getAap() {
-    return aap;
-  }
-
-  public Boolean getSyfo() {
-    return syfo;
   }
 
   public Date getTidsstempel() {
@@ -406,7 +389,7 @@ public class EsCv {
         Objects.equals(fornavn, esCv.fornavn) &&
         Objects.equals(etternavn, esCv.etternavn) &&
         Objects.equals(fodselsdato, esCv.fodselsdato) &&
-        Objects.equals(dnrStatus, esCv.dnrStatus) &&
+        Objects.equals(fodselsdatoErDnr, esCv.fodselsdatoErDnr) &&
         Objects.equals(formidlingsgruppekode, esCv.formidlingsgruppekode) &&
         Objects.equals(epostadresse, esCv.epostadresse) &&
         Objects.equals(statsborgerskap, esCv.statsborgerskap) &&
@@ -423,8 +406,6 @@ public class EsCv {
         Objects.equals(landkode, esCv.landkode) &&
         Objects.equals(kommunenummer, esCv.kommunenummer) &&
         Objects.equals(disponererBil, esCv.disponererBil) &&
-        Objects.equals(aap, esCv.aap) &&
-        Objects.equals(syfo, esCv.syfo) &&
         Objects.equals(tidsstempel, esCv.tidsstempel) &&
         Objects.equals(utdanning, esCv.utdanning) &&
         Objects.equals(yrkeserfaring, esCv.yrkeserfaring) &&
@@ -446,13 +427,13 @@ public class EsCv {
   public int hashCode() {
 
     return Objects
-        .hash(fodselsnummer, fornavn, etternavn, fodselsdato, dnrStatus, formidlingsgruppekode,
+        .hash(fodselsnummer, fornavn, etternavn, fodselsdato, fodselsdatoErDnr,
+            formidlingsgruppekode,
             epostadresse, statsborgerskap, arenaPersonId, arenaKandidatnr, beskrivelse,
             samtykkeStatus, samtykkeDato, adresselinje1, adresselinje2, adresselinje3, postnummer,
-            poststed, landkode, kommunenummer, disponererBil, aap, syfo, tidsstempel, utdanning,
-            yrkeserfaring, kompetanse, annenerfaring, sertifikat, forerkort, sprak, kurs, verv,
-            geografiJobbonsker, yrkeJobbonsker, heltidDeltidJobbonsker,
-            ansettelsesforholdJobbonsker,
+            poststed, landkode, kommunenummer, disponererBil, tidsstempel, utdanning, yrkeserfaring,
+            kompetanse, annenerfaring, sertifikat, forerkort, sprak, kurs, verv, geografiJobbonsker,
+            yrkeJobbonsker, heltidDeltidJobbonsker, ansettelsesforholdJobbonsker,
             arbeidstidsordningJobbonsker);
   }
 
@@ -463,7 +444,7 @@ public class EsCv {
         ", fornavn='" + fornavn + '\'' +
         ", etternavn='" + etternavn + '\'' +
         ", fodselsdato=" + fodselsdato +
-        ", dnrStatus=" + dnrStatus +
+        ", fodselsdatoErDnr=" + fodselsdatoErDnr +
         ", formidlingsgruppekode='" + formidlingsgruppekode + '\'' +
         ", epostadresse='" + epostadresse + '\'' +
         ", statsborgerskap='" + statsborgerskap + '\'' +
@@ -480,8 +461,6 @@ public class EsCv {
         ", landkode='" + landkode + '\'' +
         ", kommunenummer=" + kommunenummer +
         ", disponererBil=" + disponererBil +
-        ", aap=" + aap +
-        ", syfo=" + syfo +
         ", tidsstempel=" + tidsstempel +
         ", utdanning=" + utdanning +
         ", yrkeserfaring=" + yrkeserfaring +

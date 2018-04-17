@@ -78,7 +78,7 @@ public class EsCvTransformerTest {
     assertThat(esCv.getFornavn()).isEqualTo(FORNAVN);
     assertThat(esCv.getEtternavn()).isEqualTo(ETTERNAVN);
     assertThat(esCv.getFodselsdato()).isEqualTo(FODSELSDATO);
-    assertThat(esCv.getDnrStatus()).isEqualTo(DNRSTATUS);
+    assertThat(esCv.getFodselsdatoErDnr()).isEqualTo(DNRSTATUS);
     assertThat(esCv.getFormidlingsgruppekode()).isEqualTo(FORMIDLINGSGRUPPEKODE);
     assertThat(esCv.getEpostadresse()).isEqualTo(EPOSTADRESSE);
     assertThat(esCv.getStatsborgerskap()).isEqualTo(STATSBORGERSKAP);
@@ -95,8 +95,6 @@ public class EsCvTransformerTest {
     assertThat(esCv.getLandkode()).isEqualTo(LANDKODE);
     assertThat(esCv.getKommunenummer()).isEqualTo(KOMMUNENUMMER);
     assertThat(esCv.getDisponererBil()).isEqualTo(DISP_BIL);
-    assertThat(esCv.getAap()).isEqualTo(AAP);
-    assertThat(esCv.getSyfo()).isEqualTo(SYFO);
     assertThat(esCv.getTidsstempel()).isEqualTo(TIDSSTEMPEL);
   }
 
