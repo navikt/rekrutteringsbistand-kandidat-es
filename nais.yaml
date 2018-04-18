@@ -22,3 +22,14 @@ resources:
   requests:
     cpu: 200m
     memory: 512Mi
+fasitResources:
+  used:
+  - alias: pamessec
+    resourceType: baseurl
+    propertyMap:
+      url: ES_HOSTNAME
+  - alias: pam_elasticsearch
+    resourceType: credential
+    propertyMap:
+      username: ES_USER
+      password: ES_PASSWORD
