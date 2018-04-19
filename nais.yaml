@@ -10,10 +10,10 @@ prometheus:
 port: 8080
 healthcheck:
   liveness:
-    path: rest/internal/isAlive
+    path: pam-cv-indexer/rest/internal/isAlive
     initialDelay: 90
   readiness:
-    path: rest/internal/isReady
+    path: pam-cv-indexer/rest/internal/isReady
     initialDelay: 90
 resources:
   limits:
