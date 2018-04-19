@@ -7,14 +7,14 @@ replicas:
 prometheus:
   enabled: false
   path: pam-cv-indexer/application/prometheus
-port: 8765
+port: 8080
 healthcheck:
   liveness:
-    path: rest/internal/isAlive
-    initialDelay: 20
+    path: pam-cv-indexer/rest/internal/isAlive
+    initialDelay: 90
   readiness:
-    path: rest/internal/isReady
-    initialDelay: 20
+    path: pam-cv-indexer/rest/internal/isReady
+    initialDelay: 90
 resources:
   limits:
     cpu: 500m
@@ -22,3 +22,14 @@ resources:
   requests:
     cpu: 200m
     memory: 512Mi
+fasitResources:
+  used:
+  - alias: pamessec
+    resourceType: baseurl
+    propertyMap:
+      url: ES_HOSTNAME
+  - alias: pam_elasticsearch
+    resourceType: credential
+    propertyMap:
+      username: ES_USER
+      password: ES_PASSWORD
