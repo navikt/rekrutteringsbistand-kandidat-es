@@ -17,11 +17,11 @@ healthcheck:
     initialDelay: 20
 resources:
   limits:
-    cpu: 500m
-    memory: 1024Mi
+    cpu: 1500m
+    memory: 3072Mi
   requests:
-    cpu: 200m
-    memory: 512Mi
+    cpu: 1000m
+    memory: 1536Mi
 fasitResources:
   used:
   - alias: pamessec
