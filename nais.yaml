@@ -11,10 +11,10 @@ port: 8080
 healthcheck:
   liveness:
     path: rest/internal/isAlive
-    initialDelay: 20
+    initialDelay: 90
   readiness:
     path: rest/internal/isReady
-    initialDelay: 20
+    initialDelay: 90
 resources:
   limits:
     cpu: 500m
