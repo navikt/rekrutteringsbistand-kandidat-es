@@ -7,7 +7,7 @@
 	<groupId>no.nav.arbeid.pam</groupId>
 	<artifactId>pam-cv-indexer</artifactId>
 	<packaging>jar</packaging>
-	<version>10-SNAPSHOT</version>
+	<version>12-SNAPSHOT</version>
 
 	<name>pam-cv-indexer</name>
 	<description>Indeksering av CVer i Elasticsearch</description>
@@ -31,6 +31,7 @@
 		<confluent.version>4.0.0</confluent.version>
 		<avro.version>1.8.1</avro.version>
 		<logstash-logback-encoder.version>4.10</logstash-logback-encoder.version>
+		<logback-access.version>2.7.1</logback-access.version>
 		<palantir.version>0.33.0</palantir.version>
 		<poi-ooxml.version>3.16</poi-ooxml.version>
 		<elasticsearch.version>6.2.2</elasticsearch.version>
@@ -109,6 +110,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.rakugakibox.spring.boot</groupId>
+			<artifactId>logback-access-spring-boot-starter</artifactId>
+			<version>${logback-access.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
