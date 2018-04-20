@@ -1,28 +1,24 @@
 package no.nav.arbeid.cv.es.rest;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
+import no.nav.arbeid.cv.es.client.EsCvClient;
+import no.nav.arbeid.cv.es.domene.Sokeresultat;
+import no.nav.security.spring.oidc.validation.api.ProtectedWithClaims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import no.nav.arbeid.cv.es.client.EsCvClient;
-import no.nav.arbeid.cv.es.domene.Sokeresultat;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/rest/kandidatsok", produces = MediaType.APPLICATION_JSON_VALUE)
+@ProtectedWithClaims(issuer = "selvbetjening")
 public class SearchController {
 
   @Autowired
