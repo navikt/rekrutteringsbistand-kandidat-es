@@ -16,7 +16,7 @@ For at innstillingen skal være permanent må du opprette filen */etc/sysctl.d/0
 ```vm.max_map_count=262144
 ```
 
-nå kan du kjøre *maven clean install*.
+nå kan du kjøre *mvn clean install*.
 
 
 ### Hvordan kjøre applikasjonen lokalt
