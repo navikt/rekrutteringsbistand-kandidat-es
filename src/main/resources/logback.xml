@@ -11,9 +11,13 @@
 	<logger name="org.springframework.data.elasticsearch.core.ElasticsearchTemplate" level="trace">
 		<appender-ref ref="stdout_json" />
 	</logger>
-	
 
-	<root level="debug">
+
+	<logger name="no.nav" level="debug">
+		<appender-ref ref="stdout_json" />
+	</logger>
+
+	<root level="info">
 		<appender-ref ref="stdout_json" />
 	</root>
 
