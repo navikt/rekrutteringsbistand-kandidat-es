@@ -21,51 +21,51 @@ import java.util.stream.Collectors;
 @ProtectedWithClaims(issuer = "selvbetjening")
 public class SearchController {
 
-  @Autowired
-  private EsCvClient client;
+    @Autowired
+    private EsCvClient client;
 
-  @RequestMapping(path = "typeahead", method = RequestMethod.GET)
-  public HttpEntity<Resources<StringResource>> typeAhead(
-      @RequestParam(name = "komp", required = false) String komp,
-      @RequestParam(name = "utd", required = false) String utd,
-      @RequestParam(name = "yrke", required = false) String yrke) throws IOException {
+    @RequestMapping(path = "typeahead", method = RequestMethod.GET)
+    public HttpEntity<Resources<StringResource>> typeAhead(
+            @RequestParam(name = "komp", required = false) String komp,
+            @RequestParam(name = "utd", required = false) String utd,
+            @RequestParam(name = "yrke", required = false) String yrke) throws IOException {
 
-    if (komp == null && utd == null && yrke == null) {
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (komp == null && utd == null && yrke == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        List<String> list = new ArrayList<>();
+        if (komp != null) {
+            list.addAll(client.typeAheadKompetanse(komp));
+        }
+        if (utd != null) {
+            list.addAll(client.typeAheadUtdanning(utd));
+        }
+        if (yrke != null) {
+            list.addAll(client.typeAheadYrkeserfaring(yrke));
+        }
+
+        List<StringResource> resourceList =
+                list.stream().map(str -> new StringResource(str)).collect(Collectors.toList());
+        Resources<StringResource> resources = new Resources<>(resourceList);
+        return new ResponseEntity<>(resources, HttpStatus.OK);
     }
 
-    List<String> list = new ArrayList<>();
-    if (komp != null) {
-      list.addAll(client.typeAheadKompetanse(komp));
-    }
-    if (utd != null) {
-      list.addAll(client.typeAheadUtdanning(utd));
-    }
-    if (yrke != null) {
-      list.addAll(client.typeAheadYrkeserfaring(yrke));
-    }
+    @RequestMapping(path = "sok", method = RequestMethod.GET)
+    @CrossOrigin(origins = "http://localhost:9009")
+    public HttpEntity<SokeresultatResource> sok(
+            @RequestParam(name = "fritekst", required = false) String fritekst,
+            @RequestParam(name = "yrkeserfaring", required = false) String yrkeserfaring,
+            @RequestParam(name = "kompetanse", required = false) String kompetanse,
+            @RequestParam(name = "utdanning", required = false) String utdanning,
+            @RequestParam(name = "styrkKode", required = false) String styrkKode,
+            @RequestParam(name = "nusKode", required = false) String nusKode,
+            @RequestParam(name = "styrkKoder", required = false) List<String> styrkKoder,
+            @RequestParam(name = "nusKoder", required = false) List<String> nusKoder) throws IOException {
 
-    List<StringResource> resourceList =
-        list.stream().map(str -> new StringResource(str)).collect(Collectors.toList());
-    Resources<StringResource> resources = new Resources<>(resourceList);
-    return new ResponseEntity<>(resources, HttpStatus.OK);
-  }
-
-  @RequestMapping(path = "sok", method = RequestMethod.GET)
-  @CrossOrigin(origins = "http://localhost:9009")
-  public HttpEntity<SokeresultatResource> sok(
-      @RequestParam(name = "fritekst", required = false) String fritekst,
-      @RequestParam(name = "yrkeserfaring", required = false) String yrkeserfaring,
-      @RequestParam(name = "kompetanse", required = false) String kompetanse,
-      @RequestParam(name = "utdanning", required = false) String utdanning,
-      @RequestParam(name = "styrkKode", required = false) String styrkKode,
-      @RequestParam(name = "nusKode", required = false) String nusKode,
-      @RequestParam(name = "styrkKoder", required = false) List<String> styrkKoder,
-      @RequestParam(name = "nusKoder", required = false) List<String> nusKoder) throws IOException {
-
-    Sokeresultat sokeresultat =
-        client.sok(fritekst, yrkeserfaring, kompetanse, utdanning, styrkKode, nusKode, styrkKoder, nusKoder);
-    SokeresultatResource sokeresultatResource = new SokeresultatResource(sokeresultat);
-    return new ResponseEntity<>(sokeresultatResource, HttpStatus.OK);
-  }
+        Sokeresultat sokeresultat =
+                client.sok(fritekst, yrkeserfaring, kompetanse, utdanning, styrkKode, nusKode, styrkKoder, nusKoder);
+        SokeresultatResource sokeresultatResource = new SokeresultatResource(sokeresultat);
+        return new ResponseEntity<>(sokeresultatResource, HttpStatus.OK);
+    }
 }
