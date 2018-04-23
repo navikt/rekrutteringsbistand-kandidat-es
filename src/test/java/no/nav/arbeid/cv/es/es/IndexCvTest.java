@@ -3,6 +3,7 @@ package no.nav.arbeid.cv.es.es;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpHost;
@@ -112,7 +113,7 @@ public class IndexCvTest {
   }
 
   @Test
-  public void testUtenSokekriterierReturnererAllePersoner() throws IOException {
+  public void testUtenSokekriterierReturnererAlleTestPersoner() throws IOException {
     Sokeresultat sokeresultat =
         client.sok(null, null, null, null, null, null, null, null);
 
@@ -140,19 +141,154 @@ public class IndexCvTest {
   public void testSokPaNorskeStoppordGirIkkeResultat() throws IOException {
     Sokeresultat sokeresultatYrke =
         client.sok(null, "og", null, null, null, null, null, null);
-    Sokeresultat sokeresultatUtdanning =
-        client.sok(null, null, null, "og", null, null, null, null);
     Sokeresultat sokeresultatKomp =
         client.sok(null, null, "og", null, null, null, null, null);
+    Sokeresultat sokeresultatUtdanning =
+        client.sok(null, null, null, "og", null, null, null, null);
+    Sokeresultat sokeresultatFritekst =
+        client.sok("og", null, null, null, null, null, null, null);
 
 
     List<EsCv> cverYrke = sokeresultatYrke.getCver();
-    List<EsCv> cverUtdanning = sokeresultatUtdanning.getCver();
     List<EsCv> cverKomp = sokeresultatKomp.getCver();
+    List<EsCv> cverUtdanning = sokeresultatUtdanning.getCver();
+    List<EsCv> cverFritekst = sokeresultatFritekst.getCver();
 
     assertThat(cverYrke.size()).isEqualTo(0);
-    assertThat(cverUtdanning.size()).isEqualTo(0);
     assertThat(cverKomp.size()).isEqualTo(0);
+    assertThat(cverUtdanning.size()).isEqualTo(0);
+    assertThat(cverFritekst.size()).isEqualTo(0);
+  }
+
+  @Test
+  public void testSokMedFlereKriterierGirSvarMedAlleFelter() throws IOException {
+    Sokeresultat sokeresultat =
+        client.sok(null, "Progger", "Landtransport generelt", "Master i sikkerhet", null, null, null, null);
+
+    List<EsCv> cver = sokeresultat.getCver();
+
+    assertThat(cver.size()).isEqualTo(1);
+    EsCv cv = cver.get(0);
+    assertThat(cv).isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent5()));
+  }
+
+  @Test
+  public void testFlereInputYrkeGirFlereTreff() throws IOException {
+    Sokeresultat sokeresultat =
+        client.sok(null, "Progger", null, null, null, null, null, null);
+    Sokeresultat sokeresultatBredere =
+        client.sok(null, "Progger Industrimekaniker", null, null, null, null, null, null);
+
+    List<EsCv> cver = sokeresultat.getCver();
+    List<EsCv> cverBredere = sokeresultatBredere.getCver();
+
+    assertThat(cverBredere.size()).isGreaterThan(cver.size());
+  }
+
+  @Test
+  public void testFlereInputKompetanseGirFlereTreff() throws IOException {
+    Sokeresultat sokeresultat =
+        client.sok(null, null, "Programvareutvikler", null, null, null, null, null);
+    Sokeresultat sokeresultatBredere =
+        client.sok(null, null, "Programvareutvikler Nyhetsanker", null, null, null, null, null);
+
+    List<EsCv> cver = sokeresultat.getCver();
+    List<EsCv> cverBredere = sokeresultatBredere.getCver();
+
+    assertThat(cverBredere.size()).isGreaterThan(cver.size());
+  }
+
+  @Test
+  public void testFlereInputUtdanningGirFlereTreff() throws IOException {
+    Sokeresultat sokeresultat =
+        client.sok(null, null, null, "Bygg og anlegg", null, null, null, null);
+    Sokeresultat sokeresultatBredere =
+        client.sok(null, null, null, "Bygg og anlegg master i sikkerhet", null, null, null, null);
+
+    List<EsCv> cver = sokeresultat.getCver();
+    List<EsCv> cverBredere = sokeresultatBredere.getCver();
+
+    assertThat(cverBredere.size()).isGreaterThan(cver.size());
+  }
+
+  @Test
+  public void testStemOrdSkalGiSammeResultat() throws IOException {
+    Sokeresultat sokeresultat =
+        client.sok(null, "Progger", null, null, null, null, null, null);
+    Sokeresultat sokeresultatStemOrd =
+        client.sok(null, "Progg", null, null, null, null, null, null);
+
+    List<EsCv> cver = sokeresultat.getCver();
+    List <EsCv> cverStemOrd = sokeresultatStemOrd.getCver();
+
+    assertThat(cver.size()).isEqualTo(cverStemOrd.size());
+    assertThat(cver.get(0)).isEqualTo(cverStemOrd.get(0));
+  }
+
+  @Test
+  public void testSokPaStyrkKode() throws IOException {
+    Sokeresultat sokeresultat =
+        client.sok(null, null, null, null,  "5684.05", null, null, null);
+
+    List<EsCv> cver = sokeresultat.getCver();
+    EsCv cv = cver.get(0);
+    assertThat(cv).isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent3()));
+  }
+
+  @Test
+  public void testSokPaNusKode() throws IOException {
+    Sokeresultat sokeresultat =
+        client.sok(null, null, null, null,  null, "486595", null, null);
+
+    List<EsCv> cver = sokeresultat.getCver();
+    EsCv cv = cver.get(0);
+    assertThat(cv).isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent5()));
+  }
+
+  @Test
+  public void testSokPaFlereStyrkKoderGirBegrensendeResultat() throws IOException {
+    List<String> styrkKoder = new ArrayList<>();
+    styrkKoder.add("5684.05");
+
+    Sokeresultat sokeresultat =
+        client.sok(null, null, null, null,  null, null, styrkKoder, null);
+
+    styrkKoder.add("5124.46");
+
+    Sokeresultat sokeresultatToKoder =
+        client.sok(null, null, null, null,  null, null, styrkKoder, null);
+
+    styrkKoder.add("5746.07");
+
+    Sokeresultat sokeresultatTreKoder =
+        client.sok(null, null, null, null,  null, null, styrkKoder, null);
+
+    List<EsCv> cver = sokeresultat.getCver();
+    List<EsCv> cver2 = sokeresultatToKoder.getCver();
+    List<EsCv> cver3 = sokeresultatTreKoder.getCver();
+
+    assertThat(cver.size()).isGreaterThan(cver2.size());
+    assertThat(cver2.size()).isGreaterThan(cver3.size());
+  }
+
+  @Test
+  public void testSokPaFlereNusKoderGirBegrensendeResultat() throws IOException {
+    List<String> nusKoder = new ArrayList<>();
+    nusKoder.add("296647");
+
+    Sokeresultat sokeresultat =
+        client.sok(null, null, null, null,  null, null, null, nusKoder);
+
+    nusKoder.add("456375");
+
+    Sokeresultat sokeresultatToKoder =
+        client.sok(null, null, null, null,  null, null, null, nusKoder);
+
+    List<EsCv> cver = sokeresultat.getCver();
+    List<EsCv> cver2 = sokeresultatToKoder.getCver();
+
+    assertThat(cver.size()).isGreaterThan(cver2.size());
+
   }
 
 }

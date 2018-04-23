@@ -16,7 +16,7 @@ public class EsSprak {
   @ElasticKeywordField
   private String sprakKode;
 
-  @ElasticTextField
+  @ElasticTextField(copyTo = "samletKompetanse")
   private String sprakKodeTekst;
 
   @ElasticTextField

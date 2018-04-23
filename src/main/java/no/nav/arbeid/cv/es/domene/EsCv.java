@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import no.nav.elasticsearch.mapping.annotations.ElasticBooleanField;
+import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
 import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
 import no.nav.elasticsearch.mapping.annotations.ElasticDocument;
 import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
@@ -19,8 +20,13 @@ import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 public class EsCv {
 
   // Define friktest to add norwegian analyzer
+  // Kan fjernes hvis fritekst-sok ikke brukes
   @ElasticTextField(analyzer = "norwegian")
   private String fritekst;
+
+  @ElasticTextField(analyzer = "norwegian")
+  @ElasticCompletionField
+  private String samletKompetanse;
 
   @ElasticTextField
   private String fodselsnummer;

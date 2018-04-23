@@ -169,8 +169,8 @@ public class TempCvEventObjectMother {
         "1996-02-01",
         "2020-12-01",
         "V1.6110",
-        "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
-        "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
+        "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 12 tonn",
+        "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 12 tonn",
         ""
     );
     Sertifikat sertifikat4 = new Sertifikat(
@@ -240,16 +240,26 @@ public class TempCvEventObjectMother {
     forerkortListe.add(forerkort4);
 
 
-    Sprak sprak = new Sprak(
+    Sprak sprak1 = new Sprak(
         "2012-12-01",
-        "Språk kode",
-        "Språk kode tekst",
-        "Språk alternativ tekst",
-        "Språk beskrivelse"
+        "78874",
+        "Norsk(askriftlig)",
+        "Norwegian",
+        "Morsmål"
+    );
+
+    Sprak sprak2 = new Sprak(
+        "2012-12-01",
+        "78874",
+        "Norsk(muntlig)",
+        "Norwegian",
+        "Morsmål"
     );
 
     ArrayList<Sprak> sprakListe = new ArrayList<>();
-    sprakListe.add(sprak);
+    sprakListe.add(sprak1);
+    sprakListe.add(sprak2);
+    // TODO: Typeaheaden henter kun første språk i listen. Denne er sortert, og viser bare første.
 
     Kurs kurs1 = new Kurs(
         "2012-12-01",
@@ -598,10 +608,10 @@ public class TempCvEventObjectMother {
 
     Sprak sprak = new Sprak(
         "2012-12-01",
-        "Språk kode",
-        "Språk kode tekst",
-        "Språk alternativ tekst",
-        "Språk beskrivelse"
+        "19093",
+        "Norsk",
+        "Norwegian",
+        "Flytende"
     );
 
     ArrayList<Sprak> sprakListe = new ArrayList<>();
@@ -954,10 +964,10 @@ public class TempCvEventObjectMother {
 
     Sprak sprak = new Sprak(
         "2012-12-01",
-        "Språk kode",
-        "Språk kode tekst",
-        "Språk alternativ tekst",
-        "Språk beskrivelse"
+        "87392",
+        "Engelsk",
+        "English",
+        "Flytende"
     );
 
     ArrayList<Sprak> sprakListe = new ArrayList<>();
@@ -1310,10 +1320,10 @@ public class TempCvEventObjectMother {
 
     Sprak sprak = new Sprak(
         "2012-12-01",
-        "Språk kode",
-        "Språk kode tekst",
-        "Språk alternativ tekst",
-        "Språk beskrivelse"
+        "78985",
+        "Tysk",
+        "German",
+        "Begynner"
     );
 
     ArrayList<Sprak> sprakListe = new ArrayList<>();
@@ -1543,7 +1553,7 @@ public class TempCvEventObjectMother {
         "2016-03-14",
         "3281301",
         "Mekanisk arbeid spesielt",
-        "Mekanisk arbeid generelt",
+        "Mekanisk arbeid spesielt",
         null
     );
 
@@ -1666,10 +1676,10 @@ public class TempCvEventObjectMother {
 
     Sprak sprak = new Sprak(
         "2012-12-01",
-        "Språk kode",
-        "Språk kode tekst",
-        "Språk alternativ tekst",
-        "Språk beskrivelse"
+        "78983",
+        "Dansk",
+        "Danish",
+        "Uforståelig"
     );
 
     ArrayList<Sprak> sprakListe = new ArrayList<>();
