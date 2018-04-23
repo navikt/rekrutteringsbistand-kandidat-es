@@ -37,6 +37,7 @@
 		<elasticsearch.version>6.2.2</elasticsearch.version>
 		<lucene.version>7.2.1</lucene.version>
 		<prometheus.version>0.1.0</prometheus.version>
+		<oidc-spring-support.version>0.1.5</oidc-spring-support.version>
 	</properties>
 
 	<dependencies>
@@ -44,6 +45,11 @@
 			<groupId>com.palantir.docker.compose</groupId>
 			<artifactId>docker-compose-rule-junit4</artifactId>
 			<version>${palantir.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>no.nav.security</groupId>
+			<artifactId>oidc-spring-support</artifactId>
+			<version>${oidc-spring-support.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
@@ -187,6 +193,12 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>no.nav.security</groupId>
+			<artifactId>oidc-spring-test</artifactId>
+			<version>0.1.5</version>
+			<!--<scope>test</scope>-->
+		</dependency>
+		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-test-framework</artifactId>
 			<version>${lucene.version}</version>
@@ -205,8 +217,13 @@
 			<version>2.0.1.RELEASE</version>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>no.nav.security</groupId>
+            <artifactId>oidc-spring-test</artifactId>
+            <version>RELEASE</version>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 
 	<build>
 		<plugins>

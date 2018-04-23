@@ -29,5 +29,7 @@ Deretter starter du *no.nav.arbeid.cv.es.PamCvIndexerApplication* med VM Options
 ```-Dspring.profiles.active=dev -Des.hostname=localhost -Des.scheme=HTTP -Des.port=9200
 ```
 
-
+**OIDC:**
+For å nå rest grensesnitt som er sikret med OIDC kan man generere token for localhost ved å 
+gå til http://localhost:8080/pam-cv-indexer/local/cookie
 
