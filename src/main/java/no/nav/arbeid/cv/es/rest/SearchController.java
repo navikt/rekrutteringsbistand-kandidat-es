@@ -2,6 +2,7 @@ package no.nav.arbeid.cv.es.rest;
 
 import no.nav.arbeid.cv.es.client.EsCvClient;
 import no.nav.arbeid.cv.es.domene.Sokeresultat;
+import no.nav.security.spring.oidc.validation.api.ProtectedWithClaims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpEntity;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/rest/kandidatsok", produces = MediaType.APPLICATION_JSON_VALUE)
+@ProtectedWithClaims(issuer = "selvbetjening")
 public class SearchController {
 
   @Autowired
