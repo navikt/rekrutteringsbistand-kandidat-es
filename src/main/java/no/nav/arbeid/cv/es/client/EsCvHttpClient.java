@@ -111,8 +111,7 @@ public class EsCvHttpClient implements EsCvClient {
 
   @Override
   public List<String> typeAheadKompetanse(String prefix) throws IOException {
-    // return typeAhead(prefix, "kompetanse.kompKodeNavn.completion");
-    return typeAhead(prefix, "samletKompetanse.completion");
+    return typeAhead(prefix, "kompetanse.kompKodeNavn.completion");
   }
 
   @Override
@@ -178,10 +177,8 @@ public class EsCvHttpClient implements EsCvClient {
       }
 
       if (StringUtils.isNotBlank(kompetanse)) {
-        // NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
-            // QueryBuilders.matchQuery("kompetanse.kompKodeNavn", kompetanse), ScoreMode.None);
-        MultiMatchQueryBuilder kompetanseQueryBuilder =
-            QueryBuilders.multiMatchQuery(kompetanse, "samletKompetanse");
+        NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
+            QueryBuilders.matchQuery("kompetanse.kompKodeNavn", kompetanse), ScoreMode.None);
         boolQueryBuilder.must(kompetanseQueryBuilder);
         LOGGER.debug("ADDING kompetanse");
       }
