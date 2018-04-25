@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import no.nav.elasticsearch.mapping.annotations.ElasticBooleanField;
 import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
+import no.nav.elasticsearch.mapping.annotations.ElasticCustomJsonField;
 import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
 import no.nav.elasticsearch.mapping.annotations.ElasticDocument;
 import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;

@@ -138,7 +138,6 @@ public class EsCvHttpClient implements EsCvClient {
 
     searchRequest.source(searchSourceBuilder);
     SearchResponse searchResponse = client.search(searchRequest);
-    LOGGER.debug("searchRequest" + searchRequest);
     LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
     CompletionSuggestion compSuggestion = searchResponse.getSuggest().getSuggestion("typeahead");
     return compSuggestion.getOptions().stream().map(option -> option.getText().string())

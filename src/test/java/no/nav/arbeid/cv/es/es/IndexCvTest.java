@@ -5,7 +5,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
+import com.palantir.docker.compose.DockerComposeRule;
+import no.nav.arbeid.cv.es.client.EsCvClient;
+import no.nav.arbeid.cv.es.config.ServiceConfig;
+import no.nav.arbeid.cv.es.domene.Aggregering;
+import no.nav.arbeid.cv.es.domene.EsCv;
+import no.nav.arbeid.cv.es.domene.Sokeresultat;
+import no.nav.arbeid.cv.es.service.EsCvTransformer;
+import no.nav.security.spring.oidc.test.TokenGeneratorConfiguration;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -25,17 +32,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import com.palantir.docker.compose.DockerComposeRule;
-
-import no.nav.arbeid.cv.es.client.EsCvClient;
-import no.nav.arbeid.cv.es.config.ServiceConfig;
 import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother;
-import no.nav.arbeid.cv.es.domene.Aggregering;
-import no.nav.arbeid.cv.es.domene.EsCv;
-import no.nav.arbeid.cv.es.domene.Sokeresultat;
-import no.nav.arbeid.cv.es.service.CvEventObjectMother;
-import no.nav.arbeid.cv.es.service.EsCvTransformer;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -66,9 +63,9 @@ public class IndexCvTest {
 
   @TestConfiguration
   @OverrideAutoConfiguration(enabled = true)
-  @ImportAutoConfiguration(classes = {}, exclude = {KafkaAutoConfiguration.class,
+  @ImportAutoConfiguration(exclude = {KafkaAutoConfiguration.class,
       DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
-  @Import({ServiceConfig.class})
+  @Import({ServiceConfig.class, TokenGeneratorConfiguration.class})
   static class TestConfig {
 
     @Bean

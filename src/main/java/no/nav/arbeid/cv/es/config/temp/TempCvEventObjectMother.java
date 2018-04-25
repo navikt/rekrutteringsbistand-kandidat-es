@@ -243,7 +243,7 @@ public class TempCvEventObjectMother {
     Sprak sprak1 = new Sprak(
         "2012-12-01",
         "78874",
-        "Norsk(askriftlig)",
+        "Norsk(skriftlig)",
         "Norwegian",
         "Morsmål"
     );
@@ -259,7 +259,6 @@ public class TempCvEventObjectMother {
     ArrayList<Sprak> sprakListe = new ArrayList<>();
     sprakListe.add(sprak1);
     sprakListe.add(sprak2);
-    // TODO: Typeaheaden henter kun første språk i listen. Denne er sortert, og viser bare første.
 
     Kurs kurs1 = new Kurs(
         "2012-12-01",
