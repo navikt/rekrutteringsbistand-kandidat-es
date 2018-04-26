@@ -33,7 +33,7 @@ public class EsYrkeserfaring {
   @ElasticKeywordField
   private String styrkKode3Siffer;
 
-  @ElasticTextField(copyTo = "fritekst")
+  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
   @ElasticKeywordField
   @ElasticCompletionField
   private String styrkKodeStillingstittel;

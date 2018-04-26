@@ -18,6 +18,11 @@ import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 @ElasticDocument
 public class EsCv {
 
+  // Define friktest to add norwegian analyzer
+  // Kan fjernes hvis fritekst-sok ikke brukes
+  @ElasticTextField(analyzer = "norwegian")
+  private String fritekst;
+
   @ElasticTextField
   private String fodselsnummer;
 
