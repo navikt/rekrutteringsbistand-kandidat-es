@@ -37,7 +37,7 @@
 		<elasticsearch.version>6.2.2</elasticsearch.version>
 		<lucene.version>7.2.1</lucene.version>
 		<prometheus.version>0.1.0</prometheus.version>
-		<oidc-spring-support.version>0.1.5</oidc-spring-support.version>
+		<oidc-spring-support.version>0.2.1</oidc-spring-support.version>
 	</properties>
 
 	<dependencies>
