@@ -1,6 +1,7 @@
 package no.nav.arbeid.cv.es.altinn;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Reportee {
@@ -9,26 +10,31 @@ public class Reportee {
     private String type;
     private String status;
     private String organizationNumber;
-    private String SocialSecurityNumber;
+    private String socialSecurityNumber;
 
+    @JsonProperty("Name")
     public String getName() {
         return name;
     }
 
+    @JsonProperty("Type")
     public String getType() {
         return type;
     }
 
+    @JsonProperty("Status")
     public String getStatus() {
         return status;
     }
 
+    @JsonProperty("OrganizationNumber")
     public String getOrganizationNumber() {
         return organizationNumber;
     }
 
+    @JsonProperty("socialSecurityNumber")
     public String getSocialSecurityNumber() {
-        return SocialSecurityNumber;
+        return socialSecurityNumber;
     }
 
     public void setName(String name) {
@@ -48,7 +54,7 @@ public class Reportee {
     }
 
     public void setSocialSecurityNumber(String socialSecurityNumber) {
-        SocialSecurityNumber = socialSecurityNumber;
+        this.socialSecurityNumber = socialSecurityNumber;
     }
 
 }

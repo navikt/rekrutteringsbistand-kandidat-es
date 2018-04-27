@@ -1,8 +1,6 @@
-package no.nav.arbeid.cv.es.rest.dto;
+package no.nav.arbeid.cv.es.domene;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Arbeidsgiver {
 
     private String navn;

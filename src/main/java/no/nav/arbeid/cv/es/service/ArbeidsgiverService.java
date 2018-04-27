@@ -4,8 +4,12 @@ import no.nav.arbeid.cv.es.altinn.AccessRightsEnum;
 import no.nav.arbeid.cv.es.altinn.AltinnGateway;
 import no.nav.arbeid.cv.es.altinn.Reportee;
 import no.nav.arbeid.cv.es.altinn.RoleEnum;
-import no.nav.arbeid.cv.es.rest.dto.Arbeidsgiver;
+import no.nav.arbeid.cv.es.domene.Arbeidsgiver;
+import no.nav.arbeid.cv.es.util.FnrExtractor;
+import no.nav.security.oidc.context.OIDCRequestContextHolder;
 import org.apache.commons.text.WordUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +21,28 @@ import java.util.stream.Collectors;
 public class ArbeidsgiverService {
 
     private final AltinnGateway altinnService;
+    private final OIDCRequestContextHolder contextHolder;
+
+    private final static Logger LOG = LoggerFactory.getLogger(ArbeidsgiverService.class);
 
     @Autowired
-    public ArbeidsgiverService(AltinnGateway altinnService) {
+    public ArbeidsgiverService(AltinnGateway altinnService, OIDCRequestContextHolder oidcRequestContextHolder) {
         this.altinnService = altinnService;
+        this.contextHolder = oidcRequestContextHolder;
     }
 
-    public List<Arbeidsgiver> retrieveArbeidsgiverList(String subject) {
+    public boolean innloggaBrukerHarArbeidsgiverrettighetIAltinn() {
+        List<Arbeidsgiver> arbeidsgiverList = getArbeidsgiverListForReportee();
+
+        if (arbeidsgiverList.isEmpty()) {
+            LOG.warn("User doesn't seem to have the required roles for any Organization");
+            return false;
+        }
+
+        return true;
+    }
+
+    private List<Arbeidsgiver> retrieveArbeidsgiverList(String subject) {
         List<Reportee> reportees = altinnService.retrieveReporteesWithRoles(subject, altinnRolesWithAccess());
 
         if (reportees.isEmpty()) {
@@ -43,6 +62,12 @@ public class ArbeidsgiverService {
         arb.setType(r.getType());
         arb.setOrgNr(r.getOrganizationNumber());
         return arb;
+    }
+
+    private List<Arbeidsgiver> getArbeidsgiverListForReportee() {
+        String fnrFromClaims = FnrExtractor.extract(contextHolder);
+
+        return retrieveArbeidsgiverList(fnrFromClaims);
     }
 
 }
