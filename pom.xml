@@ -38,6 +38,7 @@
 		<lucene.version>7.2.1</lucene.version>
 		<prometheus.version>0.1.0</prometheus.version>
 		<oidc-spring-support.version>0.1.5</oidc-spring-support.version>
+		<wiremock.version>2.7.1</wiremock.version>
 	</properties>
 
 	<dependencies>
@@ -80,6 +81,7 @@
 		<!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
 			</dependency> <dependency> <groupId>org.springframework.data</groupId> <artifactId>spring-data-elasticsearch</artifactId>
 			<version>3.0.3.RELEASE</version> </dependency> -->
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -142,6 +144,18 @@
 			<artifactId>elasticsearch</artifactId>
 			<!-- <version>7.0.0-alpha1</version> -->
 			<version>${elasticsearch.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-text</artifactId>
+			<version>1.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.tomakehurst</groupId>
+			<artifactId>wiremock</artifactId>
+			<version>${wiremock.version}</version>
 		</dependency>
 
 		<dependency>
