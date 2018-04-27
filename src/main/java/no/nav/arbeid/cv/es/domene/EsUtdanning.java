@@ -25,7 +25,7 @@ public class EsUtdanning {
   @ElasticKeywordField
   private String nusKode;
 
-  @ElasticTextField(copyTo = "fritekst")
+  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
   @ElasticCompletionField
   private String nusKodeGrad;
 

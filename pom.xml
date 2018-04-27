@@ -37,7 +37,7 @@
 		<elasticsearch.version>6.2.2</elasticsearch.version>
 		<lucene.version>7.2.1</lucene.version>
 		<prometheus.version>0.1.0</prometheus.version>
-		<oidc-spring-support.version>0.1.5</oidc-spring-support.version>
+		<oidc-spring-support.version>0.2.1</oidc-spring-support.version>
 		<wiremock.version>2.7.1</wiremock.version>
 	</properties>
 
@@ -81,7 +81,6 @@
 		<!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
 			</dependency> <dependency> <groupId>org.springframework.data</groupId> <artifactId>spring-data-elasticsearch</artifactId>
 			<version>3.0.3.RELEASE</version> </dependency> -->
-
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
