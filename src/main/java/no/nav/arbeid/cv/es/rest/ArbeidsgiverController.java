@@ -3,7 +3,7 @@ package no.nav.arbeid.cv.es.rest;
 import no.nav.arbeid.cv.es.rest.dto.Arbeidsgiver;
 import no.nav.arbeid.cv.es.service.ArbeidsgiverService;
 import no.nav.arbeid.cv.es.util.FnrExtractor;
-import no.nav.security.oidc.filter.OIDCRequestContextHolder;
+import no.nav.security.oidc.context.OIDCRequestContextHolder;
 import no.nav.security.spring.oidc.validation.api.ProtectedWithClaims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

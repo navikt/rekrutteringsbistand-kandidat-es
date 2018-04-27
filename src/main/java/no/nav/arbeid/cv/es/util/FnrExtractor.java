@@ -1,8 +1,8 @@
 package no.nav.arbeid.cv.es.util;
 
 import no.nav.security.oidc.OIDCConstants;
+import no.nav.security.oidc.context.OIDCRequestContextHolder;
 import no.nav.security.oidc.context.OIDCValidationContext;
-import no.nav.security.oidc.filter.OIDCRequestContextHolder;
 
 public class FnrExtractor {
 
