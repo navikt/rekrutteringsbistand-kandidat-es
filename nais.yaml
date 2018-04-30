@@ -28,6 +28,10 @@ fasitResources:
     resourceType: baseurl
     propertyMap:
       url: ES_HOSTNAME
+  - alias:  aad_b2c_discovery
+    resourceType: baseurl
+    propertyMap:
+      url: NO_NAV_SECURITY_OIDC_ISSUER_SELVBETJENING_DISCOVERYURL
   - alias: pam_elasticsearch
     resourceType: credential
     propertyMap:
@@ -37,10 +41,6 @@ fasitResources:
     resourceType: credential
     propertyMap:
       username: NO_NAV_SECURITY_OIDC_ISSUER_SELVBETJENING_ACCEPTEDAUDIENCE
-  - alias: aad_b2c_discovery
-    resourceType: baseurl
-    propertyMap:
-      url: NO_NAV_SECURITY_OIDC_ISSUER_SELVBETJENING_DISCOVERYURL
  -  alias: pam-cv-indexer-eksternapp.altinn.serviceowner-apiKey
     resourceType: credential
     propertyMap:
