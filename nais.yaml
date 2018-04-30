@@ -44,7 +44,7 @@ fasitResources:
   - alias: pam-cv-indexer-eksternapp.altinn.serviceowner-apiKey
     resourceType: credential
     propertyMap:
-      password: ALTINN_GATEWAY_PASSWORD
+      password: ALTINN_GATEWAY_APIKEY
   - alias: eksternapp.altinn.serviceowner
     resourceType: restservice
     propertyMap:
