@@ -41,7 +41,7 @@ fasitResources:
     resourceType: credential
     propertyMap:
       username: NO_NAV_SECURITY_OIDC_ISSUER_SELVBETJENING_ACCEPTEDAUDIENCE
- -  alias: pam-cv-indexer-eksternapp.altinn.serviceowner-apiKey
+  - alias: pam-cv-indexer-eksternapp.altinn.serviceowner-apiKey
     resourceType: credential
     propertyMap:
       password: ALTINN_GATEWAY_PASSWORD
@@ -49,7 +49,7 @@ fasitResources:
     resourceType: restservice
     propertyMap:
       url: ALTINN_GATEWAY_URL
- -  alias: altinn.apikey
+  - alias: altinn.apikey
     resourceType: credential
     propertyMap:
       password: ALTINN_APIKEY
