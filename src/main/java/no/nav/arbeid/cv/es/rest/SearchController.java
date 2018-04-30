@@ -9,7 +9,11 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,6 +29,7 @@ public class SearchController {
     private EsCvClient client;
 
     @RequestMapping(path = "typeahead", method = RequestMethod.GET)
+   @PreAuthorize("@arbeidsgiverService.innloggaBrukerHarArbeidsgiverrettighetIAltinn()")
     public HttpEntity<Resources<StringResource>> typeAhead(
             @RequestParam(name = "komp", required = false) String komp,
             @RequestParam(name = "utd", required = false) String utd,
@@ -52,7 +57,7 @@ public class SearchController {
     }
 
     @RequestMapping(path = "sok", method = RequestMethod.GET)
-    @CrossOrigin(origins = "http://localhost:9009")
+    @PreAuthorize("@arbeidsgiverService.innloggaBrukerHarArbeidsgiverrettighetIAltinn()")
     public HttpEntity<SokeresultatResource> sok(
             @RequestParam(name = "fritekst", required = false) String fritekst,
             @RequestParam(name = "yrkeserfaring", required = false) String yrkeserfaring,
