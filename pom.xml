@@ -39,6 +39,7 @@
 		<prometheus.version>0.1.0</prometheus.version>
 		<oidc-spring-support.version>0.2.1</oidc-spring-support.version>
 		<wiremock.version>2.7.1</wiremock.version>
+		<org-ehcache.version>3.5.0</org-ehcache.version>
 	</properties>
 
 	<dependencies>
@@ -169,6 +170,20 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-jcache</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-cache</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>io.prometheus</groupId>
 			<artifactId>simpleclient</artifactId>
 			<version>${prometheus.version}</version>
@@ -208,8 +223,7 @@
 		<dependency>
 			<groupId>no.nav.security</groupId>
 			<artifactId>oidc-spring-test</artifactId>
-			<version>0.1.5</version>
-			<!--<scope>test</scope>-->
+			<version>${oidc-spring-support.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
@@ -230,12 +244,6 @@
 			<version>2.0.1.RELEASE</version>
 			<scope>test</scope>
 		</dependency>
-        <dependency>
-            <groupId>no.nav.security</groupId>
-            <artifactId>oidc-spring-test</artifactId>
-            <version>RELEASE</version>
-        </dependency>
-
     </dependencies>
 
 	<build>

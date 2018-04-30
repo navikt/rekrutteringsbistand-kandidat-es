@@ -1,9 +1,11 @@
 package no.nav.arbeid.cv.es.altinn;
 
 import no.nav.arbeid.cv.es.config.AltinnEnvConf;
+import no.nav.arbeid.cv.es.config.CacheConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,12 @@ public class AltinnGateway {
         this.altinnEnvConf = altinnEnvConf;
     }
 
+    @Cacheable(CacheConfig.ALTINN_RIGHTS_CACHE)
+    public List<Reportee> retrieveReporteesWithRights(String subject, AccessRightsEnum right) {
+        return retrieveActiveReportees(SUBJECT + "=" + subject + "&" + SERVICE_CODE + "=" + right.getServiceCode() + "&" + SERVICE_EDITION + "=" + right.getServiceEditionCode());
+    }
+
+    @Cacheable(CacheConfig.ALTINN_ROLES_CACHE)
     public List<Reportee> retrieveReporteesWithRoles(String subject, List<RoleEnum> roles) {
         return retrieveActiveReportees(SUBJECT + "=" + subject + "&" + ROLEDEFINITION_ID + "=" + composeRoleParameter(roles));
     }
@@ -40,15 +48,6 @@ public class AltinnGateway {
         StringBuilder roleParam = new StringBuilder();
         roleEnums.forEach(roleEnum -> roleParam.append(roleEnum.getRoleId()).append(","));
         return roleParam.toString();
-    }
-
-    private List<Reportee> retrieveReporteesWithRolesFallback(String subject, List<RoleEnum> roles) {
-        LOG.warn("Got unexpected response from altinn gateway");
-        return Collections.emptyList();
-    }
-
-    public List<Reportee> retrieveReporteesWithRights(String subject, AccessRightsEnum right) {
-        return retrieveActiveReportees(SUBJECT + "=" + subject + "&" + SERVICE_CODE + "=" + right.getServiceCode() + "&" + SERVICE_EDITION + "=" + right.getServiceEditionCode());
     }
 
     private List<Reportee> retrieveReporteesWithRightsFallback(String subject, AccessRightsEnum right) {
