@@ -1372,8 +1372,8 @@ public class TempCvEventObjectMother {
     vervListe.add(verv);
 
     GeografiJobbonsker geografiJobbonsker = new GeografiJobbonsker(
-        "Geografikode tekst",
-        "GeografiKode"
+        "Oslo",
+        "NO01.1000"
     );
 
     ArrayList<GeografiJobbonsker> geografiJobbonskerListe = new ArrayList<>();
@@ -1728,8 +1728,8 @@ public class TempCvEventObjectMother {
     vervListe.add(verv);
 
     GeografiJobbonsker geografiJobbonsker = new GeografiJobbonsker(
-        "Geografikode tekst",
-        "GeografiKode"
+        "Harstad",
+        "NO18.8740"
     );
 
     ArrayList<GeografiJobbonsker> geografiJobbonskerListe = new ArrayList<>();

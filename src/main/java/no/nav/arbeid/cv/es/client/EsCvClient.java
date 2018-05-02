@@ -7,8 +7,9 @@ import no.nav.arbeid.cv.es.domene.Sokeresultat;
 
 public interface EsCvClient {
 
-  Sokeresultat sok(String fritekst, List<String> stillingstitler, List<String> kompetanser, List<String> utdanninger,
-      List<String> sprak, List<String> sertifikater, String styrkKode, String nusKode, List<String> styrkKoder, List<String> nusKoder) throws IOException;
+  Sokeresultat sok(String fritekst, List<String> stillingstitler, List<String> kompetanser,
+      List<String> utdanninger, List<String> sprak, List<String> sertifikater, List<String> geografiList,
+      String styrkKode, String nusKode, List<String> styrkKoder, List<String> nusKoder) throws IOException;
 
   void index(EsCv esCv) throws IOException;
 

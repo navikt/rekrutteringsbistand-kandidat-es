@@ -156,8 +156,8 @@ public class EsCvHttpClient implements EsCvClient {
 
   @Override
   public Sokeresultat sok(String fritekst, List<String> stillingstitler, List<String> kompetanser,
-      List<String> utdanninger, List<String> sprak, List<String> sertifikater, String styrkKode,
-      String nusKode, List<String> styrkKoder, List<String> nusKoder) throws IOException {
+      List<String> utdanninger, List<String> sprak, List<String> sertifikater, List<String> geografiList,
+      String styrkKode, String nusKode, List<String> styrkKoder, List<String> nusKoder) throws IOException {
 
     AbstractQueryBuilder<?> queryBuilder = null;
     if (StringUtils.isBlank(fritekst)
@@ -166,6 +166,7 @@ public class EsCvHttpClient implements EsCvClient {
         && (utdanninger == null || utdanninger.isEmpty())
         && (sprak == null || sprak.isEmpty())
         && (sertifikater == null || sertifikater.isEmpty())
+        && (geografiList == null || geografiList.isEmpty())
         && StringUtils.isBlank(styrkKode) && StringUtils.isBlank(nusKode)
         && (styrkKoder == null || styrkKoder.isEmpty())
         && (nusKoder == null || nusKoder.isEmpty())) {
@@ -206,6 +207,11 @@ public class EsCvHttpClient implements EsCvClient {
       if (sertifikater != null && !sertifikater.isEmpty()) {
         sertifikater.stream().filter(StringUtils::isNotBlank)
             .forEach((s) -> addSertifikaterQuery(s, boolQueryBuilder));
+      }
+
+      if (geografiList != null && !geografiList.isEmpty()) {
+        geografiList.stream().filter(StringUtils::isNotBlank)
+            .forEach((g) -> addGeografiQuery(g, boolQueryBuilder));
       }
 
       if (StringUtils.isNotBlank(styrkKode)) {
@@ -267,6 +273,13 @@ public class EsCvHttpClient implements EsCvClient {
         QueryBuilders.matchQuery("sertifikat.sertifikatKodeNavn", sertifikat), ScoreMode.None);
     boolQueryBuilder.must(sertifikaterQueryBuilder);
     LOGGER.debug("ADDING sertifikat");
+  }
+
+  private void addGeografiQuery(String geografi, BoolQueryBuilder boolQueryBuilder) {
+    NestedQueryBuilder geografiQueryBuilder = QueryBuilders.nestedQuery("geografiJobbonsker",
+        QueryBuilders.matchQuery("geografiJobbonsker.geografiKodeTekst", geografi), ScoreMode.None);
+    boolQueryBuilder.must(geografiQueryBuilder);
+    LOGGER.debug("ADDING geografiJobbonske");
   }
 
   private void addNusKodeQuery(String nusKode, BoolQueryBuilder boolQueryBuilder) {
