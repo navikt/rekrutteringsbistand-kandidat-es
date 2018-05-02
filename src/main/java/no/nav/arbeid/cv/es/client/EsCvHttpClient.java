@@ -1,8 +1,10 @@
 package no.nav.arbeid.cv.es.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -17,6 +19,7 @@ import no.nav.elasticsearch.mapping.MappingBuilderImpl;
 import no.nav.elasticsearch.mapping.ObjectMapping;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.kafka.common.protocol.types.Field.Str;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
@@ -124,6 +127,19 @@ public class EsCvHttpClient implements EsCvClient {
     return typeAhead(prefix, "yrkeserfaring.styrkKodeStillingstittel.completion");
   }
 
+  public List<String> typeAheadSprak(String prefix) throws IOException {
+    return typeAhead(prefix, "sprak.sprakKodeTekst.completion");
+  }
+
+  public List<String> typeAheadSertifikat(String prefix) throws IOException {
+    return typeAhead(prefix, "sertifikat.sertifikatKodeNavn.completion");
+  }
+
+  public List<String> typeAheadGeografi(String prefix) throws IOException {
+    // TODO: Hvilken data skal returneres her?
+    return Arrays.asList("Legg til typeahead med geografi her?");
+  }
+
   private List<String> typeAhead(String prefix, String suggestionField) throws IOException {
     SearchRequest searchRequest = new SearchRequest(CV_INDEX);
     searchRequest.types(CV_TYPE);
@@ -144,13 +160,17 @@ public class EsCvHttpClient implements EsCvClient {
   }
 
   @Override
-  public Sokeresultat sok(String fritekst, String stillingstittel, String kompetanse,
-      String utdanning, String styrkKode, String nusKode, List<String> styrkKoder,
-      List<String> nusKoder) throws IOException {
+  public Sokeresultat sok(String fritekst, List<String> stillingstitler, List<String> kompetanser,
+      List<String> utdanninger, List<String> sprak, List<String> sertifikater, String styrkKode,
+      String nusKode, List<String> styrkKoder, List<String> nusKoder) throws IOException {
 
     AbstractQueryBuilder<?> queryBuilder = null;
-    if (StringUtils.isBlank(fritekst) && StringUtils.isBlank(stillingstittel)
-        && StringUtils.isBlank(kompetanse) && StringUtils.isBlank(utdanning)
+    if (StringUtils.isBlank(fritekst)
+        && (stillingstitler == null || stillingstitler.isEmpty())
+        && (kompetanser == null || kompetanser.isEmpty())
+        && (utdanninger == null || utdanninger.isEmpty())
+        && (sprak == null || sprak.isEmpty())
+        && (sertifikater == null || sertifikater.isEmpty())
         && StringUtils.isBlank(styrkKode) && StringUtils.isBlank(nusKode)
         && (styrkKoder == null || styrkKoder.isEmpty())
         && (nusKoder == null || nusKoder.isEmpty())) {
@@ -168,26 +188,29 @@ public class EsCvHttpClient implements EsCvClient {
         LOGGER.debug("ADDING fritekst");
       }
 
-      if (StringUtils.isNotBlank(stillingstittel)) {
-        NestedQueryBuilder yrkeserfaringQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
-            QueryBuilders.matchQuery("yrkeserfaring.styrkKodeStillingstittel", stillingstittel),
-            ScoreMode.None);
-        boolQueryBuilder.must(yrkeserfaringQueryBuilder);
-        LOGGER.debug("ADDING yrkeserfaring");
+      if (stillingstitler != null && !stillingstitler.isEmpty()) {
+        stillingstitler.stream().filter(StringUtils::isNotBlank)
+            .forEach(s -> addStillingsTitlerQuery(s, boolQueryBuilder));
       }
 
-      if (StringUtils.isNotBlank(kompetanse)) {
-        NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
-            QueryBuilders.matchQuery("kompetanse.kompKodeNavn", kompetanse), ScoreMode.None);
-        boolQueryBuilder.must(kompetanseQueryBuilder);
-        LOGGER.debug("ADDING kompetanse");
+      if (kompetanser != null && !kompetanser.isEmpty()) {
+        kompetanser.stream().filter(StringUtils::isNotBlank)
+            .forEach(k -> addKompetanseQuery(k, boolQueryBuilder));
       }
 
-      if (StringUtils.isNotBlank(utdanning)) {
-        NestedQueryBuilder utdanningQueryBuilder = QueryBuilders.nestedQuery("utdanning",
-            QueryBuilders.matchQuery("utdanning.nusKodeGrad", utdanning), ScoreMode.None);
-        boolQueryBuilder.must(utdanningQueryBuilder);
-        LOGGER.debug("ADDING utdanning");
+      if (utdanninger != null && !utdanninger.isEmpty()) {
+        utdanninger.stream().filter(StringUtils::isNotBlank)
+            .forEach(u -> addUtdanningerQuery(u, boolQueryBuilder));
+      }
+
+      if (sprak != null && !sprak.isEmpty()) {
+        sprak.stream().filter(StringUtils::isNotBlank)
+            .forEach((s) -> addSprakQuery(s, boolQueryBuilder));
+      }
+
+      if (sertifikater != null && !sertifikater.isEmpty()) {
+        sertifikater.stream().filter(StringUtils::isNotBlank)
+            .forEach((s) -> addSertifikaterQuery(s, boolQueryBuilder));
       }
 
       if (StringUtils.isNotBlank(styrkKode)) {
@@ -213,6 +236,42 @@ public class EsCvHttpClient implements EsCvClient {
 
     SearchResponse searchResponse = search(queryBuilder, 0, 1000);
     return toSokeresultat(searchResponse);
+  }
+
+  private void addStillingsTitlerQuery(String stillingstittel, BoolQueryBuilder boolQueryBuilder) {
+    NestedQueryBuilder yrkeserfaringQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
+        QueryBuilders.matchQuery("yrkeserfaring.styrkKodeStillingstittel", stillingstittel),
+        ScoreMode.None);
+    boolQueryBuilder.must(yrkeserfaringQueryBuilder);
+    LOGGER.debug("ADDING yrkeserfaring");
+  }
+
+  private void addUtdanningerQuery(String utdanning, BoolQueryBuilder boolQueryBuilder) {
+    NestedQueryBuilder utdanningQueryBuilder = QueryBuilders.nestedQuery("utdanning",
+        QueryBuilders.matchQuery("utdanning.nusKodeGrad", utdanning), ScoreMode.None);
+    boolQueryBuilder.must(utdanningQueryBuilder);
+    LOGGER.debug("ADDING utdanning");
+  }
+
+  private void addKompetanseQuery(String kompetanse, BoolQueryBuilder boolQueryBuilder) {
+    NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
+        QueryBuilders.matchQuery("kompetanse.kompKodeNavn", kompetanse), ScoreMode.None);
+    boolQueryBuilder.must(kompetanseQueryBuilder);
+    LOGGER.debug("ADDING kompetanse");
+  }
+
+  private void addSprakQuery(String sprak, BoolQueryBuilder boolQueryBuilder) {
+    NestedQueryBuilder sprakQueryBuilder = QueryBuilders.nestedQuery("sprak",
+        QueryBuilders.matchQuery("sprak.sprakKodeTekst", sprak), ScoreMode.None);
+    boolQueryBuilder.must(sprakQueryBuilder);
+    LOGGER.debug("ADDING sprak");
+  }
+
+  private void addSertifikaterQuery(String sertifikat, BoolQueryBuilder boolQueryBuilder) {
+    NestedQueryBuilder sertifikaterQueryBuilder = QueryBuilders.nestedQuery("sertifikat",
+        QueryBuilders.matchQuery("sertifikat.sertifikatKodeNavn", sertifikat), ScoreMode.None);
+    boolQueryBuilder.must(sertifikaterQueryBuilder);
+    LOGGER.debug("ADDING sertifikat");
   }
 
   private void addNusKodeQuery(String nusKode, BoolQueryBuilder boolQueryBuilder) {

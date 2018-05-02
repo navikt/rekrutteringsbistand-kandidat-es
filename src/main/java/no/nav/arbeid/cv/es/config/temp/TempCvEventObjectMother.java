@@ -1236,8 +1236,8 @@ public class TempCvEventObjectMother {
     Sertifikat sertifikat2 = new Sertifikat(
         "1991-01-01",
         null,
-        "V1.6070",
-        "Førerkort: Kl. BE (personbil/varebil og tilhenger)",
+        "V1.6090",
+        "Førerkort: Kl. M (Moped)",
         null,
         ""
     );
