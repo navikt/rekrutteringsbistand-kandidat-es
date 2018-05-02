@@ -1236,8 +1236,8 @@ public class TempCvEventObjectMother {
     Sertifikat sertifikat2 = new Sertifikat(
         "1991-01-01",
         null,
-        "V1.6070",
-        "Førerkort: Kl. BE (personbil/varebil og tilhenger)",
+        "V1.6090",
+        "Førerkort: Kl. M (Moped)",
         null,
         ""
     );
@@ -1372,8 +1372,8 @@ public class TempCvEventObjectMother {
     vervListe.add(verv);
 
     GeografiJobbonsker geografiJobbonsker = new GeografiJobbonsker(
-        "Geografikode tekst",
-        "GeografiKode"
+        "Oslo",
+        "NO01.1000"
     );
 
     ArrayList<GeografiJobbonsker> geografiJobbonskerListe = new ArrayList<>();
@@ -1728,8 +1728,8 @@ public class TempCvEventObjectMother {
     vervListe.add(verv);
 
     GeografiJobbonsker geografiJobbonsker = new GeografiJobbonsker(
-        "Geografikode tekst",
-        "GeografiKode"
+        "Harstad",
+        "NO18.8740"
     );
 
     ArrayList<GeografiJobbonsker> geografiJobbonskerListe = new ArrayList<>();
