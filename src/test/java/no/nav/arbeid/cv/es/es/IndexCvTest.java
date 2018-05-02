@@ -3,8 +3,16 @@ package no.nav.arbeid.cv.es.es;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-
+import com.palantir.docker.compose.DockerComposeRule;
+import no.nav.arbeid.cv.es.client.EsCvClient;
+import no.nav.arbeid.cv.es.config.ServiceConfig;
+import no.nav.arbeid.cv.es.domene.Aggregering;
+import no.nav.arbeid.cv.es.domene.EsCv;
+import no.nav.arbeid.cv.es.domene.Sokeresultat;
+import no.nav.arbeid.cv.es.service.EsCvTransformer;
+import no.nav.security.spring.oidc.test.TokenGeneratorConfiguration;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -24,21 +32,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import com.palantir.docker.compose.DockerComposeRule;
-
-import no.nav.arbeid.cv.es.client.EsCvClient;
-import no.nav.arbeid.cv.es.config.ServiceConfig;
 import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother;
-import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother2;
-import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother3;
-import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother4;
-import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother5;
-import no.nav.arbeid.cv.es.domene.Aggregering;
-import no.nav.arbeid.cv.es.domene.EsCv;
-import no.nav.arbeid.cv.es.domene.Sokeresultat;
-import no.nav.arbeid.cv.es.service.CvEventObjectMother;
-import no.nav.arbeid.cv.es.service.EsCvTransformer;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -69,9 +63,9 @@ public class IndexCvTest {
 
   @TestConfiguration
   @OverrideAutoConfiguration(enabled = true)
-  @ImportAutoConfiguration(classes = {}, exclude = {KafkaAutoConfiguration.class,
+  @ImportAutoConfiguration(exclude = {KafkaAutoConfiguration.class,
       DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
-  @Import({ServiceConfig.class})
+  @Import({ServiceConfig.class, TokenGeneratorConfiguration.class})
   static class TestConfig {
 
     @Bean
@@ -92,10 +86,10 @@ public class IndexCvTest {
     client.createIndex();
 
     client.index(transformer.transform(TempCvEventObjectMother.giveMeCvEvent()));
-    client.index(transformer.transform(TempCvEventObjectMother2.giveMeCvEvent()));
-    client.index(transformer.transform(TempCvEventObjectMother3.giveMeCvEvent()));
-    client.index(transformer.transform(TempCvEventObjectMother4.giveMeCvEvent()));
-    client.index(transformer.transform(TempCvEventObjectMother5.giveMeCvEvent()));
+    client.index(transformer.transform(TempCvEventObjectMother.giveMeCvEvent2()));
+    client.index(transformer.transform(TempCvEventObjectMother.giveMeCvEvent3()));
+    client.index(transformer.transform(TempCvEventObjectMother.giveMeCvEvent4()));
+    client.index(transformer.transform(TempCvEventObjectMother.giveMeCvEvent5()));
   }
 
   @After
@@ -109,10 +103,189 @@ public class IndexCvTest {
         client.findByEtternavnAndUtdanningNusKodeGrad("NORDMANN", "Mekaniske fag, grunnkurs");
     List<EsCv> list = sokeres.getCver();
     List<Aggregering> aggregeringer = sokeres.getAggregeringer();
-    
+
     assertThat(list.size()).isEqualTo(1);
     EsCv esCv = list.get(0);
     assertThat(esCv).isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent()));
+  }
+
+  @Test
+  public void testUtenSokekriterierReturnererAlleTestPersoner() throws IOException {
+    Sokeresultat sokeresultat =
+        client.sok(null, null, null, null, null, null, null, null);
+
+    List<EsCv> cver = sokeresultat.getCver();
+
+    assertThat(cver.size()).isEqualTo(5);
+  }
+
+  @Test
+  public void testFlereInputFritekstGirBredereResultat() throws IOException {
+    Sokeresultat sokeresultat1 =
+        client.sok("javautvikler", null, null, null, null, null, null, null);
+    Sokeresultat sokeresultat =
+        client.sok("industrimekaniker javautvikler", null, null, null, null, null, null, null);
+
+    List<EsCv> cver1 = sokeresultat1.getCver();
+    List<EsCv> cver = sokeresultat.getCver();
+
+    assertThat(cver1.size()).isLessThan(cver.size());
+    assertThat(cver1.size()).isEqualTo(1);
+    assertThat(cver.size()).isEqualTo(3);
+  }
+
+  @Test
+  public void testSokPaNorskeStoppordGirIkkeResultat() throws IOException {
+    Sokeresultat sokeresultatYrke =
+        client.sok(null, "og", null, null, null, null, null, null);
+    Sokeresultat sokeresultatKomp =
+        client.sok(null, null, "og", null, null, null, null, null);
+    Sokeresultat sokeresultatUtdanning =
+        client.sok(null, null, null, "og", null, null, null, null);
+    Sokeresultat sokeresultatFritekst =
+        client.sok("og", null, null, null, null, null, null, null);
+
+
+    List<EsCv> cverYrke = sokeresultatYrke.getCver();
+    List<EsCv> cverKomp = sokeresultatKomp.getCver();
+    List<EsCv> cverUtdanning = sokeresultatUtdanning.getCver();
+    List<EsCv> cverFritekst = sokeresultatFritekst.getCver();
+
+    assertThat(cverYrke.size()).isEqualTo(0);
+    assertThat(cverKomp.size()).isEqualTo(0);
+    assertThat(cverUtdanning.size()).isEqualTo(0);
+    assertThat(cverFritekst.size()).isEqualTo(0);
+  }
+
+  @Test
+  public void testSokMedFlereKriterierGirSvarMedAlleFelter() throws IOException {
+    Sokeresultat sokeresultat =
+        client.sok(null, "Progger", "Landtransport generelt", "Master i sikkerhet", null, null, null, null);
+
+    List<EsCv> cver = sokeresultat.getCver();
+
+    assertThat(cver.size()).isEqualTo(1);
+    EsCv cv = cver.get(0);
+    assertThat(cv).isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent5()));
+  }
+
+  @Test
+  public void testFlereInputYrkeGirFlereTreff() throws IOException {
+    Sokeresultat sokeresultat =
+        client.sok(null, "Progger", null, null, null, null, null, null);
+    Sokeresultat sokeresultatBredere =
+        client.sok(null, "Progger Industrimekaniker", null, null, null, null, null, null);
+
+    List<EsCv> cver = sokeresultat.getCver();
+    List<EsCv> cverBredere = sokeresultatBredere.getCver();
+
+    assertThat(cverBredere.size()).isGreaterThan(cver.size());
+  }
+
+  @Test
+  public void testFlereInputKompetanseGirFlereTreff() throws IOException {
+    Sokeresultat sokeresultat =
+        client.sok(null, null, "Programvareutvikler", null, null, null, null, null);
+    Sokeresultat sokeresultatBredere =
+        client.sok(null, null, "Programvareutvikler Nyhetsanker", null, null, null, null, null);
+
+    List<EsCv> cver = sokeresultat.getCver();
+    List<EsCv> cverBredere = sokeresultatBredere.getCver();
+
+    assertThat(cverBredere.size()).isGreaterThan(cver.size());
+  }
+
+  @Test
+  public void testFlereInputUtdanningGirFlereTreff() throws IOException {
+    Sokeresultat sokeresultat =
+        client.sok(null, null, null, "Bygg og anlegg", null, null, null, null);
+    Sokeresultat sokeresultatBredere =
+        client.sok(null, null, null, "Bygg og anlegg master i sikkerhet", null, null, null, null);
+
+    List<EsCv> cver = sokeresultat.getCver();
+    List<EsCv> cverBredere = sokeresultatBredere.getCver();
+
+    assertThat(cverBredere.size()).isGreaterThan(cver.size());
+  }
+
+  @Test
+  public void testStemOrdSkalGiSammeResultat() throws IOException {
+    Sokeresultat sokeresultat =
+        client.sok(null, "Progger", null, null, null, null, null, null);
+    Sokeresultat sokeresultatStemOrd =
+        client.sok(null, "Progg", null, null, null, null, null, null);
+
+    List<EsCv> cver = sokeresultat.getCver();
+    List <EsCv> cverStemOrd = sokeresultatStemOrd.getCver();
+
+    assertThat(cver.size()).isEqualTo(cverStemOrd.size());
+    assertThat(cver.get(0)).isEqualTo(cverStemOrd.get(0));
+  }
+
+  @Test
+  public void testSokPaStyrkKode() throws IOException {
+    Sokeresultat sokeresultat =
+        client.sok(null, null, null, null,  "5684.05", null, null, null);
+
+    List<EsCv> cver = sokeresultat.getCver();
+    EsCv cv = cver.get(0);
+    assertThat(cv).isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent3()));
+  }
+
+  @Test
+  public void testSokPaNusKode() throws IOException {
+    Sokeresultat sokeresultat =
+        client.sok(null, null, null, null,  null, "486595", null, null);
+
+    List<EsCv> cver = sokeresultat.getCver();
+    EsCv cv = cver.get(0);
+    assertThat(cv).isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent5()));
+  }
+
+  @Test
+  public void testSokPaFlereStyrkKoderGirBegrensendeResultat() throws IOException {
+    List<String> styrkKoder = new ArrayList<>();
+    styrkKoder.add("5684.05");
+
+    Sokeresultat sokeresultat =
+        client.sok(null, null, null, null,  null, null, styrkKoder, null);
+
+    styrkKoder.add("5124.46");
+
+    Sokeresultat sokeresultatToKoder =
+        client.sok(null, null, null, null,  null, null, styrkKoder, null);
+
+    styrkKoder.add("5746.07");
+
+    Sokeresultat sokeresultatTreKoder =
+        client.sok(null, null, null, null,  null, null, styrkKoder, null);
+
+    List<EsCv> cver = sokeresultat.getCver();
+    List<EsCv> cver2 = sokeresultatToKoder.getCver();
+    List<EsCv> cver3 = sokeresultatTreKoder.getCver();
+
+    assertThat(cver.size()).isGreaterThan(cver2.size());
+    assertThat(cver2.size()).isGreaterThan(cver3.size());
+  }
+
+  @Test
+  public void testSokPaFlereNusKoderGirBegrensendeResultat() throws IOException {
+    List<String> nusKoder = new ArrayList<>();
+    nusKoder.add("296647");
+
+    Sokeresultat sokeresultat =
+        client.sok(null, null, null, null,  null, null, null, nusKoder);
+
+    nusKoder.add("456375");
+
+    Sokeresultat sokeresultatToKoder =
+        client.sok(null, null, null, null,  null, null, null, nusKoder);
+
+    List<EsCv> cver = sokeresultat.getCver();
+    List<EsCv> cver2 = sokeresultatToKoder.getCver();
+
+    assertThat(cver.size()).isGreaterThan(cver2.size());
+
   }
 
 }

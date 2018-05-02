@@ -29,5 +29,12 @@ Deretter starter du *no.nav.arbeid.cv.es.PamCvIndexerApplication* med VM Options
 ```-Dspring.profiles.active=dev -Des.hostname=localhost -Des.scheme=HTTP -Des.port=9200
 ```
 
+**OIDC:**
+For å nå rest grensesnitt som er sikret med OIDC kan man generere token for localhost ved å 
+gå til http://localhost:8765/pam-cv-indexer/local/cookie
 
+**Altinn:**
+Bruker med fnr 12345678910(default fra cookie-url over) er satt opp med altinn-rolle lokalt (via wiremock).
 
+For å simulere bruker uten rolle i altinn:
+Simuler bruker med fnr 12121212121 ved å gå til http://localhost:8765/pam-cv-indexer/local/cookie?subject=12121212121
