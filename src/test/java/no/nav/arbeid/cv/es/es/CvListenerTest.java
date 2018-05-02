@@ -27,6 +27,7 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.hamcrest.CoreMatchers;
 import static org.hamcrest.CoreMatchers.equalTo;
 
+import org.hamcrest.Matchers;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -34,6 +35,7 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.timeout;
+import static org.mockito.ArgumentMatchers.argThat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
@@ -107,62 +109,62 @@ public class CvListenerTest {
     }
   }
 
-  @BeforeClass
-  public static void spolTilSluttenAvTopic() throws Exception {
-    // TODO Dette er litt klønete: vi må gjøre dette før vi fyrer opp spring og kafka message listeneren,
-    //      men da har vi ikke tilgang på konfigurasjonsverdiene til spring. Bør vurdere å gjøre dette annerledes...
-    Properties props = new Properties();
-    props.put("bootstrap.servers", "localhost:9092");
-    props.put("group.id", "pam-cv-index");
-    props.put("key.deserializer", "org.apache.kafka.common.serialization.LongDeserializer");
-    props.put("value.deserializer", "io.confluent.kafka.serializers.KafkaAvroDeserializer");
-    props.put("schema.registry.url", "http://localhost:8081");
-
-    KafkaConsumer kafkaConsumer = new KafkaConsumer(props);
-    kafkaConsumer.subscribe(Collections.singletonList(TopicNames.TOPIC_CVEVENT_V3));
-    Collection<TopicPartition> topicPartitions =
-            Collections.singletonList(new TopicPartition(TopicNames.TOPIC_CVEVENT_V3, 0));
-//    kafkaConsumer.assign(topicPartitions);
-    ConsumerRecords cr = kafkaConsumer.poll(10);
-    while (!cr.isEmpty())
-      cr = kafkaConsumer.poll(10);
-    kafkaConsumer.seekToEnd(topicPartitions);
-    kafkaConsumer.commitSync();
-    kafkaConsumer.close();
-  }
-
   @Test
   public void skalMottaOgIndeksereEvents() {
+    Mockito.reset(cvIndexerServiceMock);
+
     CvEvent publisertEvent = TempCvEventObjectMother.giveMeCvEvent();
+    publisertEvent.setAdresselinje1(UUID.randomUUID().toString());
     kafkaTemplate.send(TopicNames.TOPIC_CVEVENT_V3, publisertEvent);
 
     ArgumentCaptor<CvEvent> mottattEventCaptor = ArgumentCaptor.forClass(CvEvent.class);
-    verify(cvIndexerServiceMock, timeout(500l).atLeast(1)).indekser(mottattEventCaptor.capture());
-    CvEvent mottattEvent = mottattEventCaptor.getValue();
-
-    assertThat(mottattEvent.getFodselsdato()).isEqualTo(publisertEvent.getFodselsdato());
+    verify(cvIndexerServiceMock, timeout(500l).times(1))
+            .indekser(argThat(e -> publisertEvent.getAdresselinje1().equals(e.getAdresselinje1())));
   }
 
   @Test
   public void skalSendeApplikasjonsfeilTilFeilTopicOgFortsetteMedProsesseringAvEvents() {
+    String feilendeAdresse = UUID.randomUUID().toString();
+    String okAdresse1 =  UUID.randomUUID().toString();
+    String okAdresse2 =  UUID.randomUUID().toString();
+
+    Mockito.reset(cvIndexerServiceMock);
     Mockito.doThrow(new ApplicationException("Applikasjonsfeil", new NullPointerException()))
-            .when(cvIndexerServiceMock).indekser(ArgumentMatchers.argThat(cv -> cv.getAdresselinje1().equals("adresselinje2")));
+            .when(cvIndexerServiceMock).indekser(ArgumentMatchers.argThat(cv -> cv.getAdresselinje1().equals(feilendeAdresse)));
 
     CvEvent publisertEvent1 = TempCvEventObjectMother.giveMeCvEvent();
-    publisertEvent1.setAdresselinje1("adresse1");
+    publisertEvent1.setAdresselinje1(okAdresse1);
     CvEvent publisertEvent2 = TempCvEventObjectMother.giveMeCvEvent();
-    publisertEvent2.setAdresselinje1("adresse2");
+    publisertEvent2.setAdresselinje1(feilendeAdresse);
     CvEvent publisertEvent3 = TempCvEventObjectMother.giveMeCvEvent();
-    publisertEvent3.setAdresselinje1("adresse3");
+    publisertEvent3.setAdresselinje1(okAdresse2);
     kafkaTemplate.send(TopicNames.TOPIC_CVEVENT_V3, publisertEvent1);
     kafkaTemplate.send(TopicNames.TOPIC_CVEVENT_V3, publisertEvent2);
     kafkaTemplate.send(TopicNames.TOPIC_CVEVENT_V3, publisertEvent3);
 
-    ArgumentCaptor<CvEvent> mottattEventCaptor = ArgumentCaptor.forClass(CvEvent.class);
-    verify(cvIndexerServiceMock, timeout(500l).atLeast(1)).indekser(mottattEventCaptor.capture());
-    List<CvEvent> mottatteEvents = mottattEventCaptor.getAllValues();
+    verify(cvIndexerServiceMock, timeout(500l).times(1))
+            .indekser(argThat(e -> okAdresse1.equals(e.getAdresselinje1())));
+    verify(cvIndexerServiceMock, timeout(500l).times(1))
+            .indekser(argThat(e -> okAdresse2.equals(e.getAdresselinje1())));
+    verify(cvIndexerServiceMock, timeout(100l).times(1))
+            .indekser(argThat(e -> feilendeAdresse.equals(e.getAdresselinje1())));
 
-    assertThat(mottatteEvents.size()).isGreaterThanOrEqualTo(3);
+    /* TODO Burde egentlig verifisere at det ble lagt en melding på feiltopic'et.
+     *      Siden vi sannsynligvis ikke kommer til å bruke et eget topic for feil, så vil vi vi måtte verifisere noe annet
+     *      (f.eks verifisere at vi kaller en eller annen feilhåndterer - DltForwarder er det som brukes nå)
+     *      Som en kuriositet kan nevnes at hvis vi ender med å bruke et eget topic for feil, så bør det topicet være skjemaløst.
+     *      Jeg har fått feil pga at jeg har prøvd å sende meldinger til feiltopic som ikke bruker riktig skjema.
+     *      Da ender feilhåndteringen av giftpiller opp med selv å bli en giftpille...
+     */
   }
 
+  @Test
+  public void skalKunneMottaSlettemeldinger() throws Exception {
+    Mockito.reset(cvIndexerServiceMock);
+
+    kafkaTemplate.send(TopicNames.TOPIC_CVEVENT_V3, 1l, null);
+    verify(cvIndexerServiceMock, timeout(100l).times(1))
+            .indekser(argThat(e -> e == null));
+
+  }
 }
