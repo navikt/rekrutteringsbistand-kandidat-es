@@ -344,7 +344,7 @@ public class TempCvEventObjectMother {
         "unnasluntrer@mailinator.com",
         "NO",
         1L,
-        null,
+        "1234", // Kan ik
         "",
         "J",
         "2016-05-30",

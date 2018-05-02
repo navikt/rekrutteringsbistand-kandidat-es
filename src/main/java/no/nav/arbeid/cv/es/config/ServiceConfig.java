@@ -18,6 +18,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import no.nav.arbeid.cv.es.service.*;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -42,10 +43,7 @@ import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother2;
 import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother3;
 import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother4;
 import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother5;
-import no.nav.arbeid.cv.es.service.CvEventListener;
-import no.nav.arbeid.cv.es.service.CvIndexerService;
-import no.nav.arbeid.cv.es.service.DefaultCvIndexerService;
-import no.nav.arbeid.cv.es.service.EsCvTransformer;
+import org.springframework.core.convert.ConversionService;
 
 @Configuration
 public class ServiceConfig {
@@ -55,6 +53,12 @@ public class ServiceConfig {
 
   @Autowired
   private EsConfigurationProperties props;
+
+  @Autowired
+  private DltForwarder dltForwarder;
+
+  @Autowired
+  private ConversionService conversionService;
 
   @Bean
   public EsCvClient esCvClient() {
@@ -73,7 +77,7 @@ public class ServiceConfig {
 
   @Bean
   public CvEventListener cvEventListener() {
-    return new CvEventListener(cvIndexerService());
+    return new CvEventListener(cvIndexerService(), dltForwarder, conversionService);
   }
 
   @Bean
