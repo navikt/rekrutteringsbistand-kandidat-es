@@ -20,7 +20,6 @@ public class EsSertifikat {
   @ElasticKeywordField
   private String sertifikatKode;
 
-  // @ElasticTextField
   @ElasticKeywordField
   @ElasticCompletionField
   private String sertifikatKodeNavn;
