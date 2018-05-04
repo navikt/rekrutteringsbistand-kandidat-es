@@ -97,11 +97,6 @@ public class KafkaConfig {
         return new ContainerAwareBatchErrorHandler() {
 
             @Override
-            public void handle(Exception thrownException, ConsumerRecords<?, ?> data, Consumer<?, ?> consumer) {
-                LOGGER.error("Uventet feil mottat: {}", thrownException.getMessage(), thrownException);
-            }
-
-            @Override
             public void handle(Exception e, ConsumerRecords<?, ?> consumerRecords, Consumer<?, ?> consumer, MessageListenerContainer messageListenerContainer) {
                 boolean skalRekjore = skalRekjoreBatch(e, consumerRecords);
                 MetaConsumerRecord mcr = beregnMetaConsumerRecord(consumerRecords);
@@ -133,11 +128,6 @@ public class KafkaConfig {
                     mcr.maxPrTopicPartition.forEach((topicPartition, offset) -> consumer.seek(topicPartition, offset+1));
                 }
 
-            }
-
-            @Override
-            public void handle(Exception thrownException, ConsumerRecords<?, ?> data) {
-                LOGGER.error("Uventet feil mottattt: {}", thrownException.getMessage(), thrownException);
             }
 
             boolean skalRekjoreBatch(Exception exception, ConsumerRecords<?,?> records) {
