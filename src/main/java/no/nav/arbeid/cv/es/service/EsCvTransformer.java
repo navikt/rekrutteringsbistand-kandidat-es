@@ -2,10 +2,10 @@ package no.nav.arbeid.cv.es.service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -91,15 +91,18 @@ public class EsCvTransformer {
   }
 
   private EsYrkeserfaring mapYrke(Yrkeserfaring yrke) {
+    Date fraDato = toDate(yrke.getFraDato());
+    Date tilDato = toDate(yrke.getTilDato());
     return new EsYrkeserfaring(
-        toDate(yrke.getFraDato()),
-        toDate(yrke.getTilDato()),
+        fraDato,
+        tilDato,
         yrke.getArbeidsgiver(),
         yrke.getStyrkKode(),
         yrke.getStyrkKodeStillingstittel(),
         yrke.getAlternativStillingstittel(),
         yrke.getOrganisasjonsnummer(),
-        yrke.getNaceKode()
+        yrke.getNaceKode(),
+        this.toYrkeserfaringManeder(fraDato, tilDato)
     );
   }
 
@@ -212,6 +215,27 @@ public class EsCvTransformer {
     return new EsSamletKompetanse(
         kompetanse.getKompKodeNavn()
     );
+  }
+
+  private int toYrkeserfaringManeder(Date fraDato, Date tilDato) {
+    // Should not be possible, but will keep the check just in case
+    if (fraDato == null) {
+      return 0;
+    }
+
+    Calendar fraCalendar = new GregorianCalendar();
+    fraCalendar.setTime(fraDato);
+
+    // If tilDato is null, it is set to the current date
+    Calendar tilCalendar = new GregorianCalendar();
+    if (tilDato == null) {
+      tilCalendar.setTime(new Date());
+    } else {
+      tilCalendar.setTime(tilDato);
+    }
+
+    int diffYear = tilCalendar.get(Calendar.YEAR) - fraCalendar.get(Calendar.YEAR);
+    return diffYear * 12 + tilCalendar.get(Calendar.MONTH) - fraCalendar.get(Calendar.MONTH);
   }
 
   private Date toDate(String dateString) {
