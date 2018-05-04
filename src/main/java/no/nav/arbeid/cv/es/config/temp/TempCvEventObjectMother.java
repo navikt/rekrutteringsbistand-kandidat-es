@@ -890,8 +890,8 @@ public class TempCvEventObjectMother {
         "1996-02-01",
         "2020-12-01",
         "V1.6110",
-        "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
-        "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
+        "Truckførerbevis",
+        "Truckførerbevis",
         ""
     );
     Sertifikat sertifikat4 = new Sertifikat(
@@ -949,7 +949,7 @@ public class TempCvEventObjectMother {
         "1996-02-01",
         "2020-12-01",
         "V1.6145",
-        "Førerkort: Kl. DE (buss og tilhenger)",
+        "Traktorlappen",
         null,
         ""
     );
@@ -1696,8 +1696,8 @@ public class TempCvEventObjectMother {
     Kurs kurs2 = new Kurs(
         "2015-06-01",
         null,
-        "Varme arbeider Sertifikat",
-        "Norsk brannvernforening",
+        "Spring Boot",
+        "Spring-folkene",
         new Omfang(5, "ÅR"),
         null
     );

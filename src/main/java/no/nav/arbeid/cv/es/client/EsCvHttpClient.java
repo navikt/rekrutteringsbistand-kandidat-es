@@ -123,18 +123,6 @@ public class EsCvHttpClient implements EsCvClient {
     return typeAhead(prefix, "yrkeserfaring.styrkKodeStillingstittel.completion");
   }
 
-  public List<String> typeAheadSprak(String prefix) throws IOException {
-    return typeAhead(prefix, "sprak.sprakKodeTekst.completion");
-  }
-
-  public List<String> typeAheadSertifikat(String prefix) throws IOException {
-    return typeAhead(prefix, "sertifikat.sertifikatKodeNavn.completion");
-  }
-
-  public List<String> typeAheadGeografi(String prefix) throws IOException {
-    return typeAhead(prefix, "geografiJobbonsker.geografiKodeTekst.completion");
-  }
-
   private List<String> typeAhead(String prefix, String suggestionField) throws IOException {
     SearchRequest searchRequest = new SearchRequest(CV_INDEX);
     searchRequest.types(CV_TYPE);
@@ -156,17 +144,13 @@ public class EsCvHttpClient implements EsCvClient {
 
   @Override
   public Sokeresultat sok(String fritekst, List<String> stillingstitler, List<String> kompetanser,
-      List<String> utdanninger, List<String> sprak, List<String> sertifikater, List<String> geografiList,
-      String styrkKode, String nusKode, List<String> styrkKoder, List<String> nusKoder) throws IOException {
+      List<String> utdanninger, String styrkKode, String nusKode, List<String> styrkKoder, List<String> nusKoder) throws IOException {
 
     AbstractQueryBuilder<?> queryBuilder = null;
     if (StringUtils.isBlank(fritekst)
         && (stillingstitler == null || stillingstitler.isEmpty())
         && (kompetanser == null || kompetanser.isEmpty())
         && (utdanninger == null || utdanninger.isEmpty())
-        && (sprak == null || sprak.isEmpty())
-        && (sertifikater == null || sertifikater.isEmpty())
-        && (geografiList == null || geografiList.isEmpty())
         && StringUtils.isBlank(styrkKode) && StringUtils.isBlank(nusKode)
         && (styrkKoder == null || styrkKoder.isEmpty())
         && (nusKoder == null || nusKoder.isEmpty())) {
@@ -197,21 +181,6 @@ public class EsCvHttpClient implements EsCvClient {
       if (utdanninger != null && !utdanninger.isEmpty()) {
         utdanninger.stream().filter(StringUtils::isNotBlank)
             .forEach(u -> addUtdanningerQuery(u, boolQueryBuilder));
-      }
-
-      if (sprak != null && !sprak.isEmpty()) {
-        sprak.stream().filter(StringUtils::isNotBlank)
-            .forEach((s) -> addSprakQuery(s, boolQueryBuilder));
-      }
-
-      if (sertifikater != null && !sertifikater.isEmpty()) {
-        sertifikater.stream().filter(StringUtils::isNotBlank)
-            .forEach((s) -> addSertifikaterQuery(s, boolQueryBuilder));
-      }
-
-      if (geografiList != null && !geografiList.isEmpty()) {
-        geografiList.stream().filter(StringUtils::isNotBlank)
-            .forEach((g) -> addGeografiQuery(g, boolQueryBuilder));
       }
 
       if (StringUtils.isNotBlank(styrkKode)) {
@@ -259,27 +228,6 @@ public class EsCvHttpClient implements EsCvClient {
         QueryBuilders.matchQuery("samletKompetanse.samletKompetanseTekst", kompetanse), ScoreMode.None);
     boolQueryBuilder.must(kompetanseQueryBuilder);
     LOGGER.debug("ADDING kompetanse");
-  }
-
-  private void addSprakQuery(String sprak, BoolQueryBuilder boolQueryBuilder) {
-    NestedQueryBuilder sprakQueryBuilder = QueryBuilders.nestedQuery("sprak",
-        QueryBuilders.matchQuery("sprak.sprakKodeTekst", sprak), ScoreMode.None);
-    boolQueryBuilder.must(sprakQueryBuilder);
-    LOGGER.debug("ADDING sprak");
-  }
-
-  private void addSertifikaterQuery(String sertifikat, BoolQueryBuilder boolQueryBuilder) {
-    NestedQueryBuilder sertifikaterQueryBuilder = QueryBuilders.nestedQuery("sertifikat",
-        QueryBuilders.matchQuery("sertifikat.sertifikatKodeNavn", sertifikat), ScoreMode.None);
-    boolQueryBuilder.must(sertifikaterQueryBuilder);
-    LOGGER.debug("ADDING sertifikat");
-  }
-
-  private void addGeografiQuery(String geografi, BoolQueryBuilder boolQueryBuilder) {
-    NestedQueryBuilder geografiQueryBuilder = QueryBuilders.nestedQuery("geografiJobbonsker",
-        QueryBuilders.matchQuery("geografiJobbonsker.geografiKodeTekst", geografi), ScoreMode.None);
-    boolQueryBuilder.must(geografiQueryBuilder);
-    LOGGER.debug("ADDING geografiJobbonske");
   }
 
   private void addNusKodeQuery(String nusKode, BoolQueryBuilder boolQueryBuilder) {
