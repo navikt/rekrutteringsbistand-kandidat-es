@@ -2,6 +2,8 @@ package no.nav.arbeid.cv.es.service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +15,7 @@ import no.nav.arbeid.cv.es.domene.EsForerkort;
 import no.nav.arbeid.cv.es.domene.EsGeografiJobbonsker;
 import no.nav.arbeid.cv.es.domene.EsKompetanse;
 import no.nav.arbeid.cv.es.domene.EsKurs;
+import no.nav.arbeid.cv.es.domene.EsSamletKompetanse;
 import no.nav.arbeid.cv.es.domene.EsSertifikat;
 import no.nav.arbeid.cv.es.domene.EsSprak;
 import no.nav.arbeid.cv.es.domene.EsUtdanning;
@@ -70,6 +73,12 @@ public class EsCvTransformer {
     esCv.addKurs(mapList(p.getKurs(), this::mapKurs));
     esCv.addVerv(mapList(p.getVerv(), this::mapVerv));
     esCv.addGeografiJobbonske(mapList(p.getGeografiJobbonsker(), this::mapGeografiJobbonske));
+
+    esCv.addSamletKompetanse(mapList(p.getSprak(), this::mapSamletKompetanse));
+    esCv.addSamletKompetanse(mapList(p.getSertifikat(), this::mapSamletKompetanse));
+    esCv.addSamletKompetanse(mapList(p.getKurs(), this::mapSamletKompetanse));
+    esCv.addSamletKompetanse(mapList(p.getForerkort(), this::mapSamletKompetanse));
+    esCv.addSamletKompetanse(mapList(p.getKompetanse(), this::mapSamletKompetanse));
 
     return esCv;
   }
@@ -175,9 +184,41 @@ public class EsCvTransformer {
     );
   }
 
+  private EsSamletKompetanse mapSamletKompetanse(Sprak sprak) {
+    return new EsSamletKompetanse(
+        sprak.getSprakKodeTekst()
+    );
+  }
+
+  private EsSamletKompetanse mapSamletKompetanse(Sertifikat sertifikat) {
+    return new EsSamletKompetanse(
+        sertifikat.getSertifikatKodeNavn()
+    );
+  }
+
+  private EsSamletKompetanse mapSamletKompetanse(Kurs kurs) {
+    return new EsSamletKompetanse(
+        kurs.getTittel()
+    );
+  }
+
+  private EsSamletKompetanse mapSamletKompetanse(Forerkort forerkort) {
+    return new EsSamletKompetanse(
+        forerkort.getForerkortKodeKlasse()
+    );
+  }
+
+  private EsSamletKompetanse mapSamletKompetanse(Kompetanse kompetanse) {
+    return new EsSamletKompetanse(
+        kompetanse.getKompKodeNavn()
+    );
+  }
+
   private Date toDate(String dateString) {
 
-    if(dateString == null || dateString.equals("")) {return null;}
+    if (dateString == null || dateString.equals("")) {
+      return null;
+    }
     try {
       DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
       return formatter.parse(dateString);

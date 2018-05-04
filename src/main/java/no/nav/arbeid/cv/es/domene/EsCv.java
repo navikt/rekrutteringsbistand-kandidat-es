@@ -127,6 +127,10 @@ public class EsCv {
 
   private List<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonsker = new ArrayList<>();
 
+  @ElasticNestedField
+  private List<EsSamletKompetanse> samletKompetanse = new ArrayList<>();
+
+
   public EsCv() {
 
   }
@@ -237,6 +241,10 @@ public class EsCv {
 
   public void addGeografiJobbonske(Collection<EsGeografiJobbonsker> geografiJobbonskerListe) {
     this.geografiJobbonsker.addAll(geografiJobbonskerListe);
+  }
+
+  public void addSamletKompetanse(Collection<EsSamletKompetanse> samletKompetanseListe) {
+    this.samletKompetanse.addAll(samletKompetanseListe);
   }
 
 
@@ -386,6 +394,10 @@ public class EsCv {
     return arbeidstidsordningJobbonsker;
   }
 
+  public List<EsSamletKompetanse> getSamletKompetanse() {
+    return samletKompetanse;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -430,7 +442,8 @@ public class EsCv {
         Objects.equals(yrkeJobbonsker, esCv.yrkeJobbonsker) &&
         Objects.equals(heltidDeltidJobbonsker, esCv.heltidDeltidJobbonsker) &&
         Objects.equals(ansettelsesforholdJobbonsker, esCv.ansettelsesforholdJobbonsker) &&
-        Objects.equals(arbeidstidsordningJobbonsker, esCv.arbeidstidsordningJobbonsker);
+        Objects.equals(arbeidstidsordningJobbonsker, esCv.arbeidstidsordningJobbonsker) &&
+        Objects.equals(samletKompetanse, esCv.samletKompetanse);
   }
 
   @Override
@@ -444,7 +457,7 @@ public class EsCv {
             poststed, landkode, kommunenummer, disponererBil, tidsstempel, utdanning, yrkeserfaring,
             kompetanse, annenerfaring, sertifikat, forerkort, sprak, kurs, verv, geografiJobbonsker,
             yrkeJobbonsker, heltidDeltidJobbonsker, ansettelsesforholdJobbonsker,
-            arbeidstidsordningJobbonsker);
+            arbeidstidsordningJobbonsker, samletKompetanse);
   }
 
   @Override
@@ -486,6 +499,7 @@ public class EsCv {
         ", heltidDeltidJobbonsker=" + heltidDeltidJobbonsker +
         ", ansettelsesforholdJobbonsker=" + ansettelsesforholdJobbonsker +
         ", arbeidstidsordningJobbonsker=" + arbeidstidsordningJobbonsker +
+        ", samletKompetanse=" + samletKompetanse +
         '}';
   }
 

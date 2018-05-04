@@ -110,7 +110,7 @@ public class EsCvHttpClient implements EsCvClient {
 
   @Override
   public List<String> typeAheadKompetanse(String prefix) throws IOException {
-    return typeAhead(prefix, "kompetanse.kompKodeNavn.completion");
+    return typeAhead(prefix, "samletKompetanse.samletKompetanseTekst.completion");
   }
 
   @Override
@@ -255,8 +255,8 @@ public class EsCvHttpClient implements EsCvClient {
   }
 
   private void addKompetanseQuery(String kompetanse, BoolQueryBuilder boolQueryBuilder) {
-    NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
-        QueryBuilders.matchQuery("kompetanse.kompKodeNavn", kompetanse), ScoreMode.None);
+    NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("samletKompetanse",
+        QueryBuilders.matchQuery("samletKompetanse.samletKompetanseTekst", kompetanse), ScoreMode.None);
     boolQueryBuilder.must(kompetanseQueryBuilder);
     LOGGER.debug("ADDING kompetanse");
   }
@@ -400,6 +400,13 @@ public class EsCvHttpClient implements EsCvClient {
         AggregationBuilders.nested("utdanning", "utdanning");
     nestedUtdanningAggregation.subAggregation(utdanningAggregation);
     searchSourceBuilder.aggregation(nestedUtdanningAggregation);
+
+    TermsAggregationBuilder kompetanseAggregation =
+        AggregationBuilders.terms("nested").field("kompetanse.kompKodeNavn.keyword");
+    NestedAggregationBuilder nestedKompetanseAggregation =
+        AggregationBuilders.nested("kompetanse", "kompetanse");
+    nestedKompetanseAggregation.subAggregation(kompetanseAggregation);
+    searchSourceBuilder.aggregation(nestedKompetanseAggregation);
 
     SearchRequest searchRequest = new SearchRequest();
     searchRequest.indices(CV_INDEX);
