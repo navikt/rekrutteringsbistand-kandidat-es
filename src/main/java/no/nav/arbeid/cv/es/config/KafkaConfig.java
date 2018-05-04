@@ -1,7 +1,6 @@
 package no.nav.arbeid.cv.es.config;
 
 import no.nav.arbeid.cv.es.domene.OperationalException;
-import no.nav.arbeid.cv.es.service.DltForwarder;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -41,8 +40,7 @@ public class KafkaConfig {
             @Value("${kafka.retry.max}") int maxRetries,
             @Value("${kafka.retry.initial_interval}") int initialInterval,
             @Value("${kafka.retry.multiplier}") double multiplier,
-            @Value("${kafka.retry.max_interval}") int maxInterval,
-            DltForwarder dltForwarder) {
+            @Value("${kafka.retry.max_interval}") int maxInterval) {
         ConcurrentKafkaListenerContainerFactory factory = new ConcurrentKafkaListenerContainerFactory();
         factory.setConcurrency(concurrency);
 
