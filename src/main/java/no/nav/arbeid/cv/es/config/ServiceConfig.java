@@ -40,6 +40,7 @@ import no.nav.arbeid.cv.es.client.EsCvClient;
 import no.nav.arbeid.cv.es.client.EsCvHttpClient;
 import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.retry.support.RetryTemplate;
 
 @Configuration
 public class ServiceConfig {
@@ -66,8 +67,9 @@ public class ServiceConfig {
   }
 
   @Bean
-  public CvEventListener cvEventListener() {
-    return new CvEventListener(cvIndexerService());
+  @Autowired
+  public CvEventListener cvEventListener(CvIndexerService cvIndexerService, RetryTemplate retryTemplate) {
+    return new CvEventListener(cvIndexerService, retryTemplate);
   }
 
   @Bean

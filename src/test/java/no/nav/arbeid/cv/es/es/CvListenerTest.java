@@ -2,13 +2,13 @@ package no.nav.arbeid.cv.es.es;
 
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Appender;
+import com.palantir.docker.compose.DockerComposeRule;
 import no.nav.arbeid.cv.es.config.KafkaConfig;
 import no.nav.arbeid.cv.es.config.ServiceConfig;
 import no.nav.arbeid.cv.es.config.TopicNames;
 import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother;
 import no.nav.arbeid.cv.es.domene.ApplicationException;
 import no.nav.arbeid.cv.es.domene.OperationalException;
-import no.nav.arbeid.cv.es.service.CvEventListener;
 import no.nav.arbeid.cv.es.service.CvIndexerService;
 import no.nav.arbeid.cv.events.CvEvent;
 import org.apache.http.HttpHost;
@@ -17,6 +17,7 @@ import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,12 +55,12 @@ public class CvListenerTest {
 
   // Kjører "docker-compose up" manuelt istedenfor denne ClassRule:
 
-//  @ClassRule
-//  public static DockerComposeRule docker =
-//      DockerComposeRule.builder().file("src/test/resources/docker-compose-kafka-og-es.yml")
+  @ClassRule
+  public static DockerComposeRule docker =
+      DockerComposeRule.builder().file("src/test/resources/docker-compose-kafka-og-es.yml")
           // .waitingForHostNetworkedPort(9200, port -> SuccessOrFailure
           // .fromBoolean(port.isListeningNow(), "Internal port " + port + " was not listening"))
-//          .build();
+          .build();
 
   @Autowired
   private KafkaTemplate kafkaTemplate;
@@ -111,7 +112,7 @@ public class CvListenerTest {
     String okAdresse1 =  UUID.randomUUID().toString();
     String okAdresse2 =  UUID.randomUUID().toString();
 
-    Appender mockAppender = mockLogger(CvEventListener.class);
+    Appender mockAppender = mockLogger(KafkaConfig.class);
 
     Mockito.reset(cvIndexerServiceMock);
     Mockito.doThrow(new ApplicationException("Applikasjonsfeil", new NullPointerException()))
@@ -138,7 +139,7 @@ public class CvListenerTest {
                     e.stream()
                             .anyMatch(v -> feilendeAdresse.equals(v.getAdresselinje1()))));
     kafkaTemplate.send(TopicNames.TOPIC_CVEVENT_V3, publisertEvent3);
-    verify(cvIndexerServiceMock, timeout(100l).times(1))
+    verify(cvIndexerServiceMock, timeout(1000l).times(1))
             .bulkIndekser(argThat(e ->
                     e.stream()
                             .anyMatch(v -> okAdresse2.equals(v.getAdresselinje1()))));
@@ -204,7 +205,7 @@ public class CvListenerTest {
     String okAdresse1 =  UUID.randomUUID().toString();
     String okAdresse2 =  UUID.randomUUID().toString();
 
-    Appender mockAppender = mockLogger(CvEventListener.class);
+    Appender mockAppender = mockLogger(KafkaConfig.class);
 
     Mockito.reset(cvIndexerServiceMock);
     CvEvent publisertEvent1 = TempCvEventObjectMother.giveMeCvEvent();
