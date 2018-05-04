@@ -50,12 +50,6 @@ public class ServiceConfig {
   @Autowired
   private EsConfigurationProperties props;
 
-  @Autowired
-  private DltForwarder dltForwarder;
-
-  @Autowired
-  private ConversionService conversionService;
-
   @Bean
   public EsCvClient esCvClient() {
     return new EsCvHttpClient(restHighLevelClient(), objectMapper);
@@ -73,7 +67,7 @@ public class ServiceConfig {
 
   @Bean
   public CvEventListener cvEventListener() {
-    return new CvEventListener(cvIndexerService(), dltForwarder, conversionService);
+    return new CvEventListener(cvIndexerService());
   }
 
   @Bean
