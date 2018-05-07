@@ -363,4 +363,15 @@ public class IndexCvTest {
     assertThat(cver.size()).isGreaterThan(cver2.size());
   }
 
+  @Test
+  public void testPaTotalYrkeserfaringSkalGiKorrektResultat() throws IOException {
+    Sokeresultat sokeresultat =
+        client.sok(null, null, null, null, null,  "37-72", null, null, null, null);
+
+    List<EsCv> cver = sokeresultat.getCver();
+    EsCv cv = cver.get(0);
+
+    assertThat(cv).isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent2()));
+  }
+
 }
