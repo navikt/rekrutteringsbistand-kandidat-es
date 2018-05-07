@@ -2,7 +2,6 @@ package no.nav.arbeid.cv.es.es;
 
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Appender;
-import com.palantir.docker.compose.DockerComposeRule;
 import no.nav.arbeid.cv.es.config.KafkaConfig;
 import no.nav.arbeid.cv.es.config.ServiceConfig;
 import no.nav.arbeid.cv.es.config.TopicNames;
@@ -17,7 +16,6 @@ import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,14 +52,14 @@ public class CvListenerTest {
    */
 
   // Kjører "docker-compose up" manuelt istedenfor denne ClassRule:
-
+/*
   @ClassRule
   public static DockerComposeRule docker =
       DockerComposeRule.builder().file("src/test/resources/docker-compose-kafka-og-es.yml")
           // .waitingForHostNetworkedPort(9200, port -> SuccessOrFailure
           // .fromBoolean(port.isListeningNow(), "Internal port " + port + " was not listening"))
           .build();
-
+*/
   @Autowired
   private KafkaTemplate kafkaTemplate;
 

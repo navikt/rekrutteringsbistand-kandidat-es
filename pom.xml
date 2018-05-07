@@ -255,26 +255,43 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
-	</build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<configuration>
+						<!-- Dette er utrolig Harry... Bør finne en litt mer elegang måte å sikre
+						     at testene som ligger i en suite ikke kjøres både innenfor og utenfor suiten... -->
+                            <excludes>
+                                <exclude>**/IndexCvTest.java</exclude>
+                                <exclude>**/CvListenerTest.java</exclude>
+                                <exclude>**/SearchControllerTest.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </pluginManagement>
+        </build>
 
-	<scm>
-		<connection>scm:git:https://github.com/navikt/pam-cv-indexer.git</connection>
-		<developerConnection>scm:git:https://github.com/navikt/pam-cv-indexer.git</developerConnection>
-		<tag>HEAD</tag>
-	</scm>
+        <scm>
+            <connection>scm:git:https://github.com/navikt/pam-cv-indexer.git</connection>
+            <developerConnection>scm:git:https://github.com/navikt/pam-cv-indexer.git</developerConnection>
+            <tag>HEAD</tag>
+        </scm>
 
-	<distributionManagement>
-		<repository>
-			<id>m2internal</id>
-			<name>NAV Maven2 Internal Repository</name>
-			<url>https://repo.adeo.no/repository/maven-releases/</url>
-		</repository>
-		<snapshotRepository>
-			<id>m2snapshot</id>
-			<name>NAV Maven2 Snapshot Repository</name>
-			<url>https://repo.adeo.no/repository/maven-snapshots/</url>
-			<uniqueVersion>false</uniqueVersion>
-		</snapshotRepository>
-	</distributionManagement>
+        <distributionManagement>
+            <repository>
+                <id>m2internal</id>
+                <name>NAV Maven2 Internal Repository</name>
+                <url>https://repo.adeo.no/repository/maven-releases/</url>
+            </repository>
+            <snapshotRepository>
+                <id>m2snapshot</id>
+                <name>NAV Maven2 Snapshot Repository</name>
+                <url>https://repo.adeo.no/repository/maven-snapshots/</url>
+                <uniqueVersion>false</uniqueVersion>
+            </snapshotRepository>
+        </distributionManagement>
 
-</project>
+    </project>
