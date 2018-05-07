@@ -36,6 +36,7 @@ import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.NestedQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
@@ -149,8 +150,8 @@ public class EsCvHttpClient implements EsCvClient {
 
   @Override
   public Sokeresultat sok(String fritekst, List<String> stillingstitler, List<String> kompetanser,
-      List<String> utdanninger, List<String> geografiList, String styrkKode, String nusKode,
-      List<String> styrkKoder, List<String> nusKoder) throws IOException {
+      List<String> utdanninger, List<String> geografiList, String totalYrkeserfaring, String styrkKode,
+      String nusKode, List<String> styrkKoder, List<String> nusKoder) throws IOException {
 
     AbstractQueryBuilder<?> queryBuilder = null;
     if (StringUtils.isBlank(fritekst)
@@ -158,6 +159,7 @@ public class EsCvHttpClient implements EsCvClient {
         && (kompetanser == null || kompetanser.isEmpty())
         && (utdanninger == null || utdanninger.isEmpty())
         && (geografiList == null || geografiList.isEmpty())
+        && StringUtils.isBlank(totalYrkeserfaring)
         && StringUtils.isBlank(styrkKode) && StringUtils.isBlank(nusKode)
         && (styrkKoder == null || styrkKoder.isEmpty())
         && (nusKoder == null || nusKoder.isEmpty())) {
@@ -193,6 +195,19 @@ public class EsCvHttpClient implements EsCvClient {
       if (geografiList != null && !geografiList.isEmpty()) {
         geografiList.stream().filter(StringUtils::isNotBlank)
             .forEach(g -> addGeografiQuery(g, boolQueryBuilder));
+      }
+
+      if (StringUtils.isNotBlank(totalYrkeserfaring)) {
+        String[] interval = totalYrkeserfaring.split("-");
+        RangeQueryBuilder totalErfaringQueryBuilder;
+        if (interval.length == 2) {
+          totalErfaringQueryBuilder = QueryBuilders.rangeQuery("totalLengdeYrkeserfaring").gte(interval[0]).lte(interval[1]);
+          boolQueryBuilder.must(totalErfaringQueryBuilder);
+        } else if (interval.length == 1) {
+          totalErfaringQueryBuilder = QueryBuilders.rangeQuery("totalLengdeYrkeserfaring").gte(interval[0]).lte(null);
+          boolQueryBuilder.must(totalErfaringQueryBuilder);
+        }
+        LOGGER.debug("ADDING totalYrkeserfaringLengde");
       }
 
       if (StringUtils.isNotBlank(styrkKode)) {

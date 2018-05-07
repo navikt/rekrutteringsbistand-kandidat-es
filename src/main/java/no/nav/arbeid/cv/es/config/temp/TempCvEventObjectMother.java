@@ -35,7 +35,7 @@ public class TempCvEventObjectMother {
     utdanningsListe.add(utdanning);
     Yrkeserfaring yrkeserfaring1 = new Yrkeserfaring(
         "2000-01-01",
-        "2002-01-01",
+        "2000-01-10",
         "Stentransport, Kragerø",
         "8341.01",
         "Anleggsmaskindrifter",
@@ -46,7 +46,7 @@ public class TempCvEventObjectMother {
 
     Yrkeserfaring yrkeserfaring2 = new Yrkeserfaring(
         "2003-01-01",
-        "2003-04-01",
+        "2003-02-01",
         "AF-Pihl, Hammerfest",
         "8342.01",
         "Anleggsmaskinfører",
@@ -57,7 +57,7 @@ public class TempCvEventObjectMother {
 
     Yrkeserfaring yrkeserfaring3 = new Yrkeserfaring(
         "2003-04-01",
-        "2003-07-01",
+        "2003-05-01",
         "O.K. Hagalia, Slependen",
         "8342.01",
         "Anleggsmaskinfører",
@@ -68,7 +68,7 @@ public class TempCvEventObjectMother {
 
     Yrkeserfaring yrkeserfaring4 = new Yrkeserfaring(
         "2005-08-01",
-        "2016-07-01",
+        "2005-09-01",
         "Vard Group,avd.Brevik",
         "7233.03",
         "Industrimekaniker",
@@ -79,7 +79,7 @@ public class TempCvEventObjectMother {
 
     Yrkeserfaring yrkeserfaring5 = new Yrkeserfaring(
         "2016-06-01",
-        "2017-04-01",
+        "2016-07-01",
         "MTM anlegg",
         "8332.03",
         "Lastebil- og trailersjåfør",
@@ -90,7 +90,7 @@ public class TempCvEventObjectMother {
 
     Yrkeserfaring yrkeserfaring6 = new Yrkeserfaring(
         "2017-10-01",
-        null,
+        "2017-12-01",
         "NLI  Grenland",
         "7233.03",
         "Industrimekaniker",
@@ -411,7 +411,7 @@ public class TempCvEventObjectMother {
 
     Yrkeserfaring yrkeserfaring2 = new Yrkeserfaring(
         "2003-01-01",
-        "2003-04-01",
+        "2003-07-01",
         "Programvarefabrikken Førde",
         "5746.07",
         "Systemutvikler",
@@ -422,7 +422,7 @@ public class TempCvEventObjectMother {
 
     Yrkeserfaring yrkeserfaring3 = new Yrkeserfaring(
         "2003-04-01",
-        "2003-07-01",
+        "2003-05-01",
         "Tjenestetest Norge",
         "6859.02",
         "Systemtester",
@@ -433,7 +433,7 @@ public class TempCvEventObjectMother {
 
     Yrkeserfaring yrkeserfaring4 = new Yrkeserfaring(
         "2005-08-01",
-        "2016-07-01",
+        "2006-07-01",
         "lagerarbeiderne L. H.",
         "8659.03",
         "Lagermedarbeider",
@@ -756,7 +756,7 @@ public class TempCvEventObjectMother {
     utdanningsListe.add(utdanning);
     Yrkeserfaring yrkeserfaring1 = new Yrkeserfaring(
         "2000-01-01",
-        "2002-01-01",
+        "2000-02-01",
         "Butikken i nærheten",
         "1010.01",
         "Butikkmedarbeider",
@@ -767,7 +767,7 @@ public class TempCvEventObjectMother {
 
     Yrkeserfaring yrkeserfaring2 = new Yrkeserfaring(
         "2003-01-01",
-        "2003-04-01",
+        "2003-02-01",
         "Butikken i nærheten",
         "1010.01",
         "Butikkmedarbeider(dagligvarer)",
@@ -778,7 +778,7 @@ public class TempCvEventObjectMother {
 
     Yrkeserfaring yrkeserfaring3 = new Yrkeserfaring(
         "2003-04-01",
-        "2003-07-01",
+        "2003-05-01",
         "Butikken langt unna",
         "1010.01",
         "Butikkmedarbeider(trevare)",
@@ -789,7 +789,7 @@ public class TempCvEventObjectMother {
 
     Yrkeserfaring yrkeserfaring4 = new Yrkeserfaring(
         "2005-08-01",
-        "2016-07-01",
+        "2005-09-01",
         "Butikken",
         "4561.03",
         "Butikkmedarbeider(elektronikk)",
@@ -800,7 +800,7 @@ public class TempCvEventObjectMother {
 
     Yrkeserfaring yrkeserfaring5 = new Yrkeserfaring(
         "2016-06-01",
-        "2017-04-01",
+        "2016-07-01",
         "Tvkanalen TV?",
         "5684.05",
         "Presentør",
@@ -1468,7 +1468,7 @@ public class TempCvEventObjectMother {
     utdanningsListe.add(utdanning);
     Yrkeserfaring yrkeserfaring1 = new Yrkeserfaring(
         "2000-01-01",
-        "2002-01-01",
+        "2000-02-01",
         "Bankhvelvet BBL",
         "4865.75",
         "Bankhvelvoperatør",
@@ -1479,7 +1479,7 @@ public class TempCvEventObjectMother {
 
     Yrkeserfaring yrkeserfaring2 = new Yrkeserfaring(
         "2003-01-01",
-        "2003-04-01",
+        "2003-02-01",
         "Proggehula",
         "5746.07",
         "Progger",
@@ -1490,7 +1490,7 @@ public class TempCvEventObjectMother {
 
     Yrkeserfaring yrkeserfaring3 = new Yrkeserfaring(
         "2003-04-01",
-        "2003-07-01",
+        "2003-05-01",
         "Test a.a.s",
         "6859.02",
         "Tester",
@@ -1501,7 +1501,7 @@ public class TempCvEventObjectMother {
 
     Yrkeserfaring yrkeserfaring4 = new Yrkeserfaring(
         "2005-08-01",
-        "2016-07-01",
+        "2005-09-01",
         "K.O. kranservice",
         "8342.01",
         "Kranoperatør",
@@ -1512,7 +1512,7 @@ public class TempCvEventObjectMother {
 
     Yrkeserfaring yrkeserfaring5 = new Yrkeserfaring(
         "2016-06-01",
-        "2017-04-01",
+        "2016-06-02",
         "Lang transport A.S.",
         "8332.03",
         "Lastebil- og trailersjåfør",
@@ -1523,7 +1523,7 @@ public class TempCvEventObjectMother {
 
     Yrkeserfaring yrkeserfaring6 = new Yrkeserfaring(
         "2017-10-01",
-        null,
+        "2017-11-01",
         "Mekken mekk",
         "7233.03",
         "Industrimekaniker",

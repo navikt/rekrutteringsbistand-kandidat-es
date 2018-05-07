@@ -48,7 +48,6 @@ public class EsYrkeserfaring {
   @ElasticIntegerField
   private int yrkeserfaringManeder;
 
-
   public EsYrkeserfaring() {}
 
   public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,

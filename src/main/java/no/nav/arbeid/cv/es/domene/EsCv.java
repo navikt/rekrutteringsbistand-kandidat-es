@@ -9,6 +9,7 @@ import java.util.Objects;
 import no.nav.elasticsearch.mapping.annotations.ElasticBooleanField;
 import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
 import no.nav.elasticsearch.mapping.annotations.ElasticDocument;
+import no.nav.elasticsearch.mapping.annotations.ElasticIntegerField;
 import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
 import no.nav.elasticsearch.mapping.annotations.ElasticLongField;
 import no.nav.elasticsearch.mapping.annotations.ElasticNestedField;
@@ -130,6 +131,9 @@ public class EsCv {
   @ElasticNestedField
   private List<EsSamletKompetanse> samletKompetanse = new ArrayList<>();
 
+  @ElasticIntegerField
+  private int totalLengdeYrkeserfaring;
+
 
   public EsCv() {
 
@@ -180,6 +184,7 @@ public class EsCv {
   }
 
   public void addYrkeserfaring(Collection<EsYrkeserfaring> yrkeserfaringListe) {
+    yrkeserfaringListe.forEach(y -> this.totalLengdeYrkeserfaring += y.getYrkeserfaringManeder());
     this.yrkeserfaring.addAll(yrkeserfaringListe);
   }
 
@@ -397,6 +402,8 @@ public class EsCv {
   public List<EsSamletKompetanse> getSamletKompetanse() {
     return samletKompetanse;
   }
+
+  public int getTotalLengdeYrkeserfaring() { return totalLengdeYrkeserfaring; }
 
   @Override
   public boolean equals(Object o) {
