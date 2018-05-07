@@ -8,7 +8,8 @@ import no.nav.arbeid.cv.es.domene.Sokeresultat;
 public interface EsCvClient {
 
   Sokeresultat sok(String fritekst, List<String> stillingstitler, List<String> kompetanser,
-      List<String> utdanninger, String styrkKode, String nusKode, List<String> styrkKoder, List<String> nusKoder) throws IOException;
+      List<String> utdanninger, List<String> geografiList, String styrkKode, String nusKode,
+      List<String> styrkKoder, List<String> nusKoder) throws IOException;
 
   void index(EsCv esCv) throws IOException;
 
@@ -21,6 +22,8 @@ public interface EsCvClient {
   List<String> typeAheadUtdanning(String prefix) throws IOException;
 
   List<String> typeAheadYrkeserfaring(String prefix) throws IOException;
+
+  List<String> typeAheadGeografi(String prefix) throws IOException;
 
   @Deprecated
   Sokeresultat findByYrkeserfaringStyrkKodeTekst(String styrkBeskrivelse) throws IOException;

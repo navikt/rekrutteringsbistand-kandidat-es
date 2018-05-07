@@ -123,6 +123,11 @@ public class EsCvHttpClient implements EsCvClient {
     return typeAhead(prefix, "yrkeserfaring.styrkKodeStillingstittel.completion");
   }
 
+  @Override
+  public List<String> typeAheadGeografi(String prefix) throws IOException {
+    return typeAhead(prefix, "geografiJobbonsker.geografiKodeTekst.completion");
+  }
+
   private List<String> typeAhead(String prefix, String suggestionField) throws IOException {
     SearchRequest searchRequest = new SearchRequest(CV_INDEX);
     searchRequest.types(CV_TYPE);
@@ -144,13 +149,15 @@ public class EsCvHttpClient implements EsCvClient {
 
   @Override
   public Sokeresultat sok(String fritekst, List<String> stillingstitler, List<String> kompetanser,
-      List<String> utdanninger, String styrkKode, String nusKode, List<String> styrkKoder, List<String> nusKoder) throws IOException {
+      List<String> utdanninger, List<String> geografiList, String styrkKode, String nusKode,
+      List<String> styrkKoder, List<String> nusKoder) throws IOException {
 
     AbstractQueryBuilder<?> queryBuilder = null;
     if (StringUtils.isBlank(fritekst)
         && (stillingstitler == null || stillingstitler.isEmpty())
         && (kompetanser == null || kompetanser.isEmpty())
         && (utdanninger == null || utdanninger.isEmpty())
+        && (geografiList == null || geografiList.isEmpty())
         && StringUtils.isBlank(styrkKode) && StringUtils.isBlank(nusKode)
         && (styrkKoder == null || styrkKoder.isEmpty())
         && (nusKoder == null || nusKoder.isEmpty())) {
@@ -181,6 +188,11 @@ public class EsCvHttpClient implements EsCvClient {
       if (utdanninger != null && !utdanninger.isEmpty()) {
         utdanninger.stream().filter(StringUtils::isNotBlank)
             .forEach(u -> addUtdanningerQuery(u, boolQueryBuilder));
+      }
+
+      if (geografiList != null && !geografiList.isEmpty()) {
+        geografiList.stream().filter(StringUtils::isNotBlank)
+            .forEach(g -> addGeografiQuery(g, boolQueryBuilder));
       }
 
       if (StringUtils.isNotBlank(styrkKode)) {
@@ -228,6 +240,13 @@ public class EsCvHttpClient implements EsCvClient {
         QueryBuilders.matchQuery("samletKompetanse.samletKompetanseTekst", kompetanse), ScoreMode.None);
     boolQueryBuilder.must(kompetanseQueryBuilder);
     LOGGER.debug("ADDING kompetanse");
+  }
+
+  private void addGeografiQuery(String geografi, BoolQueryBuilder boolQueryBuilder) {
+    NestedQueryBuilder geografiQueryBuilder = QueryBuilders.nestedQuery("geografiJobbonsker",
+        QueryBuilders.matchQuery("geografiJobbonsker.geografiKodeTekst", geografi), ScoreMode.None);
+    boolQueryBuilder.must(geografiQueryBuilder);
+    LOGGER.debug("ADDING geografiJobbonske");
   }
 
   private void addNusKodeQuery(String nusKode, BoolQueryBuilder boolQueryBuilder) {

@@ -33,9 +33,10 @@ public class SearchController {
     public HttpEntity<Resources<StringResource>> typeAhead(
             @RequestParam(name = "komp", required = false) String komp,
             @RequestParam(name = "utd", required = false) String utd,
+            @RequestParam(name = "geo", required = false) String geo,
             @RequestParam(name = "yrke", required = false) String yrke) throws IOException {
 
-        if (komp == null && utd == null && yrke == null) {
+        if (komp == null && utd == null && yrke == null && geo == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -48,6 +49,9 @@ public class SearchController {
         }
         if (yrke != null) {
             list.addAll(client.typeAheadYrkeserfaring(yrke));
+        }
+        if (geo != null) {
+          list.addAll(client.typeAheadGeografi(geo));
         }
 
         List<StringResource> resourceList =
@@ -64,12 +68,13 @@ public class SearchController {
             @RequestParam(name = "kompetanser", required = false) List<String> kompetanser,
             @RequestParam(name = "utdanninger", required = false) List<String> utdanninger,
             @RequestParam(name = "styrkKode", required = false) String styrkKode,
+            @RequestParam(name = "geografiList", required = false) List<String> geografiList,
             @RequestParam(name = "nusKode", required = false) String nusKode,
             @RequestParam(name = "styrkKoder", required = false) List<String> styrkKoder,
             @RequestParam(name = "nusKoder", required = false) List<String> nusKoder) throws IOException {
 
         Sokeresultat sokeresultat =
-                client.sok(fritekst, yrkeserfaringer, kompetanser, utdanninger,
+                client.sok(fritekst, yrkeserfaringer, kompetanser, utdanninger, geografiList,
                     styrkKode, nusKode, styrkKoder, nusKoder);
         SokeresultatResource sokeresultatResource = new SokeresultatResource(sokeresultat);
         return new ResponseEntity<>(sokeresultatResource, HttpStatus.OK);
