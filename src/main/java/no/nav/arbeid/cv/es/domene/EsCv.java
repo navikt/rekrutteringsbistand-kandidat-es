@@ -450,7 +450,8 @@ public class EsCv {
         Objects.equals(heltidDeltidJobbonsker, esCv.heltidDeltidJobbonsker) &&
         Objects.equals(ansettelsesforholdJobbonsker, esCv.ansettelsesforholdJobbonsker) &&
         Objects.equals(arbeidstidsordningJobbonsker, esCv.arbeidstidsordningJobbonsker) &&
-        Objects.equals(samletKompetanse, esCv.samletKompetanse);
+        Objects.equals(samletKompetanse, esCv.samletKompetanse) &&
+        Objects.equals(totalLengdeYrkeserfaring, esCv.totalLengdeYrkeserfaring);
   }
 
   @Override
@@ -464,7 +465,7 @@ public class EsCv {
             poststed, landkode, kommunenummer, disponererBil, tidsstempel, utdanning, yrkeserfaring,
             kompetanse, annenerfaring, sertifikat, forerkort, sprak, kurs, verv, geografiJobbonsker,
             yrkeJobbonsker, heltidDeltidJobbonsker, ansettelsesforholdJobbonsker,
-            arbeidstidsordningJobbonsker, samletKompetanse);
+            arbeidstidsordningJobbonsker, samletKompetanse, totalLengdeYrkeserfaring);
   }
 
   @Override
@@ -507,6 +508,7 @@ public class EsCv {
         ", ansettelsesforholdJobbonsker=" + ansettelsesforholdJobbonsker +
         ", arbeidstidsordningJobbonsker=" + arbeidstidsordningJobbonsker +
         ", samletKompetanse=" + samletKompetanse +
+        ", totalLengdeYrkeserfaring=" + totalLengdeYrkeserfaring +
         '}';
   }
 
