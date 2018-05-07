@@ -41,6 +41,5 @@ public class CvEventListener {
       cvIndexerService.bulkSlett(arenaIderSomSkalSlettes);
       return null;
     });
-    LOGGER.info("Hva nå?");
   }
 }
