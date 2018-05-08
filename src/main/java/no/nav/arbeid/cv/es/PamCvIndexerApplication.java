@@ -13,7 +13,7 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @ComponentScan
 @EnableAutoConfiguration(
-    exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class, KafkaAutoConfiguration.class})
+    exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
 @EnableOIDCTokenValidation(ignore = "org.springframework")
 public class PamCvIndexerApplication {
 
