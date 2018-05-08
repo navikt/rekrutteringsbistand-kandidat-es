@@ -1,14 +1,9 @@
 package no.nav.arbeid.cv.es.es;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import com.palantir.docker.compose.DockerComposeRule;
 import no.nav.arbeid.cv.es.client.EsCvClient;
 import no.nav.arbeid.cv.es.config.ServiceConfig;
+import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother;
 import no.nav.arbeid.cv.es.domene.Aggregering;
 import no.nav.arbeid.cv.es.domene.EsCv;
 import no.nav.arbeid.cv.es.domene.Sokeresultat;
@@ -19,7 +14,6 @@ import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +27,16 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
-import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class IndexCvTest {
+public class IndexCvSuiteTest {
 
   private static final String ES_DOCKER_SERVICE = "elastic_search";
 
@@ -48,14 +47,14 @@ public class IndexCvTest {
    */
 
   // Kjører "docker-compose up" manuelt istedenfor denne ClassRule:
-
+/*
   @ClassRule
   public static DockerComposeRule docker =
       DockerComposeRule.builder().file("src/test/resources/docker-compose-kun-es.yml")
           // .waitingForHostNetworkedPort(9200, port -> SuccessOrFailure
           // .fromBoolean(port.isListeningNow(), "Internal port " + port + " was not listening"))
           .build();
-
+*/
   @Autowired
   private EsCvTransformer transformer;
 

@@ -1,6 +1,7 @@
 package no.nav.arbeid.cv.es.service;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,4 +31,28 @@ public class DefaultCvIndexerService implements CvIndexerService {
       LOGGER.error("Feil under indeksering av CV", e);
     }
   }
+
+
+  @Override
+  public void bulkIndekser(List<CvEvent> cvEventer) {
+    // TODO Implementer bulkindeksering i ES.
+    for (CvEvent cvEvent: cvEventer) {
+      indekser(cvEvent);
+    }
+  }
+
+  @Override
+  public void slett(Long arenaId) {
+    // TODO implementer sletting fra indeks
+    LOGGER.info("Slett arenaId {} fra ES indeks - foreløpig ikke implementert.", arenaId);
+  }
+
+  @Override
+  public void bulkSlett(List<Long> arenaIder) {
+    // TODO implementer bulk-sletting fra ES-indeks
+    for (Long arenaId : arenaIder) {
+      slett(arenaId);
+    }
+  }
+
 }
