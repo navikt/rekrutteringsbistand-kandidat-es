@@ -261,12 +261,8 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<configuration>
-						<!-- Dette er utrolig Harry... Bør finne en litt mer elegang måte å sikre
-						     at testene som ligger i en suite ikke kjøres både innenfor og utenfor suiten... -->
                             <excludes>
-                                <exclude>**/IndexCvTest.java</exclude>
-                                <exclude>**/CvListenerTest.java</exclude>
-                                <exclude>**/SearchControllerTest.java</exclude>
+                                <exclude>**/*SuiteTest.java</exclude>
                             </excludes>
                         </configuration>
                     </plugin>

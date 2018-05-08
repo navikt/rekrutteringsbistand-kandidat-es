@@ -44,7 +44,7 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class CvListenerTest {
+public class CvListenerSuiteTest {
   /*
    * For å kunne kjøre denne testen må Linux rekonfigureres litt.. Lag en fil i
    * /etc/sysctl.d/01-increase_vm_max_map_count.conf som inneholder følgende: vm.max_map_count =

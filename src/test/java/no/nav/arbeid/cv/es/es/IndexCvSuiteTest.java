@@ -35,7 +35,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class IndexCvTest {
+public class IndexCvSuiteTest {
 
   private static final String ES_DOCKER_SERVICE = "elastic_search";
 
