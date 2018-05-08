@@ -69,6 +69,7 @@ public class SearchController {
             @RequestParam(name = "utdanninger", required = false) List<String> utdanninger,
             @RequestParam(name = "geografiList", required = false) List<String> geografiList,
             @RequestParam(name = "totalErfaring", required = false) String totalYrkeserfaring,
+            @RequestParam(name = "utdanningsniva", required = false) List<String> utdanningsniva,
             @RequestParam(name = "styrkKode", required = false) String styrkKode,
             @RequestParam(name = "nusKode", required = false) String nusKode,
             @RequestParam(name = "styrkKoder", required = false) List<String> styrkKoder,
@@ -76,7 +77,7 @@ public class SearchController {
 
         Sokeresultat sokeresultat =
                 client.sok(fritekst, yrkeserfaringer, kompetanser, utdanninger, geografiList,
-                    totalYrkeserfaring, styrkKode, nusKode, styrkKoder, nusKoder);
+                    totalYrkeserfaring, utdanningsniva, styrkKode, nusKode, styrkKoder, nusKoder);
         SokeresultatResource sokeresultatResource = new SokeresultatResource(sokeresultat);
         return new ResponseEntity<>(sokeresultatResource, HttpStatus.OK);
     }
