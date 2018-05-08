@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 import java.util.Objects;
 
-import org.junit.runner.manipulation.Sortable;
-import org.junit.runner.manipulation.Sorter;
-
 import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
 import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
+import no.nav.elasticsearch.mapping.annotations.ElasticIntegerField;
 import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
 import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 
@@ -47,12 +45,14 @@ public class EsYrkeserfaring {
   @ElasticKeywordField
   private String naceKode;
 
+  @ElasticIntegerField
+  private int yrkeserfaringManeder;
 
   public EsYrkeserfaring() {}
 
   public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
       String styrkKodeStillingstittel, String alternativStillingstittel, String organisasjonsnummer,
-      String naceKode) {
+      String naceKode, int yrkeserfaringManeder) {
     this.fraDato = fraDato;
     this.tilDato = tilDato;
     this.arbeidsgiver = arbeidsgiver;
@@ -65,6 +65,7 @@ public class EsYrkeserfaring {
     this.alternativStillingstittel = alternativStillingstittel;
     this.organisasjonsnummer = organisasjonsnummer;
     this.naceKode = naceKode;
+    this.yrkeserfaringManeder = yrkeserfaringManeder;
   }
 
   public Date getFraDato() {
@@ -107,6 +108,8 @@ public class EsYrkeserfaring {
     return naceKode;
   }
 
+  public int getYrkeserfaringManeder() { return yrkeserfaringManeder; }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -122,14 +125,15 @@ public class EsYrkeserfaring {
         && Objects.equals(styrkKodeStillingstittel, that.styrkKodeStillingstittel)
         && Objects.equals(alternativStillingstittel, that.alternativStillingstittel)
         && Objects.equals(organisasjonsnummer, that.organisasjonsnummer)
-        && Objects.equals(naceKode, that.naceKode);
+        && Objects.equals(naceKode, that.naceKode)
+        && Objects.equals(yrkeserfaringManeder, that.yrkeserfaringManeder);
   }
 
   @Override
   public int hashCode() {
 
     return Objects.hash(fraDato, tilDato, arbeidsgiver, styrkKode, styrkKodeStillingstittel,
-        alternativStillingstittel, organisasjonsnummer, naceKode);
+        alternativStillingstittel, organisasjonsnummer, naceKode, yrkeserfaringManeder);
   }
 
   @Override
@@ -138,7 +142,8 @@ public class EsYrkeserfaring {
         + arbeidsgiver + '\'' + ", styrkKode='" + styrkKode + '\'' + ", styrkKodeStillingstittel='"
         + styrkKodeStillingstittel + '\'' + ", alternativStillingstittel='"
         + alternativStillingstittel + '\'' + ", organisasjonsnummer='" + organisasjonsnummer + '\''
-        + ", naceKode='" + naceKode + '\'' + '}';
+        + ", naceKode='" + naceKode + '\'' + ", yrkeserfaringManeder='" + yrkeserfaringManeder + '\''
+    + '}';
   }
 
 }

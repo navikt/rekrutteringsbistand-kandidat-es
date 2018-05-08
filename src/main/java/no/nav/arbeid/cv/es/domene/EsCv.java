@@ -9,6 +9,7 @@ import java.util.Objects;
 import no.nav.elasticsearch.mapping.annotations.ElasticBooleanField;
 import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
 import no.nav.elasticsearch.mapping.annotations.ElasticDocument;
+import no.nav.elasticsearch.mapping.annotations.ElasticIntegerField;
 import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
 import no.nav.elasticsearch.mapping.annotations.ElasticLongField;
 import no.nav.elasticsearch.mapping.annotations.ElasticNestedField;
@@ -127,6 +128,13 @@ public class EsCv {
 
   private List<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonsker = new ArrayList<>();
 
+  @ElasticNestedField
+  private List<EsSamletKompetanse> samletKompetanse = new ArrayList<>();
+
+  @ElasticIntegerField
+  private int totalLengdeYrkeserfaring;
+
+
   public EsCv() {
 
   }
@@ -176,6 +184,7 @@ public class EsCv {
   }
 
   public void addYrkeserfaring(Collection<EsYrkeserfaring> yrkeserfaringListe) {
+    yrkeserfaringListe.forEach(y -> this.totalLengdeYrkeserfaring += y.getYrkeserfaringManeder());
     this.yrkeserfaring.addAll(yrkeserfaringListe);
   }
 
@@ -237,6 +246,10 @@ public class EsCv {
 
   public void addGeografiJobbonske(Collection<EsGeografiJobbonsker> geografiJobbonskerListe) {
     this.geografiJobbonsker.addAll(geografiJobbonskerListe);
+  }
+
+  public void addSamletKompetanse(Collection<EsSamletKompetanse> samletKompetanseListe) {
+    this.samletKompetanse.addAll(samletKompetanseListe);
   }
 
 
@@ -386,6 +399,12 @@ public class EsCv {
     return arbeidstidsordningJobbonsker;
   }
 
+  public List<EsSamletKompetanse> getSamletKompetanse() {
+    return samletKompetanse;
+  }
+
+  public int getTotalLengdeYrkeserfaring() { return totalLengdeYrkeserfaring; }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -430,7 +449,9 @@ public class EsCv {
         Objects.equals(yrkeJobbonsker, esCv.yrkeJobbonsker) &&
         Objects.equals(heltidDeltidJobbonsker, esCv.heltidDeltidJobbonsker) &&
         Objects.equals(ansettelsesforholdJobbonsker, esCv.ansettelsesforholdJobbonsker) &&
-        Objects.equals(arbeidstidsordningJobbonsker, esCv.arbeidstidsordningJobbonsker);
+        Objects.equals(arbeidstidsordningJobbonsker, esCv.arbeidstidsordningJobbonsker) &&
+        Objects.equals(samletKompetanse, esCv.samletKompetanse) &&
+        Objects.equals(totalLengdeYrkeserfaring, esCv.totalLengdeYrkeserfaring);
   }
 
   @Override
@@ -444,7 +465,7 @@ public class EsCv {
             poststed, landkode, kommunenummer, disponererBil, tidsstempel, utdanning, yrkeserfaring,
             kompetanse, annenerfaring, sertifikat, forerkort, sprak, kurs, verv, geografiJobbonsker,
             yrkeJobbonsker, heltidDeltidJobbonsker, ansettelsesforholdJobbonsker,
-            arbeidstidsordningJobbonsker);
+            arbeidstidsordningJobbonsker, samletKompetanse, totalLengdeYrkeserfaring);
   }
 
   @Override
@@ -486,6 +507,8 @@ public class EsCv {
         ", heltidDeltidJobbonsker=" + heltidDeltidJobbonsker +
         ", ansettelsesforholdJobbonsker=" + ansettelsesforholdJobbonsker +
         ", arbeidstidsordningJobbonsker=" + arbeidstidsordningJobbonsker +
+        ", samletKompetanse=" + samletKompetanse +
+        ", totalLengdeYrkeserfaring=" + totalLengdeYrkeserfaring +
         '}';
   }
 

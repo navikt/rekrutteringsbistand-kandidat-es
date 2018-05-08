@@ -33,12 +33,10 @@ public class SearchController {
     public HttpEntity<Resources<StringResource>> typeAhead(
             @RequestParam(name = "komp", required = false) String komp,
             @RequestParam(name = "utd", required = false) String utd,
-            @RequestParam(name = "yrke", required = false) String yrke,
-            @RequestParam(name = "spr", required = false) String spr,
-            @RequestParam(name = "sert", required = false) String sert,
-            @RequestParam(name = "geo", required = false) String geo) throws IOException {
+            @RequestParam(name = "geo", required = false) String geo,
+            @RequestParam(name = "yrke", required = false) String yrke) throws IOException {
 
-        if (komp == null && utd == null && yrke == null && spr == null && sert == null && geo == null) {
+        if (komp == null && utd == null && yrke == null && geo == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -52,14 +50,8 @@ public class SearchController {
         if (yrke != null) {
             list.addAll(client.typeAheadYrkeserfaring(yrke));
         }
-        if (spr != null) {
-            list.addAll(client.typeAheadSprak(spr));
-        }
-        if (sert != null) {
-            list.addAll(client.typeAheadSertifikat(sert));
-        }
         if (geo != null) {
-            list.addAll(client.typeAheadGeografi(geo));
+          list.addAll(client.typeAheadGeografi(geo));
         }
 
         List<StringResource> resourceList =
@@ -75,17 +67,16 @@ public class SearchController {
             @RequestParam(name = "arbeidserfaringer", required = false) List<String> yrkeserfaringer,
             @RequestParam(name = "kompetanser", required = false) List<String> kompetanser,
             @RequestParam(name = "utdanninger", required = false) List<String> utdanninger,
-            @RequestParam(name = "sprakList", required = false) List<String> sprak,
-            @RequestParam(name = "sertifikater", required = false) List<String> sertifikater,
             @RequestParam(name = "geografiList", required = false) List<String> geografiList,
+            @RequestParam(name = "totalErfaring", required = false) String totalYrkeserfaring,
             @RequestParam(name = "styrkKode", required = false) String styrkKode,
             @RequestParam(name = "nusKode", required = false) String nusKode,
             @RequestParam(name = "styrkKoder", required = false) List<String> styrkKoder,
             @RequestParam(name = "nusKoder", required = false) List<String> nusKoder) throws IOException {
 
         Sokeresultat sokeresultat =
-                client.sok(fritekst, yrkeserfaringer, kompetanser, utdanninger, sprak, sertifikater,
-                    geografiList, styrkKode, nusKode, styrkKoder, nusKoder);
+                client.sok(fritekst, yrkeserfaringer, kompetanser, utdanninger, geografiList,
+                    totalYrkeserfaring, styrkKode, nusKode, styrkKoder, nusKoder);
         SokeresultatResource sokeresultatResource = new SokeresultatResource(sokeresultat);
         return new ResponseEntity<>(sokeresultatResource, HttpStatus.OK);
     }

@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.Date;
 import java.util.List;
 
+import no.nav.arbeid.cv.es.domene.EsSamletKompetanse;
 import org.junit.Test;
 
 import no.nav.arbeid.cv.es.domene.EsAnnenErfaring;
@@ -242,6 +243,20 @@ public class EsCvTransformerTest {
     assertThat(verv.get(0).getTilDato()).isEqualTo("2001-01-15");
     assertThat(verv.get(0).getOrganisasjon()).isEqualTo("Verv organisasjon");
     assertThat(verv.get(0).getTittel()).isEqualTo("verv tittel");
+  }
+
+  @Test
+  public void esCvTransformerShouldCOnvertCvEventToEsCvWithCorrectSamletKompetanse() {
+    CvEvent cvEvent = CvEventObjectMother.giveMeCvEvent();
+    EsCv esCv = esCvTransformer.transform(cvEvent);
+
+    List<EsSamletKompetanse> samletKompetanse = esCv.getSamletKompetanse();
+    assertThat(samletKompetanse).hasSize(17);
+    assertThat(samletKompetanse.get(0).getSamletKompetanseTekst()).isEqualTo("Språk kode tekst");
+    assertThat(samletKompetanse.get(1).getSamletKompetanseTekst()).isEqualTo("Førerkort: Kl. A (tung motorsykkel)");
+    assertThat(samletKompetanse.get(6).getSamletKompetanseTekst()).isEqualTo("Akseloppretting");
+    assertThat(samletKompetanse.get(9).getSamletKompetanseTekst()).isEqualTo("Førerkort: Kl. A (tung motorsykkel)");
+    assertThat(samletKompetanse.get(13).getSamletKompetanseTekst()).isEqualTo("Maskin- og kranførerarbeid");
   }
 
 }

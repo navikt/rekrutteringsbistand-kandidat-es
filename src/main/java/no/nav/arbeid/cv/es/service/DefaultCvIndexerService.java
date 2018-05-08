@@ -3,6 +3,7 @@ package no.nav.arbeid.cv.es.service;
 import no.nav.arbeid.cv.es.client.EsCvClient;
 import no.nav.arbeid.cv.es.domene.ApplicationException;
 import no.nav.arbeid.cv.es.domene.EsCv;
+import no.nav.arbeid.cv.es.domene.OperationalException;
 import no.nav.arbeid.cv.events.CvEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,11 @@ public class DefaultCvIndexerService implements CvIndexerService {
       throw new ApplicationException("Feil ved transformering av cveventer som skal indekseres: " + e.getMessage(), e);
     }
 
-    esCvClient.bulkIndex(esPersoner);
+    try {
+        esCvClient.bulkIndex(esPersoner);
+    } catch (IOException e) {
+        throw new OperationalException("Infrastrukturfeil ved bulkindeksering av cver: " + e.getMessage(), e);
+    }
   }
 
   @Override
