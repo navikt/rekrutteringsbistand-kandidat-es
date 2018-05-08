@@ -1,5 +1,6 @@
 package no.nav.arbeid.cv.es.es;
 
+import java.util.Arrays;
 import no.nav.arbeid.cv.es.client.EsCvClient;
 import no.nav.arbeid.cv.es.config.ServiceConfig;
 import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother;
@@ -111,7 +112,7 @@ public class IndexCvSuiteTest {
   @Test
   public void testUtenSokekriterierReturnererAlleTestPersoner() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, null, null, null, null, null, null, null);
+        client.sok(null, null, null, null, null, null, null, null, null, null, null);
 
     List<EsCv> cver = sokeresultat.getCver();
 
@@ -121,9 +122,9 @@ public class IndexCvSuiteTest {
   @Test
   public void testFlereInputFritekstGirBredereResultat() throws IOException {
     Sokeresultat sokeresultat1 =
-        client.sok("javautvikler", null, null, null, null, null, null, null);
+        client.sok("javautvikler", null, null, null, null, null, null, null,null, null, null);
     Sokeresultat sokeresultat =
-        client.sok("industrimekaniker javautvikler", null, null, null, null, null, null, null);
+        client.sok("industrimekaniker javautvikler", null, null, null, null, null, null, null, null, null, null);
 
     List<EsCv> cver1 = sokeresultat1.getCver();
     List<EsCv> cver = sokeresultat.getCver();
@@ -136,13 +137,13 @@ public class IndexCvSuiteTest {
   @Test
   public void testSokPaNorskeStoppordGirIkkeResultat() throws IOException {
     Sokeresultat sokeresultatYrke =
-        client.sok(null, "og", null, null, null, null, null, null);
+        client.sok(null, Arrays.asList("og"), null, null, null, null, null, null, null, null, null);
     Sokeresultat sokeresultatKomp =
-        client.sok(null, null, "og", null, null, null, null, null);
+        client.sok(null, null, Arrays.asList("og"), null, null, null, null, null, null, null, null);
     Sokeresultat sokeresultatUtdanning =
-        client.sok(null, null, null, "og", null, null, null, null);
+        client.sok(null, null, null, Arrays.asList("og"), null, null, null, null, null, null, null);
     Sokeresultat sokeresultatFritekst =
-        client.sok("og", null, null, null, null, null, null, null);
+        client.sok("og", null, null, null, null, null, null, null, null,null, null);
 
 
     List<EsCv> cverYrke = sokeresultatYrke.getCver();
@@ -159,7 +160,7 @@ public class IndexCvSuiteTest {
   @Test
   public void testSokMedFlereKriterierGirSvarMedAlleFelter() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, "Progger", "Landtransport generelt", "Master i sikkerhet", null, null, null, null);
+        client.sok(null, Arrays.asList("Progger"), Arrays.asList("Landtransport generelt"), Arrays.asList("Master i sikkerhet"), null, null, null, null, null, null, null);
 
     List<EsCv> cver = sokeresultat.getCver();
 
@@ -169,50 +170,50 @@ public class IndexCvSuiteTest {
   }
 
   @Test
-  public void testFlereInputYrkeGirFlereTreff() throws IOException {
+  public void testFlereInputYrkeGirMindreTreff() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, "Progger", null, null, null, null, null, null);
-    Sokeresultat sokeresultatBredere =
-        client.sok(null, "Progger Industrimekaniker", null, null, null, null, null, null);
+        client.sok(null, Arrays.asList("Industrimekaniker"), null, null, null, null, null, null, null, null, null);
+    Sokeresultat sokeresultat2 =
+        client.sok(null, Arrays.asList("Progger", "Industrimekaniker"), null, null, null, null, null, null, null, null, null);
 
     List<EsCv> cver = sokeresultat.getCver();
-    List<EsCv> cverBredere = sokeresultatBredere.getCver();
+    List<EsCv> cver2 = sokeresultat2.getCver();
 
-    assertThat(cverBredere.size()).isGreaterThan(cver.size());
+    assertThat(cver.size()).isGreaterThan(cver2.size());
   }
 
   @Test
-  public void testFlereInputKompetanseGirFlereTreff() throws IOException {
+  public void testFlereInputKompetanseGirMindreTreff() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, null, "Programvareutvikler", null, null, null, null, null);
-    Sokeresultat sokeresultatBredere =
-        client.sok(null, null, "Programvareutvikler Nyhetsanker", null, null, null, null, null);
+        client.sok(null, null, Arrays.asList("Programvareutvikler"), null, null, null, null, null, null, null, null);
+    Sokeresultat sokeresultat2 =
+        client.sok(null, null, Arrays.asList("Programvareutvikler", "Nyhetsanker"), null, null, null, null, null, null, null, null);
 
     List<EsCv> cver = sokeresultat.getCver();
-    List<EsCv> cverBredere = sokeresultatBredere.getCver();
+    List<EsCv> cver2 = sokeresultat2.getCver();
 
-    assertThat(cverBredere.size()).isGreaterThan(cver.size());
+    assertThat(cver.size()).isGreaterThan(cver2.size());
   }
 
   @Test
-  public void testFlereInputUtdanningGirFlereTreff() throws IOException {
+  public void testFlereInputUtdanningGirMindreTreff() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, null, null, "Bygg og anlegg", null, null, null, null);
-    Sokeresultat sokeresultatBredere =
-        client.sok(null, null, null, "Bygg og anlegg master i sikkerhet", null, null, null, null);
+        client.sok(null, null, null, Arrays.asList("Bygg og anlegg"), null, null, null, null, null, null, null);
+    Sokeresultat sokeresultat2 =
+        client.sok(null, null, null, Arrays.asList("Bygg og anlegg", "master i sikkerhet"), null, null, null, null, null, null, null);
 
     List<EsCv> cver = sokeresultat.getCver();
-    List<EsCv> cverBredere = sokeresultatBredere.getCver();
+    List<EsCv> cver2 = sokeresultat2.getCver();
 
-    assertThat(cverBredere.size()).isGreaterThan(cver.size());
+    assertThat(cver.size()).isGreaterThan(cver2.size());
   }
 
   @Test
   public void testStemOrdSkalGiSammeResultat() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, "Progger", null, null, null, null, null, null);
+        client.sok(null, Arrays.asList("Progger"), null, null, null, null, null, null, null, null, null);
     Sokeresultat sokeresultatStemOrd =
-        client.sok(null, "Progg", null, null, null, null, null, null);
+        client.sok(null, Arrays.asList("Progg"), null, null, null, null, null, null, null, null, null);
 
     List<EsCv> cver = sokeresultat.getCver();
     List <EsCv> cverStemOrd = sokeresultatStemOrd.getCver();
@@ -224,7 +225,7 @@ public class IndexCvSuiteTest {
   @Test
   public void testSokPaStyrkKode() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, null, null, null,  "5684.05", null, null, null);
+        client.sok(null, null, null, null, null, null, null,  "5684.05", null, null, null);
 
     List<EsCv> cver = sokeresultat.getCver();
     EsCv cv = cver.get(0);
@@ -234,7 +235,7 @@ public class IndexCvSuiteTest {
   @Test
   public void testSokPaNusKode() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, null, null, null,  null, "486595", null, null);
+        client.sok(null, null, null, null, null, null, null,  null, "486595", null, null);
 
     List<EsCv> cver = sokeresultat.getCver();
     EsCv cv = cver.get(0);
@@ -247,17 +248,17 @@ public class IndexCvSuiteTest {
     styrkKoder.add("5684.05");
 
     Sokeresultat sokeresultat =
-        client.sok(null, null, null, null,  null, null, styrkKoder, null);
+        client.sok(null, null, null, null, null, null, null,  null, null, styrkKoder, null);
 
     styrkKoder.add("5124.46");
 
     Sokeresultat sokeresultatToKoder =
-        client.sok(null, null, null, null,  null, null, styrkKoder, null);
+        client.sok(null, null, null, null, null, null, null,  null, null, styrkKoder, null);
 
     styrkKoder.add("5746.07");
 
     Sokeresultat sokeresultatTreKoder =
-        client.sok(null, null, null, null,  null, null, styrkKoder, null);
+        client.sok(null, null, null, null, null, null,  null,null, null, styrkKoder, null);
 
     List<EsCv> cver = sokeresultat.getCver();
     List<EsCv> cver2 = sokeresultatToKoder.getCver();
@@ -273,18 +274,57 @@ public class IndexCvSuiteTest {
     nusKoder.add("296647");
 
     Sokeresultat sokeresultat =
-        client.sok(null, null, null, null,  null, null, null, nusKoder);
+        client.sok(null, null, null, null, null, null, null,  null, null, null, nusKoder);
 
     nusKoder.add("456375");
 
     Sokeresultat sokeresultatToKoder =
-        client.sok(null, null, null, null,  null, null, null, nusKoder);
+        client.sok(null, null, null, null, null, null, null,  null, null, null, nusKoder);
 
     List<EsCv> cver = sokeresultat.getCver();
     List<EsCv> cver2 = sokeresultatToKoder.getCver();
 
     assertThat(cver.size()).isGreaterThan(cver2.size());
 
+  }
+
+  @Test
+  public void testSokPaFlereSprakGirBegrensendeResultat() throws IOException {
+    Sokeresultat sokeresultat =
+        client.sok(null, null, null, null, Arrays.asList("Norsk"), null, null, null, null, null, null);
+    Sokeresultat sokeresultat2 =
+        client.sok(null, null, null, null, Arrays.asList("Norsk", "Dansk"), null, null, null, null, null, null);
+
+    List<EsCv> cver = sokeresultat.getCver();
+    List <EsCv> cver2 = sokeresultat2.getCver();
+
+    assertThat(cver.size()).isGreaterThan(cver2.size());
+  }
+
+  @Test
+  public void testSokPaFlereSertifikaterGirBegrensendeResultat() throws IOException {
+    Sokeresultat sokeresultat =
+        client.sok(null, null, null, null, null, Arrays.asList("Førerkort: Kl. A (tung motorsykkel)"), null, null, null, null, null);
+    Sokeresultat sokeresultat2 =
+        client.sok(null, null, null, null, null, Arrays.asList("Førerkort: Kl. A (tung motorsykkel)", "Førerkort: Kl. M (Moped)"), null, null, null, null, null);
+
+    List<EsCv> cver = sokeresultat.getCver();
+    List <EsCv> cver2 = sokeresultat2.getCver();
+
+    assertThat(cver.size()).isGreaterThan(cver2.size());
+  }
+
+  @Test
+  public void testSokPaFlereGeografiJobbonskerGirBegrensendeResultat() throws IOException {
+    Sokeresultat sokeresultat =
+        client.sok(null, null, null, null, null, null, Arrays.asList("Oslo"), null, null, null, null);
+    Sokeresultat sokeresultat2 =
+        client.sok(null, null, null, null, null, null, Arrays.asList("Oslo", "Harstad"), null, null, null, null);
+
+    List<EsCv> cver = sokeresultat.getCver();
+    List <EsCv> cver2 = sokeresultat2.getCver();
+
+    assertThat(cver.size()).isGreaterThan(cver2.size());
   }
 
 }

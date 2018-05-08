@@ -3,6 +3,7 @@ package no.nav.arbeid.cv.es.domene;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 import java.util.Objects;
+import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
 import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
 import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
 import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
@@ -19,7 +20,8 @@ public class EsSertifikat {
   @ElasticKeywordField
   private String sertifikatKode;
 
-  @ElasticTextField
+  @ElasticKeywordField
+  @ElasticCompletionField
   private String sertifikatKodeNavn;
 
   @ElasticTextField

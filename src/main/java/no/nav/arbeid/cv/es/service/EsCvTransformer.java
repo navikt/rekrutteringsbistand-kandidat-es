@@ -10,6 +10,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import no.nav.arbeid.cv.es.domene.EsCv;
 import no.nav.arbeid.cv.es.domene.EsForerkort;
+import no.nav.arbeid.cv.es.domene.EsGeografiJobbonsker;
 import no.nav.arbeid.cv.es.domene.EsKompetanse;
 import no.nav.arbeid.cv.es.domene.EsKurs;
 import no.nav.arbeid.cv.es.domene.EsSertifikat;
@@ -19,6 +20,7 @@ import no.nav.arbeid.cv.es.domene.EsVerv;
 import no.nav.arbeid.cv.es.domene.EsYrkeserfaring;
 import no.nav.arbeid.cv.events.CvEvent;
 import no.nav.arbeid.cv.events.Forerkort;
+import no.nav.arbeid.cv.events.GeografiJobbonsker;
 import no.nav.arbeid.cv.events.Kompetanse;
 import no.nav.arbeid.cv.events.Kurs;
 import no.nav.arbeid.cv.events.Sertifikat;
@@ -67,6 +69,7 @@ public class EsCvTransformer {
     esCv.addSprak(mapList(p.getSprak(), this::mapSprak));
     esCv.addKurs(mapList(p.getKurs(), this::mapKurs));
     esCv.addVerv(mapList(p.getVerv(), this::mapVerv));
+    esCv.addGeografiJobbonske(mapList(p.getGeografiJobbonsker(), this::mapGeografiJobbonske));
 
     return esCv;
   }
@@ -162,6 +165,13 @@ public class EsCvTransformer {
         toDate(verv.getTilDato()),
         verv.getOrganisasjon(),
         verv.getTittel()
+    );
+  }
+
+  private EsGeografiJobbonsker mapGeografiJobbonske(GeografiJobbonsker geografiJobbonsker) {
+    return new EsGeografiJobbonsker(
+        geografiJobbonsker.getGeografiKodeTekst(),
+        geografiJobbonsker.getGeografiKode()
     );
   }
 
