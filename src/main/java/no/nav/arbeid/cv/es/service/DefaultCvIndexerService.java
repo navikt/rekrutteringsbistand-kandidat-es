@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DefaultCvIndexerService implements CvIndexerService {
@@ -56,16 +57,17 @@ public class DefaultCvIndexerService implements CvIndexerService {
 
   @Override
   public void slett(Long arenaId) {
-    // TODO implementer sletting fra indeks
-    LOGGER.info("Slett arenaId {} fra ES indeks - foreløpig ikke implementert.", arenaId);
+    LOGGER.info("Slett arenaId {} fra ES indeks.", arenaId);
+    bulkSlett(Arrays.asList(arenaId));
   }
 
   @Override
   public void bulkSlett(List<Long> arenaIder) {
-    // TODO implementer bulk-sletting fra ES-indeks
-    for (Long arenaId : arenaIder) {
-      slett(arenaId);
-    }
+      try {
+          esCvClient.bulkSlett(arenaIder);
+      } catch (IOException e) {
+          throw new OperationalException("Infrastrukturfeil ved bulksletting av cver: " + e.getMessage(), e);
+      }
   }
 
 }

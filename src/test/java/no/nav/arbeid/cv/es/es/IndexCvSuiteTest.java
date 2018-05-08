@@ -445,20 +445,32 @@ public class IndexCvSuiteTest {
     assertThat(cv).isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent2()));
   }
 
-  @Test
-  public void skalBulkIndeksereCVer() throws Exception {
-    List<CvEvent> bulkEventer = Arrays.asList(TempCvEventObjectMother.giveMeCvEvent(),
-            TempCvEventObjectMother.giveMeCvEvent2(),
-            TempCvEventObjectMother.giveMeCvEvent3(),
-            TempCvEventObjectMother.giveMeCvEvent4(),
-            TempCvEventObjectMother.giveMeCvEvent5());
+    @Test
+    public void skalBulkIndeksereCVer() throws Exception {
+        List<CvEvent> bulkEventer = Arrays.asList(TempCvEventObjectMother.giveMeCvEvent(),
+                TempCvEventObjectMother.giveMeCvEvent2(),
+                TempCvEventObjectMother.giveMeCvEvent3(),
+                TempCvEventObjectMother.giveMeCvEvent4(),
+                TempCvEventObjectMother.giveMeCvEvent5());
 
-    bulkEventer.forEach(e -> e.setArenaPersonId(e.getArenaPersonId() + 9999));
+        bulkEventer.forEach(e -> e.setArenaPersonId(e.getArenaPersonId() + 9999));
 
-    int antallForBulkIndeksering = client.sok(Sokekriterier.med().bygg()).getCver().size();
-    indexerService.bulkIndekser(bulkEventer);
-    int antallEtterIndeksering =  client.sok(Sokekriterier.med().bygg()).getCver().size();
+        int antallForBulkIndeksering = client.sok(Sokekriterier.med().bygg()).getCver().size();
+        indexerService.bulkIndekser(bulkEventer);
+        int antallEtterIndeksering =  client.sok(Sokekriterier.med().bygg()).getCver().size();
 
-    Assertions.assertThat(antallEtterIndeksering-antallForBulkIndeksering).isEqualTo(bulkEventer.size());
-  }
+        Assertions.assertThat(antallEtterIndeksering-antallForBulkIndeksering).isEqualTo(bulkEventer.size());
+    }
+
+    @Test
+    public void skalBulkSletteCVer() throws Exception {
+        List<Long> sletteIder = Arrays.asList(TempCvEventObjectMother.giveMeCvEvent().getArenaPersonId(),
+                TempCvEventObjectMother.giveMeCvEvent2().getArenaPersonId());
+
+        int antallForBulkSletting = client.sok(Sokekriterier.med().bygg()).getCver().size();
+        indexerService.bulkSlett(sletteIder);
+        int antallEtterSletting =  client.sok(Sokekriterier.med().bygg()).getCver().size();
+
+        Assertions.assertThat(antallForBulkSletting - antallEtterSletting).isEqualTo(sletteIder.size());
+    }
 }

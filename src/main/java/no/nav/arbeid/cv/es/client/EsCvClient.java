@@ -17,7 +17,7 @@ public interface EsCvClient {
 
   void index(EsCv esCv) throws IOException;
   void bulkIndex(List<EsCv> esCver) throws IOException;
-
+  void bulkSlett(List<Long> arenaPersonIder) throws IOException;
   void createIndex() throws IOException;
 
   void deleteIndex() throws IOException;

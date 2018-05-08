@@ -13,6 +13,7 @@ import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
+import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
@@ -127,6 +128,24 @@ public class EsCvHttpClient implements EsCvClient {
     bulkRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
     BulkResponse bulkResponse = client.bulk(bulkRequest);
     LOGGER.debug("BULKINDEXRESPONSE: " + bulkResponse.toString());
+  }
+
+  @Override
+  public void bulkSlett(List<Long> arenapersoner) throws IOException {
+    BulkRequest bulkRequest = Requests.bulkRequest();
+
+    for (Long id : arenapersoner) {
+      DeleteRequest dr = Requests.deleteRequest(CV_INDEX)
+              .id(Long.toString(id))
+              .type(CV_TYPE);
+
+      bulkRequest.add(dr);
+    }
+
+    LOGGER.info("Sender bulksletting av {} cv'er", arenapersoner.size());
+    bulkRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
+    BulkResponse bulkResponse = client.bulk(bulkRequest);
+    LOGGER.debug("BULKDELETERESPONSE: " + bulkResponse.toString());
   }
 
   @Override
