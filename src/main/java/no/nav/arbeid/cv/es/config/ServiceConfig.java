@@ -18,6 +18,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import no.nav.arbeid.cv.es.service.*;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -38,10 +39,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.arbeid.cv.es.client.EsCvClient;
 import no.nav.arbeid.cv.es.client.EsCvHttpClient;
 import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother;
-import no.nav.arbeid.cv.es.service.CvEventListener;
-import no.nav.arbeid.cv.es.service.CvIndexerService;
-import no.nav.arbeid.cv.es.service.DefaultCvIndexerService;
-import no.nav.arbeid.cv.es.service.EsCvTransformer;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.retry.support.RetryTemplate;
 
 @Configuration
 public class ServiceConfig {
@@ -68,8 +67,9 @@ public class ServiceConfig {
   }
 
   @Bean
-  public CvEventListener cvEventListener() {
-    return new CvEventListener(cvIndexerService());
+  @Autowired
+  public CvEventListener cvEventListener(CvIndexerService cvIndexerService, RetryTemplate retryTemplate) {
+    return new CvEventListener(cvIndexerService, retryTemplate);
   }
 
   @Bean
@@ -146,12 +146,10 @@ public class ServiceConfig {
   private X509TrustManager mockX509TrustManager() {
     return new X509TrustManager() {
       @Override
-      public void checkClientTrusted(X509Certificate[] x509Certificates, String s)
-          throws CertificateException {}
+      public void checkClientTrusted(X509Certificate[] x509Certificates, String s) {}
 
       @Override
-      public void checkServerTrusted(X509Certificate[] x509Certificates, String s)
-          throws CertificateException {}
+      public void checkServerTrusted(X509Certificate[] x509Certificates, String s) {}
 
       @Override
       public X509Certificate[] getAcceptedIssuers() {

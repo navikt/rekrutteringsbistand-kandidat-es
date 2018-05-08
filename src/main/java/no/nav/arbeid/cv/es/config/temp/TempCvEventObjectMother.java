@@ -1,22 +1,8 @@
 package no.nav.arbeid.cv.es.config.temp;
 
+import no.nav.arbeid.cv.events.*;
+
 import java.util.ArrayList;
-import no.nav.arbeid.cv.es.domene.EsCv;
-import no.nav.arbeid.cv.events.AnsettelsesforholdJobbonsker;
-import no.nav.arbeid.cv.events.ArbeidstidsordningJobbonsker;
-import no.nav.arbeid.cv.events.CvEvent;
-import no.nav.arbeid.cv.events.Forerkort;
-import no.nav.arbeid.cv.events.GeografiJobbonsker;
-import no.nav.arbeid.cv.events.HeltidDeltidJobbonsker;
-import no.nav.arbeid.cv.events.Kompetanse;
-import no.nav.arbeid.cv.events.Kurs;
-import no.nav.arbeid.cv.events.Omfang;
-import no.nav.arbeid.cv.events.Sertifikat;
-import no.nav.arbeid.cv.events.Sprak;
-import no.nav.arbeid.cv.events.Utdanning;
-import no.nav.arbeid.cv.events.Verv;
-import no.nav.arbeid.cv.events.YrkeJobbonsker;
-import no.nav.arbeid.cv.events.Yrkeserfaring;
 
 public class TempCvEventObjectMother {
 
@@ -41,7 +27,7 @@ public class TempCvEventObjectMother {
         "Anleggsmaskindrifter",
         "maskinkjører og maskintransport",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",false
     );
 
     Yrkeserfaring yrkeserfaring2 = new Yrkeserfaring(
@@ -52,7 +38,8 @@ public class TempCvEventObjectMother {
         "Anleggsmaskinfører",
         "maskinkjører og maskintransport",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring3 = new Yrkeserfaring(
@@ -63,7 +50,8 @@ public class TempCvEventObjectMother {
         "Anleggsmaskinfører",
         "maskinkjører og maskintransport",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring4 = new Yrkeserfaring(
@@ -74,7 +62,8 @@ public class TempCvEventObjectMother {
         "Industrimekaniker",
         "Industrimekaniker",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring5 = new Yrkeserfaring(
@@ -85,7 +74,8 @@ public class TempCvEventObjectMother {
         "Lastebil- og trailersjåfør",
         "Sjåfør kl. 2",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring6 = new Yrkeserfaring(
@@ -96,7 +86,8 @@ public class TempCvEventObjectMother {
         "Industrimekaniker",
         "Industrimekaniker",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     ArrayList<Yrkeserfaring> yrkeserfaringsListe = new ArrayList<>();
@@ -354,7 +345,7 @@ public class TempCvEventObjectMother {
         "unnasluntrer@mailinator.com",
         "NO",
         1L,
-        null,
+        "1234", // Kan ik
         "",
         "J",
         "2016-05-30",
@@ -366,8 +357,7 @@ public class TempCvEventObjectMother {
         "NO",
         301,
         false,
-        false,
-        false,
+        "removeme",
         "",
         utdanningsListe,
         yrkeserfaringsListe,
@@ -406,7 +396,8 @@ public class TempCvEventObjectMother {
         "Programvareutvikler",
         "Fullstackutvikler",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring2 = new Yrkeserfaring(
@@ -417,7 +408,8 @@ public class TempCvEventObjectMother {
         "Systemutvikler",
         "Utvikling av nytt kandidatsøk",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring3 = new Yrkeserfaring(
@@ -428,7 +420,8 @@ public class TempCvEventObjectMother {
         "Systemtester",
         "Automatiske tester av nytt kandidatsøk",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring4 = new Yrkeserfaring(
@@ -439,7 +432,8 @@ public class TempCvEventObjectMother {
         "Lagermedarbeider",
         "Lagermedarbeider",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring5 = new Yrkeserfaring(
@@ -450,7 +444,8 @@ public class TempCvEventObjectMother {
         "Truckfører lager",
         "Stortruck",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring6 = new Yrkeserfaring(
@@ -461,7 +456,8 @@ public class TempCvEventObjectMother {
         "Javautvikler",
         "Javautvikler",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     ArrayList<Yrkeserfaring> yrkeserfaringsListe = new ArrayList<>();
@@ -722,8 +718,7 @@ public class TempCvEventObjectMother {
         "NO",
         301,
         false,
-        false,
-        false,
+        "removeme",
         "",
         utdanningsListe,
         yrkeserfaringsListe,
@@ -762,7 +757,8 @@ public class TempCvEventObjectMother {
         "Butikkmedarbeider",
         "Butikkmedarbeider i Førde",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring2 = new Yrkeserfaring(
@@ -773,7 +769,8 @@ public class TempCvEventObjectMother {
         "Butikkmedarbeider(dagligvarer)",
         "Butikkmedarbeider(dagligvarer)",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring3 = new Yrkeserfaring(
@@ -784,7 +781,8 @@ public class TempCvEventObjectMother {
         "Butikkmedarbeider(trevare)",
         "Butikkmedarbeider(trevare)",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring4 = new Yrkeserfaring(
@@ -795,7 +793,8 @@ public class TempCvEventObjectMother {
         "Butikkmedarbeider(elektronikk)",
         "Butikkmedarbeider(elektronikk)",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring5 = new Yrkeserfaring(
@@ -806,7 +805,8 @@ public class TempCvEventObjectMother {
         "Presentør",
         "Presentør",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring6 = new Yrkeserfaring(
@@ -817,7 +817,8 @@ public class TempCvEventObjectMother {
         "Nyhetsanker",
         "Nyhetsanker",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     ArrayList<Yrkeserfaring> yrkeserfaringsListe = new ArrayList<>();
@@ -1078,8 +1079,7 @@ public class TempCvEventObjectMother {
         "NO",
         301,
         false,
-        false,
-        false,
+        "removeme",
         "",
         utdanningsListe,
         yrkeserfaringsListe,
@@ -1118,7 +1118,8 @@ public class TempCvEventObjectMother {
         "Butikkmedarbeider",
         "Butikkmedarbeider",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring2 = new Yrkeserfaring(
@@ -1129,7 +1130,8 @@ public class TempCvEventObjectMother {
         "Butikkmedarbeider(klesbutikk)",
         "Butikkmedarbeider(klebutikk)",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring3 = new Yrkeserfaring(
@@ -1140,7 +1142,8 @@ public class TempCvEventObjectMother {
         "Nyhetspresentør",
         "Nyhetspresentør",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring4 = new Yrkeserfaring(
@@ -1151,7 +1154,8 @@ public class TempCvEventObjectMother {
         "Hallovert",
         "Hallovert",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring5 = new Yrkeserfaring(
@@ -1162,7 +1166,8 @@ public class TempCvEventObjectMother {
         "Skuespiller",
         "Skuespiller",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring6 = new Yrkeserfaring(
@@ -1173,7 +1178,8 @@ public class TempCvEventObjectMother {
         "Skuespiller(dukketeater)",
         "Skuespiller(dukketeater)",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     ArrayList<Yrkeserfaring> yrkeserfaringsListe = new ArrayList<>();
@@ -1434,8 +1440,7 @@ public class TempCvEventObjectMother {
         "NO",
         301,
         false,
-        false,
-        false,
+        "removeme",
         "",
         utdanningsListe,
         yrkeserfaringsListe,
@@ -1474,7 +1479,8 @@ public class TempCvEventObjectMother {
         "Bankhvelvoperatør",
         "Bankhvelvoperatør",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring2 = new Yrkeserfaring(
@@ -1485,7 +1491,8 @@ public class TempCvEventObjectMother {
         "Progger",
         "Progger",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring3 = new Yrkeserfaring(
@@ -1496,7 +1503,8 @@ public class TempCvEventObjectMother {
         "Tester",
         "Tester",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring4 = new Yrkeserfaring(
@@ -1507,7 +1515,8 @@ public class TempCvEventObjectMother {
         "Kranoperatør",
         "Kranoperatør",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring5 = new Yrkeserfaring(
@@ -1518,7 +1527,8 @@ public class TempCvEventObjectMother {
         "Lastebil- og trailersjåfør",
         "Sjåfør kl. 3",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring6 = new Yrkeserfaring(
@@ -1529,7 +1539,8 @@ public class TempCvEventObjectMother {
         "Industrimekaniker",
         "Industrimekaniker",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     ArrayList<Yrkeserfaring> yrkeserfaringsListe = new ArrayList<>();
@@ -1790,8 +1801,7 @@ public class TempCvEventObjectMother {
         "NO",
         301,
         false,
-        false,
-        false,
+        "removeme",
         "",
         utdanningsListe,
         yrkeserfaringsListe,

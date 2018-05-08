@@ -1,17 +1,12 @@
 package no.nav.arbeid.cv.es.es;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
-import com.palantir.docker.compose.DockerComposeRule;
 import no.nav.arbeid.cv.es.client.EsCvClient;
 import no.nav.arbeid.cv.es.config.ServiceConfig;
+import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother;
 import no.nav.arbeid.cv.es.domene.Aggregering;
 import no.nav.arbeid.cv.es.domene.EsCv;
+import no.nav.arbeid.cv.es.domene.Sokekriterier;
 import no.nav.arbeid.cv.es.domene.Sokeresultat;
 import no.nav.arbeid.cv.es.service.EsCvTransformer;
 import no.nav.security.spring.oidc.test.TokenGeneratorConfiguration;
@@ -20,7 +15,6 @@ import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +28,17 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
-import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class IndexCvTest {
+public class IndexCvSuiteTest {
 
   private static final String ES_DOCKER_SERVICE = "elastic_search";
 
@@ -49,14 +49,14 @@ public class IndexCvTest {
    */
 
   // Kjører "docker-compose up" manuelt istedenfor denne ClassRule:
-
+/*
   @ClassRule
   public static DockerComposeRule docker =
       DockerComposeRule.builder().file("src/test/resources/docker-compose-kun-es.yml")
           // .waitingForHostNetworkedPort(9200, port -> SuccessOrFailure
           // .fromBoolean(port.isListeningNow(), "Internal port " + port + " was not listening"))
           .build();
-
+*/
   @Autowired
   private EsCvTransformer transformer;
 
@@ -102,7 +102,10 @@ public class IndexCvTest {
   @Test
   public void test() throws IOException {
     Sokeresultat sokeres =
-        client.findByEtternavnAndUtdanningNusKodeGrad("NORDMANN", "Mekaniske fag, grunnkurs");
+        client.sok(Sokekriterier.med()
+            .etternavn("NORDMANN")
+            .nusKode("355211")
+            .bygg());
     List<EsCv> list = sokeres.getCver();
     List<Aggregering> aggregeringer = sokeres.getAggregeringer();
 
@@ -114,7 +117,7 @@ public class IndexCvTest {
   @Test
   public void testUtenSokekriterierReturnererAlleTestPersoner() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, null, null, null, null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med().bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
 
@@ -124,9 +127,13 @@ public class IndexCvTest {
   @Test
   public void testFlereInputFritekstGirBredereResultat() throws IOException {
     Sokeresultat sokeresultat1 =
-        client.sok("javautvikler", null, null, null, null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .fritekst("javautvikler")
+            .bygg());
     Sokeresultat sokeresultat =
-        client.sok("industrimekaniker javautvikler", null, null, null, null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .fritekst("industrimekaniker javautvikler")
+            .bygg());
 
     List<EsCv> cver1 = sokeresultat1.getCver();
     List<EsCv> cver = sokeresultat.getCver();
@@ -139,14 +146,21 @@ public class IndexCvTest {
   @Test
   public void testSokPaNorskeStoppordGirIkkeResultat() throws IOException {
     Sokeresultat sokeresultatYrke =
-        client.sok(null, Collections.singletonList("og"), null, null, null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .stillingstitler(Collections.singletonList("og"))
+            .bygg());
     Sokeresultat sokeresultatKomp =
-        client.sok(null, null, Collections.singletonList("og"), null, null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .kompetanser(Collections.singletonList("og"))
+            .bygg());
     Sokeresultat sokeresultatUtdanning =
-        client.sok(null, null, null, Collections.singletonList("og"), null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .utdanninger(Collections.singletonList("og"))
+            .bygg());
     Sokeresultat sokeresultatFritekst =
-        client.sok("og", null, null, null, null, null, null, null, null, null, null);
-
+        client.sok(Sokekriterier.med()
+            .fritekst("og")
+            .bygg());
 
     List<EsCv> cverYrke = sokeresultatYrke.getCver();
     List<EsCv> cverKomp = sokeresultatKomp.getCver();
@@ -162,7 +176,11 @@ public class IndexCvTest {
   @Test
   public void testSokMedFlereKriterierGirSvarMedAlleFelter() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, Collections.singletonList("Progger"), Collections.singletonList("Landtransport generelt"), Collections.singletonList("Master i sikkerhet"), null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .stillingstitler(Collections.singletonList("Progger"))
+            .kompetanser(Collections.singletonList("Landtransport generelt"))
+            .utdanninger(Collections.singletonList("Master i sikkerhet"))
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
 
@@ -174,9 +192,13 @@ public class IndexCvTest {
   @Test
   public void testFlereInputYrkeGirMindreTreff() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, Collections.singletonList("Industrimekaniker"), null, null, null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .stillingstitler(Collections.singletonList("Industrimekaniker"))
+            .bygg());
     Sokeresultat sokeresultat2 =
-        client.sok(null, Arrays.asList("Progger", "Industrimekaniker"), null, null, null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .stillingstitler(Arrays.asList("Progger", "Industrimekaniker"))
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
     List<EsCv> cver2 = sokeresultat2.getCver();
@@ -187,9 +209,13 @@ public class IndexCvTest {
   @Test
   public void testFlereInputKompetanseGirMindreTreff() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, null, Collections.singletonList("Programvareutvikler"), null, null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .kompetanser(Collections.singletonList("Programvareutvikler"))
+            .bygg());
     Sokeresultat sokeresultat2 =
-        client.sok(null, null, Arrays.asList("Programvareutvikler", "Nyhetsanker"), null, null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .kompetanser(Arrays.asList("Programvareutvikler", "Nyhetsanker"))
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
     List<EsCv> cver2 = sokeresultat2.getCver();
@@ -200,9 +226,13 @@ public class IndexCvTest {
   @Test
   public void testFlereInputUtdanningGirMindreTreff() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, null, null, Collections.singletonList("Bygg og anlegg"), null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .utdanninger(Collections.singletonList("Bygg og anlegg"))
+            .bygg());
     Sokeresultat sokeresultat2 =
-        client.sok(null, null, null, Arrays.asList("Bygg og anlegg", "master i sikkerhet"), null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .utdanninger(Arrays.asList("Bygg og anlegg", "master i sikkerhet"))
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
     List<EsCv> cver2 = sokeresultat2.getCver();
@@ -213,12 +243,16 @@ public class IndexCvTest {
   @Test
   public void testStemOrdSkalGiSammeResultat() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, Collections.singletonList("Progger"), null, null, null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .stillingstitler(Collections.singletonList("Progger"))
+            .bygg());
     Sokeresultat sokeresultatStemOrd =
-        client.sok(null, Arrays.asList("Progg"), null, null, null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .stillingstitler(Collections.singletonList("Progg"))
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
-    List <EsCv> cverStemOrd = sokeresultatStemOrd.getCver();
+    List<EsCv> cverStemOrd = sokeresultatStemOrd.getCver();
 
     assertThat(cver.size()).isEqualTo(cverStemOrd.size());
     assertThat(cver.get(0)).isEqualTo(cverStemOrd.get(0));
@@ -227,7 +261,9 @@ public class IndexCvTest {
   @Test
   public void testSokPaStyrkKode() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok( null, null, null, null, null, null, null,  "5684.05", null, null, null);
+        client.sok(Sokekriterier.med()
+            .styrkKode("5684.05")
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
     EsCv cv = cver.get(0);
@@ -237,7 +273,9 @@ public class IndexCvTest {
   @Test
   public void testSokPaNusKode() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok( null, null, null, null, null,  null, null, null, "486595", null, null);
+        client.sok(Sokekriterier.med()
+            .nusKode("486595")
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
     EsCv cv = cver.get(0);
@@ -250,17 +288,23 @@ public class IndexCvTest {
     styrkKoder.add("5684.05");
 
     Sokeresultat sokeresultat =
-        client.sok( null, null, null, null, null, null,  null, null, null, styrkKoder, null);
+        client.sok(Sokekriterier.med()
+            .styrkKoder(styrkKoder)
+            .bygg());
 
     styrkKoder.add("5124.46");
 
     Sokeresultat sokeresultatToKoder =
-        client.sok( null, null, null, null, null, null,  null, null, null, styrkKoder, null);
+        client.sok(Sokekriterier.med()
+            .styrkKoder(styrkKoder)
+            .bygg());
 
     styrkKoder.add("5746.07");
 
     Sokeresultat sokeresultatTreKoder =
-        client.sok( null, null, null,  null, null, null,null, null, null, styrkKoder, null);
+        client.sok(Sokekriterier.med()
+            .styrkKoder(styrkKoder)
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
     List<EsCv> cver2 = sokeresultatToKoder.getCver();
@@ -276,12 +320,16 @@ public class IndexCvTest {
     nusKoder.add("296647");
 
     Sokeresultat sokeresultat =
-        client.sok( null, null, null, null, null, null,  null, null, null, null, nusKoder);
+        client.sok(Sokekriterier.med()
+            .nusKoder(nusKoder)
+            .bygg());
 
     nusKoder.add("456375");
 
     Sokeresultat sokeresultatToKoder =
-        client.sok( null, null, null, null, null, null,  null, null, null, null, nusKoder);
+        client.sok(Sokekriterier.med()
+            .nusKoder(nusKoder)
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
     List<EsCv> cver2 = sokeresultatToKoder.getCver();
@@ -293,7 +341,9 @@ public class IndexCvTest {
   @Test
   public void testSamletKompetanseSkalGiResultatVedSokPaSprak() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok( null, null, Collections.singletonList("Dansk"), null, null, null,   null,null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .kompetanser(Collections.singletonList("Dansk"))
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
     EsCv cv = cver.get(0);
@@ -305,7 +355,9 @@ public class IndexCvTest {
   @Test
   public void testSamletKompetanseSkalGiResultatVedSokPaSertifikater() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok( null, null, Collections.singletonList("Truckførerbevis"), null, null, null, null,  null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .kompetanser(Collections.singletonList("Truckførerbevis"))
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
     EsCv cv = cver.get(0);
@@ -317,7 +369,9 @@ public class IndexCvTest {
   @Test
   public void testSamletKompetanseSkalGiResultatVedSokPaForerkort() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok( null, null, Collections.singletonList("Traktorlappen"), null, null, null,  null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .kompetanser(Collections.singletonList("Traktorlappen"))
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
     EsCv cv = cver.get(0);
@@ -329,7 +383,9 @@ public class IndexCvTest {
   @Test
   public void testSamletKompetanseSkalGiResultatVedSokPaKurs() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok( null, null, Collections.singletonList("Spring Boot"), null, null, null,  null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .kompetanser(Collections.singletonList("Spring Boot"))
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
     EsCv cv = cver.get(0);
@@ -341,7 +397,9 @@ public class IndexCvTest {
   @Test
   public void testSamletKompetanseSkalGiResultatVedSokPaKompetanse() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok( null, null, Collections.singletonList("Javautvikler"), null, null, null,  null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .kompetanser(Collections.singletonList("Javautvikler"))
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
     EsCv cv = cver.get(0);
@@ -353,12 +411,16 @@ public class IndexCvTest {
   @Test
   public void testSokPaFlereGeografiJobbonskerGirBegrensendeResultat() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, null, null, null, Arrays.asList("Oslo"), null,  null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .geografiList(Collections.singletonList("Oslo"))
+            .bygg());
     Sokeresultat sokeresultat2 =
-        client.sok(null, null, null, null,  Arrays.asList("Oslo", "Harstad"), null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .geografiList(Arrays.asList("Oslo", "Harstad"))
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
-    List <EsCv> cver2 = sokeresultat2.getCver();
+    List<EsCv> cver2 = sokeresultat2.getCver();
 
     assertThat(cver.size()).isGreaterThan(cver2.size());
   }
@@ -366,7 +428,9 @@ public class IndexCvTest {
   @Test
   public void testPaTotalYrkeserfaringSkalGiKorrektResultat() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, null, null, null, null,  "37-72", null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .totalYrkeserfaring("37-72")
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
     EsCv cv = cver.get(0);
