@@ -1,5 +1,6 @@
 package no.nav.arbeid.cv.es.es;
 
+import java.util.Collections;
 import no.nav.arbeid.cv.es.client.EsCvClient;
 import no.nav.arbeid.cv.es.config.ServiceConfig;
 import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother;
@@ -101,10 +102,10 @@ public class IndexCvSuiteTest {
   @Test
   public void test() throws IOException {
     Sokeresultat sokeres =
-            client.sok(Sokekriterier.med()
-              .etternavn("NORDMANN")
-              .nusKode("355211")
-              .bygg());
+        client.sok(Sokekriterier.med()
+            .etternavn("NORDMANN")
+            .nusKode("355211")
+            .bygg());
     List<EsCv> list = sokeres.getCver();
     List<Aggregering> aggregeringer = sokeres.getAggregeringer();
 
@@ -116,7 +117,7 @@ public class IndexCvSuiteTest {
   @Test
   public void testUtenSokekriterierReturnererAlleTestPersoner() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, null, null, null, null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med().bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
 
@@ -126,9 +127,13 @@ public class IndexCvSuiteTest {
   @Test
   public void testFlereInputFritekstGirBredereResultat() throws IOException {
     Sokeresultat sokeresultat1 =
-        client.sok("javautvikler", null, null, null, null, null, null, null,null, null, null);
+        client.sok(Sokekriterier.med()
+            .fritekst("javautvikler")
+            .bygg());
     Sokeresultat sokeresultat =
-        client.sok("industrimekaniker javautvikler", null, null, null, null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .fritekst("industrimekaniker javautvikler")
+            .bygg());
 
     List<EsCv> cver1 = sokeresultat1.getCver();
     List<EsCv> cver = sokeresultat.getCver();
@@ -141,14 +146,21 @@ public class IndexCvSuiteTest {
   @Test
   public void testSokPaNorskeStoppordGirIkkeResultat() throws IOException {
     Sokeresultat sokeresultatYrke =
-        client.sok(null, Arrays.asList("og"), null, null, null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .stillingstitler(Collections.singletonList("og"))
+            .bygg());
     Sokeresultat sokeresultatKomp =
-        client.sok(null, null, Arrays.asList("og"), null, null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .kompetanser(Collections.singletonList("og"))
+            .bygg());
     Sokeresultat sokeresultatUtdanning =
-        client.sok(null, null, null, Arrays.asList("og"), null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .utdanninger(Collections.singletonList("og"))
+            .bygg());
     Sokeresultat sokeresultatFritekst =
-        client.sok("og", null, null, null, null, null, null, null, null,null, null);
-
+        client.sok(Sokekriterier.med()
+            .fritekst("og")
+            .bygg());
 
     List<EsCv> cverYrke = sokeresultatYrke.getCver();
     List<EsCv> cverKomp = sokeresultatKomp.getCver();
@@ -164,7 +176,11 @@ public class IndexCvSuiteTest {
   @Test
   public void testSokMedFlereKriterierGirSvarMedAlleFelter() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, Arrays.asList("Progger"), Arrays.asList("Landtransport generelt"), Arrays.asList("Master i sikkerhet"), null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .stillingstitler(Collections.singletonList("Progger"))
+            .kompetanser(Collections.singletonList("Landtransport generelt"))
+            .utdanninger(Collections.singletonList("Master i sikkerhet"))
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
 
@@ -176,9 +192,13 @@ public class IndexCvSuiteTest {
   @Test
   public void testFlereInputYrkeGirMindreTreff() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, Arrays.asList("Industrimekaniker"), null, null, null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .stillingstitler(Collections.singletonList("Industrimekaniker"))
+            .bygg());
     Sokeresultat sokeresultat2 =
-        client.sok(null, Arrays.asList("Progger", "Industrimekaniker"), null, null, null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .stillingstitler(Arrays.asList("Progger", "Industrimekaniker"))
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
     List<EsCv> cver2 = sokeresultat2.getCver();
@@ -189,9 +209,13 @@ public class IndexCvSuiteTest {
   @Test
   public void testFlereInputKompetanseGirMindreTreff() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, null, Arrays.asList("Programvareutvikler"), null, null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .kompetanser(Collections.singletonList("Programvareutvikler"))
+            .bygg());
     Sokeresultat sokeresultat2 =
-        client.sok(null, null, Arrays.asList("Programvareutvikler", "Nyhetsanker"), null, null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .kompetanser(Arrays.asList("Programvareutvikler", "Nyhetsanker"))
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
     List<EsCv> cver2 = sokeresultat2.getCver();
@@ -202,9 +226,13 @@ public class IndexCvSuiteTest {
   @Test
   public void testFlereInputUtdanningGirMindreTreff() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, null, null, Arrays.asList("Bygg og anlegg"), null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .utdanninger(Collections.singletonList("Bygg og anlegg"))
+            .bygg());
     Sokeresultat sokeresultat2 =
-        client.sok(null, null, null, Arrays.asList("Bygg og anlegg", "master i sikkerhet"), null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .utdanninger(Arrays.asList("Bygg og anlegg", "master i sikkerhet"))
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
     List<EsCv> cver2 = sokeresultat2.getCver();
@@ -215,12 +243,16 @@ public class IndexCvSuiteTest {
   @Test
   public void testStemOrdSkalGiSammeResultat() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, Arrays.asList("Progger"), null, null, null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .stillingstitler(Collections.singletonList("Progger"))
+            .bygg());
     Sokeresultat sokeresultatStemOrd =
-        client.sok(null, Arrays.asList("Progg"), null, null, null, null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .stillingstitler(Collections.singletonList("Progg"))
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
-    List <EsCv> cverStemOrd = sokeresultatStemOrd.getCver();
+    List<EsCv> cverStemOrd = sokeresultatStemOrd.getCver();
 
     assertThat(cver.size()).isEqualTo(cverStemOrd.size());
     assertThat(cver.get(0)).isEqualTo(cverStemOrd.get(0));
@@ -229,7 +261,9 @@ public class IndexCvSuiteTest {
   @Test
   public void testSokPaStyrkKode() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, null, null, null, null, null, null,  "5684.05", null, null, null);
+        client.sok(Sokekriterier.med()
+            .styrkKode("5684.05")
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
     EsCv cv = cver.get(0);
@@ -239,7 +273,9 @@ public class IndexCvSuiteTest {
   @Test
   public void testSokPaNusKode() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, null, null, null, null, null, null,  null, "486595", null, null);
+        client.sok(Sokekriterier.med()
+            .nusKode("486595")
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
     EsCv cv = cver.get(0);
@@ -252,17 +288,23 @@ public class IndexCvSuiteTest {
     styrkKoder.add("5684.05");
 
     Sokeresultat sokeresultat =
-        client.sok(null, null, null, null, null, null, null,  null, null, styrkKoder, null);
+        client.sok(Sokekriterier.med()
+            .styrkKoder(styrkKoder)
+            .bygg());
 
     styrkKoder.add("5124.46");
 
     Sokeresultat sokeresultatToKoder =
-        client.sok(null, null, null, null, null, null, null,  null, null, styrkKoder, null);
+        client.sok(Sokekriterier.med()
+            .styrkKoder(styrkKoder)
+            .bygg());
 
     styrkKoder.add("5746.07");
 
     Sokeresultat sokeresultatTreKoder =
-        client.sok(null, null, null, null, null, null,  null,null, null, styrkKoder, null);
+        client.sok(Sokekriterier.med()
+            .styrkKoder(styrkKoder)
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
     List<EsCv> cver2 = sokeresultatToKoder.getCver();
@@ -278,12 +320,16 @@ public class IndexCvSuiteTest {
     nusKoder.add("296647");
 
     Sokeresultat sokeresultat =
-        client.sok(null, null, null, null, null, null, null,  null, null, null, nusKoder);
+        client.sok(Sokekriterier.med()
+            .nusKoder(nusKoder)
+            .bygg());
 
     nusKoder.add("456375");
 
     Sokeresultat sokeresultatToKoder =
-        client.sok(null, null, null, null, null, null, null,  null, null, null, nusKoder);
+        client.sok(Sokekriterier.med()
+            .nusKoder(nusKoder)
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
     List<EsCv> cver2 = sokeresultatToKoder.getCver();
@@ -293,42 +339,103 @@ public class IndexCvSuiteTest {
   }
 
   @Test
-  public void testSokPaFlereSprakGirBegrensendeResultat() throws IOException {
+  public void testSamletKompetanseSkalGiResultatVedSokPaSprak() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, null, null, null, Arrays.asList("Norsk"), null, null, null, null, null, null);
-    Sokeresultat sokeresultat2 =
-        client.sok(null, null, null, null, Arrays.asList("Norsk", "Dansk"), null, null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .kompetanser(Collections.singletonList("Dansk"))
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
-    List <EsCv> cver2 = sokeresultat2.getCver();
+    EsCv cv = cver.get(0);
 
-    assertThat(cver.size()).isGreaterThan(cver2.size());
+    assertThat(cver.size()).isEqualTo(1);
+    assertThat(cv).isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent5()));
   }
 
   @Test
-  public void testSokPaFlereSertifikaterGirBegrensendeResultat() throws IOException {
+  public void testSamletKompetanseSkalGiResultatVedSokPaSertifikater() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, null, null, null, null, Arrays.asList("Førerkort: Kl. A (tung motorsykkel)"), null, null, null, null, null);
-    Sokeresultat sokeresultat2 =
-        client.sok(null, null, null, null, null, Arrays.asList("Førerkort: Kl. A (tung motorsykkel)", "Førerkort: Kl. M (Moped)"), null, null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .kompetanser(Collections.singletonList("Truckførerbevis"))
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
-    List <EsCv> cver2 = sokeresultat2.getCver();
+    EsCv cv = cver.get(0);
 
-    assertThat(cver.size()).isGreaterThan(cver2.size());
+    assertThat(cver.size()).isEqualTo(1);
+    assertThat(cv).isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent3()));
+  }
+
+  @Test
+  public void testSamletKompetanseSkalGiResultatVedSokPaForerkort() throws IOException {
+    Sokeresultat sokeresultat =
+        client.sok(Sokekriterier.med()
+            .kompetanser(Collections.singletonList("Traktorlappen"))
+            .bygg());
+
+    List<EsCv> cver = sokeresultat.getCver();
+    EsCv cv = cver.get(0);
+
+    assertThat(cver.size()).isEqualTo(1);
+    assertThat(cv).isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent3()));
+  }
+
+  @Test
+  public void testSamletKompetanseSkalGiResultatVedSokPaKurs() throws IOException {
+    Sokeresultat sokeresultat =
+        client.sok(Sokekriterier.med()
+            .kompetanser(Collections.singletonList("Spring Boot"))
+            .bygg());
+
+    List<EsCv> cver = sokeresultat.getCver();
+    EsCv cv = cver.get(0);
+
+    assertThat(cver.size()).isEqualTo(1);
+    assertThat(cv).isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent5()));
+  }
+
+  @Test
+  public void testSamletKompetanseSkalGiResultatVedSokPaKompetanse() throws IOException {
+    Sokeresultat sokeresultat =
+        client.sok(Sokekriterier.med()
+            .kompetanser(Collections.singletonList("Javautvikler"))
+            .bygg());
+
+    List<EsCv> cver = sokeresultat.getCver();
+    EsCv cv = cver.get(0);
+
+    assertThat(cver.size()).isEqualTo(1);
+    assertThat(cv).isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent2()));
   }
 
   @Test
   public void testSokPaFlereGeografiJobbonskerGirBegrensendeResultat() throws IOException {
     Sokeresultat sokeresultat =
-        client.sok(null, null, null, null, null, null, Arrays.asList("Oslo"), null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .geografiList(Collections.singletonList("Oslo"))
+            .bygg());
     Sokeresultat sokeresultat2 =
-        client.sok(null, null, null, null, null, null, Arrays.asList("Oslo", "Harstad"), null, null, null, null);
+        client.sok(Sokekriterier.med()
+            .geografiList(Arrays.asList("Oslo", "Harstad"))
+            .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
-    List <EsCv> cver2 = sokeresultat2.getCver();
+    List<EsCv> cver2 = sokeresultat2.getCver();
 
     assertThat(cver.size()).isGreaterThan(cver2.size());
+  }
+
+  @Test
+  public void testPaTotalYrkeserfaringSkalGiKorrektResultat() throws IOException {
+    Sokeresultat sokeresultat =
+        client.sok(Sokekriterier.med()
+            .totalYrkeserfaring("37-72")
+            .bygg());
+
+    List<EsCv> cver = sokeresultat.getCver();
+    EsCv cv = cver.get(0);
+
+    assertThat(cv).isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent2()));
   }
 
 }

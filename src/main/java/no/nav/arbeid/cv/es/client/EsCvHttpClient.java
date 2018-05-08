@@ -102,7 +102,7 @@ public class EsCvHttpClient implements EsCvClient {
 
   @Override
   public List<String> typeAheadKompetanse(String prefix) throws IOException {
-    return typeAhead(prefix, "kompetanse.kompKodeNavn.completion");
+    return typeAhead(prefix, "samletKompetanse.samletKompetanseTekst.completion");
   }
 
   @Override
@@ -115,14 +115,7 @@ public class EsCvHttpClient implements EsCvClient {
     return typeAhead(prefix, "yrkeserfaring.styrkKodeStillingstittel.completion");
   }
 
-  public List<String> typeAheadSprak(String prefix) throws IOException {
-    return typeAhead(prefix, "sprak.sprakKodeTekst.completion");
-  }
-
-  public List<String> typeAheadSertifikat(String prefix) throws IOException {
-    return typeAhead(prefix, "sertifikat.sertifikatKodeNavn.completion");
-  }
-
+  @Override
   public List<String> typeAheadGeografi(String prefix) throws IOException {
     return typeAhead(prefix, "geografiJobbonsker.geografiKodeTekst.completion");
   }
@@ -148,21 +141,20 @@ public class EsCvHttpClient implements EsCvClient {
 
   @Override
   public Sokeresultat sok(String fritekst, List<String> stillingstitler, List<String> kompetanser,
-                          List<String> utdanninger, List<String> sprak, List<String> sertifikater, List<String> geografiList,
-                          String styrkKode, String nusKode, List<String> styrkKoder, List<String> nusKoder) throws IOException {
+      List<String> utdanninger, List<String> geografiList, String totalYrkeserfaring, String styrkKode,
+      String nusKode, List<String> styrkKoder, List<String> nusKoder) throws IOException {
     Sokekriterier s = Sokekriterier.med()
-            .fritekst(fritekst)
-            .stillingstitler(stillingstitler)
-            .kompetanser(kompetanser)
-            .utdanninger(utdanninger)
-            .sprak(sprak)
-            .sertifikater(sertifikater)
-            .geografiList(geografiList)
-            .styrkKode(styrkKode)
-            .nusKode(nusKode)
-            .styrkKoder(styrkKoder)
-            .nusKoder(nusKoder)
-            .bygg();
+        .fritekst(fritekst)
+        .stillingstitler(stillingstitler)
+        .kompetanser(kompetanser)
+        .utdanninger(utdanninger)
+        .geografiList(geografiList)
+        .totalYrkeserfaring(totalYrkeserfaring)
+        .styrkKode(styrkKode)
+        .nusKode(nusKode)
+        .styrkKoder(styrkKoder)
+        .nusKoder(nusKoder)
+        .bygg();
     return sok(s);
   }
 
@@ -174,8 +166,7 @@ public class EsCvHttpClient implements EsCvClient {
         && (sk.stillingstitler() == null || sk.stillingstitler().isEmpty())
         && (sk.kompetanser() == null || sk.kompetanser().isEmpty())
         && (sk.utdanninger() == null || sk.utdanninger().isEmpty())
-        && (sk.sprak() == null || sk.sprak().isEmpty())
-        && (sk.sertifikater() == null || sk.sertifikater().isEmpty())
+        && (StringUtils.isBlank(sk.totalYrkeserfaring()))
         && (sk.geografiList() == null || sk.geografiList().isEmpty())
         && (sk.styrkKoder() == null || sk.styrkKoder().isEmpty())
         && (sk.nusKoder() == null || sk.nusKoder().isEmpty())) {
@@ -208,19 +199,22 @@ public class EsCvHttpClient implements EsCvClient {
             .forEach(u -> addUtdanningerQuery(u, boolQueryBuilder));
       }
 
-      if (sk.sprak() != null && !sk.sprak().isEmpty()) {
-        sk.sprak().stream().filter(StringUtils::isNotBlank)
-            .forEach((s) -> addSprakQuery(s, boolQueryBuilder));
-      }
-
-      if (sk.sertifikater() != null && !sk.sertifikater().isEmpty()) {
-        sk.sertifikater().stream().filter(StringUtils::isNotBlank)
-            .forEach((s) -> addSertifikaterQuery(s, boolQueryBuilder));
-      }
-
       if (sk.geografiList() != null && !sk.geografiList().isEmpty()) {
         sk.geografiList().stream().filter(StringUtils::isNotBlank)
-            .forEach((g) -> addGeografiQuery(g, boolQueryBuilder));
+            .forEach(g -> addGeografiQuery(g, boolQueryBuilder));
+      }
+
+      if (StringUtils.isNotBlank(sk.totalYrkeserfaring())) {
+        String[] interval = sk.totalYrkeserfaring().split("-");
+        RangeQueryBuilder totalErfaringQueryBuilder;
+        if (interval.length == 2) {
+          totalErfaringQueryBuilder = QueryBuilders.rangeQuery("totalLengdeYrkeserfaring").gte(interval[0]).lte(interval[1]);
+          boolQueryBuilder.must(totalErfaringQueryBuilder);
+        } else if (interval.length == 1) {
+          totalErfaringQueryBuilder = QueryBuilders.rangeQuery("totalLengdeYrkeserfaring").gte(interval[0]).lte(null);
+          boolQueryBuilder.must(totalErfaringQueryBuilder);
+        }
+        LOGGER.debug("ADDING totalYrkeserfaringLengde");
       }
 
       if (sk.styrkKoder() != null && !sk.styrkKoder().isEmpty()) {
@@ -260,24 +254,10 @@ public class EsCvHttpClient implements EsCvClient {
   }
 
   private void addKompetanseQuery(String kompetanse, BoolQueryBuilder boolQueryBuilder) {
-    NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
-        QueryBuilders.matchQuery("kompetanse.kompKodeNavn", kompetanse), ScoreMode.None);
+    NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("samletKompetanse",
+        QueryBuilders.matchQuery("samletKompetanse.samletKompetanseTekst", kompetanse), ScoreMode.None);
     boolQueryBuilder.must(kompetanseQueryBuilder);
     LOGGER.debug("ADDING kompetanse");
-  }
-
-  private void addSprakQuery(String sprak, BoolQueryBuilder boolQueryBuilder) {
-    NestedQueryBuilder sprakQueryBuilder = QueryBuilders.nestedQuery("sprak",
-        QueryBuilders.matchQuery("sprak.sprakKodeTekst", sprak), ScoreMode.None);
-    boolQueryBuilder.must(sprakQueryBuilder);
-    LOGGER.debug("ADDING sprak");
-  }
-
-  private void addSertifikaterQuery(String sertifikat, BoolQueryBuilder boolQueryBuilder) {
-    NestedQueryBuilder sertifikaterQueryBuilder = QueryBuilders.nestedQuery("sertifikat",
-        QueryBuilders.matchQuery("sertifikat.sertifikatKodeNavn", sertifikat), ScoreMode.None);
-    boolQueryBuilder.must(sertifikaterQueryBuilder);
-    LOGGER.debug("ADDING sertifikat");
   }
 
   private void addGeografiQuery(String geografi, BoolQueryBuilder boolQueryBuilder) {
@@ -405,6 +385,13 @@ public class EsCvHttpClient implements EsCvClient {
         AggregationBuilders.nested("utdanning", "utdanning");
     nestedUtdanningAggregation.subAggregation(utdanningAggregation);
     searchSourceBuilder.aggregation(nestedUtdanningAggregation);
+
+    TermsAggregationBuilder kompetanseAggregation =
+        AggregationBuilders.terms("nested").field("kompetanse.kompKodeNavn.keyword");
+    NestedAggregationBuilder nestedKompetanseAggregation =
+        AggregationBuilders.nested("kompetanse", "kompetanse");
+    nestedKompetanseAggregation.subAggregation(kompetanseAggregation);
+    searchSourceBuilder.aggregation(nestedKompetanseAggregation);
 
     SearchRequest searchRequest = new SearchRequest();
     searchRequest.indices(CV_INDEX);

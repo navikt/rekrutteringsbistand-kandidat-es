@@ -18,6 +18,7 @@ public class EsKompetanse {
   private String kompKode;
 
   @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
+  @ElasticKeywordField
   @ElasticCompletionField
   private String kompKodeNavn;
 

@@ -11,8 +11,7 @@ public class Sokekriterier {
     private List<String> stillingstitler;
     private List<String> kompetanser;
     private List<String> utdanninger;
-    private List<String> sprak;
-    private List<String> sertifikater;
+    private String totalYrkeserfaring;
     private List<String> geografiList;
     private List<String> styrkKoder;
     private List<String> nusKoder;
@@ -38,13 +37,7 @@ public class Sokekriterier {
         return utdanninger;
     }
 
-    public List<String> sprak() {
-        return sprak;
-    }
-
-    public List<String> sertifikater() {
-        return sertifikater;
-    }
+    public String totalYrkeserfaring() { return totalYrkeserfaring; }
 
     public List<String> geografiList() {
         return geografiList;
@@ -67,8 +60,7 @@ public class Sokekriterier {
         private List<String> stillingstitler;
         private List<String> kompetanser;
         private List<String> utdanninger;
-        private List<String> sprak;
-        private List<String> sertifikater;
+        private String totalYrkeserfaring;
         private List<String> geografiList;
         private String styrkKode;
         private String nusKode;
@@ -84,9 +76,7 @@ public class Sokekriterier {
                     Collections.unmodifiableList(new ArrayList<>(geografiList));
             s.kompetanser = kompetanser == null ? null :
                     Collections.unmodifiableList(new ArrayList<>(kompetanser));
-            s.sertifikater = sertifikater == null ? null :
-                    Collections.unmodifiableList(new ArrayList<>(sertifikater));
-            s.sprak = sprak;
+            s.totalYrkeserfaring = totalYrkeserfaring;
             s.stillingstitler = stillingstitler == null ? null :
                     Collections.unmodifiableList(new ArrayList<>(stillingstitler));
             s.utdanninger = utdanninger == null ? null :
@@ -131,14 +121,9 @@ public class Sokekriterier {
             return this;
         }
 
-        public Builder sprak(List<String> sprak) {
-            this.sprak = sprak;
-            return this;
-        }
-
-        public Builder sertifikater(List<String> sertifikater) {
-            this.sertifikater = sertifikater;
-            return this;
+        public Builder totalYrkeserfaring(String totalYrkeserfaring) {
+          this.totalYrkeserfaring = totalYrkeserfaring;
+          return this;
         }
 
         public Builder geografiList(List<String> geografiList) {
