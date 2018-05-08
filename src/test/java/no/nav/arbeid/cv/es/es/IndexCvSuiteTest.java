@@ -1,11 +1,11 @@
 package no.nav.arbeid.cv.es.es;
 
-import java.util.Arrays;
 import no.nav.arbeid.cv.es.client.EsCvClient;
 import no.nav.arbeid.cv.es.config.ServiceConfig;
 import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother;
 import no.nav.arbeid.cv.es.domene.Aggregering;
 import no.nav.arbeid.cv.es.domene.EsCv;
+import no.nav.arbeid.cv.es.domene.Sokekriterier;
 import no.nav.arbeid.cv.es.domene.Sokeresultat;
 import no.nav.arbeid.cv.es.service.EsCvTransformer;
 import no.nav.security.spring.oidc.test.TokenGeneratorConfiguration;
@@ -30,6 +30,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -100,7 +101,10 @@ public class IndexCvSuiteTest {
   @Test
   public void test() throws IOException {
     Sokeresultat sokeres =
-        client.findByEtternavnAndUtdanningNusKodeGrad("NORDMANN", "Mekaniske fag, grunnkurs");
+            client.sok(Sokekriterier.med()
+              .etternavn("NORDMANN")
+              .nusKode("355211")
+              .bygg());
     List<EsCv> list = sokeres.getCver();
     List<Aggregering> aggregeringer = sokeres.getAggregeringer();
 
