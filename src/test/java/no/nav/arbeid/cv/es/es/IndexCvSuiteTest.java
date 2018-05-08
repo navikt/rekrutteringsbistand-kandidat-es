@@ -8,6 +8,7 @@ import no.nav.arbeid.cv.es.domene.EsCv;
 import no.nav.arbeid.cv.es.domene.Sokekriterier;
 import no.nav.arbeid.cv.es.domene.Sokeresultat;
 import no.nav.arbeid.cv.es.service.EsCvTransformer;
+import no.nav.arbeid.cv.events.CvEvent;
 import no.nav.security.spring.oidc.test.TokenGeneratorConfiguration;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
@@ -331,4 +332,21 @@ public class IndexCvSuiteTest {
     assertThat(cver.size()).isGreaterThan(cver2.size());
   }
 
+  @Test
+  public void skalBulkIndeksereCVer() throws Exception {
+    List<CvEvent> bulkEventer = new ArrayList<>();
+
+    Arrays.asList(TempCvEventObjectMother.giveMeCvEvent(),
+            TempCvEventObjectMother.giveMeCvEvent2())
+    CvEvent cvEvent = TempCvEventObjectMother.giveMeCvEvent();
+    cvEvent.setArenaPersonId(cvEvent.getArenaPersonId()+9999);
+    bulkEventer.add(cvEvent);
+
+    cvEvent = TempCvEventObjectMother.giveMeCvEvent2();
+    cvEvent.setArenaPersonId(cvEvent.getArenaPersonId()+9999);
+    bulkEventer.add(cvEvent);
+
+    client.index(transformer.transform(TempCvEventObjectMother.giveMeCvEvent()));
+
+  }
 }

@@ -11,11 +11,14 @@ import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.support.WriteRequest;
+import org.elasticsearch.client.Requests;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentType;
@@ -93,11 +96,37 @@ public class EsCvHttpClient implements EsCvClient {
     LOGGER.debug("DOKUMENTET: " + jsonString);
 
     IndexRequest request =
-        new IndexRequest(CV_INDEX, CV_TYPE, Long.toString(esCv.getArenaPersonId()));
+            new IndexRequest(CV_INDEX, CV_TYPE, Long.toString(esCv.getArenaPersonId()));
     request.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
     request.source(jsonString, XContentType.JSON);
     IndexResponse indexResponse = client.index(request);
     LOGGER.debug("INDEXRESPONSE: " + indexResponse.toString());
+  }
+
+  @Override
+  public void bulkIndex(List<EsCv> esCver) throws IOException {
+    BulkRequest bulkRequest = Requests.bulkRequest();
+
+    try {
+      for (EsCv esCv : esCver) {
+        String jsonString = mapper.writeValueAsString(esCv);
+        IndexRequest ir = Requests.indexRequest()
+                .source(jsonString, XContentType.JSON)
+                .index(CV_INDEX)
+                .type(CV_TYPE)
+                .id(Long.toString(esCv.getArenaPersonId()));
+        ir.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
+
+        bulkRequest.add(ir);
+      }
+    } catch (Exception e) {
+      LOGGER.info("Greide ikke å serialisere CV til JSON for å bygge opp bulk-indekseringsrequest: " + e.getMessage(), e);
+      throw new ApplicationException("Greide ikke å serialisere CV til JSON for å bygge opp bulk-indekseringsrequest.", e);
+    }
+
+    LOGGER.info("Sender bulk indexrequest med {} cv'er", esCver.size());
+    BulkResponse bulkResponse = client.bulk(bulkRequest);
+    LOGGER.debug("BULKINDEXRESPONSE: " + bulkResponse.toString());
   }
 
   @Override

@@ -1,14 +1,15 @@
 package no.nav.arbeid.cv.es.service;
 
-import java.io.IOException;
-import java.util.List;
-
+import no.nav.arbeid.cv.es.client.EsCvClient;
+import no.nav.arbeid.cv.es.domene.ApplicationException;
+import no.nav.arbeid.cv.es.domene.EsCv;
+import no.nav.arbeid.cv.events.CvEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.nav.arbeid.cv.es.client.EsCvClient;
-import no.nav.arbeid.cv.es.domene.EsCv;
-import no.nav.arbeid.cv.events.CvEvent;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DefaultCvIndexerService implements CvIndexerService {
 
@@ -35,10 +36,17 @@ public class DefaultCvIndexerService implements CvIndexerService {
 
   @Override
   public void bulkIndekser(List<CvEvent> cvEventer) {
-    // TODO Implementer bulkindeksering i ES.
-    for (CvEvent cvEvent: cvEventer) {
-      indekser(cvEvent);
+    List<EsCv> esPersoner = new ArrayList<>(cvEventer.size());
+    try {
+      for (CvEvent cvEvent : cvEventer) {
+        esPersoner.add(transformer.transform(cvEvent));
+      }
+    } catch (Exception e) {
+      LOGGER.info("Feil ved transformering av {} cveventer som skal indekseres: {}", cvEventer.size(), e.getMessage(), e);
+      throw new ApplicationException("Feil ved transformering av cveventer som skal indekseres: " + e.getMessage(), e);
     }
+
+    esCvClient.bulkIndex(esPersoner);
   }
 
   @Override

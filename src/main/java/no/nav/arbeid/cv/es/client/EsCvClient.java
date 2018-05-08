@@ -16,6 +16,7 @@ public interface EsCvClient {
       String styrkKode, String nusKode, List<String> styrkKoder, List<String> nusKoder) throws IOException;
 
   void index(EsCv esCv) throws IOException;
+  void bulkIndex(List<EsCv> esCver) throws IOException;
 
   void createIndex() throws IOException;
 
