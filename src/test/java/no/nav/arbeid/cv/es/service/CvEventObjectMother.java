@@ -1,21 +1,8 @@
 package no.nav.arbeid.cv.es.service;
 
+import no.nav.arbeid.cv.events.*;
+
 import java.util.ArrayList;
-import no.nav.arbeid.cv.events.AnsettelsesforholdJobbonsker;
-import no.nav.arbeid.cv.events.ArbeidstidsordningJobbonsker;
-import no.nav.arbeid.cv.events.CvEvent;
-import no.nav.arbeid.cv.events.Forerkort;
-import no.nav.arbeid.cv.events.GeografiJobbonsker;
-import no.nav.arbeid.cv.events.HeltidDeltidJobbonsker;
-import no.nav.arbeid.cv.events.Kompetanse;
-import no.nav.arbeid.cv.events.Kurs;
-import no.nav.arbeid.cv.events.Omfang;
-import no.nav.arbeid.cv.events.Sertifikat;
-import no.nav.arbeid.cv.events.Sprak;
-import no.nav.arbeid.cv.events.Utdanning;
-import no.nav.arbeid.cv.events.Verv;
-import no.nav.arbeid.cv.events.YrkeJobbonsker;
-import no.nav.arbeid.cv.events.Yrkeserfaring;
 
 public class CvEventObjectMother {
 
@@ -40,7 +27,8 @@ public class CvEventObjectMother {
         "Anleggsmaskinfører",
         "maskinkjører og maskintransport",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring2 = new Yrkeserfaring(
@@ -51,7 +39,8 @@ public class CvEventObjectMother {
         "Anleggsmaskinfører",
         "maskinkjører og maskintransport",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring3 = new Yrkeserfaring(
@@ -62,7 +51,8 @@ public class CvEventObjectMother {
         "Anleggsmaskinfører",
         "maskinkjører og maskintransport",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring4 = new Yrkeserfaring(
@@ -73,7 +63,8 @@ public class CvEventObjectMother {
         "Industrimekaniker",
         "Industrimekaniker",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring5 = new Yrkeserfaring(
@@ -84,7 +75,8 @@ public class CvEventObjectMother {
         "Lastebil- og trailersjåfør",
         "Sjåfør kl. 2",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     Yrkeserfaring yrkeserfaring6 = new Yrkeserfaring(
@@ -95,7 +87,8 @@ public class CvEventObjectMother {
         "Industrimekaniker",
         "Industrimekaniker",
         "YRKE_ORGNR",
-        "YRKE_NACEKODE"
+        "YRKE_NACEKODE",
+        false
     );
 
     ArrayList<Yrkeserfaring> yrkeserfaringsListe = new ArrayList<>();
@@ -356,8 +349,7 @@ public class CvEventObjectMother {
         "NO",
         301,
         false,
-        false,
-        false,
+        "removeme",
         "",
         utdanningsListe,
         yrkeserfaringsListe,

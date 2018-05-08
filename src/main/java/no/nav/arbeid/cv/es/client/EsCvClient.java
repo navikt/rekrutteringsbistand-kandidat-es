@@ -1,12 +1,16 @@
 package no.nav.arbeid.cv.es.client;
 
+import no.nav.arbeid.cv.es.domene.EsCv;
+import no.nav.arbeid.cv.es.domene.Sokekriterier;
+import no.nav.arbeid.cv.es.domene.Sokeresultat;
+
 import java.io.IOException;
 import java.util.List;
-import no.nav.arbeid.cv.es.domene.EsCv;
-import no.nav.arbeid.cv.es.domene.Sokeresultat;
 
 public interface EsCvClient {
 
+  Sokeresultat sok(Sokekriterier sokekriterier) throws IOException;
+  /** @deprecated Bruk {@link #sok(Sokekriterier)} isteden */
   Sokeresultat sok(String fritekst, List<String> stillingstitler, List<String> kompetanser,
       List<String> utdanninger, List<String> geografiList, String totalYrkeserfaring, String styrkKode,
       String nusKode, List<String> styrkKoder, List<String> nusKoder) throws IOException;
