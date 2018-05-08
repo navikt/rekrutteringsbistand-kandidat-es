@@ -62,7 +62,7 @@
 		<dependency>
 			<groupId>no.nav.arbeid.cv.avro</groupId>
 			<artifactId>cv-event</artifactId>
-			<version>5</version>
+			<version>10</version>
 		</dependency>
 		<dependency>
 			<groupId>io.confluent</groupId>

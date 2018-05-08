@@ -1,21 +1,10 @@
 package no.nav.arbeid.cv.es.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-import no.nav.arbeid.cv.es.domene.Aggregering;
-import no.nav.arbeid.cv.es.domene.Aggregeringsfelt;
-import no.nav.arbeid.cv.es.domene.EsCv;
-import no.nav.arbeid.cv.es.domene.Sokeresultat;
+import no.nav.arbeid.cv.es.domene.*;
 import no.nav.elasticsearch.mapping.MappingBuilder;
 import no.nav.elasticsearch.mapping.MappingBuilderImpl;
 import no.nav.elasticsearch.mapping.ObjectMapping;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
@@ -30,12 +19,7 @@ import org.elasticsearch.action.support.WriteRequest;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.query.AbstractQueryBuilder;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.MatchQueryBuilder;
-import org.elasticsearch.index.query.MultiMatchQueryBuilder;
-import org.elasticsearch.index.query.NestedQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
@@ -54,6 +38,14 @@ import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class EsCvHttpClient implements EsCvClient {
 
@@ -156,20 +148,37 @@ public class EsCvHttpClient implements EsCvClient {
 
   @Override
   public Sokeresultat sok(String fritekst, List<String> stillingstitler, List<String> kompetanser,
-      List<String> utdanninger, List<String> sprak, List<String> sertifikater, List<String> geografiList,
-      String styrkKode, String nusKode, List<String> styrkKoder, List<String> nusKoder) throws IOException {
+                          List<String> utdanninger, List<String> sprak, List<String> sertifikater, List<String> geografiList,
+                          String styrkKode, String nusKode, List<String> styrkKoder, List<String> nusKoder) throws IOException {
+    Sokekriterier s = Sokekriterier.med()
+            .fritekst(fritekst)
+            .stillingstitler(stillingstitler)
+            .kompetanser(kompetanser)
+            .utdanninger(utdanninger)
+            .sprak(sprak)
+            .sertifikater(sertifikater)
+            .geografiList(geografiList)
+            .styrkKode(styrkKode)
+            .nusKode(nusKode)
+            .styrkKoder(styrkKoder)
+            .nusKoder(nusKoder)
+            .bygg();
+    return sok(s);
+  }
+
+  @Override
+  public Sokeresultat sok(Sokekriterier sk) throws IOException {
 
     AbstractQueryBuilder<?> queryBuilder = null;
-    if (StringUtils.isBlank(fritekst)
-        && (stillingstitler == null || stillingstitler.isEmpty())
-        && (kompetanser == null || kompetanser.isEmpty())
-        && (utdanninger == null || utdanninger.isEmpty())
-        && (sprak == null || sprak.isEmpty())
-        && (sertifikater == null || sertifikater.isEmpty())
-        && (geografiList == null || geografiList.isEmpty())
-        && StringUtils.isBlank(styrkKode) && StringUtils.isBlank(nusKode)
-        && (styrkKoder == null || styrkKoder.isEmpty())
-        && (nusKoder == null || nusKoder.isEmpty())) {
+    if (StringUtils.isBlank(sk.fritekst())
+        && (sk.stillingstitler() == null || sk.stillingstitler().isEmpty())
+        && (sk.kompetanser() == null || sk.kompetanser().isEmpty())
+        && (sk.utdanninger() == null || sk.utdanninger().isEmpty())
+        && (sk.sprak() == null || sk.sprak().isEmpty())
+        && (sk.sertifikater() == null || sk.sertifikater().isEmpty())
+        && (sk.geografiList() == null || sk.geografiList().isEmpty())
+        && (sk.styrkKoder() == null || sk.styrkKoder().isEmpty())
+        && (sk.nusKoder() == null || sk.nusKoder().isEmpty())) {
       LOGGER.debug("MATCH ALL!");
       queryBuilder = QueryBuilders.matchAllQuery();
 
@@ -177,61 +186,57 @@ public class EsCvHttpClient implements EsCvClient {
 
       BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-      if (StringUtils.isNotBlank(fritekst)) {
+      if (StringUtils.isNotBlank(sk.fritekst())) {
         MultiMatchQueryBuilder fritekstQueryBuilder =
-            QueryBuilders.multiMatchQuery(fritekst, "fritekst");
+            QueryBuilders.multiMatchQuery(sk.fritekst(), "fritekst");
         boolQueryBuilder.must(fritekstQueryBuilder);
         LOGGER.debug("ADDING fritekst");
       }
 
-      if (stillingstitler != null && !stillingstitler.isEmpty()) {
-        stillingstitler.stream().filter(StringUtils::isNotBlank)
+      if (sk.stillingstitler() != null && !sk.stillingstitler().isEmpty()) {
+        sk.stillingstitler().stream().filter(StringUtils::isNotBlank)
             .forEach(s -> addStillingsTitlerQuery(s, boolQueryBuilder));
       }
 
-      if (kompetanser != null && !kompetanser.isEmpty()) {
-        kompetanser.stream().filter(StringUtils::isNotBlank)
+      if (sk.kompetanser() != null && !sk.kompetanser().isEmpty()) {
+        sk.kompetanser().stream().filter(StringUtils::isNotBlank)
             .forEach(k -> addKompetanseQuery(k, boolQueryBuilder));
       }
 
-      if (utdanninger != null && !utdanninger.isEmpty()) {
-        utdanninger.stream().filter(StringUtils::isNotBlank)
+      if (sk.utdanninger() != null && !sk.utdanninger().isEmpty()) {
+        sk.utdanninger().stream().filter(StringUtils::isNotBlank)
             .forEach(u -> addUtdanningerQuery(u, boolQueryBuilder));
       }
 
-      if (sprak != null && !sprak.isEmpty()) {
-        sprak.stream().filter(StringUtils::isNotBlank)
+      if (sk.sprak() != null && !sk.sprak().isEmpty()) {
+        sk.sprak().stream().filter(StringUtils::isNotBlank)
             .forEach((s) -> addSprakQuery(s, boolQueryBuilder));
       }
 
-      if (sertifikater != null && !sertifikater.isEmpty()) {
-        sertifikater.stream().filter(StringUtils::isNotBlank)
+      if (sk.sertifikater() != null && !sk.sertifikater().isEmpty()) {
+        sk.sertifikater().stream().filter(StringUtils::isNotBlank)
             .forEach((s) -> addSertifikaterQuery(s, boolQueryBuilder));
       }
 
-      if (geografiList != null && !geografiList.isEmpty()) {
-        geografiList.stream().filter(StringUtils::isNotBlank)
+      if (sk.geografiList() != null && !sk.geografiList().isEmpty()) {
+        sk.geografiList().stream().filter(StringUtils::isNotBlank)
             .forEach((g) -> addGeografiQuery(g, boolQueryBuilder));
       }
 
-      if (StringUtils.isNotBlank(styrkKode)) {
-        addStyrkKodeQuery(styrkKode, boolQueryBuilder);
-      }
-
-      if (StringUtils.isNotBlank(nusKode)) {
-        addNusKodeQuery(nusKode, boolQueryBuilder);
-      }
-
-      if (styrkKoder != null && !styrkKoder.isEmpty()) {
-        styrkKoder.stream().filter(StringUtils::isNotBlank)
+      if (sk.styrkKoder() != null && !sk.styrkKoder().isEmpty()) {
+        sk.styrkKoder().stream().filter(StringUtils::isNotBlank)
             .forEach(k -> addStyrkKodeQuery(k, boolQueryBuilder));
       }
 
-      if (nusKoder != null) {
-        nusKoder.stream().filter(StringUtils::isNotBlank)
+      if (sk.nusKoder() != null) {
+        sk.nusKoder().stream().filter(StringUtils::isNotBlank)
             .forEach(k -> addNusKodeQuery(k, boolQueryBuilder));
       }
 
+      if (StringUtils.isNotBlank(sk.etternavn())) {
+        MatchQueryBuilder etternavnQueryBuilder = new MatchQueryBuilder("etternavn", sk.etternavn());
+        boolQueryBuilder.should(etternavnQueryBuilder);
+      }
       queryBuilder = boolQueryBuilder;
     }
 
