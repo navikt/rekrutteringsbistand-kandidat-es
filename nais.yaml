@@ -24,6 +24,13 @@ resources:
     memory: 512Mi
 fasitResources:
   used:
+  - alias: kafkaProperties
+    resourceType: applicationProperties
+  - alias: srvpam-cv-indexer-kafka
+    propertyMap:
+      username: KAFKA_USER
+      password: KAFKA_PWD
+    resourceType: credential
   - alias: pamessec
     resourceType: baseurl
     propertyMap:

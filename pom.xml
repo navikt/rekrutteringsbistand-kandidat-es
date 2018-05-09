@@ -7,7 +7,7 @@
 	<groupId>no.nav.arbeid.pam</groupId>
 	<artifactId>pam-cv-indexer</artifactId>
 	<packaging>jar</packaging>
-	<version>26-SNAPSHOT</version>
+	<version>34-SNAPSHOT</version>
 
 	<name>pam-cv-indexer</name>
 	<description>Indeksering av CVer i Elasticsearch</description>
@@ -62,7 +62,7 @@
 		<dependency>
 			<groupId>no.nav.arbeid.cv.avro</groupId>
 			<artifactId>cv-event</artifactId>
-			<version>10</version>
+			<version>11</version>
 		</dependency>
 		<dependency>
 			<groupId>io.confluent</groupId>

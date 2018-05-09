@@ -1,16 +1,19 @@
 package no.nav.arbeid.cv.es.es;
 
-import java.util.Collections;
 import no.nav.arbeid.cv.es.client.EsCvClient;
+import no.nav.arbeid.cv.es.client.EsCvHttpClient;
 import no.nav.arbeid.cv.es.config.ServiceConfig;
 import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother;
 import no.nav.arbeid.cv.es.domene.Aggregering;
 import no.nav.arbeid.cv.es.domene.EsCv;
 import no.nav.arbeid.cv.es.domene.Sokekriterier;
 import no.nav.arbeid.cv.es.domene.Sokeresultat;
+import no.nav.arbeid.cv.es.service.CvIndexerService;
 import no.nav.arbeid.cv.es.service.EsCvTransformer;
+import no.nav.arbeid.cv.events.CvEvent;
 import no.nav.security.spring.oidc.test.TokenGeneratorConfiguration;
 import org.apache.http.HttpHost;
+import org.assertj.core.api.Assertions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.After;
@@ -32,6 +35,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -62,6 +66,9 @@ public class IndexCvSuiteTest {
 
   @Autowired
   private EsCvClient client;
+
+  @Autowired
+  private CvIndexerService indexerService;
 
   @TestConfiguration
   @OverrideAutoConfiguration(enabled = true)
@@ -114,7 +121,19 @@ public class IndexCvSuiteTest {
     assertThat(esCv).isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent()));
   }
 
-  @Test
+    @Test
+    public void skalOppretteIndexHvisDenIkkeFinnes() throws IOException {
+        client.deleteIndex();
+        Sokeresultat sokeres =
+                client.sok(Sokekriterier.med()
+                        .etternavn("NORDMANN")
+                        .nusKode("355211")
+                        .bygg());
+        List<EsCv> list = sokeres.getCver();
+        assertThat(list.size()).isEqualTo(0);
+    }
+
+    @Test
   public void testUtenSokekriterierReturnererAlleTestPersoner() throws IOException {
     Sokeresultat sokeresultat =
         client.sok(Sokekriterier.med().bygg());
@@ -485,4 +504,38 @@ public class IndexCvSuiteTest {
     assertThat(cverFagskole).contains(transformer.transform(TempCvEventObjectMother.giveMeCvEvent4()));
   }
 
+    @Test
+    public void skalBulkIndeksereCVerIdempotent() throws Exception {
+        List<CvEvent> bulkEventer = Arrays.asList(TempCvEventObjectMother.giveMeCvEvent(),
+                TempCvEventObjectMother.giveMeCvEvent2(),
+                TempCvEventObjectMother.giveMeCvEvent3(),
+                TempCvEventObjectMother.giveMeCvEvent4(),
+                TempCvEventObjectMother.giveMeCvEvent5());
+
+        bulkEventer.forEach(e -> e.setArenaPersonId(e.getArenaPersonId() + 9999));
+
+        int antallForBulkIndeksering = client.sok(Sokekriterier.med().bygg()).getCver().size();
+        indexerService.bulkIndekser(bulkEventer);
+        int antallEtterIndeksering = client.sok(Sokekriterier.med().bygg()).getCver().size();
+
+        Assertions.assertThat(antallEtterIndeksering-antallForBulkIndeksering).isEqualTo(bulkEventer.size());
+
+        // Reindekser
+        indexerService.bulkIndekser(bulkEventer);
+        antallEtterIndeksering = client.sok(Sokekriterier.med().bygg()).getCver().size();
+
+        Assertions.assertThat(antallEtterIndeksering-antallForBulkIndeksering).isEqualTo(bulkEventer.size());
+    }
+
+    @Test
+    public void skalBulkSletteCVer() throws Exception {
+        List<Long> sletteIder = Arrays.asList(TempCvEventObjectMother.giveMeCvEvent().getArenaPersonId(),
+                TempCvEventObjectMother.giveMeCvEvent2().getArenaPersonId());
+
+        int antallForBulkSletting = client.sok(Sokekriterier.med().bygg()).getCver().size();
+        indexerService.bulkSlett(sletteIder);
+        int antallEtterSletting =  client.sok(Sokekriterier.med().bygg()).getCver().size();
+
+        Assertions.assertThat(antallForBulkSletting - antallEtterSletting).isEqualTo(sletteIder.size());
+    }
 }
