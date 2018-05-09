@@ -161,12 +161,13 @@ public class ServiceConfig {
     } catch (Exception e) {
       // Ignore
     }
-
+  /*
     esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent()));
     esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent2()));
     esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent3()));
     esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent4()));
     esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent5()));
+    */
   }
 
 }
