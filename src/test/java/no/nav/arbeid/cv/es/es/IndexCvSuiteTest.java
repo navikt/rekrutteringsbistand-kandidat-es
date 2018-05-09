@@ -121,7 +121,19 @@ public class IndexCvSuiteTest {
     assertThat(esCv).isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent()));
   }
 
-  @Test
+    @Test
+    public void skalOppretteIndexHvisDenIkkeFinnes() throws IOException {
+        client.deleteIndex();
+        Sokeresultat sokeres =
+                client.sok(Sokekriterier.med()
+                        .etternavn("NORDMANN")
+                        .nusKode("355211")
+                        .bygg());
+        List<EsCv> list = sokeres.getCver();
+        assertThat(list.size()).isEqualTo(0);
+    }
+
+    @Test
   public void testUtenSokekriterierReturnererAlleTestPersoner() throws IOException {
     Sokeresultat sokeresultat =
         client.sok(Sokekriterier.med().bygg());

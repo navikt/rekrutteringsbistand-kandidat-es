@@ -7,6 +7,7 @@ import no.nav.elasticsearch.mapping.MappingBuilderImpl;
 import no.nav.elasticsearch.mapping.ObjectMapping;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.search.join.ScoreMode;
+import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
@@ -129,7 +130,7 @@ public class EsCvHttpClient implements EsCvClient {
 
     LOGGER.info("Sender bulk indexrequest med {} cv'er", esCver.size());
     bulkRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
-    BulkResponse bulkResponse = client.bulk(bulkRequest);
+    BulkResponse bulkResponse = esExec(() -> client.bulk(bulkRequest));
     if (bulkResponse.hasFailures()) {
       LOGGER.warn("Feilet under indeksering av CVer: " + bulkResponse.buildFailureMessage());
     }
@@ -150,7 +151,7 @@ public class EsCvHttpClient implements EsCvClient {
 
     LOGGER.info("Sender bulksletting av {} cv'er", arenapersoner.size());
     bulkRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
-    BulkResponse bulkResponse = client.bulk(bulkRequest);
+    BulkResponse bulkResponse = esExec(() -> client.bulk(bulkRequest));
     if (bulkResponse.hasFailures()) {
       LOGGER.warn("Feilet under sletting av CVer: " + bulkResponse.buildFailureMessage());
     }
@@ -189,7 +190,7 @@ public class EsCvHttpClient implements EsCvClient {
     searchSourceBuilder.suggest(suggestBuilder);
 
     searchRequest.source(searchSourceBuilder);
-    SearchResponse searchResponse = client.search(searchRequest);
+    SearchResponse searchResponse = esExec(() -> client.search(searchRequest));
     LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
     CompletionSuggestion compSuggestion = searchResponse.getSuggest().getSuggestion("typeahead");
     return compSuggestion.getOptions().stream().map(option -> option.getText().string())
@@ -291,7 +292,8 @@ public class EsCvHttpClient implements EsCvClient {
       queryBuilder = boolQueryBuilder;
     }
 
-    SearchResponse searchResponse = search(queryBuilder, 0, 1000);
+    final AbstractQueryBuilder<?> qb = queryBuilder;
+    SearchResponse searchResponse = esExec(() -> search(qb, 0, 1000));
     return toSokeresultat(searchResponse);
   }
 
@@ -473,5 +475,31 @@ public class EsCvHttpClient implements EsCvClient {
   private List<EsCv> toCvList(SearchResponse searchResponse) {
     return StreamSupport.stream(searchResponse.getHits().spliterator(), false)
         .map(hit -> mapEsCv(hit)).filter(Objects::nonNull).collect(Collectors.toList());
+  }
+
+  /**
+   * Pakk inn kall mot elastic search i sjekk på om index finnes.
+   * Hvis index ikke finnes så opprettes den, og kalles forsøkes på nytt
+   * @param fun
+   * @param <T>
+   * @return
+   * @throws IOException
+   */
+  private <T> T esExec(IOSupplier<T> fun) throws IOException {
+    try {
+      return fun.get();
+    } catch (ElasticsearchStatusException e) {
+      if (e.status().getStatus() == 404 && e.getMessage().contains("index_not_found_exception")) {
+        LOGGER.info("Greide ikke å utfore operasjon mot elastic search. Prøver å opprette index og forsøke på nytt.");
+        createIndex();
+        return fun.get();
+      }
+      throw(e);
+    }
+  }
+
+  /** Tilsvarer java.functions.Supplier bare at get metoden kan kaste IOException */
+  private interface IOSupplier<T> {
+    T get() throws IOException;
   }
 }
