@@ -107,9 +107,10 @@ public class EsCvHttpClient implements EsCvClient {
   @Override
   public void bulkIndex(List<EsCv> esCver) throws IOException {
     BulkRequest bulkRequest = Requests.bulkRequest();
-
+    Long currentArenaId = 0l;
     try {
       for (EsCv esCv : esCver) {
+        currentArenaId = esCv.getArenaPersonId();
         String jsonString = mapper.writeValueAsString(esCv);
         IndexRequest ir = Requests.indexRequest()
                 .source(jsonString, XContentType.JSON)
@@ -120,13 +121,18 @@ public class EsCvHttpClient implements EsCvClient {
         bulkRequest.add(ir);
       }
     } catch (Exception e) {
-      LOGGER.info("Greide ikke å serialisere CV til JSON for å bygge opp bulk-indekseringsrequest: " + e.getMessage(), e);
-      throw new ApplicationException("Greide ikke å serialisere CV til JSON for å bygge opp bulk-indekseringsrequest.", e);
+      LOGGER.info("Greide ikke å serialisere CV til JSON for å bygge opp bulk-indekseringsrequest: {}. ArenaId: {}",
+              e.getMessage(), currentArenaId, e);
+      throw new ApplicationException("Greide ikke å serialisere CV til JSON for å bygge opp bulk-indekseringsrequest. ArenaId: " +
+              currentArenaId, e);
     }
 
     LOGGER.info("Sender bulk indexrequest med {} cv'er", esCver.size());
     bulkRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
     BulkResponse bulkResponse = client.bulk(bulkRequest);
+    if (bulkResponse.hasFailures()) {
+      LOGGER.warn("Feilet under indeksering av CVer: " + bulkResponse.buildFailureMessage());
+    }
     LOGGER.debug("BULKINDEXRESPONSE: " + bulkResponse.toString());
   }
 
@@ -145,6 +151,9 @@ public class EsCvHttpClient implements EsCvClient {
     LOGGER.info("Sender bulksletting av {} cv'er", arenapersoner.size());
     bulkRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
     BulkResponse bulkResponse = client.bulk(bulkRequest);
+    if (bulkResponse.hasFailures()) {
+      LOGGER.warn("Feilet under sletting av CVer: " + bulkResponse.buildFailureMessage());
+    }
     LOGGER.debug("BULKDELETERESPONSE: " + bulkResponse.toString());
   }
 

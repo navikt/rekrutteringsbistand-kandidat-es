@@ -27,11 +27,13 @@ public class DefaultCvIndexerService implements CvIndexerService {
 
   @Override
   public void indekser(CvEvent cvEvent) {
+    Long arenaId = cvEvent.getArenaPersonId();
     EsCv esPerson = transformer.transform(cvEvent);
     try {
       esCvClient.index(esPerson);
     } catch (IOException e) {
-      LOGGER.error("Feil under indeksering av CV", e);
+      LOGGER.info("Feil under indeksering av CV, arenaId: {} {}", arenaId, e.getMessage(), e);
+      throw new OperationalException("Feil under indeksering av CV med arenaId " + arenaId, e);
     }
   }
 

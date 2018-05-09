@@ -446,7 +446,7 @@ public class IndexCvSuiteTest {
   }
 
     @Test
-    public void skalBulkIndeksereCVer() throws Exception {
+    public void skalBulkIndeksereCVerIdempotent() throws Exception {
         List<CvEvent> bulkEventer = Arrays.asList(TempCvEventObjectMother.giveMeCvEvent(),
                 TempCvEventObjectMother.giveMeCvEvent2(),
                 TempCvEventObjectMother.giveMeCvEvent3(),
@@ -457,7 +457,13 @@ public class IndexCvSuiteTest {
 
         int antallForBulkIndeksering = client.sok(Sokekriterier.med().bygg()).getCver().size();
         indexerService.bulkIndekser(bulkEventer);
-        int antallEtterIndeksering =  client.sok(Sokekriterier.med().bygg()).getCver().size();
+        int antallEtterIndeksering = client.sok(Sokekriterier.med().bygg()).getCver().size();
+
+        Assertions.assertThat(antallEtterIndeksering-antallForBulkIndeksering).isEqualTo(bulkEventer.size());
+
+        // Reindekser
+        indexerService.bulkIndekser(bulkEventer);
+        antallEtterIndeksering = client.sok(Sokekriterier.med().bygg()).getCver().size();
 
         Assertions.assertThat(antallEtterIndeksering-antallForBulkIndeksering).isEqualTo(bulkEventer.size());
     }
