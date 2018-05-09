@@ -101,7 +101,7 @@ public class EsCvHttpClient implements EsCvClient {
             new IndexRequest(CV_INDEX, CV_TYPE, Long.toString(esCv.getArenaPersonId()));
     request.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
     request.source(jsonString, XContentType.JSON);
-    IndexResponse indexResponse = client.index(request);
+    IndexResponse indexResponse = esExec(() -> client.index(request));
     LOGGER.debug("INDEXRESPONSE: " + indexResponse.toString());
   }
 

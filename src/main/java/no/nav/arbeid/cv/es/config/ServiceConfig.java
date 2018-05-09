@@ -1,24 +1,13 @@
 package no.nav.arbeid.cv.es.config;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.security.KeyManagementException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-
-import javax.annotation.PostConstruct;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
-import no.nav.arbeid.cv.es.service.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import no.nav.arbeid.cv.es.client.EsCvClient;
+import no.nav.arbeid.cv.es.client.EsCvHttpClient;
+import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother;
+import no.nav.arbeid.cv.es.service.CvEventListener;
+import no.nav.arbeid.cv.es.service.CvIndexerService;
+import no.nav.arbeid.cv.es.service.DefaultCvIndexerService;
+import no.nav.arbeid.cv.es.service.EsCvTransformer;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -33,14 +22,20 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import no.nav.arbeid.cv.es.client.EsCvClient;
-import no.nav.arbeid.cv.es.client.EsCvHttpClient;
-import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.retry.support.RetryTemplate;
+
+import javax.annotation.PostConstruct;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.*;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 
 @Configuration
 public class ServiceConfig {
@@ -160,17 +155,18 @@ public class ServiceConfig {
 
   @PostConstruct
   public void initES() throws IOException {
+    EsCvClient esCvClient = esCvClient();
     try {
-      esCvClient().deleteIndex();
+      esCvClient.createIndex();
     } catch (Exception e) {
+      // Ignore
     }
-    esCvClient().createIndex();
 
-    esCvClient().index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent()));
-    esCvClient().index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent2()));
-    esCvClient().index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent3()));
-    esCvClient().index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent4()));
-    esCvClient().index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent5()));
+    esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent()));
+    esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent2()));
+    esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent3()));
+    esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent4()));
+    esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent5()));
   }
 
 }
