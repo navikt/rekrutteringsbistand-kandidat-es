@@ -15,7 +15,6 @@ target
 .idea/
 *.iml
 *.log
-snapshots.txt
 reports/
 node_modules/
 repo_test_dir
