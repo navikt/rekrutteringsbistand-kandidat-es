@@ -222,16 +222,12 @@ public class EsCvHttpClient implements EsCvClient {
       }
 
       if (sk.utdanningsniva() != null && !sk.utdanningsniva().isEmpty()) {
-        StringBuilder regex = new StringBuilder("(");
+        BoolQueryBuilder utdanningsnivaBoolQueryBuilder = QueryBuilders.boolQuery();
 
         sk.utdanningsniva().stream().filter(StringUtils::isNotBlank)
-            .forEach(u -> addUtdanningsnivaToRegex(u, regex));
+            .forEach(u -> addUtdanningsnivaQuery(u, utdanningsnivaBoolQueryBuilder));
 
-        String regexp = regex.toString().substring(0, regex.toString().length() - 1) + ")[0-9]+";
-
-        NestedQueryBuilder utdanningsnivaQueryBuilder = QueryBuilders.nestedQuery("utdanning",
-            QueryBuilders.regexpQuery("utdanning.nusKode", regexp), ScoreMode.None);
-        boolQueryBuilder.must(utdanningsnivaQueryBuilder);
+        boolQueryBuilder.must(utdanningsnivaBoolQueryBuilder);
         LOGGER.debug("ADDING utdanningsniva");
       }
 
@@ -286,26 +282,42 @@ public class EsCvHttpClient implements EsCvClient {
     LOGGER.debug("ADDING geografiJobbonske");
   }
 
-  private void addUtdanningsnivaToRegex(String utdanningsniva, StringBuilder regex) {
+  private void addUtdanningsnivaQuery(String utdanningsniva, BoolQueryBuilder boolQueryBuilder) {
+    String regex = "";
     switch (utdanningsniva) {
       case "Grunnskole":
-        regex.append("[0-2]|");
+        regex = "[0-2][0-9]+";
         break;
-      case "Videregående skole/fagbrev":
-        regex.append("[3-4]|");
+      case "Videregaende":
+        regex = "[3-4][0-9]+";
         break;
-      case "Fagskole/mesterbrev":
-        regex.append("5|");
+      case "Fagskole":
+        regex = "5[0-9]+";
         break;
-      case "Bachelor eller lavere universitets-/høgskolegrad":
-        regex.append("6|");
+      case "Bachelor":
+        regex = "6[0-9]+";
         break;
-      case "Mastergrad eller tilsvarende":
-        regex.append("7|");
+      case "Master":
+        regex = "7[0-9]+";
         break;
-      case "Forsker/doktorgrad":
-        regex.append("8|");
+      case "Doktorgrad":
+        regex = "8[0-9]+";
         break;
+    }
+    if (!regex.equals("")) {
+      NestedQueryBuilder utdanningsnivaQueryBuilder = QueryBuilders.nestedQuery("utdanning",
+          QueryBuilders.regexpQuery("utdanning.nusKode", regex), ScoreMode.None);
+      boolQueryBuilder.should(utdanningsnivaQueryBuilder);
+    }
+    if(utdanningsniva.equals("Videregaende")) {
+      NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
+          QueryBuilders.matchQuery("kompetanse.kompKode", "501"), ScoreMode.None);
+      boolQueryBuilder.should(kompetanseQueryBuilder);
+    }
+    if(utdanningsniva.equals("Fagskole")) {
+      NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
+          QueryBuilders.matchQuery("kompetanse.kompKode", "506"), ScoreMode.None);
+      boolQueryBuilder.should(kompetanseQueryBuilder);
     }
   }
 

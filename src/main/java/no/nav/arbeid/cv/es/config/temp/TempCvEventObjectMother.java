@@ -1216,7 +1216,7 @@ public class TempCvEventObjectMother {
 
     Kompetanse kompetanse4 = new Kompetanse(
         "2016-03-14",
-        "131345",
+        "506",
         "Skuespiller",
         "Skuespiller",
         null
