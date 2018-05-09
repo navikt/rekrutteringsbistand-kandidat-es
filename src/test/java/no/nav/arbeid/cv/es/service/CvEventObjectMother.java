@@ -349,7 +349,6 @@ public class CvEventObjectMother {
         "NO",
         301,
         false,
-        "removeme",
         "",
         utdanningsListe,
         yrkeserfaringsListe,
