@@ -20,11 +20,14 @@ import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.retry.support.RetryTemplate;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
@@ -45,6 +48,9 @@ public class ServiceConfig {
 
   @Autowired
   private EsConfigurationProperties props;
+
+  @Autowired
+  private @Value("${es.legg.til.testdata}") boolean leggTilTestdata;
 
   @Bean
   public EsCvClient esCvClient() {
@@ -161,13 +167,13 @@ public class ServiceConfig {
     } catch (Exception e) {
       // Ignore
     }
-  /*
-    esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent()));
-    esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent2()));
-    esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent3()));
-    esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent4()));
-    esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent5()));
-    */
-  }
 
+    if (leggTilTestdata) {
+      esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent()));
+      esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent2()));
+      esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent3()));
+      esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent4()));
+      esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent5()));
+    }
+  }
 }
