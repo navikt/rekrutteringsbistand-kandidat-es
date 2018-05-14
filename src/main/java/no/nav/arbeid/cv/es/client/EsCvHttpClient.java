@@ -199,8 +199,8 @@ public class EsCvHttpClient implements EsCvClient {
 
   @Override
   public Sokeresultat sok(String fritekst, List<String> stillingstitler, List<String> kompetanser,
-      List<String> utdanninger, List<String> geografiList, String totalYrkeserfaring, String styrkKode,
-      String nusKode, List<String> styrkKoder, List<String> nusKoder) throws IOException {
+      List<String> utdanninger, List<String> geografiList, String totalYrkeserfaring, List<String> utdanningsniva,
+      String styrkKode, String nusKode, List<String> styrkKoder, List<String> nusKoder) throws IOException {
     Sokekriterier s = Sokekriterier.med()
         .fritekst(fritekst)
         .stillingstitler(stillingstitler)
@@ -208,6 +208,7 @@ public class EsCvHttpClient implements EsCvClient {
         .utdanninger(utdanninger)
         .geografiList(geografiList)
         .totalYrkeserfaring(totalYrkeserfaring)
+        .utdanningsniva(utdanningsniva)
         .styrkKode(styrkKode)
         .nusKode(nusKode)
         .styrkKoder(styrkKoder)
@@ -225,6 +226,7 @@ public class EsCvHttpClient implements EsCvClient {
         && (sk.kompetanser() == null || sk.kompetanser().isEmpty())
         && (sk.utdanninger() == null || sk.utdanninger().isEmpty())
         && (StringUtils.isBlank(sk.totalYrkeserfaring()))
+        && (sk.utdanningsniva() == null || sk.utdanningsniva().isEmpty())
         && (sk.geografiList() == null || sk.geografiList().isEmpty())
         && (sk.styrkKoder() == null || sk.styrkKoder().isEmpty())
         && (sk.nusKoder() == null || sk.nusKoder().isEmpty())) {
@@ -266,13 +268,25 @@ public class EsCvHttpClient implements EsCvClient {
         String[] interval = sk.totalYrkeserfaring().split("-");
         RangeQueryBuilder totalErfaringQueryBuilder;
         if (interval.length == 2) {
-          totalErfaringQueryBuilder = QueryBuilders.rangeQuery("totalLengdeYrkeserfaring").gte(interval[0]).lte(interval[1]);
+          totalErfaringQueryBuilder = QueryBuilders.rangeQuery("totalLengdeYrkeserfaring")
+              .gte(interval[0]).lte(interval[1]);
           boolQueryBuilder.must(totalErfaringQueryBuilder);
         } else if (interval.length == 1) {
-          totalErfaringQueryBuilder = QueryBuilders.rangeQuery("totalLengdeYrkeserfaring").gte(interval[0]).lte(null);
+          totalErfaringQueryBuilder = QueryBuilders.rangeQuery("totalLengdeYrkeserfaring")
+              .gte(interval[0]).lte(null);
           boolQueryBuilder.must(totalErfaringQueryBuilder);
         }
         LOGGER.debug("ADDING totalYrkeserfaringLengde");
+      }
+
+      if (sk.utdanningsniva() != null && !sk.utdanningsniva().isEmpty()) {
+        BoolQueryBuilder utdanningsnivaBoolQueryBuilder = QueryBuilders.boolQuery();
+
+        sk.utdanningsniva().stream().filter(StringUtils::isNotBlank)
+            .forEach(u -> addUtdanningsnivaQuery(u, utdanningsnivaBoolQueryBuilder));
+
+        boolQueryBuilder.must(utdanningsnivaBoolQueryBuilder);
+        LOGGER.debug("ADDING utdanningsniva");
       }
 
       if (sk.styrkKoder() != null && !sk.styrkKoder().isEmpty()) {
@@ -314,7 +328,8 @@ public class EsCvHttpClient implements EsCvClient {
 
   private void addKompetanseQuery(String kompetanse, BoolQueryBuilder boolQueryBuilder) {
     NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("samletKompetanse",
-        QueryBuilders.matchQuery("samletKompetanse.samletKompetanseTekst", kompetanse), ScoreMode.None);
+        QueryBuilders.matchQuery("samletKompetanse.samletKompetanseTekst", kompetanse),
+        ScoreMode.None);
     boolQueryBuilder.must(kompetanseQueryBuilder);
     LOGGER.debug("ADDING kompetanse");
   }
@@ -324,6 +339,45 @@ public class EsCvHttpClient implements EsCvClient {
         QueryBuilders.matchQuery("geografiJobbonsker.geografiKodeTekst", geografi), ScoreMode.None);
     boolQueryBuilder.must(geografiQueryBuilder);
     LOGGER.debug("ADDING geografiJobbonske");
+  }
+
+  private void addUtdanningsnivaQuery(String utdanningsniva, BoolQueryBuilder boolQueryBuilder) {
+    String regex = "";
+    switch (utdanningsniva) {
+      case "Grunnskole":
+        regex = "[0-2][0-9]+";
+        break;
+      case "Videregaende":
+        regex = "[3-4][0-9]+";
+        break;
+      case "Fagskole":
+        regex = "5[0-9]+";
+        break;
+      case "Bachelor":
+        regex = "6[0-9]+";
+        break;
+      case "Master":
+        regex = "7[0-9]+";
+        break;
+      case "Doktorgrad":
+        regex = "8[0-9]+";
+        break;
+    }
+    if (!regex.equals("")) {
+      NestedQueryBuilder utdanningsnivaQueryBuilder = QueryBuilders.nestedQuery("utdanning",
+          QueryBuilders.regexpQuery("utdanning.nusKode", regex), ScoreMode.None);
+      boolQueryBuilder.should(utdanningsnivaQueryBuilder);
+    }
+    if(utdanningsniva.equals("Videregaende")) {
+      NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
+          QueryBuilders.matchQuery("kompetanse.kompKode", "501"), ScoreMode.None);
+      boolQueryBuilder.should(kompetanseQueryBuilder);
+    }
+    if(utdanningsniva.equals("Fagskole")) {
+      NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
+          QueryBuilders.matchQuery("kompetanse.kompKode", "506"), ScoreMode.None);
+      boolQueryBuilder.should(kompetanseQueryBuilder);
+    }
   }
 
   private void addNusKodeQuery(String nusKode, BoolQueryBuilder boolQueryBuilder) {

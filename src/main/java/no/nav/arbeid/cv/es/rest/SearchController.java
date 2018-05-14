@@ -1,6 +1,7 @@
 package no.nav.arbeid.cv.es.rest;
 
 import no.nav.arbeid.cv.es.client.EsCvClient;
+import no.nav.arbeid.cv.es.domene.Sokekriterier;
 import no.nav.arbeid.cv.es.domene.Sokeresultat;
 import no.nav.security.spring.oidc.validation.api.ProtectedWithClaims;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,14 +70,26 @@ public class SearchController {
             @RequestParam(name = "utdanninger", required = false) List<String> utdanninger,
             @RequestParam(name = "geografiList", required = false) List<String> geografiList,
             @RequestParam(name = "totalErfaring", required = false) String totalYrkeserfaring,
+            @RequestParam(name = "utdanningsniva", required = false) List<String> utdanningsniva,
             @RequestParam(name = "styrkKode", required = false) String styrkKode,
             @RequestParam(name = "nusKode", required = false) String nusKode,
             @RequestParam(name = "styrkKoder", required = false) List<String> styrkKoder,
             @RequestParam(name = "nusKoder", required = false) List<String> nusKoder) throws IOException {
 
         Sokeresultat sokeresultat =
-                client.sok(fritekst, yrkeserfaringer, kompetanser, utdanninger, geografiList,
-                    totalYrkeserfaring, styrkKode, nusKode, styrkKoder, nusKoder);
+            client.sok(Sokekriterier.med()
+                .fritekst(fritekst)
+                .stillingstitler(yrkeserfaringer)
+                .kompetanser(kompetanser)
+                .utdanninger(utdanninger)
+                .geografiList(geografiList)
+                .totalYrkeserfaring(totalYrkeserfaring)
+                .utdanningsniva(utdanningsniva)
+                .styrkKode(styrkKode)
+                .nusKode(nusKode)
+                .styrkKoder(styrkKoder)
+                .nusKoder(nusKoder)
+                .bygg());
         SokeresultatResource sokeresultatResource = new SokeresultatResource(sokeresultat);
         return new ResponseEntity<>(sokeresultatResource, HttpStatus.OK);
     }

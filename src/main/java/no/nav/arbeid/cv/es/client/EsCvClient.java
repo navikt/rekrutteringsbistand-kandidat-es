@@ -12,8 +12,8 @@ public interface EsCvClient {
   Sokeresultat sok(Sokekriterier sokekriterier) throws IOException;
   /** @deprecated Bruk {@link #sok(Sokekriterier)} isteden */
   Sokeresultat sok(String fritekst, List<String> stillingstitler, List<String> kompetanser,
-      List<String> utdanninger, List<String> geografiList, String totalYrkeserfaring, String styrkKode,
-      String nusKode, List<String> styrkKoder, List<String> nusKoder) throws IOException;
+      List<String> utdanninger, List<String> geografiList, String totalYrkeserfaring, List<String> utdanningsniva,
+      String styrkKode, String nusKode, List<String> styrkKoder, List<String> nusKoder) throws IOException;
 
   void index(EsCv esCv) throws IOException;
   void bulkIndex(List<EsCv> esCver) throws IOException;

@@ -12,6 +12,7 @@ public class Sokekriterier {
     private List<String> kompetanser;
     private List<String> utdanninger;
     private String totalYrkeserfaring;
+    private List<String> utdanningsniva;
     private List<String> geografiList;
     private List<String> styrkKoder;
     private List<String> nusKoder;
@@ -39,6 +40,8 @@ public class Sokekriterier {
 
     public String totalYrkeserfaring() { return totalYrkeserfaring; }
 
+    public List<String> utdanningsniva() { return utdanningsniva; }
+
     public List<String> geografiList() {
         return geografiList;
     }
@@ -61,6 +64,7 @@ public class Sokekriterier {
         private List<String> kompetanser;
         private List<String> utdanninger;
         private String totalYrkeserfaring;
+        private List<String> utdanningsniva;
         private List<String> geografiList;
         private String styrkKode;
         private String nusKode;
@@ -77,6 +81,8 @@ public class Sokekriterier {
             s.kompetanser = kompetanser == null ? null :
                     Collections.unmodifiableList(new ArrayList<>(kompetanser));
             s.totalYrkeserfaring = totalYrkeserfaring;
+            s.utdanningsniva = utdanningsniva == null ? null :
+                    Collections.unmodifiableList(new ArrayList<>(utdanningsniva));
             s.stillingstitler = stillingstitler == null ? null :
                     Collections.unmodifiableList(new ArrayList<>(stillingstitler));
             s.utdanninger = utdanninger == null ? null :
@@ -124,6 +130,11 @@ public class Sokekriterier {
         public Builder totalYrkeserfaring(String totalYrkeserfaring) {
           this.totalYrkeserfaring = totalYrkeserfaring;
           return this;
+        }
+
+        public Builder utdanningsniva(List<String> utdanningsniva) {
+            this.utdanningsniva = utdanningsniva;
+            return this;
         }
 
         public Builder geografiList(List<String> geografiList) {

@@ -116,7 +116,7 @@ public class TempCvEventObjectMother {
 
     Kompetanse kompetanse3 = new Kompetanse(
         "2016-03-14",
-        "3220201",
+        "506",
         "Landtransport generelt",
         "Landtransport generelt",
         null
@@ -295,12 +295,24 @@ public class TempCvEventObjectMother {
     vervListe.add(verv);
 
     GeografiJobbonsker geografiJobbonsker = new GeografiJobbonsker(
-        "Geografikode tekst",
-        "GeografiKode"
+        "Hamar",
+        "NO10.1010"
+    );
+
+    GeografiJobbonsker geografiJobbonsker1 = new GeografiJobbonsker(
+        "Lillehammer",
+        "NO10.1011"
+    );
+
+    GeografiJobbonsker geografiJobbonsker2 = new GeografiJobbonsker(
+        "Hedmark",
+        "NO10"
     );
 
     ArrayList<GeografiJobbonsker> geografiJobbonskerListe = new ArrayList<>();
     geografiJobbonskerListe.add(geografiJobbonsker);
+    geografiJobbonskerListe.add(geografiJobbonsker1);
+    geografiJobbonskerListe.add(geografiJobbonsker2);
 
     YrkeJobbonsker yrkeJobbonsker = new YrkeJobbonsker(
         "Yrke jobb ønskeStyrk Kode",
@@ -493,7 +505,7 @@ public class TempCvEventObjectMother {
 
     Kompetanse kompetanse4 = new Kompetanse(
         "2016-03-14",
-        "475869",
+        "501",
         "Truckfører",
         "Truckfører",
         null
@@ -655,12 +667,24 @@ public class TempCvEventObjectMother {
     vervListe.add(verv);
 
     GeografiJobbonsker geografiJobbonsker = new GeografiJobbonsker(
-        "Geografikode tekst",
-        "GeografiKode"
+        "Hedmark",
+        "NO10"
+    );
+
+    GeografiJobbonsker geografiJobbonsker1 = new GeografiJobbonsker(
+        "Stavanger",
+        "NO21.2020"
+    );
+
+    GeografiJobbonsker geografiJobbonsker2 = new GeografiJobbonsker(
+        "Førde",
+        "NO08.2929"
     );
 
     ArrayList<GeografiJobbonsker> geografiJobbonskerListe = new ArrayList<>();
     geografiJobbonskerListe.add(geografiJobbonsker);
+    geografiJobbonskerListe.add(geografiJobbonsker1);
+    geografiJobbonskerListe.add(geografiJobbonsker2);
 
     YrkeJobbonsker yrkeJobbonsker = new YrkeJobbonsker(
         "Yrke jobb ønskeStyrk Kode",
@@ -1015,12 +1039,24 @@ public class TempCvEventObjectMother {
     vervListe.add(verv);
 
     GeografiJobbonsker geografiJobbonsker = new GeografiJobbonsker(
-        "Geografikode tekst",
-        "GeografiKode"
+        "Hedmark",
+        "NO10"
+    );
+
+    GeografiJobbonsker geografiJobbonsker1 = new GeografiJobbonsker(
+        "Bergen",
+        "NO34.3434"
+    );
+
+    GeografiJobbonsker geografiJobbonsker2 = new GeografiJobbonsker(
+        "Hordaland",
+        "NO34"
     );
 
     ArrayList<GeografiJobbonsker> geografiJobbonskerListe = new ArrayList<>();
     geografiJobbonskerListe.add(geografiJobbonsker);
+    geografiJobbonskerListe.add(geografiJobbonsker1);
+    geografiJobbonskerListe.add(geografiJobbonsker2);
 
     YrkeJobbonsker yrkeJobbonsker = new YrkeJobbonsker(
         "Yrke jobb ønskeStyrk Kode",
@@ -1213,7 +1249,7 @@ public class TempCvEventObjectMother {
 
     Kompetanse kompetanse4 = new Kompetanse(
         "2016-03-14",
-        "131345",
+        "506",
         "Skuespiller",
         "Skuespiller",
         null
@@ -1379,8 +1415,26 @@ public class TempCvEventObjectMother {
         "NO01.1000"
     );
 
+    GeografiJobbonsker geografiJobbonsker1 = new GeografiJobbonsker(
+        "Akershus",
+        "NO02.1210"
+    );
+
+    GeografiJobbonsker geografiJobbonsker2 = new GeografiJobbonsker(
+        "Bærum",
+        "NO02.1212"
+    );
+
+    GeografiJobbonsker geografiJobbonsker3 = new GeografiJobbonsker(
+        "Norge",
+        "NO"
+    );
+
     ArrayList<GeografiJobbonsker> geografiJobbonskerListe = new ArrayList<>();
     geografiJobbonskerListe.add(geografiJobbonsker);
+    geografiJobbonskerListe.add(geografiJobbonsker1);
+    geografiJobbonskerListe.add(geografiJobbonsker2);
+    geografiJobbonskerListe.add(geografiJobbonsker3);
 
     YrkeJobbonsker yrkeJobbonsker = new YrkeJobbonsker(
         "Yrke jobb ønskeStyrk Kode",
@@ -1739,8 +1793,20 @@ public class TempCvEventObjectMother {
         "NO18.8740"
     );
 
+    GeografiJobbonsker geografiJobbonsker1 = new GeografiJobbonsker(
+        "Nordland",
+        "NO18"
+    );
+
+    GeografiJobbonsker geografiJobbonsker2 = new GeografiJobbonsker(
+        "Tromsø",
+        "NO19.8809"
+    );
+
     ArrayList<GeografiJobbonsker> geografiJobbonskerListe = new ArrayList<>();
     geografiJobbonskerListe.add(geografiJobbonsker);
+    geografiJobbonskerListe.add(geografiJobbonsker1);
+    geografiJobbonskerListe.add(geografiJobbonsker2);
 
     YrkeJobbonsker yrkeJobbonsker = new YrkeJobbonsker(
         "Yrke jobb ønskeStyrk Kode",
