@@ -533,8 +533,9 @@ public class EsCvHttpClient implements EsCvClient {
 
   public void reindex() throws IOException {
     // TODO kun testendring for å teste bygging av pullrequester
+    
   }
-  
+
   /**
    * Pakk inn kall mot elastic search i sjekk på om index finnes.
    * Hvis index ikke finnes så opprettes den, og kalles forsøkes på nytt
