@@ -533,7 +533,6 @@ public class EsCvHttpClient implements EsCvClient {
 
   public void reindex() throws IOException {
     // TODO kun testendring for å teste bygging av pullrequester
-    
   }
 
   /**
