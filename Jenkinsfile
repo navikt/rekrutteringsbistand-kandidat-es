@@ -32,6 +32,7 @@ node {
                 }
 
         stage("initialize") {
+            println ("Initialize $env{GIT_BRANCH}")
             if ("$env{GIT_BRANCH}".contains("PR-")) {
                 isPullRequest = true
                 newPomVersion = "$env{GIT_BRANCH}".replaceAll("-", "_").concat("-SNAPSHOT")
