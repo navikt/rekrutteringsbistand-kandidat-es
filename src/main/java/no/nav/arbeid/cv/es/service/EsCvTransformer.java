@@ -20,6 +20,7 @@ import no.nav.arbeid.cv.es.domene.EsSertifikat;
 import no.nav.arbeid.cv.es.domene.EsSprak;
 import no.nav.arbeid.cv.es.domene.EsUtdanning;
 import no.nav.arbeid.cv.es.domene.EsVerv;
+import no.nav.arbeid.cv.es.domene.EsYrkeJobbonsker;
 import no.nav.arbeid.cv.es.domene.EsYrkeserfaring;
 import no.nav.arbeid.cv.events.CvEvent;
 import no.nav.arbeid.cv.events.Forerkort;
@@ -30,6 +31,7 @@ import no.nav.arbeid.cv.events.Sertifikat;
 import no.nav.arbeid.cv.events.Sprak;
 import no.nav.arbeid.cv.events.Utdanning;
 import no.nav.arbeid.cv.events.Verv;
+import no.nav.arbeid.cv.events.YrkeJobbonsker;
 import no.nav.arbeid.cv.events.Yrkeserfaring;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,6 +75,7 @@ public class EsCvTransformer {
     esCv.addKurs(mapList(p.getKurs(), this::mapKurs));
     esCv.addVerv(mapList(p.getVerv(), this::mapVerv));
     esCv.addGeografiJobbonske(mapList(p.getGeografiJobbonsker(), this::mapGeografiJobbonske));
+    esCv.addYrkeJobbonske(mapList(p.getYrkeJobbonsker(), this::mapYrkeJobbonske));
 
     esCv.addSamletKompetanse(mapList(p.getSprak(), this::mapSamletKompetanse));
     esCv.addSamletKompetanse(mapList(p.getSertifikat(), this::mapSamletKompetanse));
@@ -184,6 +187,14 @@ public class EsCvTransformer {
     return new EsGeografiJobbonsker(
         geografiJobbonsker.getGeografiKodeTekst(),
         geografiJobbonsker.getGeografiKode()
+    );
+  }
+
+  private EsYrkeJobbonsker mapYrkeJobbonske(YrkeJobbonsker yrkeJobbonsker) {
+    return new EsYrkeJobbonsker(
+        yrkeJobbonsker.getStyrkKode(),
+        yrkeJobbonsker.getStyrkBeskrivelse(),
+        yrkeJobbonsker.getPrimaertJobbonske()
     );
   }
 

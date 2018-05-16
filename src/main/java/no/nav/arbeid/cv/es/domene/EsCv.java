@@ -120,6 +120,7 @@ public class EsCv {
   @ElasticNestedField
   private List<EsGeografiJobbonsker> geografiJobbonsker = new ArrayList<>();
 
+  @ElasticNestedField
   private List<EsYrkeJobbonsker> yrkeJobbonsker = new ArrayList<>();
 
   private List<EsHeltidDeltidJobbonsker> heltidDeltidJobbonsker = new ArrayList<>();
@@ -246,6 +247,10 @@ public class EsCv {
 
   public void addGeografiJobbonske(Collection<EsGeografiJobbonsker> geografiJobbonskerListe) {
     this.geografiJobbonsker.addAll(geografiJobbonskerListe);
+  }
+
+  public void addYrkeJobbonske(Collection<EsYrkeJobbonsker> yrkeJobbonskerListe) {
+    this.yrkeJobbonsker.addAll(yrkeJobbonskerListe);
   }
 
   public void addSamletKompetanse(Collection<EsSamletKompetanse> samletKompetanseListe) {

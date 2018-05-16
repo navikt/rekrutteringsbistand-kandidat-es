@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
 import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
 import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 
@@ -15,6 +16,7 @@ public class EsYrkeJobbonsker {
 
   @ElasticTextField
   @ElasticKeywordField
+  @ElasticCompletionField
   private String styrkBeskrivelse;
 
   private boolean primaertJobbonske;

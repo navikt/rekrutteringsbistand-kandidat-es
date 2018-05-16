@@ -8,6 +8,7 @@ import java.util.List;
 
 public class Sokekriterier {
     private String fritekst;
+    private List<String> yrkeJobbonsker;
     private List<String> stillingstitler;
     private List<String> kompetanser;
     private List<String> utdanninger;
@@ -24,6 +25,10 @@ public class Sokekriterier {
 
     public String fritekst() {
         return fritekst;
+    }
+
+    public List<String> yrkeJobbonsker() {
+        return yrkeJobbonsker;
     }
 
     public List<String> stillingstitler() {
@@ -60,6 +65,7 @@ public class Sokekriterier {
 
     public static class Builder {
         private String fritekst;
+        private List<String> yrkeJobbonsker;
         private List<String> stillingstitler;
         private List<String> kompetanser;
         private List<String> utdanninger;
@@ -85,6 +91,8 @@ public class Sokekriterier {
                     Collections.unmodifiableList(new ArrayList<>(utdanningsniva));
             s.stillingstitler = stillingstitler == null ? null :
                     Collections.unmodifiableList(new ArrayList<>(stillingstitler));
+            s.yrkeJobbonsker = yrkeJobbonsker == null ? null :
+                    Collections.unmodifiableList(new ArrayList<>(yrkeJobbonsker));
             s.utdanninger = utdanninger == null ? null :
                     Collections.unmodifiableList(new ArrayList<>(utdanninger));
 
@@ -109,6 +117,11 @@ public class Sokekriterier {
 
         public Builder fritekst(String fritekst) {
             this.fritekst = fritekst;
+            return this;
+        }
+
+        public Builder yrkeJobbonsker(List<String> yrkeJobbonsker) {
+            this.yrkeJobbonsker = yrkeJobbonsker;
             return this;
         }
 

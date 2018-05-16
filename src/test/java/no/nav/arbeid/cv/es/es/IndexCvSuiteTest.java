@@ -538,4 +538,29 @@ public class IndexCvSuiteTest {
 
         Assertions.assertThat(antallForBulkSletting - antallEtterSletting).isEqualTo(sletteIder.size());
     }
+
+    @Test
+    public void sokPaYrkeJobbonskerSkalGiKorrektResultat() throws IOException {
+        Sokeresultat sokeresultat = client.sok(Sokekriterier.med()
+            .yrkeJobbonsker(Collections.singletonList("Lastebilsjåfør"))
+            .bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        EsCv cv = cver.get(0);
+        assertThat(cv).isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent5()));
+    }
+
+    @Test
+    public void sokPaFlereYrkeJobbonskerSkalGiBegrensendeResultat() throws IOException {
+        Sokeresultat sokeresultat = client.sok(Sokekriterier.med()
+            .yrkeJobbonsker(Collections.singletonList("Butikkmedarbeider"))
+            .bygg());
+        Sokeresultat sokeresultat1 = client.sok(Sokekriterier.med()
+            .yrkeJobbonsker(Arrays.asList("Butikkmedarbeider", "Lastebilsjåfør"))
+            .bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver1 = sokeresultat1.getCver();
+        assertThat(cver.size()).isGreaterThan(cver1.size());
+    }
 }

@@ -30,6 +30,8 @@ public interface EsCvClient {
 
   List<String> typeAheadGeografi(String prefix) throws IOException;
 
+  List<String> typeAheadYrkeJobbonsker(String prefix) throws IOException;
+
   @Deprecated
   Sokeresultat findByYrkeserfaringStyrkKodeTekst(String styrkBeskrivelse) throws IOException;
 
