@@ -551,16 +551,16 @@ public class IndexCvSuiteTest {
     }
 
     @Test
-    public void sokPaFlereYrkeJobbonskerSkalGiBegrensendeResultat() throws IOException {
+    public void sokPaFlereYrkeJobbonskerSkalGiUtvidendeResultat() throws IOException {
         Sokeresultat sokeresultat = client.sok(Sokekriterier.med()
             .yrkeJobbonsker(Collections.singletonList("Butikkmedarbeider"))
             .bygg());
         Sokeresultat sokeresultat1 = client.sok(Sokekriterier.med()
-            .yrkeJobbonsker(Arrays.asList("Butikkmedarbeider", "Lastebilsjåfør"))
+            .yrkeJobbonsker(Arrays.asList("Butikkmedarbeider", "Ordfører"))
             .bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         List<EsCv> cver1 = sokeresultat1.getCver();
-        assertThat(cver.size()).isGreaterThan(cver1.size());
+        assertThat(cver.size()).isLessThan(cver1.size());
     }
 }
