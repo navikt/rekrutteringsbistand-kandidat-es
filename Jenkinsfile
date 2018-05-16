@@ -6,7 +6,7 @@ def deployLib = new deploy()
 node {
     def application = "pam-cv-indexer"
 
-    def committer, committerEmail, changelog, pom, releaseVersion, newPomVersion, isSnapshot, isPullRequest, nextVersion // metadata
+    def committer, committerEmail, changelog, pom, releaseVersion, prPomVersion, isSnapshot, isPullRequest, nextVersion // metadata
 
     def mvnHome = tool "maven-3.3.9"
     def mvn = "${mvnHome}/bin/mvn"
@@ -36,8 +36,8 @@ node {
             if (BRANCH_NAME.contains("PR-")) {
                 println ("Branch is pull request")
                 isPullRequest = true
-                //newPomVersion = BRANCH_NAME.replaceAll("-", "_").concat("-SNAPSHOT")
-                //sh "${mvn} versions:set -B -DnewVersion=${newPomVersion} -DgenerateBackupPoms=false"
+                prPomVersion = BRANCH_NAME.replaceAll("-", "_").concat("-SNAPSHOT")
+                sh "${mvn} versions:set -B -DnewVersion=${prPomVersion} -DgenerateBackupPoms=false"
             } else {
                 isPullRequest = false
             }
