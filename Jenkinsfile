@@ -6,7 +6,7 @@ def deployLib = new deploy()
 node {
     def application = "pam-cv-indexer"
 
-    def committer, committerEmail, changelog, pom, releaseVersion, isSnapshot, nextVersion // metadata
+    def committer, committerEmail, changelog, pom, releaseVersion, isSnapshot, isPullRequest, nextVersion // metadata
 
     def mvnHome = tool "maven-3.3.9"
     def mvn = "${mvnHome}/bin/mvn"
@@ -32,6 +32,13 @@ node {
                 }
 
         stage("initialize") {
+            if ("$env{GIT_BRANCH}".contains("PR-")) {
+                isPullRequest = true
+                newPomVersion = "$env{GIT_BRANCH}".replaceAll("-", "_").concat("-SNAPSHOT")
+                sh "${mvn} versions:set -B -DnewVersion=${newPomVersion} -DgenerateBackupPoms=false"
+            } else {
+                isPullRequest = false
+            }
             pom = readMavenPom file: 'pom.xml'
             releaseVersion = pom.version.tokenize("-")[0]
             isSnapshot = pom.version.contains("-SNAPSHOT")
@@ -70,15 +77,19 @@ node {
         }
 
         stage("publish yaml") {
-            withCredentials([usernamePassword(credentialsId: 'nexusUploader', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-                sh "curl --user ${env.NEXUS_USERNAME}:${env.NEXUS_PASSWORD} --upload-file ${appConfig} https://repo.adeo.no/repository/raw/nais/${application}/${releaseVersion}/nais.yaml"
+            if (!isPullRequest) {
+                withCredentials([usernamePassword(credentialsId: 'nexusUploader', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+                    sh "curl --user ${env.NEXUS_USERNAME}:${env.NEXUS_PASSWORD} --upload-file ${appConfig} https://repo.adeo.no/repository/raw/nais/${application}/${releaseVersion}/nais.yaml"
+                }
             }
         }
 
         stage("build and publish docker image") {
-            withCredentials([usernamePassword(credentialsId: 'nexusUploader', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-                sh "docker build --build-arg JAR_FILE=${application}-${releaseVersion}.jar -t ${dockerRepo}/${application}:${releaseVersion} ."
-                sh "docker login -u ${env.NEXUS_USERNAME} -p ${env.NEXUS_PASSWORD} ${dockerRepo} && docker push ${dockerRepo}/${application}:${releaseVersion}"
+            if (!isPullRequest) {
+                withCredentials([usernamePassword(credentialsId: 'nexusUploader', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+                    sh "docker build --build-arg JAR_FILE=${application}-${releaseVersion}.jar -t ${dockerRepo}/${application}:${releaseVersion} ."
+                    sh "docker login -u ${env.NEXUS_USERNAME} -p ${env.NEXUS_PASSWORD} ${dockerRepo} && docker push ${dockerRepo}/${application}:${releaseVersion}"
+                }
             }
         }
 
@@ -94,17 +105,19 @@ node {
         }
 
         stage("deploy to preprod") {
-            callback = "${env.BUILD_URL}input/Deploy/"
+            if (!isPullRequest) {
+		    callback = "${env.BUILD_URL}input/Deploy/"
 
-            def deploy = deployLib.deployNaisApp(application, releaseVersion, deployEnv, zone, namespace, callback, committer, false).key
+		    def deploy = deployLib.deployNaisApp(application, releaseVersion, deployEnv, zone, namespace, callback, committer, false).key
 
-            try {
-                timeout(time: 15, unit: 'MINUTES') {
-                    input id: 'deploy', message: "Check status here:  https://jira.adeo.no/browse/${deploy}"
-                }
-            } catch (Exception e) {https://repo.adeo.no/repository/raw/
-            throw new Exception("Deploy feilet :( \n Se https://jira.adeo.no/browse/" + deploy + " for detaljer", e)
+		    try {
+		        timeout(time: 15, unit: 'MINUTES') {
+		            input id: 'deploy', message: "Check status here:  https://jira.adeo.no/browse/${deploy}"
+		        }
+		    } catch (Exception e) {https://repo.adeo.no/repository/raw/
+		    throw new Exception("Deploy feilet :( \n Se https://jira.adeo.no/browse/" + deploy + " for detaljer", e)
 
+		    }
             }
         }
 
