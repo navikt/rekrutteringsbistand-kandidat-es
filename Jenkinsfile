@@ -32,8 +32,6 @@ node {
                 }
 
         stage("initialize") {
-            sh 'env'
-            sh 'echo INIT $BRANCH_NAME'
             println ("Initialize $BRANCH_NAME")
             if ("$BRANCH_NAME".contains("PR-")) {
                 isPullRequest = true
@@ -68,13 +66,15 @@ node {
         }
 
         stage("release version") {
-            withEnv(['HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088']) {
-                withCredentials([string(credentialsId: 'navikt-ci-oauthtoken', variable: 'token')]) {
-                    sh "${mvn} versions:set -B -DnewVersion=${releaseVersion} -DgenerateBackupPoms=false"
-                    sh "git commit -am \"set version to ${releaseVersion} (from Jenkins pipeline)\""
-                    sh ("git push https://${token}:x-oauth-basic@github.com/navikt/${application}.git")
-                    sh ("git tag -a ${application}-${releaseVersion} -m ${application}-${releaseVersion}")
-                    sh ("git push https://${token}:x-oauth-basic@github.com/navikt/${application}.git --tags")
+            if (!isPullRequest) {
+                withEnv(['HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088']) {
+                    withCredentials([string(credentialsId: 'navikt-ci-oauthtoken', variable: 'token')]) {
+                        sh "${mvn} versions:set -B -DnewVersion=${releaseVersion} -DgenerateBackupPoms=false"
+                        sh "git commit -am \"set version to ${releaseVersion} (from Jenkins pipeline)\""
+                        sh ("git push https://${token}:x-oauth-basic@github.com/navikt/${application}.git")
+                        sh ("git tag -a ${application}-${releaseVersion} -m ${application}-${releaseVersion}")
+                        sh ("git push https://${token}:x-oauth-basic@github.com/navikt/${application}.git --tags")
+                    }
                 }
             }
         }
