@@ -37,6 +37,7 @@ node {
                 println ("Branch is pull request")
                 isPullRequest = true
                 prPomVersion = BRANCH_NAME.replaceAll("-", "_").concat("-SNAPSHOT")
+                println ("Setter ny pom versjon $prPomVersion")
                 sh "${mvn} versions:set -B -DnewVersion=${prPomVersion} -DgenerateBackupPoms=false"
             } else {
                 isPullRequest = false
