@@ -32,7 +32,6 @@ node {
                 }
 
         stage("initialize") {
-            println ("Initialize $BRANCH_NAME")
             if ("$BRANCH_NAME".contains("PR-")) {
                 isPullRequest = true
                 newPomVersion = "$BRANCH_NAME".replaceAll("-", "_").concat("-SNAPSHOT")
