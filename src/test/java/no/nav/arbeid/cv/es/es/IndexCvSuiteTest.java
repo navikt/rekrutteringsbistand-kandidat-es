@@ -196,16 +196,16 @@ public class IndexCvSuiteTest {
   public void testSokMedFlereKriterierGirSvarMedAlleFelter() throws IOException {
     Sokeresultat sokeresultat =
         client.sok(Sokekriterier.med()
-            .stillingstitler(Collections.singletonList("Progger"))
-            .kompetanser(Collections.singletonList("Landtransport generelt"))
-            .utdanninger(Collections.singletonList("Master i sikkerhet"))
+            .stillingstitler(Collections.singletonList("Butikkmedarbeider"))
+            .kompetanser(Collections.singletonList("Hallovert"))
+            .utdanninger(Collections.singletonList("Bygg og anlegg"))
             .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
 
     assertThat(cver.size()).isEqualTo(1);
     EsCv cv = cver.get(0);
-    assertThat(cv).isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent5()));
+    assertThat(cv).isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent4()));
   }
 
   @Test
@@ -298,7 +298,7 @@ public class IndexCvSuiteTest {
 
     List<EsCv> cver = sokeresultat.getCver();
     EsCv cv = cver.get(0);
-    assertThat(cv).isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent5()));
+    assertThat(cv).isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent()));
   }
 
   @Test
@@ -487,21 +487,33 @@ public class IndexCvSuiteTest {
   }
 
   @Test
-  public void sokPaVideregaendeOgFagskoleSkalGiTreffPaKorrektKompetanser() throws IOException {
+  public void sokPaVideregaendeSkalGiTreffPaKorrektKompetanse() throws IOException {
     Sokeresultat sokeresultatVideregaende =
         client.sok(Sokekriterier.med()
             .utdanningsniva(Collections.singletonList("Videregaende"))
             .bygg());
-    Sokeresultat sokeresultatFagskole =
-        client.sok(Sokekriterier.med()
-            .utdanningsniva(Collections.singletonList("Fagskole"))
-            .bygg());
 
     List<EsCv> cverVideregaende = sokeresultatVideregaende.getCver();
-    List<EsCv> cverFagskole = sokeresultatFagskole.getCver();
 
-    assertThat(cverVideregaende).contains(transformer.transform(TempCvEventObjectMother.giveMeCvEvent2()));
-    assertThat(cverFagskole).contains(transformer.transform(TempCvEventObjectMother.giveMeCvEvent4()));
+    assertThat(cverVideregaende).contains(transformer.transform(TempCvEventObjectMother.giveMeCvEvent()));
+  }
+
+  @Test
+  public void sokPaIngenUtdanningSkalGiKorrektResultat() throws IOException {
+    Sokeresultat sokeresultatIngen =
+        client.sok(Sokekriterier.med()
+            .utdanningsniva(Collections.singletonList("Ingen"))
+            .bygg());
+    Sokeresultat sokeresultatIngenOgGrunnskole =
+        client.sok(Sokekriterier.med()
+            .utdanningsniva(Arrays.asList("Ingen", "Grunnskole"))
+            .bygg());
+
+   List<EsCv> cverIngen = sokeresultatIngen.getCver();
+   List<EsCv> cverIngenOgGrunnskole = sokeresultatIngenOgGrunnskole.getCver();
+
+   assertThat(cverIngen.get(0)).isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent5()));
+   assertThat(cverIngen.size()).isLessThan(cverIngenOgGrunnskole.size());
   }
 
     @Test

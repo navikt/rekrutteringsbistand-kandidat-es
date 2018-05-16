@@ -390,7 +390,16 @@ public class EsCvHttpClient implements EsCvClient {
           QueryBuilders.regexpQuery("utdanning.nusKode", regex), ScoreMode.None);
       boolQueryBuilder.should(utdanningsnivaQueryBuilder);
     }
-    if(utdanningsniva.equals("Videregaende")) {
+    if (utdanningsniva.equals("Ingen")) {
+      BoolQueryBuilder boolQueryBuilder1 = QueryBuilders.boolQuery();
+
+      NestedQueryBuilder utdanningsnivaQueryBuilder = QueryBuilders.nestedQuery("utdanning",
+          QueryBuilders.existsQuery("utdanning.nusKode"), ScoreMode.None);
+
+      boolQueryBuilder1.mustNot(utdanningsnivaQueryBuilder);
+      boolQueryBuilder.should(boolQueryBuilder1);
+    }
+    if(utdanningsniva.equals("Fagbrev")) {
       NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
           QueryBuilders.matchQuery("kompetanse.kompKode", "501"), ScoreMode.None);
       boolQueryBuilder.should(kompetanseQueryBuilder);

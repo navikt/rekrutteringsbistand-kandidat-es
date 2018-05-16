@@ -17,8 +17,19 @@ public class TempCvEventObjectMother {
         "GK maskin/mekaniker"
     );
 
+    Utdanning utdanning1 = new Utdanning(
+        "1988-08-20",
+        "1989-06-20",
+        "Høyskolen i Gjøvik",
+        "486595",
+        "Master i sikkerhet",
+        "Master i sikkerhet"
+    );
+
+
     ArrayList<Utdanning> utdanningsListe = new ArrayList<>();
     utdanningsListe.add(utdanning);
+    utdanningsListe.add(utdanning1);
     Yrkeserfaring yrkeserfaring1 = new Yrkeserfaring(
         "2000-01-01",
         "2000-01-10",
@@ -1545,17 +1556,9 @@ public class TempCvEventObjectMother {
 
   public  static CvEvent giveMeCvEvent5() {
 
-    Utdanning utdanning = new Utdanning(
-        "1988-08-20",
-        "1989-06-20",
-        "Høyskolen i Gjøvik",
-        "486595",
-        "Master i sikkerhet",
-        "Master i sikkerhet"
-    );
-
     ArrayList<Utdanning> utdanningsListe = new ArrayList<>();
-    utdanningsListe.add(utdanning);
+
+
     Yrkeserfaring yrkeserfaring1 = new Yrkeserfaring(
         "2000-01-01",
         "2000-02-01",
