@@ -32,9 +32,11 @@ node {
                 }
 
         stage("initialize") {
-            if ("$BRANCH_NAME".contains("PR-")) {
+            println ("Initialize $BRANCH_NAME")
+            if (BRANCH_NAME.contains("PR-")) {
+                println ("Branch is pull request")
                 isPullRequest = true
-                newPomVersion = "$BRANCH_NAME".replaceAll("-", "_").concat("-SNAPSHOT")
+                newPomVersion = BRANCH_NAME.replaceAll("-", "_").concat("-SNAPSHOT")
                 sh "${mvn} versions:set -B -DnewVersion=${newPomVersion} -DgenerateBackupPoms=false"
             } else {
                 isPullRequest = false
