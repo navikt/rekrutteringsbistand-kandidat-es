@@ -34,10 +34,10 @@ node {
         stage("initialize") {
             sh 'env'
             sh 'echo INIT $BRANCH_NAME'
-            println ("Initialize $env{GIT_BRANCH} $env{BRANCH_NAME}")
-            if ("$env{BRANCH_NAME}".contains("PR-")) {
+            println ("Initialize $BRANCH_NAME")
+            if ("$BRANCH_NAME".contains("PR-")) {
                 isPullRequest = true
-                newPomVersion = "$env{BRANCH_NAME}".replaceAll("-", "_").concat("-SNAPSHOT")
+                newPomVersion = "$BRANCH_NAME".replaceAll("-", "_").concat("-SNAPSHOT")
                 sh "${mvn} versions:set -B -DnewVersion=${newPomVersion} -DgenerateBackupPoms=false"
             } else {
                 isPullRequest = false
