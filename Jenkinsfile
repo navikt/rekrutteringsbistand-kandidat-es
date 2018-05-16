@@ -6,7 +6,7 @@ def deployLib = new deploy()
 node {
     def application = "pam-cv-indexer"
 
-    def committer, committerEmail, changelog, pom, releaseVersion, isSnapshot, isPullRequest, nextVersion // metadata
+    def committer, committerEmail, changelog, pom, releaseVersion, newPomVersion, isSnapshot, isPullRequest, nextVersion // metadata
 
     def mvnHome = tool "maven-3.3.9"
     def mvn = "${mvnHome}/bin/mvn"
