@@ -32,6 +32,8 @@ node {
                 }
 
         stage("initialize") {
+            sh 'env'
+            sh 'echo INIT $BRANCH_NAME'
             println ("Initialize $env{GIT_BRANCH} $env{BRANCH_NAME}")
             if ("$env{BRANCH_NAME}".contains("PR-")) {
                 isPullRequest = true
