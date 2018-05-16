@@ -35,6 +35,7 @@ node {
             println ("Initialize $BRANCH_NAME")
             if (BRANCH_NAME.contains("PR-")) {
                 println ("Branch is pull request")
+                println ("$BRANCH_NAME".replaceAll("-", "_").concat("-SNAPSHOT"))
                 isPullRequest = true
                 prPomVersion = "$BRANCH_NAME".replaceAll("-", "_").concat("-SNAPSHOT")
                 println ("Setter ny pom versjon $prPomVersion")
