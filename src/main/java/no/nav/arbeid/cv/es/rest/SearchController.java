@@ -35,9 +35,10 @@ public class SearchController {
             @RequestParam(name = "komp", required = false) String komp,
             @RequestParam(name = "utd", required = false) String utd,
             @RequestParam(name = "geo", required = false) String geo,
+            @RequestParam(name = "sti", required = false) String sti,
             @RequestParam(name = "yrke", required = false) String yrke) throws IOException {
 
-        if (komp == null && utd == null && yrke == null && geo == null) {
+        if (komp == null && utd == null && yrke == null && geo == null && sti == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -54,6 +55,9 @@ public class SearchController {
         if (geo != null) {
           list.addAll(client.typeAheadGeografi(geo));
         }
+        if (sti != null) {
+            list.addAll(client.typeAheadYrkeJobbonsker(sti));
+        }
 
         List<StringResource> resourceList =
                 list.stream().map(str -> new StringResource(str)).collect(Collectors.toList());
@@ -65,6 +69,7 @@ public class SearchController {
     @PreAuthorize("@arbeidsgiverService.innloggaBrukerHarArbeidsgiverrettighetIAltinn()")
     public HttpEntity<SokeresultatResource> sok(
             @RequestParam(name = "fritekst", required = false) String fritekst,
+            @RequestParam(name = "stillinger", required = false) List<String> yrkeJobbonsker,
             @RequestParam(name = "arbeidserfaringer", required = false) List<String> yrkeserfaringer,
             @RequestParam(name = "kompetanser", required = false) List<String> kompetanser,
             @RequestParam(name = "utdanninger", required = false) List<String> utdanninger,
@@ -79,6 +84,7 @@ public class SearchController {
         Sokeresultat sokeresultat =
             client.sok(Sokekriterier.med()
                 .fritekst(fritekst)
+                .yrkeJobbonsker(yrkeJobbonsker)
                 .stillingstitler(yrkeserfaringer)
                 .kompetanser(kompetanser)
                 .utdanninger(utdanninger)

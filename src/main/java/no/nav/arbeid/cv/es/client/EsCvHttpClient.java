@@ -178,6 +178,10 @@ public class EsCvHttpClient implements EsCvClient {
     return typeAhead(prefix, "geografiJobbonsker.geografiKodeTekst.completion");
   }
 
+  public List<String> typeAheadYrkeJobbonsker(String prefix) throws IOException {
+    return typeAhead(prefix, "yrkeJobbonsker.styrkBeskrivelse.completion");
+  }
+
   private List<String> typeAhead(String prefix, String suggestionField) throws IOException {
     SearchRequest searchRequest = new SearchRequest(CV_INDEX);
     searchRequest.types(CV_TYPE);
@@ -222,6 +226,7 @@ public class EsCvHttpClient implements EsCvClient {
 
     AbstractQueryBuilder<?> queryBuilder = null;
     if (StringUtils.isBlank(sk.fritekst())
+        && (sk.yrkeJobbonsker() == null || sk.yrkeJobbonsker().isEmpty())
         && (sk.stillingstitler() == null || sk.stillingstitler().isEmpty())
         && (sk.kompetanser() == null || sk.kompetanser().isEmpty())
         && (sk.utdanninger() == null || sk.utdanninger().isEmpty())
@@ -242,6 +247,16 @@ public class EsCvHttpClient implements EsCvClient {
             QueryBuilders.multiMatchQuery(sk.fritekst(), "fritekst");
         boolQueryBuilder.must(fritekstQueryBuilder);
         LOGGER.debug("ADDING fritekst");
+      }
+
+      if (sk.yrkeJobbonsker() != null && !sk.yrkeJobbonsker().isEmpty()) {
+        BoolQueryBuilder yrkeJobbonskerBoolQueryBuilder = QueryBuilders.boolQuery();
+
+        sk.yrkeJobbonsker().stream().filter(StringUtils::isNotBlank)
+            .forEach(y -> addYrkeJobbonskerQuery(y, yrkeJobbonskerBoolQueryBuilder));
+
+        boolQueryBuilder.must(yrkeJobbonskerBoolQueryBuilder);
+        LOGGER.debug("ADDING onsket stilling");
       }
 
       if (sk.stillingstitler() != null && !sk.stillingstitler().isEmpty()) {
@@ -311,6 +326,13 @@ public class EsCvHttpClient implements EsCvClient {
     return toSokeresultat(searchResponse);
   }
 
+  private void addYrkeJobbonskerQuery(String yrkeJobbonske, BoolQueryBuilder boolQueryBuilder) {
+    NestedQueryBuilder yrkeJobbonskeQueryBuilder = QueryBuilders.nestedQuery("yrkeJobbonsker",
+        QueryBuilders.matchQuery("yrkeJobbonsker.styrkBeskrivelse", yrkeJobbonske),
+        ScoreMode.None);
+    boolQueryBuilder.should(yrkeJobbonskeQueryBuilder);
+  }
+
   private void addStillingsTitlerQuery(String stillingstittel, BoolQueryBuilder boolQueryBuilder) {
     NestedQueryBuilder yrkeserfaringQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
         QueryBuilders.matchQuery("yrkeserfaring.styrkKodeStillingstittel", stillingstittel),
@@ -368,7 +390,16 @@ public class EsCvHttpClient implements EsCvClient {
           QueryBuilders.regexpQuery("utdanning.nusKode", regex), ScoreMode.None);
       boolQueryBuilder.should(utdanningsnivaQueryBuilder);
     }
-    if(utdanningsniva.equals("Videregaende")) {
+    if (utdanningsniva.equals("Ingen")) {
+      BoolQueryBuilder boolQueryBuilder1 = QueryBuilders.boolQuery();
+
+      NestedQueryBuilder utdanningsnivaQueryBuilder = QueryBuilders.nestedQuery("utdanning",
+          QueryBuilders.existsQuery("utdanning.nusKode"), ScoreMode.None);
+
+      boolQueryBuilder1.mustNot(utdanningsnivaQueryBuilder);
+      boolQueryBuilder.should(boolQueryBuilder1);
+    }
+    if(utdanningsniva.equals("Fagbrev")) {
       NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
           QueryBuilders.matchQuery("kompetanse.kompKode", "501"), ScoreMode.None);
       boolQueryBuilder.should(kompetanseQueryBuilder);

@@ -163,6 +163,7 @@ public class ServiceConfig {
   public void initES() throws IOException {
     EsCvClient esCvClient = esCvClient();
     try {
+      esCvClient.deleteIndex();
       esCvClient.createIndex();
     } catch (Exception e) {
       // Ignore

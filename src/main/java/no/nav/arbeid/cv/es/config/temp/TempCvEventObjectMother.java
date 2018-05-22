@@ -17,8 +17,19 @@ public class TempCvEventObjectMother {
         "GK maskin/mekaniker"
     );
 
+    Utdanning utdanning1 = new Utdanning(
+        "1988-08-20",
+        "1989-06-20",
+        "Høyskolen i Gjøvik",
+        "486595",
+        "Master i sikkerhet",
+        "Master i sikkerhet"
+    );
+
+
     ArrayList<Utdanning> utdanningsListe = new ArrayList<>();
     utdanningsListe.add(utdanning);
+    utdanningsListe.add(utdanning1);
     Yrkeserfaring yrkeserfaring1 = new Yrkeserfaring(
         "2000-01-01",
         "2000-01-10",
@@ -357,9 +368,9 @@ public class TempCvEventObjectMother {
         "unnasluntrer@mailinator.com",
         "NO",
         1L,
-        "1234", // Kan ik
+        "S221234", // Kan ik
         "",
-        "J",
+        "N",
         "2016-05-30",
         "Minvei 1",
         "",
@@ -688,12 +699,26 @@ public class TempCvEventObjectMother {
 
     YrkeJobbonsker yrkeJobbonsker = new YrkeJobbonsker(
         "Yrke jobb ønskeStyrk Kode",
-        "Yrke jobb ønske Styrk beskrivelse",
+        "Javaprogrammerer",
+        true
+    );
+
+    YrkeJobbonsker yrkeJobbonsker1 = new YrkeJobbonsker(
+        "Yrke jobb ønskeStyrk Kode",
+        "Programvareutvikler",
+        true
+    );
+
+    YrkeJobbonsker yrkeJobbonsker2 = new YrkeJobbonsker(
+        "Yrke jobb ønskeStyrk Kode",
+        "Bonde",
         true
     );
 
     ArrayList<YrkeJobbonsker> yrkeJobbonskerListe = new ArrayList<>();
     yrkeJobbonskerListe.add(yrkeJobbonsker);
+    yrkeJobbonskerListe.add(yrkeJobbonsker1);
+    yrkeJobbonskerListe.add(yrkeJobbonsker2);
 
     HeltidDeltidJobbonsker heltidDeltidJobbonsker = new HeltidDeltidJobbonsker(
         "HeltidDeltidKode",
@@ -729,7 +754,7 @@ public class TempCvEventObjectMother {
         "unnasluntrer2@mailinator.com",
         "NO",
         2L,
-        null,
+        "H738234",
         "",
         "J",
         "2016-05-30",
@@ -1060,12 +1085,26 @@ public class TempCvEventObjectMother {
 
     YrkeJobbonsker yrkeJobbonsker = new YrkeJobbonsker(
         "Yrke jobb ønskeStyrk Kode",
-        "Yrke jobb ønske Styrk beskrivelse",
+        "Ordfører",
+        true
+    );
+
+    YrkeJobbonsker yrkeJobbonsker1 = new YrkeJobbonsker(
+        "Yrke jobb ønskeStyrk Kode",
+        "Barnehageassistent",
+        true
+    );
+
+    YrkeJobbonsker yrkeJobbonsker2 = new YrkeJobbonsker(
+        "Yrke jobb ønskeStyrk Kode",
+        "Tester",
         true
     );
 
     ArrayList<YrkeJobbonsker> yrkeJobbonskerListe = new ArrayList<>();
     yrkeJobbonskerListe.add(yrkeJobbonsker);
+    yrkeJobbonskerListe.add(yrkeJobbonsker1);
+    yrkeJobbonskerListe.add(yrkeJobbonsker2);
 
     HeltidDeltidJobbonsker heltidDeltidJobbonsker = new HeltidDeltidJobbonsker(
         "HeltidDeltidKode",
@@ -1101,7 +1140,7 @@ public class TempCvEventObjectMother {
         "alltidmed@mailinator.com",
         "NO",
         3L,
-        null,
+        "S738893",
         "",
         "J",
         "2016-05-30",
@@ -1438,12 +1477,19 @@ public class TempCvEventObjectMother {
 
     YrkeJobbonsker yrkeJobbonsker = new YrkeJobbonsker(
         "Yrke jobb ønskeStyrk Kode",
-        "Yrke jobb ønske Styrk beskrivelse",
+        "Butikkmedarbeider",
+        true
+    );
+
+    YrkeJobbonsker yrkeJobbonsker1 = new YrkeJobbonsker(
+        "Yrke jobb ønskeStyrk Kode",
+        "Butikkmedarbeider",
         true
     );
 
     ArrayList<YrkeJobbonsker> yrkeJobbonskerListe = new ArrayList<>();
     yrkeJobbonskerListe.add(yrkeJobbonsker);
+    yrkeJobbonskerListe.add(yrkeJobbonsker1);
 
     HeltidDeltidJobbonsker heltidDeltidJobbonsker = new HeltidDeltidJobbonsker(
         "HeltidDeltidKode",
@@ -1479,7 +1525,7 @@ public class TempCvEventObjectMother {
         "erjegmed@mailinator.com",
         "NO",
         4L,
-        null,
+        "K838829",
         "",
         "J",
         "2016-05-30",
@@ -1510,17 +1556,9 @@ public class TempCvEventObjectMother {
 
   public  static CvEvent giveMeCvEvent5() {
 
-    Utdanning utdanning = new Utdanning(
-        "1988-08-20",
-        "1989-06-20",
-        "Høyskolen i Gjøvik",
-        "486595",
-        "Master i sikkerhet",
-        "Master i sikkerhet"
-    );
-
     ArrayList<Utdanning> utdanningsListe = new ArrayList<>();
-    utdanningsListe.add(utdanning);
+
+
     Yrkeserfaring yrkeserfaring1 = new Yrkeserfaring(
         "2000-01-01",
         "2000-02-01",
@@ -1810,12 +1848,26 @@ public class TempCvEventObjectMother {
 
     YrkeJobbonsker yrkeJobbonsker = new YrkeJobbonsker(
         "Yrke jobb ønskeStyrk Kode",
-        "Yrke jobb ønske Styrk beskrivelse",
+        "Industrimekaniker",
         true
     );
 
+    YrkeJobbonsker yrkeJobbonsker1 = new YrkeJobbonsker(
+        "Yrke jobb ønskeStyrk Kode",
+        "Lastebilsjåfør",
+        true
+    );
+
+      YrkeJobbonsker yrkeJobbonsker2 = new YrkeJobbonsker(
+          "Yrke jobb ønskeStyrk Kode",
+          "Butikkmedarbeider",
+          true
+      );
+
     ArrayList<YrkeJobbonsker> yrkeJobbonskerListe = new ArrayList<>();
     yrkeJobbonskerListe.add(yrkeJobbonsker);
+    yrkeJobbonskerListe.add(yrkeJobbonsker1);
+    yrkeJobbonskerListe.add(yrkeJobbonsker2);
 
     HeltidDeltidJobbonsker heltidDeltidJobbonsker = new HeltidDeltidJobbonsker(
         "HeltidDeltidKode",
@@ -1851,7 +1903,7 @@ public class TempCvEventObjectMother {
         "bobob@mailinator.com",
         "NO",
         5L,
-        null,
+        "N883773",
         "",
         "J",
         "2016-05-30",
