@@ -79,7 +79,7 @@ public class IndexCvSuiteTest {
 
     @Bean
     public RestHighLevelClient restHighLevelClient() {
-      return new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9200, "http")));
+      return new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9250, "http")));
     }
 
   }

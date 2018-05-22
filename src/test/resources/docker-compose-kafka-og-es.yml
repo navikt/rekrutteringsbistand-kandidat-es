@@ -41,7 +41,6 @@ services:
       SCHEMA_REGISTRY_HOST_NAME: 127.0.0.1
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: '127.0.0.1:2181'
 
-
   elastic_search:
     image: ssense/elasticsearch:latest
     volumes:
@@ -49,7 +48,8 @@ services:
     privileged: true
     hostname: elastic
     ports:
-      - "9200:9200"
+      - "9250:9200"
+      - "9350:9300" 
     healthcheck:
       test: "curl -f http://localhost:9200"
 
