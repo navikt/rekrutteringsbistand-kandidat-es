@@ -25,7 +25,7 @@ node {
         stage("checkout") {
               if (true) {
                   checkout scm
-              }
+              } else {
                     withCredentials([string(credentialsId: 'navikt-ci-oauthtoken', variable: 'token')]) {
                      withEnv(['HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088']) {
                             sh(script: "git clone https://${token}:x-oauth-basic@github.com/navikt/${application}.git .")
@@ -34,6 +34,7 @@ node {
                         }
                     }
                 }
+              }
 
         stage("initialize") {
             println ("Initialize $BRANCH_NAME")
