@@ -101,12 +101,14 @@ node {
         }
 
         stage("new dev version") {
-            withEnv(['HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088']) {
-                withCredentials([string(credentialsId: 'navikt-ci-oauthtoken', variable: 'token')]) {
-                    nextVersion = (releaseVersion.toInteger() + 1) + "-SNAPSHOT"
-                    sh "${mvn} versions:set -B -DnewVersion=${nextVersion} -DgenerateBackupPoms=false"
-                    sh "git commit -am \"updated to new dev-version ${nextVersion} after release by ${committer}\""
-                    sh "git push https://${token}:x-oauth-basic@github.com/navikt/${application}.git"
+            if (!isPullRequest) {
+                withEnv(['HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088']) {
+                    withCredentials([string(credentialsId: 'navikt-ci-oauthtoken', variable: 'token')]) {
+                        nextVersion = (releaseVersion.toInteger() + 1) + "-SNAPSHOT"
+                        sh "${mvn} versions:set -B -DnewVersion=${nextVersion} -DgenerateBackupPoms=false"
+                        sh "git commit -am \"updated to new dev-version ${nextVersion} after release by ${committer}\""
+                        sh "git push https://${token}:x-oauth-basic@github.com/navikt/${application}.git"
+                    }
                 }
             }
         }
