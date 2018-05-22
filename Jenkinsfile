@@ -24,6 +24,10 @@ node {
 
         stage("checkout") {
                     cleanWs()
+                    println("Sjekker ut $GIT_BRANCH")
+                    if (true) {
+                       scm checkout
+                    }
                     withCredentials([string(credentialsId: 'navikt-ci-oauthtoken', variable: 'token')]) {
                      withEnv(['HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088']) {
                             sh(script: "git clone https://${token}:x-oauth-basic@github.com/navikt/${application}.git .")
