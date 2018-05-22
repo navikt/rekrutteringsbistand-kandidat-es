@@ -28,6 +28,7 @@ node {
                      withEnv(['HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088']) {
                             sh(script: "git clone https://${token}:x-oauth-basic@github.com/navikt/${application}.git .")
                             sh(script: "env")
+                            sh(script: "git checkout ${BRANCH_NAME}")
                         }
                     }
                 }
