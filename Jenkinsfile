@@ -34,14 +34,14 @@ node {
                 namespace="default"
                 isPullRequest = true
                 prPomVersion = "$BRANCH_NAME".replaceAll("-", "_") + "-SNAPSHOT"
-                releaseVersion=prPomVersion
+                sh "env"
                 println ("Setter ny pom versjon $prPomVersion")
                 sh "${mvn} versions:set -B -DnewVersion=${prPomVersion} -DgenerateBackupPoms=false"                 
             } else {
                 isPullRequest = false
             }
             pom = readMavenPom file: 'pom.xml'
-            releaseVersion = pom.version.tokenize("-")[0]
+            releaseVersion = isPullRequest ? prPomVersion : pom.version.tokenize("-")[0]
             isSnapshot = pom.version.contains("-SNAPSHOT")
             committer = sh(script: 'git log -1 --pretty=format:"%an (%ae)"', returnStdout: true).trim()
             committerEmail = sh(script: 'git log -1 --pretty=format:"%ae"', returnStdout: true).trim()
@@ -88,7 +88,7 @@ node {
 
         stage("build and publish docker image") {
             withCredentials([usernamePassword(credentialsId: 'nexusUploader', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-                sh "docker build --build-arg JAR_FILE=${application}-${releaseVersion}.jar -t ${dockerRepo}/${application}:${releaseVersion} ."
+                sh "docker build -t ${dockerRepo}/${application}:${releaseVersion} ."
                 sh "docker login -u ${env.NEXUS_USERNAME} -p ${env.NEXUS_PASSWORD} ${dockerRepo} && docker push ${dockerRepo}/${application}:${releaseVersion}"
             }
         }
