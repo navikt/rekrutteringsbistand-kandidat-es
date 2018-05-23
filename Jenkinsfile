@@ -6,12 +6,12 @@ def deployLib = new deploy()
 node {
     def application = "pam-cv-indexer"
 
-    def committer, committerEmail, changelog, pom, releaseVersion, isSnapshot, nextVersion // metadata
+    def committer, committerEmail, changelog, pom, releaseVersion, prPomVersion, isSnapshot, isPullRequest, nextVersion // metadata
 
     def mvnHome = tool "maven-3.3.9"
     def mvn = "${mvnHome}/bin/mvn"
-    def deployEnv = "${env.DEPLOY_ENV}"
-    def namespace = "${env.NAMESPACE}"
+    def deployEnv = "t1" /* "${env.DEPLOY_ENV}" */
+    def namespace = "default" /* "${env.NAMESPACE}" */
     def policies = "app-policies.xml"
     def notenforced = "not-enforced-urls.txt"
     def appConfig = "nais.yaml"
@@ -23,15 +23,20 @@ node {
     try {
 
         stage("checkout") {
-                    cleanWs()
-                    withCredentials([string(credentialsId: 'navikt-ci-oauthtoken', variable: 'token')]) {
-                     withEnv(['HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088']) {
-                            sh(script: "git clone https://${token}:x-oauth-basic@github.com/navikt/${application}.git .")
-                        }
-                    }
-                }
+            checkout scm
+        }
 
         stage("initialize") {
+            println ("Initialize $BRANCH_NAME")
+            if (BRANCH_NAME.contains("PR-")) {
+                println ("Branch is pull request")
+                isPullRequest = true
+                prPomVersion = "$BRANCH_NAME".replaceAll("-", "_") + "-SNAPSHOT"
+                println ("Setter ny pom versjon $prPomVersion")
+                sh "${mvn} versions:set -B -DnewVersion=${prPomVersion} -DgenerateBackupPoms=false"
+            } else {
+                isPullRequest = false
+            }
             pom = readMavenPom file: 'pom.xml'
             releaseVersion = pom.version.tokenize("-")[0]
             isSnapshot = pom.version.contains("-SNAPSHOT")
@@ -54,57 +59,66 @@ node {
             } else {
                 println("POM version is not a SNAPSHOT, it is ${pom.version}. Skipping build and testing of backend")
             }
-
         }
 
         stage("release version") {
-            withEnv(['HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088']) {
-                withCredentials([string(credentialsId: 'navikt-ci-oauthtoken', variable: 'token')]) {
-                    sh "${mvn} versions:set -B -DnewVersion=${releaseVersion} -DgenerateBackupPoms=false"
-                    sh "git commit -am \"set version to ${releaseVersion} (from Jenkins pipeline)\""
-                    sh ("git push https://${token}:x-oauth-basic@github.com/navikt/${application}.git")
-                    sh ("git tag -a ${application}-${releaseVersion} -m ${application}-${releaseVersion}")
-                    sh ("git push https://${token}:x-oauth-basic@github.com/navikt/${application}.git --tags")
+            if (!isPullRequest) {
+                withEnv(['HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088']) {
+                    withCredentials([string(credentialsId: 'navikt-ci-oauthtoken', variable: 'token')]) {
+                        sh "${mvn} versions:set -B -DnewVersion=${releaseVersion} -DgenerateBackupPoms=false"
+                        sh "git commit -am \"set version to ${releaseVersion} (from Jenkins pipeline)\""
+                        sh ("git push -u https://${token}:x-oauth-basic@github.com/navikt/${application}.git $BRANCH_NAME")
+                        sh ("git tag -a ${application}-${releaseVersion} -m ${application}-${releaseVersion}")
+                        sh ("git push -u https://${token}:x-oauth-basic@github.com/navikt/${application}.git --tags $BRANCH_NAME")
+                    }
                 }
             }
         }
 
         stage("publish yaml") {
-            withCredentials([usernamePassword(credentialsId: 'nexusUploader', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-                sh "curl --user ${env.NEXUS_USERNAME}:${env.NEXUS_PASSWORD} --upload-file ${appConfig} https://repo.adeo.no/repository/raw/nais/${application}/${releaseVersion}/nais.yaml"
+            if (!isPullRequest) {
+                withCredentials([usernamePassword(credentialsId: 'nexusUploader', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+                    sh "curl --user ${env.NEXUS_USERNAME}:${env.NEXUS_PASSWORD} --upload-file ${appConfig} https://repo.adeo.no/repository/raw/nais/${application}/${releaseVersion}/nais.yaml"
+                }
             }
         }
 
         stage("build and publish docker image") {
-            withCredentials([usernamePassword(credentialsId: 'nexusUploader', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-                sh "docker build --build-arg JAR_FILE=${application}-${releaseVersion}.jar -t ${dockerRepo}/${application}:${releaseVersion} ."
-                sh "docker login -u ${env.NEXUS_USERNAME} -p ${env.NEXUS_PASSWORD} ${dockerRepo} && docker push ${dockerRepo}/${application}:${releaseVersion}"
+            if (!isPullRequest) {
+                withCredentials([usernamePassword(credentialsId: 'nexusUploader', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+                    sh "docker build --build-arg JAR_FILE=${application}-${releaseVersion}.jar -t ${dockerRepo}/${application}:${releaseVersion} ."
+                    sh "docker login -u ${env.NEXUS_USERNAME} -p ${env.NEXUS_PASSWORD} ${dockerRepo} && docker push ${dockerRepo}/${application}:${releaseVersion}"
+                }
             }
         }
 
         stage("new dev version") {
-            withEnv(['HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088']) {
-                withCredentials([string(credentialsId: 'navikt-ci-oauthtoken', variable: 'token')]) {
-                    nextVersion = (releaseVersion.toInteger() + 1) + "-SNAPSHOT"
-                    sh "${mvn} versions:set -B -DnewVersion=${nextVersion} -DgenerateBackupPoms=false"
-                    sh "git commit -am \"updated to new dev-version ${nextVersion} after release by ${committer}\""
-                    sh "git push https://${token}:x-oauth-basic@github.com/navikt/${application}.git"
+            if (!isPullRequest) {
+                withEnv(['HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088']) {
+                    withCredentials([string(credentialsId: 'navikt-ci-oauthtoken', variable: 'token')]) {
+                        nextVersion = (releaseVersion.toInteger() + 1) + "-SNAPSHOT"
+                        sh "${mvn} versions:set -B -DnewVersion=${nextVersion} -DgenerateBackupPoms=false"
+                        sh "git commit -am \"updated to new dev-version ${nextVersion} after release by ${committer} (from Jenkins pipeline)\""
+                        sh "git push -u https://${token}:x-oauth-basic@github.com/navikt/${application}.git $BRANCH_NAME"
+                    }
                 }
             }
         }
 
         stage("deploy to preprod") {
-            callback = "${env.BUILD_URL}input/Deploy/"
+            if (!isPullRequest) {
+		    callback = "${env.BUILD_URL}input/Deploy/"
 
-            def deploy = deployLib.deployNaisApp(application, releaseVersion, deployEnv, zone, namespace, callback, committer, false).key
+		    def deploy = deployLib.deployNaisApp(application, releaseVersion, deployEnv, zone, namespace, callback, committer, false).key
 
-            try {
-                timeout(time: 15, unit: 'MINUTES') {
-                    input id: 'deploy', message: "Check status here:  https://jira.adeo.no/browse/${deploy}"
-                }
-            } catch (Exception e) {https://repo.adeo.no/repository/raw/
-            throw new Exception("Deploy feilet :( \n Se https://jira.adeo.no/browse/" + deploy + " for detaljer", e)
+		    try {
+		        timeout(time: 15, unit: 'MINUTES') {
+		            input id: 'deploy', message: "Check status here:  https://jira.adeo.no/browse/${deploy}"
+		        }
+		    } catch (Exception e) {https://repo.adeo.no/repository/raw/
+		    throw new Exception("Deploy feilet :( \n Se https://jira.adeo.no/browse/" + deploy + " for detaljer", e)
 
+		    }
             }
         }
 
