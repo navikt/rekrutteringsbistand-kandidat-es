@@ -41,7 +41,7 @@ node {
                 isPullRequest = false
             }
             pom = readMavenPom file: 'pom.xml'
-            releaseVersion = isPullRequest ? prPomVersion : pom.version.tokenize("-")[0]
+            releaseVersion = isPullRequest ? "$BRANCH_NAME".replaceAll("-", "_") + "_$BUILD_NUMBER" : pom.version.tokenize("-")[0]
             isSnapshot = pom.version.contains("-SNAPSHOT")
             committer = sh(script: 'git log -1 --pretty=format:"%an (%ae)"', returnStdout: true).trim()
             committerEmail = sh(script: 'git log -1 --pretty=format:"%ae"', returnStdout: true).trim()
