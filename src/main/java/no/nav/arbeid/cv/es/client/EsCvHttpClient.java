@@ -175,7 +175,24 @@ public class EsCvHttpClient implements EsCvClient {
 
   @Override
   public List<String> typeAheadGeografi(String prefix) throws IOException {
-    return typeAhead(prefix, "geografiJobbonsker.geografiKodeTekst.completion");
+    SearchRequest searchRequest = new SearchRequest(CV_INDEX);
+    searchRequest.types(CV_TYPE);
+    SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+    CompletionSuggestionBuilder suggestionBuilder =
+        SuggestBuilders.completionSuggestion("geografiJobbonsker.geografiKodeTekst.completion")
+            .text(prefix).skipDuplicates(true);
+
+    SuggestBuilder suggestBuilder = new SuggestBuilder();
+    suggestBuilder.addSuggestion("typeahead", suggestionBuilder);
+    searchSourceBuilder.suggest(suggestBuilder);
+
+    searchRequest.source(searchSourceBuilder);
+    SearchResponse searchResponse = esExec(() -> client.search(searchRequest));
+    LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
+    CompletionSuggestion compSuggestion = searchResponse.getSuggest().getSuggestion("typeahead");
+
+    return compSuggestion.getOptions().stream().map(option -> option.getHit().getSourceAsString())
+        .collect(Collectors.toList());
   }
 
   public List<String> typeAheadYrkeJobbonsker(String prefix) throws IOException {
@@ -357,9 +374,22 @@ public class EsCvHttpClient implements EsCvClient {
   }
 
   private void addGeografiQuery(String geografi, BoolQueryBuilder boolQueryBuilder) {
+    String[] geografiKoder = geografi.split("\\.");
+
+    String regex = geografi + "|NO";
+
+    if (geografiKoder.length > 1) {
+        regex += "|" + geografiKoder[0];
+        if (geografiKoder[1].length() > 4) {
+            regex += "|" + geografiKoder[0] + "." + geografiKoder[1].substring(0, 4);
+        }
+    }
+    System.out.println(regex);
+
     NestedQueryBuilder geografiQueryBuilder = QueryBuilders.nestedQuery("geografiJobbonsker",
-        QueryBuilders.matchQuery("geografiJobbonsker.geografiKodeTekst", geografi), ScoreMode.None);
+        QueryBuilders.regexpQuery("geografiJobbonsker.geografiKode", regex), ScoreMode.None);
     boolQueryBuilder.must(geografiQueryBuilder);
+
     LOGGER.debug("ADDING geografiJobbonske");
   }
 

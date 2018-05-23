@@ -692,10 +692,16 @@ public class TempCvEventObjectMother {
         "NO08.2929"
     );
 
+    GeografiJobbonsker geografiJobbonsker3 = new GeografiJobbonsker(
+        "Trondheim(Bydel Heimdal)",
+        "NO50.50014"
+    );
+
     ArrayList<GeografiJobbonsker> geografiJobbonskerListe = new ArrayList<>();
     geografiJobbonskerListe.add(geografiJobbonsker);
     geografiJobbonskerListe.add(geografiJobbonsker1);
     geografiJobbonskerListe.add(geografiJobbonsker2);
+    geografiJobbonskerListe.add(geografiJobbonsker3);
 
     YrkeJobbonsker yrkeJobbonsker = new YrkeJobbonsker(
         "Yrke jobb ønskeStyrk Kode",
@@ -1069,8 +1075,8 @@ public class TempCvEventObjectMother {
     );
 
     GeografiJobbonsker geografiJobbonsker1 = new GeografiJobbonsker(
-        "Bergen",
-        "NO34.3434"
+        "Bergen(bydel Fana)",
+        "NO34.3434.1"
     );
 
     GeografiJobbonsker geografiJobbonsker2 = new GeografiJobbonsker(
