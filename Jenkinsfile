@@ -58,7 +58,7 @@ node {
 
         stage("build and test backend") {
             if (isSnapshot) {
-                lock($application) {
+                lock('PAM_CV_INDEXER_BYGG') {
                     sh "${mvn} clean install -Dit.skip=true -Djava.io.tmpdir=/tmp/${application} -B -e"
                 }
             } else {
