@@ -7,7 +7,7 @@
 	<groupId>no.nav.arbeid.pam</groupId>
 	<artifactId>pam-cv-indexer</artifactId>
 	<packaging>jar</packaging>
-	<version>70</version>
+	<version>71-SNAPSHOT</version>
 
 	<name>pam-cv-indexer</name>
 	<description>Indeksering av CVer i Elasticsearch</description>
