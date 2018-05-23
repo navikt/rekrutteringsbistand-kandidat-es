@@ -2,6 +2,7 @@ package no.nav.arbeid.cv.es.altinn;
 
 import no.nav.arbeid.cv.es.config.AltinnEnvConf;
 import no.nav.arbeid.cv.es.config.CacheConfig;
+import no.nav.arbeid.cv.es.domene.OperationalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,19 +57,27 @@ public class AltinnGateway {
     }
 
     private List<Reportee> retrieveActiveReportees(String query) {
-        ResponseEntity<List<Reportee>> response = restAltinnRetrieve(
-                "/reportees",
-                query,
-                new ParameterizedTypeReference<List<Reportee>>() {
-                });
 
-        if (response.getStatusCode() != HttpStatus.OK) {
-            return retrieveReporteesWithRightsFallback("", AccessRightsEnum.REKRUTTERING);
+        try {
+            ResponseEntity<List<Reportee>> response = restAltinnRetrieve(
+                    "/reportees",
+                    query,
+                    new ParameterizedTypeReference<List<Reportee>>() {
+                    });
+
+            if (response.getStatusCode() != HttpStatus.OK) {
+                return retrieveReporteesWithRightsFallback("", AccessRightsEnum.REKRUTTERING);
+            }
+
+            return (response.getBody().stream()
+                    .filter(this::isActiveEnterpriseOrBusinessReportee)
+                    .collect(Collectors.toList()));
+        } catch (Exception e) {
+            LOG.error("Kall til Altinn feilet", e);
+            throw new OperationalException(e.getMessage(), e);
         }
 
-        return (response.getBody().stream()
-                .filter(this::isActiveEnterpriseOrBusinessReportee)
-                .collect(Collectors.toList()));
+
     }
 
     private boolean isActiveEnterpriseOrBusinessReportee(Reportee r) {
