@@ -66,11 +66,10 @@ node {
                 withEnv(['HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088']) {
                     withCredentials([string(credentialsId: 'navikt-ci-oauthtoken', variable: 'token')]) {
                         sh "${mvn} versions:set -B -DnewVersion=${releaseVersion} -DgenerateBackupPoms=false"
-                        sh "git config push.default simple"
                         sh "git commit -am \"set version to ${releaseVersion} (from Jenkins pipeline)\""
-                        sh ("git push https://${token}:x-oauth-basic@github.com/navikt/${application}.git")
+                        sh ("git push -u https://${token}:x-oauth-basic@github.com/navikt/${application}.git $BRANCH_NAME")
                         sh ("git tag -a ${application}-${releaseVersion} -m ${application}-${releaseVersion}")
-                        sh ("git push https://${token}:x-oauth-basic@github.com/navikt/${application}.git --tags")
+                        sh ("git push -u https://${token}:x-oauth-basic@github.com/navikt/${application}.git --tags $BRANCH_NAME")
                     }
                 }
             }
@@ -100,7 +99,7 @@ node {
                         nextVersion = (releaseVersion.toInteger() + 1) + "-SNAPSHOT"
                         sh "${mvn} versions:set -B -DnewVersion=${nextVersion} -DgenerateBackupPoms=false"
                         sh "git commit -am \"updated to new dev-version ${nextVersion} after release by ${committer}\""
-                        sh "git push https://${token}:x-oauth-basic@github.com/navikt/${application}.git"
+                        sh "git push -u https://${token}:x-oauth-basic@github.com/navikt/${application}.git $BRANCH_NAME"
                     }
                 }
             }
