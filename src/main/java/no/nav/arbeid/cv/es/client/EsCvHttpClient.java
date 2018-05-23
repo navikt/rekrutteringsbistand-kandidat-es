@@ -375,7 +375,6 @@ public class EsCvHttpClient implements EsCvClient {
 
   private void addGeografiQuery(String geografi, BoolQueryBuilder boolQueryBuilder) {
     String[] geografiKoder = geografi.split("\\.");
-
     String regex = geografi + "|NO";
 
     if (geografiKoder.length > 1) {
@@ -384,12 +383,10 @@ public class EsCvHttpClient implements EsCvClient {
             regex += "|" + geografiKoder[0] + "." + geografiKoder[1].substring(0, 4);
         }
     }
-    System.out.println(regex);
 
     NestedQueryBuilder geografiQueryBuilder = QueryBuilders.nestedQuery("geografiJobbonsker",
         QueryBuilders.regexpQuery("geografiJobbonsker.geografiKode", regex), ScoreMode.None);
     boolQueryBuilder.must(geografiQueryBuilder);
-
     LOGGER.debug("ADDING geografiJobbonske");
   }
 

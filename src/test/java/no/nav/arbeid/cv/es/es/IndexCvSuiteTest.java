@@ -431,11 +431,11 @@ public class IndexCvSuiteTest {
   public void testSokPaFlereGeografiJobbonskerGirBegrensendeResultat() throws IOException {
     Sokeresultat sokeresultat =
         client.sok(Sokekriterier.med()
-            .geografiList(Collections.singletonList("Oslo"))
+            .geografiList(Collections.singletonList("NO34.3434.1"))
             .bygg());
     Sokeresultat sokeresultat2 =
         client.sok(Sokekriterier.med()
-            .geografiList(Arrays.asList("Oslo", "Harstad"))
+            .geografiList(Arrays.asList("NO34.3434.1", "NO21.2020"))
             .bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
