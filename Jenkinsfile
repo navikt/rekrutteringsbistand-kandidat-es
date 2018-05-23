@@ -98,7 +98,7 @@ node {
                     withCredentials([string(credentialsId: 'navikt-ci-oauthtoken', variable: 'token')]) {
                         nextVersion = (releaseVersion.toInteger() + 1) + "-SNAPSHOT"
                         sh "${mvn} versions:set -B -DnewVersion=${nextVersion} -DgenerateBackupPoms=false"
-                        sh "git commit -am \"updated to new dev-version ${nextVersion} after release by ${committer}\""
+                        sh "git commit -am \"updated to new dev-version ${nextVersion} after release by ${committer} (from Jenkins pipeline)\""
                         sh "git push -u https://${token}:x-oauth-basic@github.com/navikt/${application}.git $BRANCH_NAME"
                     }
                 }
