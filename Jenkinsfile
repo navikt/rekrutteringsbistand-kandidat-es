@@ -59,7 +59,6 @@ node {
             } else {
                 println("POM version is not a SNAPSHOT, it is ${pom.version}. Skipping build and testing of backend")
             }
-
         }
 
         stage("release version") {
