@@ -30,10 +30,13 @@ node {
             println ("Initialize $BRANCH_NAME")
             if (BRANCH_NAME.contains("PR-")) {
                 println ("Branch is pull request")
+                deployEnv="t1"
+                namespace="default"
                 isPullRequest = true
                 prPomVersion = "$BRANCH_NAME".replaceAll("-", "_") + "-SNAPSHOT"
+                releaseVersion=prPomVersion
                 println ("Setter ny pom versjon $prPomVersion")
-                sh "${mvn} versions:set -B -DnewVersion=${prPomVersion} -DgenerateBackupPoms=false"
+                sh "${mvn} versions:set -B -DnewVersion=${prPomVersion} -DgenerateBackupPoms=false"                 
             } else {
                 isPullRequest = false
             }
@@ -84,11 +87,9 @@ node {
         }
 
         stage("build and publish docker image") {
-            if (!isPullRequest) {
-                withCredentials([usernamePassword(credentialsId: 'nexusUploader', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-                    sh "docker build --build-arg JAR_FILE=${application}-${releaseVersion}.jar -t ${dockerRepo}/${application}:${releaseVersion} ."
-                    sh "docker login -u ${env.NEXUS_USERNAME} -p ${env.NEXUS_PASSWORD} ${dockerRepo} && docker push ${dockerRepo}/${application}:${releaseVersion}"
-                }
+            withCredentials([usernamePassword(credentialsId: 'nexusUploader', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+                sh "docker build --build-arg JAR_FILE=${application}-${releaseVersion}.jar -t ${dockerRepo}/${application}:${releaseVersion} ."
+                sh "docker login -u ${env.NEXUS_USERNAME} -p ${env.NEXUS_PASSWORD} ${dockerRepo} && docker push ${dockerRepo}/${application}:${releaseVersion}"
             }
         }
 
@@ -106,19 +107,16 @@ node {
         }
 
         stage("deploy to preprod") {
-            if (!isPullRequest) {
-		    callback = "${env.BUILD_URL}input/Deploy/"
+            callback = "${env.BUILD_URL}input/Deploy/"
 
-		    def deploy = deployLib.deployNaisApp(application, releaseVersion, deployEnv, zone, namespace, callback, committer, false).key
+            def deploy = deployLib.deployNaisApp(application, releaseVersion, deployEnv, zone, namespace, callback, committer, false).key
 
-		    try {
-		        timeout(time: 15, unit: 'MINUTES') {
-		            input id: 'deploy', message: "Check status here:  https://jira.adeo.no/browse/${deploy}"
-		        }
-		    } catch (Exception e) {https://repo.adeo.no/repository/raw/
-		    throw new Exception("Deploy feilet :( \n Se https://jira.adeo.no/browse/" + deploy + " for detaljer", e)
-
-		    }
+            try {
+                timeout(time: 15, unit: 'MINUTES') {
+                    input id: 'deploy', message: "Check status here:  https://jira.adeo.no/browse/${deploy}"
+                }
+            } catch (Exception e) {
+                throw new Exception("Deploy feilet :( \n Se https://jira.adeo.no/browse/" + deploy + " for detaljer", e)
             }
         }
 
