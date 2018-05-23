@@ -58,7 +58,9 @@ node {
 
         stage("build and test backend") {
             if (isSnapshot) {
-                sh "${mvn} clean install -Dit.skip=true -Djava.io.tmpdir=/tmp/${application} -B -e"
+                lock($application) {
+                    sh "${mvn} clean install -Dit.skip=true -Djava.io.tmpdir=/tmp/${application} -B -e"
+                }
             } else {
                 println("POM version is not a SNAPSHOT, it is ${pom.version}. Skipping build and testing of backend")
             }
