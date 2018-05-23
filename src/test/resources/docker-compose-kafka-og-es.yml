@@ -48,8 +48,8 @@ services:
     privileged: true
     hostname: elastic
     ports:
-      - "9200:9200"
-      - "9300:9300" 
+      - "9250:9200"
+      - "9350:9300" 
     healthcheck:
       test: "curl -f http://localhost:9200"
 
