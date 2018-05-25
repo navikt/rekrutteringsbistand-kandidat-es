@@ -17,7 +17,7 @@ healthcheck:
     initialDelay: 90
 resources:
   limits:
-    cpu: 500m
+    cpu: 800m
     memory: 1024Mi
   requests:
     cpu: 200m
