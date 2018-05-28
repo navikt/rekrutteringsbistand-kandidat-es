@@ -10,6 +10,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import no.nav.arbeid.cv.es.domene.EsCv;
 import no.nav.arbeid.cv.es.domene.EsForerkort;
 import no.nav.arbeid.cv.es.domene.EsGeografiJobbonsker;
@@ -33,38 +37,21 @@ import no.nav.arbeid.cv.events.Utdanning;
 import no.nav.arbeid.cv.events.Verv;
 import no.nav.arbeid.cv.events.YrkeJobbonsker;
 import no.nav.arbeid.cv.events.Yrkeserfaring;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class EsCvTransformer {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(EsCvTransformer.class);
 
   public EsCv transform(CvEvent p) {
-    EsCv esCv = new EsCv(
-        p.getFodselsnummer(),
-        p.getFornavn(),
-        p.getEtternavn(),
-        this.toDate(p.getFodselsdato()),
-        p.getFodselsdatoErDnr(),
-        p.getFormidlingsgruppekode(),
-        p.getEpostadresse(),
-        p.getStatsborgerskap(),
-        p.getArenaPersonId(),
-        p.getArenaKandidatnr(),
-        p.getBeskrivelse(),
-        p.getSamtykkeStatus(),
-        this.toDate(p.getSamtykkeDato()),
-        p.getAdresselinje1(),
-        p.getAdresselinje2(),
-        p.getAdresselinje3(),
-        p.getPostnr(),
-        p.getPoststed(),
-        p.getLandkode(),
-        p.getKommunenr(),
-        p.getDisponererBil(),
-        this.toDate(p.getTidsstempel())
-    );
+    LOGGER.debug("Mottatt en CV med {} antall utdanning og {} antall arbeidserfaringer",
+        nullSafeAntall(p.getUtdanning()), nullSafeAntall(p.getYrkeserfaring()));
+    EsCv esCv = new EsCv(p.getFodselsnummer(), p.getFornavn(), p.getEtternavn(),
+        this.toDate(p.getFodselsdato()), p.getFodselsdatoErDnr(), p.getFormidlingsgruppekode(),
+        p.getEpostadresse(), p.getStatsborgerskap(), p.getArenaPersonId(), p.getArenaKandidatnr(),
+        p.getBeskrivelse(), p.getSamtykkeStatus(), this.toDate(p.getSamtykkeDato()),
+        p.getAdresselinje1(), p.getAdresselinje2(), p.getAdresselinje3(), p.getPostnr(),
+        p.getPoststed(), p.getLandkode(), p.getKommunenr(), p.getDisponererBil(),
+        this.toDate(p.getTidsstempel()));
 
     esCv.addYrkeserfaring(mapList(p.getYrkeserfaring(), this::mapYrke));
     esCv.addUtdanning(mapList(p.getUtdanning(), this::mapUtdanning));
@@ -86,6 +73,10 @@ public class EsCvTransformer {
     return esCv;
   }
 
+  private int nullSafeAntall(List<?> list) {
+    return list == null ? 0 : list.size();
+  }
+
   private <T, U> List<T> mapList(List<U> startListe, Function<U, T> mapper) {
     if (startListe == null) {
       return Collections.emptyList();
@@ -96,136 +87,79 @@ public class EsCvTransformer {
   private EsYrkeserfaring mapYrke(Yrkeserfaring yrke) {
     Date fraDato = toDate(yrke.getFraDato());
     Date tilDato = toDate(yrke.getTilDato());
-    return new EsYrkeserfaring(
-        fraDato,
-        tilDato,
-        yrke.getArbeidsgiver(),
-        yrke.getStyrkKode(),
-        yrke.getStyrkKodeStillingstittel(),
-        yrke.getAlternativStillingstittel(),
-        yrke.getOrganisasjonsnummer(),
-        yrke.getNaceKode(),
-        this.toYrkeserfaringManeder(fraDato, tilDato)
-    );
+    return new EsYrkeserfaring(fraDato, tilDato, yrke.getArbeidsgiver(), yrke.getStyrkKode(),
+        yrke.getStyrkKodeStillingstittel(), yrke.getAlternativStillingstittel(),
+        yrke.getOrganisasjonsnummer(), yrke.getNaceKode(),
+        this.toYrkeserfaringManeder(fraDato, tilDato));
   }
 
   private EsUtdanning mapUtdanning(Utdanning utdanning) {
-    return new EsUtdanning(
-        toDate(utdanning.getFraDato()),
-        toDate(utdanning.getTilDato()),
-        utdanning.getUtdannelsessted(),
-        utdanning.getNusKode(),
-        utdanning.getNusKodeGrad(),
-        utdanning.getAlternativGrad()
-    );
+    return new EsUtdanning(toDate(utdanning.getFraDato()), toDate(utdanning.getTilDato()),
+        utdanning.getUtdannelsessted(), utdanning.getNusKode(), utdanning.getNusKodeGrad(),
+        utdanning.getAlternativGrad());
   }
 
   private EsKompetanse mapKompetanse(Kompetanse kompetanse) {
-    return new EsKompetanse(
-        this.toDate(kompetanse.getFraDato()),
-        kompetanse.getKompKode(),
-        kompetanse.getKompKodeNavn(),
-        kompetanse.getAlternativtNavn(),
-        kompetanse.getBeskrivelse()
-    );
+    return new EsKompetanse(this.toDate(kompetanse.getFraDato()), kompetanse.getKompKode(),
+        kompetanse.getKompKodeNavn(), kompetanse.getAlternativtNavn(), kompetanse.getBeskrivelse());
   }
 
   private EsSertifikat mapSertifikat(Sertifikat sertifikat) {
-    return new EsSertifikat(
-        toDate(sertifikat.getFraDato()),
-        toDate(sertifikat.getTilDato()),
-        sertifikat.getSertifikatKode(),
-        sertifikat.getSertifikatKodeNavn(),
-        sertifikat.getAlternativtNavn(),
-        sertifikat.getUtsteder()
-    );
+    return new EsSertifikat(toDate(sertifikat.getFraDato()), toDate(sertifikat.getTilDato()),
+        sertifikat.getSertifikatKode(), sertifikat.getSertifikatKodeNavn(),
+        sertifikat.getAlternativtNavn(), sertifikat.getUtsteder());
   }
 
   private EsForerkort mapForerkort(Forerkort forerkort) {
-    return new EsForerkort(
-        toDate(forerkort.getFraDato()),
-        toDate(forerkort.getTilDato()),
-        forerkort.getForerkortKode(),
-        forerkort.getForerkortKodeKlasse(),
-        forerkort.getAlternativKlasse(),
-        forerkort.getUtsteder()
-    );
+    return new EsForerkort(toDate(forerkort.getFraDato()), toDate(forerkort.getTilDato()),
+        forerkort.getForerkortKode(), forerkort.getForerkortKodeKlasse(),
+        forerkort.getAlternativKlasse(), forerkort.getUtsteder());
   }
 
   private EsSprak mapSprak(Sprak sprak) {
-    return new EsSprak(
-        this.toDate(sprak.getFraDato()),
-        sprak.getSprakKode(),
-        sprak.getSprakKodeTekst(),
-        sprak.getAlternativTekst(),
-        sprak.getBeskrivelse()
-    );
+    return new EsSprak(this.toDate(sprak.getFraDato()), sprak.getSprakKode(),
+        sprak.getSprakKodeTekst(), sprak.getAlternativTekst(), sprak.getBeskrivelse());
   }
 
   private EsKurs mapKurs(Kurs kurs) {
-    return new EsKurs(
-        toDate(kurs.getFraDato()),
-        toDate(kurs.getTilDato()),
-        kurs.getTittel(),
-        kurs.getArrangor(),
-        kurs.getOmfang().getEnhet(),
-        kurs.getOmfang().getVerdi(),
-        kurs.getBeskrivelse()
-    );
+    return new EsKurs(toDate(kurs.getFraDato()), toDate(kurs.getTilDato()), kurs.getTittel(),
+        kurs.getArrangor(), kurs.getOmfang().getEnhet(), kurs.getOmfang().getVerdi(),
+        kurs.getBeskrivelse());
   }
 
   private EsVerv mapVerv(Verv verv) {
-    return new EsVerv(
-        toDate(verv.getFraDato()),
-        toDate(verv.getTilDato()),
-        verv.getOrganisasjon(),
-        verv.getTittel()
-    );
+    return new EsVerv(toDate(verv.getFraDato()), toDate(verv.getTilDato()), verv.getOrganisasjon(),
+        verv.getTittel());
   }
 
   private EsGeografiJobbonsker mapGeografiJobbonske(GeografiJobbonsker geografiJobbonsker) {
-    return new EsGeografiJobbonsker(
-        geografiJobbonsker.getGeografiKodeTekst(),
-        geografiJobbonsker.getGeografiKode()
-    );
+    return new EsGeografiJobbonsker(geografiJobbonsker.getGeografiKodeTekst(),
+        geografiJobbonsker.getGeografiKode());
   }
 
   private EsYrkeJobbonsker mapYrkeJobbonske(YrkeJobbonsker yrkeJobbonsker) {
-    return new EsYrkeJobbonsker(
-        yrkeJobbonsker.getStyrkKode(),
-        yrkeJobbonsker.getStyrkBeskrivelse(),
-        yrkeJobbonsker.getPrimaertJobbonske()
-    );
+    return new EsYrkeJobbonsker(yrkeJobbonsker.getStyrkKode(), yrkeJobbonsker.getStyrkBeskrivelse(),
+        yrkeJobbonsker.getPrimaertJobbonske());
   }
 
   private EsSamletKompetanse mapSamletKompetanse(Sprak sprak) {
-    return new EsSamletKompetanse(
-        sprak.getSprakKodeTekst()
-    );
+    return new EsSamletKompetanse(sprak.getSprakKodeTekst());
   }
 
   private EsSamletKompetanse mapSamletKompetanse(Sertifikat sertifikat) {
-    return new EsSamletKompetanse(
-        sertifikat.getSertifikatKodeNavn()
-    );
+    return new EsSamletKompetanse(sertifikat.getSertifikatKodeNavn());
   }
 
   private EsSamletKompetanse mapSamletKompetanse(Kurs kurs) {
-    return new EsSamletKompetanse(
-        kurs.getTittel()
-    );
+    return new EsSamletKompetanse(kurs.getTittel());
   }
 
   private EsSamletKompetanse mapSamletKompetanse(Forerkort forerkort) {
-    return new EsSamletKompetanse(
-        forerkort.getForerkortKodeKlasse()
-    );
+    return new EsSamletKompetanse(forerkort.getForerkortKodeKlasse());
   }
 
   private EsSamletKompetanse mapSamletKompetanse(Kompetanse kompetanse) {
-    return new EsSamletKompetanse(
-        kompetanse.getKompKodeNavn()
-    );
+    return new EsSamletKompetanse(kompetanse.getKompKodeNavn());
   }
 
   private int toYrkeserfaringManeder(Date fraDato, Date tilDato) {

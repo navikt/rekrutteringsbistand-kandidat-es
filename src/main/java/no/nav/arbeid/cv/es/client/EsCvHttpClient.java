@@ -150,6 +150,8 @@ public class EsCvHttpClient implements EsCvClient {
         try {
           if (bir.getFailure() != null) {
             LOGGER.warn(bir.getFailure().getMessage(), bir.getFailure().getCause());
+          }
+          if (bir.getResponse() == null) {
             esCver.stream()
                 .filter(esCv -> esCv.getArenaPersonId().toString().equals(bir.getIndex()))
                 .findFirst().ifPresent(
@@ -162,6 +164,7 @@ public class EsCvHttpClient implements EsCvClient {
       }
     }
     LOGGER.debug("BULKINDEX tidsbruk: " + bulkResponse.getTook());
+
   }
 
   @Override
