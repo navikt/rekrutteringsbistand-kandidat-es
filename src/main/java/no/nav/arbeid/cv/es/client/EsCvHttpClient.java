@@ -360,7 +360,7 @@ public class EsCvHttpClient implements EsCvClient {
     }
 
     final AbstractQueryBuilder<?> qb = queryBuilder;
-    SearchResponse searchResponse = esExec(() -> search(qb, 0, 100));
+    SearchResponse searchResponse = esExec(() -> search(qb, 0, 1000));
     return toSokeresultat(searchResponse);
   }
 
@@ -501,6 +501,7 @@ public class EsCvHttpClient implements EsCvClient {
   }
 
   private Sokeresultat toSokeresultat(SearchResponse searchResponse) {
+    LOGGER.debug("Totalt antall treff: " + searchResponse.getHits().getTotalHits());
     List<EsCv> cver = toCvList(searchResponse);
     List<Aggregering> aggregeringer = toAggregeringList(searchResponse);
     return new Sokeresultat(searchResponse.getHits().getTotalHits(), cver, aggregeringer);
