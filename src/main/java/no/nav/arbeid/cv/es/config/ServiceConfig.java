@@ -214,7 +214,7 @@ public class ServiceConfig {
 
     @Async
     public void last() throws JsonParseException, JsonMappingException, IOException {
-      File file = ResourceUtils.getFile("classpath:input.json");
+      File file = ResourceUtils.getFile("classpath:/input.json");
       LOGGER.info("File Found : " + file.exists());
       String input = new String(Files.readAllBytes(file.toPath()));
       List<ArenaPerson> arenapersoner =
