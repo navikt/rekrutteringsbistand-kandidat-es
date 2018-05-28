@@ -134,7 +134,7 @@ public class EsCvHttpClient implements EsCvClient {
     if (bulkResponse.hasFailures()) {
       LOGGER.warn("Feilet under indeksering av CVer: " + bulkResponse.buildFailureMessage());
     }
-    LOGGER.debug("BULKINDEXRESPONSE: " + bulkResponse.toString());
+    LOGGER.debug("BULKINDEX tidsbruk: " + bulkResponse.getTook());
   }
 
   @Override
