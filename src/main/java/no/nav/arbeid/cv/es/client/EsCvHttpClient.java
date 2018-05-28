@@ -12,6 +12,7 @@ import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse;
+import org.elasticsearch.action.bulk.BulkItemResponse;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteRequest;
@@ -49,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -98,7 +100,7 @@ public class EsCvHttpClient implements EsCvClient {
     LOGGER.debug("DOKUMENTET: " + jsonString);
 
     IndexRequest request =
-            new IndexRequest(CV_INDEX, CV_TYPE, Long.toString(esCv.getArenaPersonId()));
+        new IndexRequest(CV_INDEX, CV_TYPE, Long.toString(esCv.getArenaPersonId()));
     request.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
     request.source(jsonString, XContentType.JSON);
     IndexResponse indexResponse = esExec(() -> client.index(request));
@@ -113,26 +115,35 @@ public class EsCvHttpClient implements EsCvClient {
       for (EsCv esCv : esCver) {
         currentArenaId = esCv.getArenaPersonId();
         String jsonString = mapper.writeValueAsString(esCv);
-        IndexRequest ir = Requests.indexRequest()
-                .source(jsonString, XContentType.JSON)
-                .index(CV_INDEX)
-                .type(CV_TYPE)
-                .id(Long.toString(esCv.getArenaPersonId()));
+        IndexRequest ir = Requests.indexRequest().source(jsonString, XContentType.JSON)
+            .index(CV_INDEX).type(CV_TYPE).id(Long.toString(esCv.getArenaPersonId()));
 
         bulkRequest.add(ir);
       }
     } catch (Exception e) {
-      LOGGER.info("Greide ikke å serialisere CV til JSON for å bygge opp bulk-indekseringsrequest: {}. ArenaId: {}",
-              e.getMessage(), currentArenaId, e);
-      throw new ApplicationException("Greide ikke å serialisere CV til JSON for å bygge opp bulk-indekseringsrequest. ArenaId: " +
-              currentArenaId, e);
+      LOGGER.info(
+          "Greide ikke å serialisere CV til JSON for å bygge opp bulk-indekseringsrequest: {}. ArenaId: {}",
+          e.getMessage(), currentArenaId, e);
+      throw new ApplicationException(
+          "Greide ikke å serialisere CV til JSON for å bygge opp bulk-indekseringsrequest. ArenaId: "
+              + currentArenaId,
+          e);
     }
 
     LOGGER.info("Sender bulk indexrequest med {} cv'er", esCver.size());
     bulkRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
     BulkResponse bulkResponse = esExec(() -> client.bulk(bulkRequest));
     if (bulkResponse.hasFailures()) {
-      LOGGER.warn("Feilet under indeksering av CVer: " + bulkResponse.buildFailureMessage());
+      for (BulkItemResponse bir : bulkResponse.getItems()) {
+        try {
+          esCver.stream().filter(esCv -> esCv.getArenaPersonId().toString().equals(bir.getIndex()))
+              .findFirst().ifPresent(
+                  esCv -> LOGGER.warn("Det filet å indeksere denne CVen: " + esCv.toString()));
+        } catch (Exception e) {
+          LOGGER.warn("Feilet å parse bulkitemresponse..", e);
+        }
+        LOGGER.warn("Feilet under indeksering av CVer: " + bulkResponse.buildFailureMessage());
+      }
     }
     LOGGER.debug("BULKINDEX tidsbruk: " + bulkResponse.getTook());
   }
@@ -142,9 +153,7 @@ public class EsCvHttpClient implements EsCvClient {
     BulkRequest bulkRequest = Requests.bulkRequest();
 
     for (Long id : arenapersoner) {
-      DeleteRequest dr = Requests.deleteRequest(CV_INDEX)
-              .id(Long.toString(id))
-              .type(CV_TYPE);
+      DeleteRequest dr = Requests.deleteRequest(CV_INDEX).id(Long.toString(id)).type(CV_TYPE);
 
       bulkRequest.add(dr);
     }
@@ -220,21 +229,13 @@ public class EsCvHttpClient implements EsCvClient {
 
   @Override
   public Sokeresultat sok(String fritekst, List<String> stillingstitler, List<String> kompetanser,
-      List<String> utdanninger, List<String> geografiList, String totalYrkeserfaring, List<String> utdanningsniva,
-      String styrkKode, String nusKode, List<String> styrkKoder, List<String> nusKoder) throws IOException {
-    Sokekriterier s = Sokekriterier.med()
-        .fritekst(fritekst)
-        .stillingstitler(stillingstitler)
-        .kompetanser(kompetanser)
-        .utdanninger(utdanninger)
-        .geografiList(geografiList)
-        .totalYrkeserfaring(totalYrkeserfaring)
-        .utdanningsniva(utdanningsniva)
-        .styrkKode(styrkKode)
-        .nusKode(nusKode)
-        .styrkKoder(styrkKoder)
-        .nusKoder(nusKoder)
-        .bygg();
+      List<String> utdanninger, List<String> geografiList, String totalYrkeserfaring,
+      List<String> utdanningsniva, String styrkKode, String nusKode, List<String> styrkKoder,
+      List<String> nusKoder) throws IOException {
+    Sokekriterier s = Sokekriterier.med().fritekst(fritekst).stillingstitler(stillingstitler)
+        .kompetanser(kompetanser).utdanninger(utdanninger).geografiList(geografiList)
+        .totalYrkeserfaring(totalYrkeserfaring).utdanningsniva(utdanningsniva).styrkKode(styrkKode)
+        .nusKode(nusKode).styrkKoder(styrkKoder).nusKoder(nusKoder).bygg();
     return sok(s);
   }
 
@@ -304,8 +305,8 @@ public class EsCvHttpClient implements EsCvClient {
               .gte(interval[0]).lte(interval[1]);
           boolQueryBuilder.must(totalErfaringQueryBuilder);
         } else if (interval.length == 1) {
-          totalErfaringQueryBuilder = QueryBuilders.rangeQuery("totalLengdeYrkeserfaring")
-              .gte(interval[0]).lte(null);
+          totalErfaringQueryBuilder =
+              QueryBuilders.rangeQuery("totalLengdeYrkeserfaring").gte(interval[0]).lte(null);
           boolQueryBuilder.must(totalErfaringQueryBuilder);
         }
         LOGGER.debug("ADDING totalYrkeserfaringLengde");
@@ -332,7 +333,8 @@ public class EsCvHttpClient implements EsCvClient {
       }
 
       if (StringUtils.isNotBlank(sk.etternavn())) {
-        MatchQueryBuilder etternavnQueryBuilder = new MatchQueryBuilder("etternavn", sk.etternavn());
+        MatchQueryBuilder etternavnQueryBuilder =
+            new MatchQueryBuilder("etternavn", sk.etternavn());
         boolQueryBuilder.should(etternavnQueryBuilder);
       }
       queryBuilder = boolQueryBuilder;
@@ -345,8 +347,7 @@ public class EsCvHttpClient implements EsCvClient {
 
   private void addYrkeJobbonskerQuery(String yrkeJobbonske, BoolQueryBuilder boolQueryBuilder) {
     NestedQueryBuilder yrkeJobbonskeQueryBuilder = QueryBuilders.nestedQuery("yrkeJobbonsker",
-        QueryBuilders.matchQuery("yrkeJobbonsker.styrkBeskrivelse", yrkeJobbonske),
-        ScoreMode.None);
+        QueryBuilders.matchQuery("yrkeJobbonsker.styrkBeskrivelse", yrkeJobbonske), ScoreMode.None);
     boolQueryBuilder.should(yrkeJobbonskeQueryBuilder);
   }
 
@@ -378,10 +379,10 @@ public class EsCvHttpClient implements EsCvClient {
     String regex = geografi + "|NO";
 
     if (geografiKoder.length > 1) {
-        regex += "|" + geografiKoder[0];
-        if (geografiKoder[1].length() > 4) {
-            regex += "|" + geografiKoder[0] + "." + geografiKoder[1].substring(0, 4);
-        }
+      regex += "|" + geografiKoder[0];
+      if (geografiKoder[1].length() > 4) {
+        regex += "|" + geografiKoder[0] + "." + geografiKoder[1].substring(0, 4);
+      }
     }
 
     NestedQueryBuilder geografiQueryBuilder = QueryBuilders.nestedQuery("geografiJobbonsker",
@@ -426,12 +427,12 @@ public class EsCvHttpClient implements EsCvClient {
       boolQueryBuilder1.mustNot(utdanningsnivaQueryBuilder);
       boolQueryBuilder.should(boolQueryBuilder1);
     }
-    if(utdanningsniva.equals("Fagbrev")) {
+    if (utdanningsniva.equals("Fagbrev")) {
       NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
           QueryBuilders.matchQuery("kompetanse.kompKode", "501"), ScoreMode.None);
       boolQueryBuilder.should(kompetanseQueryBuilder);
     }
-    if(utdanningsniva.equals("Fagskole")) {
+    if (utdanningsniva.equals("Fagskole")) {
       NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
           QueryBuilders.matchQuery("kompetanse.kompKode", "506"), ScoreMode.None);
       boolQueryBuilder.should(kompetanseQueryBuilder);
@@ -590,8 +591,9 @@ public class EsCvHttpClient implements EsCvClient {
   }
 
   /**
-   * Pakk inn kall mot elastic search i sjekk på om index finnes.
-   * Hvis index ikke finnes så opprettes den, og kalles forsøkes på nytt
+   * Pakk inn kall mot elastic search i sjekk på om index finnes. Hvis index ikke finnes så
+   * opprettes den, og kalles forsøkes på nytt
+   * 
    * @param fun
    * @param <T>
    * @return
@@ -602,11 +604,12 @@ public class EsCvHttpClient implements EsCvClient {
       return fun.get();
     } catch (ElasticsearchStatusException e) {
       if (e.status().getStatus() == 404 && e.getMessage().contains("index_not_found_exception")) {
-        LOGGER.info("Greide ikke å utfore operasjon mot elastic search. Prøver å opprette index og forsøke på nytt.");
+        LOGGER.info(
+            "Greide ikke å utfore operasjon mot elastic search. Prøver å opprette index og forsøke på nytt.");
         createIndex();
         return fun.get();
       }
-      throw(e);
+      throw (e);
     }
   }
 
