@@ -13,6 +13,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,6 +59,7 @@ import no.nav.arbeid.cv.es.service.CvEventListener;
 import no.nav.arbeid.cv.es.service.CvIndexerService;
 import no.nav.arbeid.cv.es.service.DefaultCvIndexerService;
 import no.nav.arbeid.cv.es.service.EsCvTransformer;
+import no.nav.arbeid.cv.events.CvEvent;
 
 @Configuration
 public class ServiceConfig {
@@ -198,11 +200,13 @@ public class ServiceConfig {
 
     if (leggTilTestdata) {
       testDataLaster().last();
-      esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent()));
-      esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent2()));
-      esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent3()));
-      esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent4()));
-      esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent5()));
+      List<EsCv> statiskePersoner =
+          Arrays.asList(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent()),
+              esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent2()),
+              esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent3()),
+              esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent4()),
+              esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent5()));
+      esCvClient.bulkIndex(statiskePersoner);
     }
   }
 
