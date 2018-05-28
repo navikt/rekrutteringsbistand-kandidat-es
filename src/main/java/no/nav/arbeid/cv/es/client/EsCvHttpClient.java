@@ -1,10 +1,13 @@
 package no.nav.arbeid.cv.es.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import no.nav.arbeid.cv.es.domene.*;
-import no.nav.elasticsearch.mapping.MappingBuilder;
-import no.nav.elasticsearch.mapping.MappingBuilderImpl;
-import no.nav.elasticsearch.mapping.ObjectMapping;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.ElasticsearchStatusException;
@@ -25,7 +28,13 @@ import org.elasticsearch.client.Requests;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.query.*;
+import org.elasticsearch.index.query.AbstractQueryBuilder;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.NestedQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
@@ -45,14 +54,17 @@ import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import no.nav.arbeid.cv.es.domene.Aggregering;
+import no.nav.arbeid.cv.es.domene.Aggregeringsfelt;
+import no.nav.arbeid.cv.es.domene.ApplicationException;
+import no.nav.arbeid.cv.es.domene.EsCv;
+import no.nav.arbeid.cv.es.domene.Sokekriterier;
+import no.nav.arbeid.cv.es.domene.Sokeresultat;
+import no.nav.elasticsearch.mapping.MappingBuilder;
+import no.nav.elasticsearch.mapping.MappingBuilderImpl;
+import no.nav.elasticsearch.mapping.ObjectMapping;
 
 public class EsCvHttpClient implements EsCvClient {
 
@@ -136,9 +148,13 @@ public class EsCvHttpClient implements EsCvClient {
     if (bulkResponse.hasFailures()) {
       for (BulkItemResponse bir : bulkResponse.getItems()) {
         try {
-          esCver.stream().filter(esCv -> esCv.getArenaPersonId().toString().equals(bir.getIndex()))
-              .findFirst().ifPresent(
-                  esCv -> LOGGER.warn("Det filet å indeksere denne CVen: " + esCv.toString()));
+          if (bir.getFailure() != null) {
+            LOGGER.warn(bir.getFailure().getMessage(), bir.getFailure().getCause());
+            esCver.stream()
+                .filter(esCv -> esCv.getArenaPersonId().toString().equals(bir.getIndex()))
+                .findFirst().ifPresent(
+                    esCv -> LOGGER.warn("Det filet å indeksere denne CVen: " + esCv.toString()));
+          }
         } catch (Exception e) {
           LOGGER.warn("Feilet å parse bulkitemresponse..", e);
         }
