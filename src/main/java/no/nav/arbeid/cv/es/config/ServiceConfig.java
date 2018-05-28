@@ -2,6 +2,7 @@ package no.nav.arbeid.cv.es.config;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,12 +13,15 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -35,13 +39,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.retry.support.RetryTemplate;
+import org.springframework.scheduling.annotation.Async;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import no.nav.arbeid.cv.arena.domene.ArenaPerson;
+import no.nav.arbeid.cv.arena.mapper.ArenaPersonMapper;
 import no.nav.arbeid.cv.es.client.EsCvClient;
 import no.nav.arbeid.cv.es.client.EsCvHttpClient;
 import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother;
+import no.nav.arbeid.cv.es.domene.EsCv;
 import no.nav.arbeid.cv.es.service.CvEventListener;
 import no.nav.arbeid.cv.es.service.CvIndexerService;
 import no.nav.arbeid.cv.es.service.DefaultCvIndexerService;
@@ -169,10 +181,10 @@ public class ServiceConfig {
     };
   }
 
-  // @Bean
-  // public TestDataLaster testDataLaster() {
-  // return new TestDataLaster(objectMapper, esCvClient(), esCvTransformer());
-  // }
+  @Bean
+  public TestDataLaster testDataLaster() {
+    return new TestDataLaster(objectMapper, esCvClient(), esCvTransformer());
+  }
 
   @PostConstruct
   public void initES() throws IOException {
@@ -185,6 +197,7 @@ public class ServiceConfig {
     }
 
     if (leggTilTestdata) {
+      testDataLaster().last();
       esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent()));
       esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent2()));
       esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent3()));
@@ -193,36 +206,36 @@ public class ServiceConfig {
     }
   }
 
-  // static class TestDataLaster {
-  // private final ObjectMapper objectMapper;
-  // private final EsCvClient esCvClient;
-  // private final EsCvTransformer esCvTransformer;
-  //
-  // public TestDataLaster(ObjectMapper objectMapper, EsCvClient esCvClient,
-  // EsCvTransformer esCvTransformer) {
-  // this.objectMapper = objectMapper;
-  // this.esCvClient = esCvClient;
-  // this.esCvTransformer = esCvTransformer;
-  // }
-  //
-  // @Async
-  // public void last() throws JsonParseException, JsonMappingException, IOException {
-  //
-  // ClassPathResource classPathResource = new ClassPathResource("input.json");
-  // InputStream inputStream = classPathResource.getInputStream();
-  //
-  // StringWriter writer = new StringWriter();
-  // IOUtils.copy(inputStream, writer, "UTF-8");
-  // String input = writer.toString();
-  // List<ArenaPerson> arenapersoner =
-  // objectMapper.readValue(input, new TypeReference<List<ArenaPerson>>() {});
-  //
-  // ArenaPersonMapper mapper = new ArenaPersonMapper();
-  // List<EsCv> espersoner = arenapersoner.stream().map(mapper::map).collect(Collectors.toList());
-  // esCvClient.bulkIndex(espersoner);
-  //
-  //
-  // }
-  // }
+  static class TestDataLaster {
+    private final ObjectMapper objectMapper;
+    private final EsCvClient esCvClient;
+    private final EsCvTransformer esCvTransformer;
+
+    public TestDataLaster(ObjectMapper objectMapper, EsCvClient esCvClient,
+        EsCvTransformer esCvTransformer) {
+      this.objectMapper = objectMapper;
+      this.esCvClient = esCvClient;
+      this.esCvTransformer = esCvTransformer;
+    }
+
+    @Async
+    public void last() throws JsonParseException, JsonMappingException, IOException {
+
+      ClassPathResource classPathResource = new ClassPathResource("input.json");
+      InputStream inputStream = classPathResource.getInputStream();
+
+      StringWriter writer = new StringWriter();
+      IOUtils.copy(inputStream, writer, "UTF-8");
+      String input = writer.toString();
+      List<ArenaPerson> arenapersoner =
+          objectMapper.readValue(input, new TypeReference<List<ArenaPerson>>() {});
+
+      ArenaPersonMapper mapper = new ArenaPersonMapper();
+      List<EsCv> espersoner = arenapersoner.stream().map(mapper::map).collect(Collectors.toList());
+      esCvClient.bulkIndex(espersoner);
+
+
+    }
+  }
 }
 
