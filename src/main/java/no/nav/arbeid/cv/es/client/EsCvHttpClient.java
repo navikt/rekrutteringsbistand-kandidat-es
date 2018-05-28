@@ -360,7 +360,7 @@ public class EsCvHttpClient implements EsCvClient {
     }
 
     final AbstractQueryBuilder<?> qb = queryBuilder;
-    SearchResponse searchResponse = esExec(() -> search(qb, 0, 1000));
+    SearchResponse searchResponse = esExec(() -> search(qb, 0, 100));
     return toSokeresultat(searchResponse);
   }
 
