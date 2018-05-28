@@ -43,6 +43,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -59,9 +60,9 @@ import no.nav.arbeid.cv.es.service.CvEventListener;
 import no.nav.arbeid.cv.es.service.CvIndexerService;
 import no.nav.arbeid.cv.es.service.DefaultCvIndexerService;
 import no.nav.arbeid.cv.es.service.EsCvTransformer;
-import no.nav.arbeid.cv.events.CvEvent;
 
 @Configuration
+@EnableAsync
 public class ServiceConfig {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ServiceConfig.class);
