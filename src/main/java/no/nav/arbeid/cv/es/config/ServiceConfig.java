@@ -1,8 +1,8 @@
 package no.nav.arbeid.cv.es.config;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -21,6 +21,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -38,9 +39,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.util.ResourceUtils;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -214,9 +215,13 @@ public class ServiceConfig {
 
     @Async
     public void last() throws JsonParseException, JsonMappingException, IOException {
-      File file = ResourceUtils.getFile("classpath:input.json");
-      LOGGER.info("File Found : " + file.exists());
-      String input = new String(Files.readAllBytes(file.toPath()));
+
+      ClassPathResource classPathResource = new ClassPathResource("input.json");
+      InputStream inputStream = classPathResource.getInputStream();
+
+      StringWriter writer = new StringWriter();
+      IOUtils.copy(inputStream, writer, "UTF-8");
+      String input = writer.toString();
       List<ArenaPerson> arenapersoner =
           objectMapper.readValue(input, new TypeReference<List<ArenaPerson>>() {});
 
