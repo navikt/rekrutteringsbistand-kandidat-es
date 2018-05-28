@@ -39,9 +39,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.support.RetryTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.util.ResourceUtils;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import no.nav.arbeid.cv.arena.domene.ArenaPerson;
@@ -177,6 +180,11 @@ public class ServiceConfig {
     };
   }
 
+  @Bean
+  public TestDataLaster testDataLaster() {
+    return new TestDataLaster(objectMapper, esCvClient(), esCvTransformer());
+  }
+
   @PostConstruct
   public void initES() throws IOException {
     EsCvClient esCvClient = esCvClient();
@@ -188,7 +196,24 @@ public class ServiceConfig {
     }
 
     if (leggTilTestdata) {
+      testDataLaster().last();
+    }
+  }
 
+  static class TestDataLaster {
+    private final ObjectMapper objectMapper;
+    private final EsCvClient esCvClient;
+    private final EsCvTransformer esCvTransformer;
+
+    public TestDataLaster(ObjectMapper objectMapper, EsCvClient esCvClient,
+        EsCvTransformer esCvTransformer) {
+      this.objectMapper = objectMapper;
+      this.esCvClient = esCvClient;
+      this.esCvTransformer = esCvTransformer;
+    }
+
+    @Async
+    public void last() throws JsonParseException, JsonMappingException, IOException {
       File file = ResourceUtils.getFile("classpath:input.json");
       LOGGER.info("File Found : " + file.exists());
       String input = new String(Files.readAllBytes(file.toPath()));
@@ -199,11 +224,12 @@ public class ServiceConfig {
       List<EsCv> espersoner = arenapersoner.stream().map(mapper::map).collect(Collectors.toList());
       esCvClient.bulkIndex(espersoner);
 
-      esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent()));
-      esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent2()));
-      esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent3()));
-      esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent4()));
-      esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent5()));
+      esCvClient.index(esCvTransformer.transform(TempCvEventObjectMother.giveMeCvEvent()));
+      esCvClient.index(esCvTransformer.transform(TempCvEventObjectMother.giveMeCvEvent2()));
+      esCvClient.index(esCvTransformer.transform(TempCvEventObjectMother.giveMeCvEvent3()));
+      esCvClient.index(esCvTransformer.transform(TempCvEventObjectMother.giveMeCvEvent4()));
+      esCvClient.index(esCvTransformer.transform(TempCvEventObjectMother.giveMeCvEvent5()));
     }
   }
 }
+
