@@ -80,8 +80,8 @@ public class ArenaPersonMapper {
         p.getKompetanse().stream().map(this::mapSamletKompetanseKomp).collect(Collectors.toList()));
     esCv.addSamletKompetanse(p.getSertifikater().stream().map(this::mapSamletKompetanseSert)
         .collect(Collectors.toList()));
-    esCv.addSamletKompetanse(
-        p.getKurs().stream().map(this::mapSamletKompetanseKurs).collect(Collectors.toList()));
+    // esCv.addSamletKompetanse(
+    // p.getKurs().stream().map(this::mapSamletKompetanseKurs).collect(Collectors.toList()));
 
     return esCv;
   }
