@@ -103,7 +103,7 @@ public class ArenaPersonMapper {
   }
 
   private EsGeografiJobbonsker mapGeografiJobbonsker(ArenaGeoPersonProfilLedd a) {
-    return new EsGeografiJobbonsker(a.getGeografiKode(), a.getGeografiKodeTekst());
+    return new EsGeografiJobbonsker(a.getGeografiKodeTekst(), a.getGeografiKode());
   }
 
   private EsYrkeJobbonsker mapYrkeJobbonske(ArenaYrkePersonProfilLedd a) {
