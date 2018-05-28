@@ -1,13 +1,26 @@
 package no.nav.arbeid.cv.es.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import no.nav.arbeid.cv.es.client.EsCvClient;
-import no.nav.arbeid.cv.es.client.EsCvHttpClient;
-import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother;
-import no.nav.arbeid.cv.es.service.CvEventListener;
-import no.nav.arbeid.cv.es.service.CvIndexerService;
-import no.nav.arbeid.cv.es.service.DefaultCvIndexerService;
-import no.nav.arbeid.cv.es.service.EsCvTransformer;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -19,29 +32,33 @@ import org.apache.http.ssl.SSLContexts;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.retry.support.RetryTemplate;
+import org.springframework.util.ResourceUtils;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.security.*;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import no.nav.arbeid.cv.arena.domene.ArenaPerson;
+import no.nav.arbeid.cv.arena.mapper.ArenaPersonMapper;
+import no.nav.arbeid.cv.es.client.EsCvClient;
+import no.nav.arbeid.cv.es.client.EsCvHttpClient;
+import no.nav.arbeid.cv.es.config.temp.TempCvEventObjectMother;
+import no.nav.arbeid.cv.es.domene.EsCv;
+import no.nav.arbeid.cv.es.service.CvEventListener;
+import no.nav.arbeid.cv.es.service.CvIndexerService;
+import no.nav.arbeid.cv.es.service.DefaultCvIndexerService;
+import no.nav.arbeid.cv.es.service.EsCvTransformer;
 
 @Configuration
 public class ServiceConfig {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(ServiceConfig.class);
 
   @Autowired
   private ObjectMapper objectMapper;
@@ -69,7 +86,8 @@ public class ServiceConfig {
 
   @Bean
   @Autowired
-  public CvEventListener cvEventListener(CvIndexerService cvIndexerService, RetryTemplate retryTemplate) {
+  public CvEventListener cvEventListener(CvIndexerService cvIndexerService,
+      RetryTemplate retryTemplate) {
     return new CvEventListener(cvIndexerService, retryTemplate);
   }
 
@@ -170,6 +188,17 @@ public class ServiceConfig {
     }
 
     if (leggTilTestdata) {
+
+      File file = ResourceUtils.getFile("classpath:input.json");
+      LOGGER.info("File Found : " + file.exists());
+      String input = new String(Files.readAllBytes(file.toPath()));
+      List<ArenaPerson> arenapersoner =
+          objectMapper.readValue(input, new TypeReference<List<ArenaPerson>>() {});
+
+      ArenaPersonMapper mapper = new ArenaPersonMapper();
+      List<EsCv> espersoner = arenapersoner.stream().map(mapper::map).collect(Collectors.toList());
+      esCvClient.bulkIndex(espersoner);
+
       esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent()));
       esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent2()));
       esCvClient.index(esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent3()));

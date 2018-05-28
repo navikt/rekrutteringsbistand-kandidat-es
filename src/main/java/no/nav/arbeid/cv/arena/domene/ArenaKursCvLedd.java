@@ -2,24 +2,14 @@ package no.nav.arbeid.cv.arena.domene;
 
 import java.time.LocalDate;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+public class ArenaKursCvLedd {
 
-import org.apache.commons.lang3.StringUtils;
-
-@Entity
-@DiscriminatorValue("KURS")
-public class ArenaKursCvLedd extends ArenaCvLedd {
-
-  public ArenaKursCvLedd(no.nav.arbeid.cv.arena.domene.ArenaCvLedd.ArenaCvLeddPK arenaCvLeddPK,
-      ArenaPerson person, int cvleddnr, String leddtekst1, String leddtekst2, LocalDate fraDato,
-      LocalDate tilDato, String beskrivelse, Integer omfangVerdi, String omfangMaaleenhet,
-      String strukturkode, String elementord, String elementklassekode, String nivaa, String hensyn,
-      String aktiv) {
-    super(arenaCvLeddPK, person, cvleddnr, leddtekst1, leddtekst2, fraDato, tilDato, beskrivelse,
-        omfangVerdi, omfangMaaleenhet, strukturkode, elementord, elementklassekode, nivaa, hensyn,
-        aktiv);
-  }
+  private String arrangor;
+  private String tittel;
+  private String beskrivelse;
+  private Omfang omfang;
+  private LocalDate fraDato;
+  private LocalDate tilDato;
 
   public ArenaKursCvLedd() {}
 
@@ -28,33 +18,70 @@ public class ArenaKursCvLedd extends ArenaCvLedd {
     private Integer verdi;
     private String enhet;
 
-    public Omfang(Integer verdi, String enhet) {
-      this.verdi = verdi;
-      this.enhet = enhet;
-    }
+    public Omfang() {}
 
     public Integer getVerdi() {
       return verdi;
     }
 
+    public void setVerdi(Integer verdi) {
+      this.verdi = verdi;
+    }
+
     public String getEnhet() {
       return enhet;
     }
+
+    public void setEnhet(String enhet) {
+      this.enhet = enhet;
+    }
   }
-  
+
   public String getArrangor() {
-    return StringUtils.defaultString(getLeddtekst1());
+    return arrangor;
+  }
+
+  public void setArrangor(String arrangor) {
+    this.arrangor = arrangor;
   }
 
   public String getTittel() {
-    return StringUtils.defaultString(getLeddtekst2());
+    return tittel;
+  }
+
+  public void setTittel(String tittel) {
+    this.tittel = tittel;
   }
 
   public Omfang getOmfang() {
-    return new Omfang(omfangVerdi, omfangMaaleenhet);
+    return omfang;
   }
-  
+
+  public void setOmfang(Omfang omfang) {
+    this.omfang = omfang;
+  }
+
   public String getBeskrivelse() {
-    return getOpprinneligBeskrivelse();
+    return beskrivelse;
+  }
+
+  public void setBeskrivelse(String beskrivelse) {
+    this.beskrivelse = beskrivelse;
+  }
+
+  public LocalDate getFraDato() {
+    return fraDato;
+  }
+
+  public void setFraDato(LocalDate fraDato) {
+    this.fraDato = fraDato;
+  }
+
+  public LocalDate getTilDato() {
+    return tilDato;
+  }
+
+  public void setTilDato(LocalDate tilDato) {
+    this.tilDato = tilDato;
   }
 }

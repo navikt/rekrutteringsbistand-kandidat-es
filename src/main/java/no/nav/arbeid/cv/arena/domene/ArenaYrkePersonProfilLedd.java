@@ -1,24 +1,33 @@
 package no.nav.arbeid.cv.arena.domene;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+public class ArenaYrkePersonProfilLedd {
 
-import org.apache.commons.lang3.StringUtils;
-
-@Entity
-@DiscriminatorValue("JOBBØ")
-public class ArenaYrkePersonProfilLedd extends ArenaPersonProfilLedd {
+  private String styrkKode;
+  private String styrkBeskrivelse;
+  private boolean primaertJobbonske;
 
   public String getStyrkKode() {
-    return StringUtils.removeStart(StringUtils.defaultString(getStrukturkode()), "T");
+    return styrkKode;
+  }
+
+  public void setStyrkKode(String styrkKode) {
+    this.styrkKode = styrkKode;
   }
 
   public String getStyrkBeskrivelse() {
-    return getElementord();
+    return styrkBeskrivelse;
+  }
+
+  public void setStyrkBeskrivelse(String styrkBeskrivelse) {
+    this.styrkBeskrivelse = styrkBeskrivelse;
   }
 
   public boolean isPrimaertJobbonske() {
-    return getLeddkodeErKilde().equals("PRIMØ");
+    return primaertJobbonske;
+  }
+
+  public void setPrimaertJobbonske(boolean primaertJobbonske) {
+    this.primaertJobbonske = primaertJobbonske;
   }
 }
 

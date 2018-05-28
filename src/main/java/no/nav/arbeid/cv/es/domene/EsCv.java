@@ -171,7 +171,6 @@ public class EsCv {
   }
 
   // Adderfunksjoner
-
   public void addUtdanning(EsUtdanning utdanning) {
     this.utdanning.add(utdanning);
   }

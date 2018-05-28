@@ -1,18 +1,24 @@
 package no.nav.arbeid.cv.arena.domene;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+public class ArenaHedePersonProfilLedd {
 
-@Entity
-@DiscriminatorValue("HEDE")
-public class ArenaHedePersonProfilLedd extends ArenaPersonProfilLedd {
+  private String heltidDeltidKode;
+  private String heltidDeltidKodeTekst;
 
   public String getHeltidDeltidKode() {
-    return getStrukturkode();
+    return heltidDeltidKode;
+  }
+
+  public void setHeltidDeltidKode(String heltidDeltidKode) {
+    this.heltidDeltidKode = heltidDeltidKode;
   }
 
   public String getHeltidDeltidKodeTekst() {
-    return getElementord();
+    return heltidDeltidKodeTekst;
+  }
+
+  public void setHeltidDeltidKodeTekst(String heltidDeltidKodeTekst) {
+    this.heltidDeltidKodeTekst = heltidDeltidKodeTekst;
   }
 
 }

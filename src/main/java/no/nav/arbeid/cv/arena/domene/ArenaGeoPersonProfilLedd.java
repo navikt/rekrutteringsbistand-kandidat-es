@@ -1,18 +1,24 @@
 package no.nav.arbeid.cv.arena.domene;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+public class ArenaGeoPersonProfilLedd {
 
-@Entity
-@DiscriminatorValue("GEO")
-public class ArenaGeoPersonProfilLedd extends ArenaPersonProfilLedd {
+  private String geografiKode;
+  private String geografiKodeTekst;
 
   public String getGeografiKode() {
-    return getStrukturkode();
+    return geografiKode;
+  }
+
+  public void setGeografiKode(String geografiKode) {
+    this.geografiKode = geografiKode;
   }
 
   public String getGeografiKodeTekst() {
-    return getElementord();
+    return geografiKodeTekst;
+  }
+
+  public void setGeografiKodeTekst(String geografiKodeTekst) {
+    this.geografiKodeTekst = geografiKodeTekst;
   }
 
 }

@@ -1,18 +1,24 @@
 package no.nav.arbeid.cv.arena.domene;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+public class ArenaAnsfPersonProfilLedd {
 
-@Entity
-@DiscriminatorValue("ANSF")
-public class ArenaAnsfPersonProfilLedd extends ArenaPersonProfilLedd {
+  private String ansettelsesforholdKode;
+  private String ansettelsesforholdKodeTekst;
 
   public String getAnsettelsesforholdKode() {
-    return getStrukturkode();
+    return ansettelsesforholdKode;
+  }
+
+  public void setAnsettelsesforholdKode(String ansettelsesforholdKode) {
+    this.ansettelsesforholdKode = ansettelsesforholdKode;
   }
 
   public String getAnsettelsesforholdKodeTekst() {
-    return getElementord();
+    return ansettelsesforholdKodeTekst;
+  }
+
+  public void setAnsettelsesforholdKodeTekst(String ansettelsesforholdKodeTekst) {
+    this.ansettelsesforholdKodeTekst = ansettelsesforholdKodeTekst;
   }
 
 }

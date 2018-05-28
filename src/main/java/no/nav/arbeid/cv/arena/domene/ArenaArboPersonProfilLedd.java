@@ -1,17 +1,23 @@
 package no.nav.arbeid.cv.arena.domene;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+public class ArenaArboPersonProfilLedd {
 
-@Entity
-@DiscriminatorValue("ARBO")
-public class ArenaArboPersonProfilLedd extends ArenaPersonProfilLedd {
+  private String arbeidstidsordningKode;
+  private String arbeidstidsordningKodeTekst;
 
   public String getArbeidstidsordningKode() {
-    return getStrukturkode();
+    return arbeidstidsordningKode;
+  }
+
+  public void setArbeidstidsordningKode(String arbeidstidsordningKode) {
+    this.arbeidstidsordningKode = arbeidstidsordningKode;
   }
 
   public String getArbeidstidsordningKodeTekst() {
-    return getElementord();
+    return arbeidstidsordningKodeTekst;
+  }
+
+  public void setArbeidstidsordningKodeTekst(String arbeidstidsordningKodeTekst) {
+    this.arbeidstidsordningKodeTekst = arbeidstidsordningKodeTekst;
   }
 }
