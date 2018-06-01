@@ -10,7 +10,7 @@ node {
 
     def mvnHome = tool "maven-3.3.9"
     def mvn = "${mvnHome}/bin/mvn"
-    def deployEnv = "t6" /* "${env.DEPLOY_ENV}" */
+    def deployEnv = "t1" /* "${env.DEPLOY_ENV}" */
     def namespace = "default" /* "${env.NAMESPACE}" */
     def policies = "app-policies.xml"
     def notenforced = "not-enforced-urls.txt"
