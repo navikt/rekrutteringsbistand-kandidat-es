@@ -11,13 +11,13 @@ port: 8080
 healthcheck:
   liveness:
     path: pam-cv-indexer/rest/internal/isAlive
-    initialDelay: 90
+    initialDelay: 100
   readiness:
     path: pam-cv-indexer/rest/internal/isReady
-    initialDelay: 90
+    initialDelay: 100
 resources:
   limits:
-    cpu: 500m
+    cpu: 800m
     memory: 1024Mi
   requests:
     cpu: 200m

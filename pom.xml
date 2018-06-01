@@ -7,7 +7,7 @@
 	<groupId>no.nav.arbeid.pam</groupId>
 	<artifactId>pam-cv-indexer</artifactId>
 	<packaging>jar</packaging>
-	<version>73-SNAPSHOT</version>
+	<version>99-SNAPSHOT</version>
 
 	<name>pam-cv-indexer</name>
 	<description>Indeksering av CVer i Elasticsearch</description>
@@ -28,7 +28,7 @@
 		<!-- NAVs -->
 		<!-- Tredjeparts -->
 		<!-- <mockito.version>2.7.22</mockito.version> -->
-		<confluent.version>4.0.0</confluent.version>
+		<confluent.version>3.3.1</confluent.version>
 		<avro.version>1.8.1</avro.version>
 		<logstash-logback-encoder.version>4.10</logstash-logback-encoder.version>
 		<logback-access.version>2.7.1</logback-access.version>
