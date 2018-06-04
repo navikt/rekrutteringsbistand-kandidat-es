@@ -156,6 +156,8 @@ node {
 		    } catch (Exception e) {
 		        throw new Exception("Deploy feilet :( \n Se https://jira.adeo.no/browse/" + deploy + " for detaljer", e)
 		    }
+            } else {
+                println ("Pull-requester og brancher deployes ikke til pre-prod. Steg ignorert")
             }
         }
 
