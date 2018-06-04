@@ -126,7 +126,7 @@ node {
         }
 
         stage("deploy PR to test") {
-            if (isPullRequest && deployPullRequests)) {
+            if (isPullRequest && deployPullRequests) {
 		    callback = "${env.BUILD_URL}input/Deploy/"
 
 		    def deploy = deployLib.deployNaisApp(application, releaseVersion, deployPREnv, zone, namespace, callback, committer, false).key
