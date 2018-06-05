@@ -41,6 +41,7 @@
 		<wiremock.version>2.7.1</wiremock.version>
 		<org-ehcache.version>3.5.0</org-ehcache.version>
 		<slf4j-test.version>1.1.0</slf4j-test.version>
+		<kotlin.version>1.2.41</kotlin.version>
 	</properties>
 
 	<dependencies>
@@ -79,6 +80,11 @@
 			<groupId>org.apache.avro</groupId>
 			<artifactId>avro</artifactId>
 			<version>${avro.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>no.finn.unleash</groupId>
+			<artifactId>unleash-client-java</artifactId>
+			<version>3.0.0</version>
 		</dependency>
 		<!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
 			</dependency> <dependency> <groupId>org.springframework.data</groupId> <artifactId>spring-data-elasticsearch</artifactId>
@@ -245,7 +251,23 @@
 			<version>2.0.1.RELEASE</version>
 			<scope>test</scope>
 		</dependency>
-    </dependencies>
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-stdlib-jdk8</artifactId>
+			<version>${kotlin.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-reflect</artifactId>
+			<version>${kotlin.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-test</artifactId>
+			<version>${kotlin.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
 
 	<build>
@@ -262,6 +284,50 @@
                     </execution>
                 </executions>
 			</plugin>
+			<plugin>
+				<groupId>org.jetbrains.kotlin</groupId>
+				<artifactId>kotlin-maven-plugin</artifactId>
+				<version>${kotlin.version}</version>
+				<executions>
+					<execution>
+						<id>compile</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>test-compile</id>
+						<phase>test-compile</phase>
+						<goals>
+							<goal>test-compile</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<jvmTarget>1.8</jvmTarget>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>compile</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>testCompile</id>
+						<phase>test-compile</phase>
+						<goals>
+							<goal>testCompile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -269,33 +335,51 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<configuration>
-                            <excludes>
-                                <exclude>**/*SuiteTest.java</exclude>
-                            </excludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </pluginManagement>
-        </build>
+						<excludes>
+							<exclude>**/*SuiteTest.java</exclude>
+						</excludes>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 
-        <scm>
-            <connection>scm:git:https://github.com/navikt/pam-cv-indexer.git</connection>
-            <developerConnection>scm:git:https://github.com/navikt/pam-cv-indexer.git</developerConnection>
-            <tag>HEAD</tag>
-        </scm>
+	<scm>
+		<connection>scm:git:https://github.com/navikt/pam-cv-indexer.git</connection>
+		<developerConnection>scm:git:https://github.com/navikt/pam-cv-indexer.git</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
 
-        <distributionManagement>
-            <repository>
-                <id>m2internal</id>
-                <name>NAV Maven2 Internal Repository</name>
-                <url>https://repo.adeo.no/repository/maven-releases/</url>
-            </repository>
-            <snapshotRepository>
-                <id>m2snapshot</id>
-                <name>NAV Maven2 Snapshot Repository</name>
-                <url>https://repo.adeo.no/repository/maven-snapshots/</url>
-                <uniqueVersion>false</uniqueVersion>
-            </snapshotRepository>
-        </distributionManagement>
+	<repositories>
+		<repository>
+			<id>repo.adeo.no</id>
+			<name>Maven repo i iApp-sonen</name>
+			<url>https://repo.adeo.no/repository</url>
+		</repository>
+		<repository>
+			<id>palantir</id>
+			<name>Repo for palantir</name>
+			<url>https://dl.bintray.com/palantir/releases</url>
+		</repository>
+		<repository>
+			<id>confluent</id>
+			<name>Maven repo i iApp-sonen (confluent)</name>
+			<url>https://repo.adeo.no/repository/confluent.io</url>
+		</repository>
+	</repositories>
 
-    </project>
+	<distributionManagement>
+		<repository>
+			<id>m2internal</id>
+			<name>NAV Maven2 Internal Repository</name>
+			<url>https://repo.adeo.no/repository/maven-releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>m2snapshot</id>
+			<name>NAV Maven2 Snapshot Repository</name>
+			<url>https://repo.adeo.no/repository/maven-snapshots/</url>
+			<uniqueVersion>false</uniqueVersion>
+		</snapshotRepository>
+	</distributionManagement>
+
+</project>
