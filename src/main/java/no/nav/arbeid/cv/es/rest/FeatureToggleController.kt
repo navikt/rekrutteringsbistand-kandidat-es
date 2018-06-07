@@ -18,7 +18,7 @@ class FeatureToggleController @Inject constructor(val unleashService: UnleashSer
 
     @GetMapping
     fun featureToggles(@RequestParam(name = "feature", required = false) features: List<String>?): ResponseEntity<Map<String, Boolean>> {
-        val featureMap = features?.map { it to unleashService.unleash.isEnabled(it) }?.toMap()
+        val featureMap = features?.map { it to unleashService.unleash.isEnabled("pam-kandidatsok.$it") }?.toMap()
         return ResponseEntity(featureMap ?: HashMap(), HttpStatus.OK)
     }
 }
