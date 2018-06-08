@@ -1,9 +1,6 @@
 package no.nav.arbeid.cv.es.service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import no.nav.arbeid.cv.events.CvEvent;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.TopicPartition;
 import org.slf4j.Logger;
@@ -12,8 +9,9 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.listener.ConsumerSeekAware;
 import org.springframework.retry.support.RetryTemplate;
 
-import no.nav.arbeid.cv.es.config.TopicNames;
-import no.nav.arbeid.cv.events.CvEvent;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CvEventListener implements ConsumerSeekAware {
 
@@ -27,7 +25,7 @@ public class CvEventListener implements ConsumerSeekAware {
     this.retryTemplate = retryTemplate;
   }
 
-  @KafkaListener(topics = TopicNames.TOPIC_CVEVENT_V3,
+  @KafkaListener(topics = "${ARENACV_TOPIC}",
       containerFactory = "kafkaListenerContainerFactory")
   public void processConsumerRecord(List<ConsumerRecord<Long, CvEvent>> records) throws Exception {
     LOGGER.info("{} events mottatt.", records.size());
