@@ -10,6 +10,7 @@ import java.util.List;
 public interface EsCvClient {
 
   Sokeresultat sok(Sokekriterier sokekriterier) throws IOException;
+  
   /** @deprecated Bruk {@link #sok(Sokekriterier)} isteden */
   Sokeresultat sok(String fritekst, List<String> stillingstitler, List<String> kompetanser,
       List<String> utdanninger, List<String> geografiList, String totalYrkeserfaring, List<String> utdanningsniva,
@@ -38,4 +39,6 @@ public interface EsCvClient {
   @Deprecated
   Sokeresultat findByEtternavnAndUtdanningNusKodeGrad(String etternavn,
       String utdanningNusKodeTekst) throws IOException;
+  
+  boolean doesIndexExist() throws IOException;
 }

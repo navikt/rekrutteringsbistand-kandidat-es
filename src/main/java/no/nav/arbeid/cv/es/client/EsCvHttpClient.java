@@ -25,6 +25,8 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.support.WriteRequest;
 import org.elasticsearch.client.Requests;
+import org.elasticsearch.client.Response;
+import org.elasticsearch.client.ResponseException;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentType;
@@ -636,5 +638,16 @@ public class EsCvHttpClient implements EsCvClient {
   /** Tilsvarer java.functions.Supplier bare at get metoden kan kaste IOException */
   private interface IOSupplier<T> {
     T get() throws IOException;
+  }
+
+  @Override
+  public boolean doesIndexExist() throws IOException {
+    try {
+      Response restResponse = client.getLowLevelClient().performRequest("HEAD", "/" + CV_INDEX);
+      return restResponse.getStatusLine().getStatusCode() == 200;
+    } catch (ResponseException e) {
+      LOGGER.debug("Exception while calling isExistingIndex" + e.getMessage());
+    }
+    return false;
   }
 }
