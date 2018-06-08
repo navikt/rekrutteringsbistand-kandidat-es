@@ -170,10 +170,11 @@ public class CvListenerSuiteTest {
     kafkaTemplate.send(TopicNames.TOPIC_CVEVENT_V3, publisertEvent1);
     kafkaTemplate.send(TopicNames.TOPIC_CVEVENT_V3, publisertEvent2);
 
-    verify(cvIndexerServiceMock, timeout(1500l).times(3))
+    verify(cvIndexerServiceMock, timeout(2500l).times(3))
             .bulkIndekser(argThat(e ->
                     e.stream()
                             .anyMatch(v -> feilendeAdresse.equals(v.getAdresselinje1()))));
+    
     verify(cvIndexerServiceMock, timeout(500l).atLeast(1))
             .bulkIndekser(argThat(e ->
                     e.stream()

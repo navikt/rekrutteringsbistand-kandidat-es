@@ -43,6 +43,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -59,9 +60,9 @@ import no.nav.arbeid.cv.es.service.CvEventListener;
 import no.nav.arbeid.cv.es.service.CvIndexerService;
 import no.nav.arbeid.cv.es.service.DefaultCvIndexerService;
 import no.nav.arbeid.cv.es.service.EsCvTransformer;
-import no.nav.arbeid.cv.events.CvEvent;
 
 @Configuration
+@EnableAsync
 public class ServiceConfig {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ServiceConfig.class);
@@ -185,17 +186,19 @@ public class ServiceConfig {
 
   @Bean
   public TestDataLaster testDataLaster() {
-    return new TestDataLaster(objectMapper, esCvClient(), esCvTransformer());
+    return new TestDataLaster(objectMapper, esCvClient());
   }
 
   @PostConstruct
   public void initES() throws IOException {
     EsCvClient esCvClient = esCvClient();
     try {
-      esCvClient.deleteIndex();
-      esCvClient.createIndex();
+      // esCvClient.deleteIndex();
+      if (!esCvClient.doesIndexExist()) {
+        esCvClient.createIndex();
+      }
     } catch (Exception e) {
-      // Ignore
+      LOGGER.error("Feilet under initialisering av Elasticsearch", e);
     }
 
     if (leggTilTestdata) {
@@ -213,13 +216,10 @@ public class ServiceConfig {
   static class TestDataLaster {
     private final ObjectMapper objectMapper;
     private final EsCvClient esCvClient;
-    private final EsCvTransformer esCvTransformer;
 
-    public TestDataLaster(ObjectMapper objectMapper, EsCvClient esCvClient,
-        EsCvTransformer esCvTransformer) {
+    public TestDataLaster(ObjectMapper objectMapper, EsCvClient esCvClient) {
       this.objectMapper = objectMapper;
       this.esCvClient = esCvClient;
-      this.esCvTransformer = esCvTransformer;
     }
 
     @Async

@@ -11,6 +11,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({CvListenerSuiteTest.class, IndexCvSuiteTest.class, SearchControllerSuiteTest.class})
 public class DockerComposeTest {
+  
     @ClassRule
     public static DockerComposeRule docker =
             DockerComposeRule.builder().file("src/test/resources/docker-compose-kafka-og-es.yml")
