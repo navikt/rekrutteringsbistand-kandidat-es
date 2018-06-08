@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 import javax.inject.Inject
 
 @RestController
-@RequestMapping("/rest/toggles", produces = [(MediaType.APPLICATION_JSON_VALUE)])
+@RequestMapping("/rest/kandidatsok/toggles", produces = [(MediaType.APPLICATION_JSON_VALUE)])
 @Unprotected
 class FeatureToggleController @Inject constructor(val unleashService: UnleashService) {
 
