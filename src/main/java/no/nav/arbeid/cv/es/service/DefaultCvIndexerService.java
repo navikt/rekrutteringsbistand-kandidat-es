@@ -40,6 +40,8 @@ public class DefaultCvIndexerService implements CvIndexerService {
 
   @Override
   public void bulkIndekser(List<CvEvent> cvEventer) {
+    if (cvEventer.isEmpty())
+      return;
     List<EsCv> esPersoner = new ArrayList<>(cvEventer.size());
     try {
       for (CvEvent cvEvent : cvEventer) {
@@ -65,7 +67,9 @@ public class DefaultCvIndexerService implements CvIndexerService {
 
   @Override
   public void bulkSlett(List<Long> arenaIder) {
-      try {
+    if (arenaIder.isEmpty())
+      return;
+    try {
           esCvClient.bulkSlett(arenaIder);
       } catch (IOException e) {
           throw new OperationalException("Infrastrukturfeil ved bulksletting av cver: " + e.getMessage(), e);
