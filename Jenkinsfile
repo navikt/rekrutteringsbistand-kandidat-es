@@ -10,9 +10,9 @@ node {
 
     def mvnHome = tool "maven-3.3.9"
     def mvn = "${mvnHome}/bin/mvn"
-    def deployEnv = "t1" /* "${env.DEPLOY_ENV}" */
+    def deployEnv = "t6" /* "${env.DEPLOY_ENV}" */
     def deployPREnv = "t1"
-    def namespace = "default" /* "${env.NAMESPACE}" */
+    def namespace = "t6" /* "${env.NAMESPACE}" */
     def policies = "app-policies.xml"
     def notenforced = "not-enforced-urls.txt"
     def appConfig = "nais.yaml"
@@ -100,6 +100,13 @@ node {
               withCredentials([usernamePassword(credentialsId: 'nexusUploader', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
                   sh "curl --user ${env.NEXUS_USERNAME}:${env.NEXUS_PASSWORD} --upload-file ${appConfig} https://repo.adeo.no/repository/raw/nais/${application}/${releaseVersion}/nais.yaml"
               }
+            }
+        }
+
+        stage("publish openAm files") {
+            withCredentials([usernamePassword(credentialsId: 'nexusUploader', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+                sh "curl --user ${env.NEXUS_USERNAME}:${env.NEXUS_PASSWORD} --upload-file ${policies} https://repo.adeo.no/repository/raw/nais/${application}/${releaseVersion}/am/app-policies.xml"
+                sh "curl --user ${env.NEXUS_USERNAME}:${env.NEXUS_PASSWORD} --upload-file ${notenforced} https://repo.adeo.no/repository/raw/nais/${application}/${releaseVersion}/am/not-enforced-urls.txt"
             }
         }
 
