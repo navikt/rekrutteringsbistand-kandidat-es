@@ -415,7 +415,7 @@ public class EsCvHttpClient implements EsCvClient {
   private void addUtdanningsnivaQuery(String utdanningsniva, BoolQueryBuilder boolQueryBuilder) {
     String regex = "";
     switch (utdanningsniva) {
-      case "Grunnskole":
+      case "Ingen":
         regex = "[0-2][0-9]+";
         break;
       case "Videregaende":
@@ -615,7 +615,7 @@ public class EsCvHttpClient implements EsCvClient {
   /**
    * Pakk inn kall mot elastic search i sjekk på om index finnes. Hvis index ikke finnes så
    * opprettes den, og kalles forsøkes på nytt
-   * 
+   *
    * @param fun
    * @param <T>
    * @return
