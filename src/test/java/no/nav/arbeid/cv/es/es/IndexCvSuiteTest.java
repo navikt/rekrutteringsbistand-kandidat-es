@@ -403,7 +403,7 @@ public class IndexCvSuiteTest {
     List<EsCv> cverVideregaende = sokeresultatVideregaende.getCver();
 
     assertThat(cverVideregaende)
-        .contains(transformer.transform(TempCvEventObjectMother.giveMeCvEvent()));
+        .contains(transformer.transform(TempCvEventObjectMother.giveMeCvEvent2()));
   }
 
   @Test
