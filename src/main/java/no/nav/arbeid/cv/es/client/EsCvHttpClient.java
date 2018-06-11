@@ -443,14 +443,14 @@ public class EsCvHttpClient implements EsCvClient {
     if (!searchRegex.equals("")) {
       BoolQueryBuilder boolQueryBuilder1 = QueryBuilders.boolQuery();
 
-      NestedQueryBuilder utdanningsnivaQueryBuilder = QueryBuilders.nestedQuery("utdanning",
+      NestedQueryBuilder includeUtdanningsnivaQueryBuilder = QueryBuilders.nestedQuery("utdanning",
           QueryBuilders.regexpQuery("utdanning.nusKode", searchRegex), ScoreMode.None);
 
-      NestedQueryBuilder utdanningsnivaQueryBuilder1 = QueryBuilders.nestedQuery("utdanning",
+      NestedQueryBuilder excludeUtdanningsnivaQueryBuilder1 = QueryBuilders.nestedQuery("utdanning",
           QueryBuilders.regexpQuery("utdanning.nusKode", excludeRegex), ScoreMode.None);
 
-      boolQueryBuilder1.must(utdanningsnivaQueryBuilder);
-      boolQueryBuilder1.mustNot(utdanningsnivaQueryBuilder1);
+      boolQueryBuilder1.must(includeUtdanningsnivaQueryBuilder);
+      boolQueryBuilder1.mustNot(excludeUtdanningsnivaQueryBuilder1);
 
       boolQueryBuilder.should(boolQueryBuilder1);
     }
@@ -466,28 +466,28 @@ public class EsCvHttpClient implements EsCvClient {
     if (utdanningsniva.equals("Videregaende")) {
       BoolQueryBuilder boolQueryBuilder1 = QueryBuilders.boolQuery();
 
-      NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
+      NestedQueryBuilder includeKompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
           QueryBuilders.matchQuery("kompetanse.kompKode", "501"), ScoreMode.None);
 
-      NestedQueryBuilder utdanningsnivaQueryBuilder = QueryBuilders.nestedQuery("utdanning",
+      NestedQueryBuilder excludeUtdanningsnivaQueryBuilder = QueryBuilders.nestedQuery("utdanning",
           QueryBuilders.regexpQuery("utdanning.nusKode", excludeRegex), ScoreMode.None);
 
-      boolQueryBuilder1.mustNot(utdanningsnivaQueryBuilder);
-      boolQueryBuilder1.must(kompetanseQueryBuilder);
+      boolQueryBuilder1.must(includeKompetanseQueryBuilder);
+      boolQueryBuilder1.mustNot(excludeUtdanningsnivaQueryBuilder);
 
       boolQueryBuilder.should(boolQueryBuilder1);
     }
     if (utdanningsniva.equals("Fagskole")) {
       BoolQueryBuilder boolQueryBuilder1 = QueryBuilders.boolQuery();
 
-      NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
+      NestedQueryBuilder includeKompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
           QueryBuilders.matchQuery("kompetanse.kompKode", "506"), ScoreMode.None);
 
-      NestedQueryBuilder utdanningsnivaQueryBuilder = QueryBuilders.nestedQuery("utdanning",
+      NestedQueryBuilder excludeUtdanningsnivaQueryBuilder = QueryBuilders.nestedQuery("utdanning",
           QueryBuilders.regexpQuery("utdanning.nusKode", excludeRegex), ScoreMode.None);
 
-      boolQueryBuilder1.mustNot(utdanningsnivaQueryBuilder);
-      boolQueryBuilder1.must(kompetanseQueryBuilder);
+      boolQueryBuilder1.must(includeKompetanseQueryBuilder);
+      boolQueryBuilder1.mustNot(excludeUtdanningsnivaQueryBuilder);
 
       boolQueryBuilder.should(boolQueryBuilder1);
     }
