@@ -413,31 +413,46 @@ public class EsCvHttpClient implements EsCvClient {
   }
 
   private void addUtdanningsnivaQuery(String utdanningsniva, BoolQueryBuilder boolQueryBuilder) {
-    String regex = "";
+    String searchRegex = "";
+    String excludeRegex = "";
     switch (utdanningsniva) {
       case "Ingen":
-        regex = "[0-2][0-9]+";
+        searchRegex = "[0-2][0-9]+";
+        excludeRegex = "[3-8][0-9]+";
         break;
       case "Videregaende":
-        regex = "[3-4][0-9]+";
+        searchRegex = "[3-4][0-9]+";
+        excludeRegex = "[5-8][0-9]+";
         break;
       case "Fagskole":
-        regex = "5[0-9]+";
+        searchRegex = "5[0-9]+";
+        excludeRegex = "[6-8][0-9]+";
         break;
       case "Bachelor":
-        regex = "6[0-9]+";
+        searchRegex = "6[0-9]+";
+        excludeRegex = "[7-8][0-9]+";
         break;
       case "Master":
-        regex = "7[0-9]+";
+        searchRegex = "7[0-9]+";
+        excludeRegex = "8[0-9]+";
         break;
       case "Doktorgrad":
-        regex = "8[0-9]+";
+        searchRegex = "8[0-9]+";
         break;
     }
-    if (!regex.equals("")) {
-      NestedQueryBuilder utdanningsnivaQueryBuilder = QueryBuilders.nestedQuery("utdanning",
-          QueryBuilders.regexpQuery("utdanning.nusKode", regex), ScoreMode.None);
-      boolQueryBuilder.should(utdanningsnivaQueryBuilder);
+    if (!searchRegex.equals("")) {
+      BoolQueryBuilder boolQueryBuilder1 = QueryBuilders.boolQuery();
+
+      NestedQueryBuilder includeUtdanningsnivaQueryBuilder = QueryBuilders.nestedQuery("utdanning",
+          QueryBuilders.regexpQuery("utdanning.nusKode", searchRegex), ScoreMode.None);
+
+      NestedQueryBuilder excludeUtdanningsnivaQueryBuilder1 = QueryBuilders.nestedQuery("utdanning",
+          QueryBuilders.regexpQuery("utdanning.nusKode", excludeRegex), ScoreMode.None);
+
+      boolQueryBuilder1.must(includeUtdanningsnivaQueryBuilder);
+      boolQueryBuilder1.mustNot(excludeUtdanningsnivaQueryBuilder1);
+
+      boolQueryBuilder.should(boolQueryBuilder1);
     }
     if (utdanningsniva.equals("Ingen")) {
       BoolQueryBuilder boolQueryBuilder1 = QueryBuilders.boolQuery();
@@ -448,15 +463,33 @@ public class EsCvHttpClient implements EsCvClient {
       boolQueryBuilder1.mustNot(utdanningsnivaQueryBuilder);
       boolQueryBuilder.should(boolQueryBuilder1);
     }
-    if (utdanningsniva.equals("Fagbrev")) {
-      NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
+    if (utdanningsniva.equals("Videregaende")) {
+      BoolQueryBuilder boolQueryBuilder1 = QueryBuilders.boolQuery();
+
+      NestedQueryBuilder includeKompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
           QueryBuilders.matchQuery("kompetanse.kompKode", "501"), ScoreMode.None);
-      boolQueryBuilder.should(kompetanseQueryBuilder);
+
+      NestedQueryBuilder excludeUtdanningsnivaQueryBuilder = QueryBuilders.nestedQuery("utdanning",
+          QueryBuilders.regexpQuery("utdanning.nusKode", excludeRegex), ScoreMode.None);
+
+      boolQueryBuilder1.must(includeKompetanseQueryBuilder);
+      boolQueryBuilder1.mustNot(excludeUtdanningsnivaQueryBuilder);
+
+      boolQueryBuilder.should(boolQueryBuilder1);
     }
     if (utdanningsniva.equals("Fagskole")) {
-      NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
+      BoolQueryBuilder boolQueryBuilder1 = QueryBuilders.boolQuery();
+
+      NestedQueryBuilder includeKompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
           QueryBuilders.matchQuery("kompetanse.kompKode", "506"), ScoreMode.None);
-      boolQueryBuilder.should(kompetanseQueryBuilder);
+
+      NestedQueryBuilder excludeUtdanningsnivaQueryBuilder = QueryBuilders.nestedQuery("utdanning",
+          QueryBuilders.regexpQuery("utdanning.nusKode", excludeRegex), ScoreMode.None);
+
+      boolQueryBuilder1.must(includeKompetanseQueryBuilder);
+      boolQueryBuilder1.mustNot(excludeUtdanningsnivaQueryBuilder);
+
+      boolQueryBuilder.should(boolQueryBuilder1);
     }
   }
 
