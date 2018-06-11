@@ -21,7 +21,7 @@ public class TempCvEventObjectMother {
         "1988-08-20",
         "1989-06-20",
         "Høyskolen i Gjøvik",
-        "486595",
+        "786595",
         "Master i sikkerhet",
         "Master i sikkerhet"
     );

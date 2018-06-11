@@ -249,7 +249,7 @@ public class IndexCvSuiteTest {
 
   @Test
   public void testSokPaNusKode() throws IOException {
-    Sokeresultat sokeresultat = client.sok(Sokekriterier.med().nusKode("486595").bygg());
+    Sokeresultat sokeresultat = client.sok(Sokekriterier.med().nusKode("786595").bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
     EsCv cv = cver.get(0);
@@ -383,21 +383,11 @@ public class IndexCvSuiteTest {
   }
 
   @Test
-  public void sokPaUtdanningsnivaSkalGiKorrektResultat() throws IOException {
-    Sokeresultat sokeresultat = client
-        .sok(Sokekriterier.med().utdanningsniva(Collections.singletonList("Grunnskole")).bygg());
-
-    List<EsCv> cver = sokeresultat.getCver();
-    EsCv cv = cver.get(0);
-    assertThat(cv).isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent2()));
-  }
-
-  @Test
   public void sokPaFlereUtdanningsnivaSkalGiFlereResultat() throws IOException {
     Sokeresultat sokeresultat = client
-        .sok(Sokekriterier.med().utdanningsniva(Collections.singletonList("Grunnskole")).bygg());
+        .sok(Sokekriterier.med().utdanningsniva(Collections.singletonList("Master")).bygg());
     Sokeresultat sokeresultat1 = client
-        .sok(Sokekriterier.med().utdanningsniva(Arrays.asList("Grunnskole", "Fagskole")).bygg());
+        .sok(Sokekriterier.med().utdanningsniva(Arrays.asList("Master", "Fagskole")).bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
     List<EsCv> cver1 = sokeresultat1.getCver();
@@ -421,13 +411,15 @@ public class IndexCvSuiteTest {
     Sokeresultat sokeresultatIngen =
         client.sok(Sokekriterier.med().utdanningsniva(Collections.singletonList("Ingen")).bygg());
     Sokeresultat sokeresultatIngenOgGrunnskole =
-        client.sok(Sokekriterier.med().utdanningsniva(Arrays.asList("Ingen", "Grunnskole")).bygg());
+        client.sok(Sokekriterier.med().utdanningsniva(Arrays.asList("Ingen", "Master")).bygg());
 
     List<EsCv> cverIngen = sokeresultatIngen.getCver();
     List<EsCv> cverIngenOgGrunnskole = sokeresultatIngenOgGrunnskole.getCver();
 
-    assertThat(cverIngen.get(0))
-        .isEqualTo(transformer.transform(TempCvEventObjectMother.giveMeCvEvent5()));
+    assertThat(cverIngen)
+        .contains(transformer.transform(TempCvEventObjectMother.giveMeCvEvent5()));
+    assertThat(cverIngen)
+        .contains(transformer.transform(TempCvEventObjectMother.giveMeCvEvent2()));
     assertThat(cverIngen.size()).isLessThan(cverIngenOgGrunnskole.size());
   }
 
