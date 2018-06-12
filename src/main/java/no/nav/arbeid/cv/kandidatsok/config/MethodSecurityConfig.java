@@ -1,7 +1,6 @@
 package no.nav.arbeid.cv.kandidatsok.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -13,7 +12,6 @@ import org.springframework.web.client.RestTemplate;
 
 import no.nav.arbeid.cv.kandidatsok.altinn.AltinnGateway;
 import no.nav.arbeid.cv.kandidatsok.config.components.AltinnEnvConf;
-import no.nav.arbeid.cv.kandidatsok.config.components.CorsInterceptor;
 import no.nav.arbeid.cv.kandidatsok.service.ArbeidsgiverService;
 import no.nav.security.oidc.context.OIDCRequestContextHolder;
 import no.nav.security.spring.oidc.validation.api.EnableOIDCTokenValidation;
@@ -31,17 +29,9 @@ public class MethodSecurityConfig extends WebSecurityConfigurerAdapter {
   @Autowired
   private OIDCRequestContextHolder oidcRequestContextHolder;
 
-  @Value("${no.nav.arbeid.api.allowed.origins:http://localhost:9009,https://pam-cv-indexer.nais.oera-q.local,https://pam-cv-indexer-q.nav.no,https://pam-cv-indexer.nav.no}")
-  private String[] allowedOrigins;
-
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.authorizeRequests().anyRequest().permitAll();
-  }
-
-  @Bean
-  public CorsInterceptor corsInterceptor() {
-    return new CorsInterceptor(allowedOrigins);
   }
 
   @Bean

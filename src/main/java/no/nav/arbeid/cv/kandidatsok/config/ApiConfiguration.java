@@ -2,7 +2,7 @@ package no.nav.arbeid.cv.kandidatsok.config;
 
 import static java.util.Arrays.asList;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
@@ -15,8 +15,13 @@ import no.nav.arbeid.cv.kandidatsok.config.components.CorsInterceptor;
 @Configuration
 public class ApiConfiguration implements WebMvcConfigurer {
 
-  @Autowired
-  private CorsInterceptor corsInterceptor;
+  @Value("${no.nav.arbeid.api.allowed.origins:http://localhost:9009,https://pam-cv-indexer.nais.oera-q.local,https://pam-cv-indexer-q.nav.no,https://pam-cv-indexer.nav.no}")
+  private String[] allowedOrigins;
+
+  @Bean
+  public CorsInterceptor corsInterceptor() {
+    return new CorsInterceptor(allowedOrigins);
+  }
 
   @Bean
   public RestTemplate restTemplate(ClientHttpRequestInterceptor... interceptors) {
@@ -27,6 +32,6 @@ public class ApiConfiguration implements WebMvcConfigurer {
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(corsInterceptor);
+    registry.addInterceptor(corsInterceptor());
   }
 }
