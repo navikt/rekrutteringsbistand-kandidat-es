@@ -42,12 +42,12 @@ node {
                 sh "${mvn} versions:set -B -DnewVersion=${prPomVersion} -DgenerateBackupPoms=false"                         
             } else if (BRANCH_NAME.contains("master")) {
                 isPullRequest = false
-                isMaster = false
-                isBranch = true
-            } else {
-                isPullRequest = false
                 isMaster = true
                 isBranch = false
+            } else {
+                isPullRequest = false
+                isMaster = false
+                isBranch = true
 
                 branchPomVersion = "$BRANCH_NAME".replaceAll("-", "_") + "-SNAPSHOT"
                 sh "env"

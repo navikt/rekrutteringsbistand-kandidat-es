@@ -30,7 +30,7 @@ public class SearchController {
     private EsCvClient client;
 
     @RequestMapping(path = "typeahead", method = RequestMethod.GET)
-   @PreAuthorize("@arbeidsgiverService.innloggaBrukerHarArbeidsgiverrettighetIAltinn()")
+    @PreAuthorize("@arbeidsgiverService.innloggaBrukerHarArbeidsgiverrettighetIAltinn()")
     public HttpEntity<Resources<StringResource>> typeAhead(
             @RequestParam(name = "komp", required = false) String komp,
             @RequestParam(name = "utd", required = false) String utd,
@@ -53,7 +53,7 @@ public class SearchController {
             list.addAll(client.typeAheadYrkeserfaring(yrke));
         }
         if (geo != null) {
-          list.addAll(client.typeAheadGeografi(geo));
+            list.addAll(client.typeAheadGeografi(geo));
         }
         if (sti != null) {
             list.addAll(client.typeAheadYrkeJobbonsker(sti));
@@ -82,20 +82,20 @@ public class SearchController {
             @RequestParam(name = "nusKoder", required = false) List<String> nusKoder) throws IOException {
 
         Sokeresultat sokeresultat =
-            client.sok(Sokekriterier.med()
-                .fritekst(fritekst)
-                .yrkeJobbonsker(yrkeJobbonsker)
-                .stillingstitler(yrkeserfaringer)
-                .kompetanser(kompetanser)
-                .utdanninger(utdanninger)
-                .geografiList(geografiList)
-                .totalYrkeserfaring(totalYrkeserfaring)
-                .utdanningsniva(utdanningsniva)
-                .styrkKode(styrkKode)
-                .nusKode(nusKode)
-                .styrkKoder(styrkKoder)
-                .nusKoder(nusKoder)
-                .bygg());
+                client.sok(Sokekriterier.med()
+                        .fritekst(fritekst)
+                        .yrkeJobbonsker(yrkeJobbonsker)
+                        .stillingstitler(yrkeserfaringer)
+                        .kompetanser(kompetanser)
+                        .utdanninger(utdanninger)
+                        .geografiList(geografiList)
+                        .totalYrkeserfaring(totalYrkeserfaring)
+                        .utdanningsniva(utdanningsniva)
+                        .styrkKode(styrkKode)
+                        .nusKode(nusKode)
+                        .styrkKoder(styrkKoder)
+                        .nusKoder(nusKoder)
+                        .bygg());
         SokeresultatResource sokeresultatResource = new SokeresultatResource(sokeresultat);
         return new ResponseEntity<>(sokeresultatResource, HttpStatus.OK);
     }
