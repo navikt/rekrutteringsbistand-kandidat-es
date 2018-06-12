@@ -57,7 +57,7 @@ public class CvEventListener implements ConsumerSeekAware {
   public void onPartitionsAssigned(Map<TopicPartition, Long> assignments,
       ConsumerSeekCallback callback) {
     LOGGER.info("Spoler tilbake lesing av alle partitions på topic");
-    //assignments.forEach((t, o) -> callback.seekToBeginning(t.topic(), t.partition()));
+    assignments.forEach((t, o) -> callback.seekToBeginning(t.topic(), t.partition()));
 
   }
 
