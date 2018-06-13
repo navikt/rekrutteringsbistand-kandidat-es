@@ -413,7 +413,7 @@ public class EsSokHttpClient implements EsSokClient {
 
   private Sokeresultat toSokeresultat(SearchResponse searchResponse) {
     LOGGER.debug("Totalt antall treff: " + searchResponse.getHits().getTotalHits());
-    List<EsCv> cver = toCvList(searchResponse);
+    List<no.nav.arbeid.cv.kandidatsok.domene.es.EsCv> cver = toCvList(searchResponse);
     List<Aggregering> aggregeringer = toAggregeringList(searchResponse);
     return new Sokeresultat(searchResponse.getHits().getTotalHits(), cver, aggregeringer);
   }
@@ -507,16 +507,16 @@ public class EsSokHttpClient implements EsSokClient {
     return searchResponse;
   }
 
-  private EsCv mapEsCv(SearchHit hit) {
+  private no.nav.arbeid.cv.kandidatsok.domene.es.EsCv mapEsCv(SearchHit hit) {
     try {
-      return mapper.readValue(hit.getSourceAsString(), EsCv.class);
+      return mapper.readValue(hit.getSourceAsString(), no.nav.arbeid.cv.kandidatsok.domene.es.EsCv.class);
     } catch (IOException e) {
       LOGGER.warn("Klarte ikke å parse CV fra Elasticsearch, returnerer null", e);
       return null;
     }
   }
 
-  private List<EsCv> toCvList(SearchResponse searchResponse) {
+  private List<no.nav.arbeid.cv.kandidatsok.domene.es.EsCv> toCvList(SearchResponse searchResponse) {
     return StreamSupport.stream(searchResponse.getHits().spliterator(), false)
         .map(hit -> mapEsCv(hit)).filter(Objects::nonNull).collect(Collectors.toList());
   }
@@ -545,6 +545,50 @@ public class EsSokHttpClient implements EsSokClient {
   /** Tilsvarer java.functions.Supplier bare at get metoden kan kaste IOException */
   private interface IOSupplier<T> {
     T get() throws IOException;
+  }
+
+  @Override
+  public no.nav.arbeid.cv.kandidatsok.domene.es.EsCv hent(String kandidatnr) throws IOException {
+    BoolQueryBuilder queryBuilder =
+        QueryBuilders.boolQuery().must(QueryBuilders.matchQuery("arenaKandidatnr", kandidatnr));
+    SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+    searchSourceBuilder.query(queryBuilder);
+    searchSourceBuilder.from(0);
+    searchSourceBuilder.size(10);
+    // Dette er defaulten, så egentlig unødvendig å sette:
+    searchSourceBuilder.sort(new ScoreSortBuilder().order(SortOrder.DESC));
+    searchSourceBuilder.sort(new FieldSortBuilder("_uid").order(SortOrder.ASC));
+
+    SearchRequest searchRequest = new SearchRequest();
+    searchRequest.indices(CV_INDEX);
+    searchRequest.source(searchSourceBuilder);
+
+    LOGGER.debug("HENTREQUEST: " + searchRequest.toString());
+
+    SearchResponse searchResponse = client.search(searchRequest);
+    LOGGER.debug("HENTRESPONSE: " + searchResponse);
+
+    List<no.nav.arbeid.cv.kandidatsok.domene.es.EsCv> liste =
+        StreamSupport.stream(searchResponse.getHits().spliterator(), false)
+            .map(hit -> mapEsCvHent(hit)).filter(Objects::nonNull).collect(Collectors.toList());
+    if (liste.size() == 0) {
+      LOGGER.warn("Ikke funnet CVen");
+      return new no.nav.arbeid.cv.kandidatsok.domene.es.EsCv();
+    } else if (liste.size() > 1) {
+      LOGGER.warn("Funnet mer enn én CV!");
+      return liste.stream().findFirst().orElse(new no.nav.arbeid.cv.kandidatsok.domene.es.EsCv());
+    }
+    return liste.stream().findFirst().orElse(new no.nav.arbeid.cv.kandidatsok.domene.es.EsCv());
+  }
+
+  private no.nav.arbeid.cv.kandidatsok.domene.es.EsCv mapEsCvHent(SearchHit hit) {
+    try {
+      return mapper.readValue(hit.getSourceAsString(),
+          no.nav.arbeid.cv.kandidatsok.domene.es.EsCv.class);
+    } catch (IOException e) {
+      LOGGER.warn("Klarte ikke å parse CV fra Elasticsearch, returnerer null", e);
+      return null;
+    }
   }
 
 
