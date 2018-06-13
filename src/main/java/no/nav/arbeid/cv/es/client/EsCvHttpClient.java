@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import io.micrometer.core.annotation.Timed;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.ElasticsearchStatusException;
@@ -109,6 +110,7 @@ public class EsCvHttpClient implements EsCvClient {
   }
 
   @Override
+  @Timed
   public void index(EsCv esCv) throws IOException {
     String jsonString = mapper.writeValueAsString(esCv);
     LOGGER.debug("DOKUMENTET: " + jsonString);
