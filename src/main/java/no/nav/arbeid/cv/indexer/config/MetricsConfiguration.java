@@ -1,12 +1,11 @@
 package no.nav.arbeid.cv.indexer.config;
 
-import javax.annotation.PostConstruct;
-
+import io.prometheus.client.CollectorRegistry;
+import io.prometheus.client.hotspot.DefaultExports;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import io.prometheus.client.CollectorRegistry;
-import io.prometheus.client.hotspot.DefaultExports;
+import javax.annotation.PostConstruct;
 
 @Configuration
 public class MetricsConfiguration {

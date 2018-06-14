@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import io.micrometer.core.annotation.Timed;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.ElasticsearchStatusException;
@@ -57,16 +59,16 @@ public class EsSokHttpClient implements EsSokClient {
   private static final Logger LOGGER = LoggerFactory.getLogger(EsSokHttpClient.class);
 
   private final RestHighLevelClient client;
-
   private final ObjectMapper mapper;
+  private final MeterRegistry meterRegistry;
 
-  public EsSokHttpClient(RestHighLevelClient client, ObjectMapper objectMapper) {
+  public EsSokHttpClient(RestHighLevelClient client, ObjectMapper objectMapper, MeterRegistry meterRegistry) {
     this.client = client;
     this.mapper = objectMapper;
+    this.meterRegistry = meterRegistry;
   }
 
   @Override
-  @Timed
   public List<String> typeAheadKompetanse(String prefix) throws IOException {
     return typeAhead(prefix, "samletKompetanse.samletKompetanseTekst.completion");
   }
@@ -108,22 +110,31 @@ public class EsSokHttpClient implements EsSokClient {
   }
 
   private List<String> typeAhead(String prefix, String suggestionField) throws IOException {
-    SearchRequest searchRequest = new SearchRequest(CV_INDEX);
-    searchRequest.types(CV_TYPE);
-    SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-    CompletionSuggestionBuilder suggestionBuilder =
-        SuggestBuilders.completionSuggestion(suggestionField).text(prefix).skipDuplicates(true);
+    final String timerName = "cv.es.typeahead";
+    Timer.Sample sample = Timer.start(meterRegistry);
+    try {
+      SearchRequest searchRequest = new SearchRequest(CV_INDEX);
+      searchRequest.types(CV_TYPE);
+      SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+      CompletionSuggestionBuilder suggestionBuilder =
+              SuggestBuilders.completionSuggestion(suggestionField).text(prefix).skipDuplicates(true);
 
-    SuggestBuilder suggestBuilder = new SuggestBuilder();
-    suggestBuilder.addSuggestion("typeahead", suggestionBuilder);
-    searchSourceBuilder.suggest(suggestBuilder);
+      SuggestBuilder suggestBuilder = new SuggestBuilder();
+      suggestBuilder.addSuggestion("typeahead", suggestionBuilder);
+      searchSourceBuilder.suggest(suggestBuilder);
 
-    searchRequest.source(searchSourceBuilder);
-    SearchResponse searchResponse = esExec(() -> client.search(searchRequest));
-    LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
-    CompletionSuggestion compSuggestion = searchResponse.getSuggest().getSuggestion("typeahead");
-    return compSuggestion.getOptions().stream().map(option -> option.getText().string())
-        .collect(Collectors.toList());
+      searchRequest.source(searchSourceBuilder);
+      SearchResponse searchResponse = esExec(() -> client.search(searchRequest));
+      LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
+      CompletionSuggestion compSuggestion = searchResponse.getSuggest().getSuggestion("typeahead");
+      return compSuggestion.getOptions().stream().map(option -> option.getText().string())
+              .collect(Collectors.toList());
+    } finally {
+      sample.stop(Timer.builder(timerName)
+              .description(null)
+              .publishPercentileHistogram(true)
+              .register(meterRegistry));
+    }
   }
 
   @Override
@@ -131,11 +142,20 @@ public class EsSokHttpClient implements EsSokClient {
       List<String> utdanninger, List<String> geografiList, String totalYrkeserfaring,
       List<String> utdanningsniva, String styrkKode, String nusKode, List<String> styrkKoder,
       List<String> nusKoder) throws IOException {
-    Sokekriterier s = Sokekriterier.med().fritekst(fritekst).stillingstitler(stillingstitler)
-        .kompetanser(kompetanser).utdanninger(utdanninger).geografiList(geografiList)
-        .totalYrkeserfaring(totalYrkeserfaring).utdanningsniva(utdanningsniva).styrkKode(styrkKode)
-        .nusKode(nusKode).styrkKoder(styrkKoder).nusKoder(nusKoder).bygg();
-    return sok(s);
+    final String timerName = "cv.es.sok";
+    Timer.Sample sample = Timer.start(meterRegistry);
+    try {
+      Sokekriterier s = Sokekriterier.med().fritekst(fritekst).stillingstitler(stillingstitler)
+              .kompetanser(kompetanser).utdanninger(utdanninger).geografiList(geografiList)
+              .totalYrkeserfaring(totalYrkeserfaring).utdanningsniva(utdanningsniva).styrkKode(styrkKode)
+              .nusKode(nusKode).styrkKoder(styrkKoder).nusKoder(nusKoder).bygg();
+      return sok(s);
+    } finally {
+      sample.stop(Timer.builder(timerName)
+              .description(null)
+              .publishPercentileHistogram(true)
+              .register(meterRegistry));
+    }
   }
 
   @Override

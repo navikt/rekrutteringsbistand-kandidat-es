@@ -17,6 +17,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -49,10 +50,12 @@ public class KandidatsokServiceConfig {
 
   @Autowired
   private EsKandidatsokConfigurationProperties props;
+  @Autowired
+  private MeterRegistry meterRegistry;
 
   @Bean
   public EsSokClient sokCvClient() {
-    return new EsSokHttpClient(restHighLevelClient(), objectMapper);
+    return new EsSokHttpClient(restHighLevelClient(), objectMapper, meterRegistry);
   }
 
   @Bean

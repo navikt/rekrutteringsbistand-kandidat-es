@@ -22,6 +22,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import io.micrometer.core.instrument.Meter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -74,6 +76,9 @@ public class IndexerServiceConfig {
   private EsIndexerConfigurationProperties props;
 
   @Autowired
+  private MeterRegistry meterRegistry;
+
+  @Autowired
   private @Value("${es.legg.til.testdata}") boolean leggTilTestdata;
 
   @Bean
@@ -88,14 +93,14 @@ public class IndexerServiceConfig {
 
   @Bean
   public CvIndexerService cvIndexerService() {
-    return new DefaultCvIndexerService(esCvClient(), esCvTransformer());
+    return new DefaultCvIndexerService(esCvClient(), esCvTransformer(), meterRegistry);
   }
 
   @Bean
   @Autowired
   public CvEventListener cvEventListener(CvIndexerService cvIndexerService,
-      RetryTemplate retryTemplate) {
-    return new CvEventListener(cvIndexerService, retryTemplate);
+      RetryTemplate retryTemplate, MeterRegistry meterRegistry) {
+    return new CvEventListener(cvIndexerService, retryTemplate, meterRegistry);
   }
 
   @Bean

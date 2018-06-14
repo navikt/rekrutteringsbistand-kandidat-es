@@ -1,18 +1,19 @@
 package no.nav.arbeid.cv.indexer.service;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import no.nav.arbeid.cv.events.CvEvent;
 import no.nav.arbeid.cv.indexer.domene.ApplicationException;
 import no.nav.arbeid.cv.indexer.domene.EsCv;
 import no.nav.arbeid.cv.indexer.domene.OperationalException;
 import no.nav.arbeid.cv.indexer.es.client.EsIndexerClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class DefaultCvIndexerService implements CvIndexerService {
 
@@ -20,10 +21,12 @@ public class DefaultCvIndexerService implements CvIndexerService {
 
   private EsIndexerClient esCvClient;
   private EsCvTransformer transformer;
+  private MeterRegistry meterRegistry;
 
-  public DefaultCvIndexerService(EsIndexerClient esRepo, EsCvTransformer transformer) {
+  public DefaultCvIndexerService(EsIndexerClient esRepo, EsCvTransformer transformer, MeterRegistry meterRegistry) {
     this.esCvClient = esRepo;
     this.transformer = transformer;
+    this.meterRegistry = meterRegistry;
   }
 
   @Override
@@ -41,26 +44,41 @@ public class DefaultCvIndexerService implements CvIndexerService {
 
   @Override
   public void bulkIndekser(List<CvEvent> cvEventer) {
-    if (cvEventer.isEmpty())
-      return;
-    List<EsCv> esPersoner = new ArrayList<>(cvEventer.size());
+    final String timerName = "cv.es.bulkindekser";
+    Timer.Sample sample = Timer.start(meterRegistry);
     try {
-      for (CvEvent cvEvent : cvEventer) {
-        esPersoner.add(transformer.transform(cvEvent));
+      if (cvEventer.isEmpty())
+        return;
+      List<EsCv> esPersoner = new ArrayList<>(cvEventer.size());
+      try {
+        for (CvEvent cvEvent : cvEventer) {
+          esPersoner.add(transformer.transform(cvEvent));
+        }
+      } catch (Exception e) {
+        LOGGER.info("Feil ved transformering av {} cveventer som skal indekseres: {}",
+                cvEventer.size(), e.getMessage(), e);
+        throw new ApplicationException(
+                "Feil ved transformering av cveventer som skal indekseres: " + e.getMessage(), e);
       }
-    } catch (Exception e) {
-      LOGGER.info("Feil ved transformering av {} cveventer som skal indekseres: {}",
-          cvEventer.size(), e.getMessage(), e);
-      throw new ApplicationException(
-          "Feil ved transformering av cveventer som skal indekseres: " + e.getMessage(), e);
-    }
 
-    try {
-      esCvClient.bulkIndex(esPersoner);
-    } catch (IOException e) {
-      throw new OperationalException(
-          "Infrastrukturfeil ved bulkindeksering av cver: " + e.getMessage(), e);
+      try {
+        esCvClient.bulkIndex(esPersoner);
+      } catch (IOException e) {
+        throw new OperationalException(
+                "Infrastrukturfeil ved bulkindeksering av cver: " + e.getMessage(), e);
+      }
+      meterRegistry.counter("cv.es.indekser").increment(cvEventer.size());
+    } finally {
+      sample.stop(Timer.builder(timerName)
+              .description(null)
+              .publishPercentileHistogram(true)
+              .register(meterRegistry));
     }
+  }
+
+  private void oppdaterEsGauge() {
+    long antallIndeksert = esCvClient.antallIndeksert();
+    meterRegistry.gauge("cv.es.index", antallIndeksert);
   }
 
   @Override
@@ -71,13 +89,23 @@ public class DefaultCvIndexerService implements CvIndexerService {
 
   @Override
   public void bulkSlett(List<Long> arenaIder) {
-    if (arenaIder.isEmpty())
-      return;
+    final String timerName = "cv.es.bulkslett";
+    Timer.Sample sample = Timer.start(meterRegistry);
     try {
-      esCvClient.bulkSlett(arenaIder);
-    } catch (IOException e) {
-      throw new OperationalException(
-          "Infrastrukturfeil ved bulksletting av cver: " + e.getMessage(), e);
+      if (arenaIder.isEmpty())
+        return;
+      try {
+        esCvClient.bulkSlett(arenaIder);
+      } catch (IOException e) {
+        throw new OperationalException(
+            "Infrastrukturfeil ved bulksletting av cver: " + e.getMessage(), e);
+      }
+      meterRegistry.counter("cv.es.slett").increment(arenaIder.size());
+    } finally {
+      sample.stop(Timer.builder(timerName)
+              .description(null)
+              .publishPercentileHistogram(true)
+              .register(meterRegistry));
     }
   }
 

@@ -23,4 +23,5 @@ public interface EsIndexerClient {
 
   Sokeresultat sok(Sokekriterier sk) throws IOException;
 
+  long antallIndeksert();
 }
