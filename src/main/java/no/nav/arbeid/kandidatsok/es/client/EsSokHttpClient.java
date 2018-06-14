@@ -1,29 +1,17 @@
 package no.nav.arbeid.kandidatsok.es.client;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
-import io.micrometer.core.annotation.Timed;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Timer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import no.nav.arbeid.cv.kandidatsok.domene.sok.Aggregering;
+import no.nav.arbeid.cv.kandidatsok.domene.sok.Aggregeringsfelt;
+import no.nav.arbeid.cv.kandidatsok.domene.sok.Sokekriterier;
+import no.nav.arbeid.cv.kandidatsok.domene.sok.Sokeresultat;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.index.query.AbstractQueryBuilder;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.MatchQueryBuilder;
-import org.elasticsearch.index.query.MultiMatchQueryBuilder;
-import org.elasticsearch.index.query.NestedQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.RangeQueryBuilder;
+import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
@@ -43,13 +31,13 @@ import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import no.nav.arbeid.cv.kandidatsok.domene.sok.Aggregering;
-import no.nav.arbeid.cv.kandidatsok.domene.sok.Aggregeringsfelt;
-import no.nav.arbeid.cv.kandidatsok.domene.sok.EsCv;
-import no.nav.arbeid.cv.kandidatsok.domene.sok.Sokekriterier;
-import no.nav.arbeid.cv.kandidatsok.domene.sok.Sokeresultat;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class EsSokHttpClient implements EsSokClient {
 
@@ -60,12 +48,10 @@ public class EsSokHttpClient implements EsSokClient {
 
   private final RestHighLevelClient client;
   private final ObjectMapper mapper;
-  private final MeterRegistry meterRegistry;
 
-  public EsSokHttpClient(RestHighLevelClient client, ObjectMapper objectMapper, MeterRegistry meterRegistry) {
+  public EsSokHttpClient(RestHighLevelClient client, ObjectMapper objectMapper) {
     this.client = client;
     this.mapper = objectMapper;
-    this.meterRegistry = meterRegistry;
   }
 
   @Override
@@ -110,52 +96,34 @@ public class EsSokHttpClient implements EsSokClient {
   }
 
   private List<String> typeAhead(String prefix, String suggestionField) throws IOException {
-    final String timerName = "cv.es.typeahead";
-    Timer.Sample sample = Timer.start(meterRegistry);
-    try {
-      SearchRequest searchRequest = new SearchRequest(CV_INDEX);
-      searchRequest.types(CV_TYPE);
-      SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-      CompletionSuggestionBuilder suggestionBuilder =
-              SuggestBuilders.completionSuggestion(suggestionField).text(prefix).skipDuplicates(true);
+    SearchRequest searchRequest = new SearchRequest(CV_INDEX);
+    searchRequest.types(CV_TYPE);
+    SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+    CompletionSuggestionBuilder suggestionBuilder =
+            SuggestBuilders.completionSuggestion(suggestionField).text(prefix).skipDuplicates(true);
 
-      SuggestBuilder suggestBuilder = new SuggestBuilder();
-      suggestBuilder.addSuggestion("typeahead", suggestionBuilder);
-      searchSourceBuilder.suggest(suggestBuilder);
+    SuggestBuilder suggestBuilder = new SuggestBuilder();
+    suggestBuilder.addSuggestion("typeahead", suggestionBuilder);
+    searchSourceBuilder.suggest(suggestBuilder);
 
-      searchRequest.source(searchSourceBuilder);
-      SearchResponse searchResponse = esExec(() -> client.search(searchRequest));
-      LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
-      CompletionSuggestion compSuggestion = searchResponse.getSuggest().getSuggestion("typeahead");
-      return compSuggestion.getOptions().stream().map(option -> option.getText().string())
-              .collect(Collectors.toList());
-    } finally {
-      sample.stop(Timer.builder(timerName)
-              .description(null)
-              .publishPercentileHistogram(true)
-              .register(meterRegistry));
-    }
+    searchRequest.source(searchSourceBuilder);
+    SearchResponse searchResponse = esExec(() -> client.search(searchRequest));
+    LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
+    CompletionSuggestion compSuggestion = searchResponse.getSuggest().getSuggestion("typeahead");
+    return compSuggestion.getOptions().stream().map(option -> option.getText().string())
+            .collect(Collectors.toList());
   }
 
   @Override
   public Sokeresultat sok(String fritekst, List<String> stillingstitler, List<String> kompetanser,
-      List<String> utdanninger, List<String> geografiList, String totalYrkeserfaring,
-      List<String> utdanningsniva, String styrkKode, String nusKode, List<String> styrkKoder,
-      List<String> nusKoder) throws IOException {
-    final String timerName = "cv.es.sok";
-    Timer.Sample sample = Timer.start(meterRegistry);
-    try {
-      Sokekriterier s = Sokekriterier.med().fritekst(fritekst).stillingstitler(stillingstitler)
-              .kompetanser(kompetanser).utdanninger(utdanninger).geografiList(geografiList)
-              .totalYrkeserfaring(totalYrkeserfaring).utdanningsniva(utdanningsniva).styrkKode(styrkKode)
-              .nusKode(nusKode).styrkKoder(styrkKoder).nusKoder(nusKoder).bygg();
-      return sok(s);
-    } finally {
-      sample.stop(Timer.builder(timerName)
-              .description(null)
-              .publishPercentileHistogram(true)
-              .register(meterRegistry));
-    }
+    List<String> utdanninger, List<String> geografiList, String totalYrkeserfaring,
+    List<String> utdanningsniva, String styrkKode, String nusKode, List<String> styrkKoder,
+    List<String> nusKoder) throws IOException {
+    Sokekriterier s = Sokekriterier.med().fritekst(fritekst).stillingstitler(stillingstitler)
+            .kompetanser(kompetanser).utdanninger(utdanninger).geografiList(geografiList)
+            .totalYrkeserfaring(totalYrkeserfaring).utdanningsniva(utdanningsniva).styrkKode(styrkKode)
+            .nusKode(nusKode).styrkKoder(styrkKoder).nusKoder(nusKoder).bygg();
+    return sok(s);
   }
 
   @Override
