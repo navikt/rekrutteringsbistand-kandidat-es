@@ -3,6 +3,7 @@ package no.nav.arbeid.kandidatsok.es.client;
 import java.io.IOException;
 import java.util.List;
 
+import no.nav.arbeid.cv.kandidatsok.domene.es.EsCv;
 import no.nav.arbeid.cv.kandidatsok.domene.sok.Sokekriterier;
 import no.nav.arbeid.cv.kandidatsok.domene.sok.Sokeresultat;
 
@@ -32,5 +33,7 @@ public interface EsSokClient {
   @Deprecated
   Sokeresultat findByEtternavnAndUtdanningNusKodeGrad(String etternavn,
       String utdanningNusKodeTekst) throws IOException;
+
+  EsCv hent(String kandidatnr) throws IOException;
 
 }

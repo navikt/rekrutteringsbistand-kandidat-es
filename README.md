@@ -30,7 +30,7 @@ docker-compose -f src/test/resources/docker-compose-kun-es.yml up
 
 Deretter starter du *no.nav.arbeid.cv.es.PamCvIndexerApplication* med VM Options:
 ```
--Dspring.profiles.active=dev -Des.hostname=localhost -Des.scheme=HTTP -Des.port=9200
+-Dspring.profiles.active=dev -Des.hostname=localhost -Des.scheme=HTTP -Des.port=9250
 ```
 
 **OIDC:**
