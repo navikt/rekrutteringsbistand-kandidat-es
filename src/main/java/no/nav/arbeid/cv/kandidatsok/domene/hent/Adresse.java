@@ -20,7 +20,7 @@ public class Adresse {
 
   public Adresse() {}
 
-  public Adresse(Long id, Person person, String landkode, String postnr, String poststednavn,
+  public Adresse(String landkode, String postnr, String poststednavn,
       String adrlinje1, String adrlinje2, String adrlinje3, Integer kommunenr) {
     super();
     this.landkode = landkode;

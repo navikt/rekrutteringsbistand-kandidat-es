@@ -90,7 +90,7 @@ public class EsCvTransformer {
     return new EsYrkeserfaring(fraDato, tilDato, yrke.getArbeidsgiver(), yrke.getStyrkKode(),
         yrke.getStyrkKodeStillingstittel(), yrke.getAlternativStillingstittel(),
         yrke.getOrganisasjonsnummer(), yrke.getNaceKode(),
-        this.toYrkeserfaringManeder(fraDato, tilDato));
+        this.toYrkeserfaringManeder(fraDato, tilDato), yrke.getUtelukketForFremtiden());
   }
 
   private EsUtdanning mapUtdanning(Utdanning utdanning) {
