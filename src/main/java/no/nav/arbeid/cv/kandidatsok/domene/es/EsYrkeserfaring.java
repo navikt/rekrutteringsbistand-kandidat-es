@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import no.nav.elasticsearch.mapping.annotations.ElasticBooleanField;
 import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
 import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
 import no.nav.elasticsearch.mapping.annotations.ElasticIntegerField;
@@ -49,11 +50,14 @@ public class EsYrkeserfaring {
   @ElasticIntegerField
   private int yrkeserfaringManeder;
 
+  @ElasticBooleanField
+  private Boolean utelukketForFremtiden;
+
   public EsYrkeserfaring() {}
 
   public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
       String styrkKodeStillingstittel, String alternativStillingstittel, String organisasjonsnummer,
-      String naceKode, int yrkeserfaringManeder) {
+      String naceKode, int yrkeserfaringManeder, Boolean utelukketForFremtiden) {
     this.fraDato = fraDato;
     this.tilDato = tilDato;
     this.arbeidsgiver = arbeidsgiver;
@@ -67,6 +71,7 @@ public class EsYrkeserfaring {
     this.organisasjonsnummer = organisasjonsnummer;
     this.naceKode = naceKode;
     this.yrkeserfaringManeder = yrkeserfaringManeder;
+    this.utelukketForFremtiden = utelukketForFremtiden;
   }
 
   public Date getFraDato() {
@@ -112,6 +117,10 @@ public class EsYrkeserfaring {
   public int getYrkeserfaringManeder() {
     return yrkeserfaringManeder;
   }
+  
+  public Boolean getUtelukketForFremtiden() {
+    return utelukketForFremtiden;
+  }
 
   @Override
   public boolean equals(Object o) {
@@ -129,14 +138,15 @@ public class EsYrkeserfaring {
         && Objects.equals(alternativStillingstittel, that.alternativStillingstittel)
         && Objects.equals(organisasjonsnummer, that.organisasjonsnummer)
         && Objects.equals(naceKode, that.naceKode)
-        && Objects.equals(yrkeserfaringManeder, that.yrkeserfaringManeder);
+        && Objects.equals(yrkeserfaringManeder, that.yrkeserfaringManeder)
+        && Objects.equals(utelukketForFremtiden, that.utelukketForFremtiden);
   }
 
   @Override
   public int hashCode() {
 
     return Objects.hash(fraDato, tilDato, arbeidsgiver, styrkKode, styrkKodeStillingstittel,
-        alternativStillingstittel, organisasjonsnummer, naceKode, yrkeserfaringManeder);
+        alternativStillingstittel, organisasjonsnummer, naceKode, yrkeserfaringManeder, utelukketForFremtiden);
   }
 
   @Override
@@ -146,6 +156,7 @@ public class EsYrkeserfaring {
         + styrkKodeStillingstittel + '\'' + ", alternativStillingstittel='"
         + alternativStillingstittel + '\'' + ", organisasjonsnummer='" + organisasjonsnummer + '\''
         + ", naceKode='" + naceKode + '\'' + ", yrkeserfaringManeder='" + yrkeserfaringManeder
+        + '\'' + ", utelukketForFremtiden='" + utelukketForFremtiden
         + '\'' + '}';
   }
 

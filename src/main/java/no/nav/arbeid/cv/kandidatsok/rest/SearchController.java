@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import no.nav.arbeid.cv.kandidatsok.domene.es.EsCv;
+import no.nav.arbeid.cv.kandidatsok.domene.hent.Person;
+import no.nav.arbeid.cv.kandidatsok.domene.hent.mapper.IndexerCvMapper;
 import no.nav.arbeid.cv.kandidatsok.domene.sok.Sokekriterier;
 import no.nav.arbeid.cv.kandidatsok.domene.sok.Sokeresultat;
 import no.nav.arbeid.kandidatsok.es.client.EsSokClient;
@@ -30,6 +32,8 @@ public class SearchController {
 
   @Autowired
   private EsSokClient client;
+
+  private IndexerCvMapper mapper = new IndexerCvMapper();
 
   @RequestMapping(path = "typeahead", method = RequestMethod.GET)
   @PreAuthorize("@arbeidsgiverService.innloggaBrukerHarArbeidsgiverrettighetIAltinn()")
@@ -94,11 +98,22 @@ public class SearchController {
 
   @RequestMapping(path = "hent", method = RequestMethod.GET)
   @PreAuthorize("@arbeidsgiverService.innloggaBrukerHarArbeidsgiverrettighetIAltinn()")
-  public HttpEntity<CvResource> sok(
+  public HttpEntity<CvResource> hent(
       @RequestParam(name = "kandidatnr", required = false) String kandidatnr) throws IOException {
 
     EsCv cv = client.hent(kandidatnr);
     CvResource cvResource = new CvResource(cv);
     return new ResponseEntity<>(cvResource, HttpStatus.OK);
+  }
+
+  @RequestMapping(path = "hentcv", method = RequestMethod.GET)
+  @PreAuthorize("@arbeidsgiverService.innloggaBrukerHarArbeidsgiverrettighetIAltinn()")
+  public HttpEntity<PersonResource> hentcv(
+      @RequestParam(name = "kandidatnr", required = false) String kandidatnr) throws IOException {
+
+    EsCv cv = client.hent(kandidatnr);
+    Person p = mapper.map(cv);
+    PersonResource resource = new PersonResource(p);
+    return new ResponseEntity<>(resource, HttpStatus.OK);
   }
 }

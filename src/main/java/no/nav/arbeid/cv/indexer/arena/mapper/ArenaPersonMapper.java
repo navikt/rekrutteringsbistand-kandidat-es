@@ -177,7 +177,7 @@ public class ArenaPersonMapper {
   private EsYrkeserfaring mapYrkeserfaring(ArenaYrkeCvLedd a) {
     return new EsYrkeserfaring(toDate(a.getFraDato()), toDate(a.getTilDato()), a.getArbeidsgiver(),
         a.getStyrkKode(), a.getStyrkKodeStillingstittel(), a.getAlternativStillingstittel(), null,
-        null, toYrkeserfaringManeder(toDate(a.getFraDato()), toDate(a.getTilDato())));
+        null, toYrkeserfaringManeder(toDate(a.getFraDato()), toDate(a.getTilDato())), a.isUtelukketForFremtiden());
   }
 
   private Date toDate(LocalDate localDate) {
