@@ -5,8 +5,8 @@ replicas:
   max: 1
   cpuThresholdPercentage: 50
 prometheus:
-  enabled: false
-  path: pam-cv-indexer/application/prometheus
+  enabled: true
+  path: pam-cv-indexer/actuator/prometheus
 port: 8080
 healthcheck:
   liveness:

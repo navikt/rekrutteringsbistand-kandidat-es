@@ -1,12 +1,12 @@
 package no.nav.arbeid.cv.indexer.es.client;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import no.nav.arbeid.cv.indexer.domene.*;
+import no.nav.elasticsearch.mapping.MappingBuilder;
+import no.nav.elasticsearch.mapping.MappingBuilderImpl;
+import no.nav.elasticsearch.mapping.ObjectMapping;
+import org.apache.http.util.EntityUtils;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
@@ -37,16 +37,12 @@ import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import no.nav.arbeid.cv.indexer.domene.Aggregering;
-import no.nav.arbeid.cv.indexer.domene.ApplicationException;
-import no.nav.arbeid.cv.indexer.domene.EsCv;
-import no.nav.arbeid.cv.indexer.domene.Sokekriterier;
-import no.nav.arbeid.cv.indexer.domene.Sokeresultat;
-import no.nav.elasticsearch.mapping.MappingBuilder;
-import no.nav.elasticsearch.mapping.MappingBuilderImpl;
-import no.nav.elasticsearch.mapping.ObjectMapping;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class EsIndexerHttpClient implements EsIndexerClient {
 
@@ -137,10 +133,10 @@ public class EsIndexerHttpClient implements EsIndexerClient {
             esCver.stream()
                 .filter(esCv -> esCv.getArenaPersonId().toString().equals(bir.getIndex()))
                 .findFirst().ifPresent(
-                    esCv -> LOGGER.warn("Det filet å indeksere denne CVen: " + esCv.toString()));
+                    esCv -> LOGGER.warn("Feile ved indeksering av CV: " + esCv.toString()));
           }
         } catch (Exception e) {
-          LOGGER.warn("Feilet å parse bulkitemresponse..", e);
+          LOGGER.warn("Feilet ved parsing av bulkitemresponse..", e);
         }
         LOGGER.warn("Feilet under indeksering av CVer: " + bulkResponse.buildFailureMessage());
       }
@@ -258,4 +254,25 @@ public class EsIndexerHttpClient implements EsIndexerClient {
         .map(hit -> mapEsCv(hit)).filter(Objects::nonNull).collect(Collectors.toList());
   }
 
+  @Override
+  public long antallIndeksert() {
+    long antallIndeksert = 0;
+    try {
+      Response response = client.getLowLevelClient().performRequest("GET",
+              String.format("/%s/%s/_count", CV_INDEX, CV_TYPE));
+      if (response != null &&
+              response.getStatusLine().getStatusCode() >= 200 &&
+              response.getStatusLine().getStatusCode() < 300) {
+        String json = EntityUtils.toString(response.getEntity());
+        JsonNode countNode = mapper.readTree(json).path(("count"));
+        antallIndeksert = countNode != null ? countNode.asLong() : 0;
+      } else {
+        LOGGER.warn("Greide ikke å hente ut antall dokumenter det i ES indeksen: {} : {}",
+                response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase());
+      }
+    } catch (Exception e) {
+      LOGGER.warn("Greide ikke å hente ut antall dokumenter i ES indeksen: {}", e.getMessage(), e);
+    }
+    return antallIndeksert;
+  }
 }
