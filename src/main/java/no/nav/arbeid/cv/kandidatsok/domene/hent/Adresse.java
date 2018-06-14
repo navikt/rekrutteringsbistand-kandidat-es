@@ -1,64 +1,28 @@
 package no.nav.arbeid.cv.kandidatsok.domene.hent;
 
-import java.time.LocalDate;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
 import org.apache.commons.lang3.StringUtils;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-@Entity
-@Table(name = "ADRESSEBRUK")
 public class Adresse {
 
-  @Id
-  @Column(name = "ADRESSEBRUK_ID")
-  private Long id;
-
-  @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "objekt_id", insertable = false, updatable = false)
-  private Person person;
-
-  @Column
   private String landkode;
 
-  @Column
   private String postnr;
 
-  @Column
   private String poststednavn;
 
-  @Column
   private Integer kommunenr;
 
-  @Column
   private String adrlinje1;
 
-  @Column
   private String adrlinje2;
 
-  @Column
   private String adrlinje3;
 
-  @Column(name = "DATO_FRA")
-  private LocalDate fraDato;
+  public Adresse() {}
 
-  @Column(name = "DATO_TIL")
-  private LocalDate tilDato;
-
-  public Adresse(Long id, Person person, String landkode, String postnr,
-      String poststednavn, String adrlinje1, String adrlinje2, String adrlinje3, Integer kommunenr,
-      LocalDate fraDato) {
+  public Adresse(Long id, Person person, String landkode, String postnr, String poststednavn,
+      String adrlinje1, String adrlinje2, String adrlinje3, Integer kommunenr) {
     super();
-    this.id = id;
-    this.person = person;
     this.landkode = landkode;
     this.postnr = postnr;
     this.poststednavn = poststednavn;
@@ -66,10 +30,7 @@ public class Adresse {
     this.adrlinje2 = adrlinje2;
     this.adrlinje3 = adrlinje3;
     this.kommunenr = kommunenr;
-    this.fraDato = fraDato;
   }
-
-  public Adresse() {}
 
   public String getLandkode() {
     return landkode;
@@ -99,10 +60,6 @@ public class Adresse {
     return StringUtils.defaultString(adrlinje3);
   }
 
-  public void setPerson(Person arenaPerson) {
-    this.person = arenaPerson;
-  }
-
   public void setAdrlinje1(String adrlinje1) {
     this.adrlinje1 = adrlinje1;
   }
@@ -129,22 +86,6 @@ public class Adresse {
 
   public void setPoststednavn(String poststednavn) {
     this.poststednavn = poststednavn;
-  }
-
-  @JsonIgnore
-  public LocalDate getFraDato() {
-    return fraDato;
-  }
-
-  @JsonIgnore
-  public LocalDate getTilDato() {
-    return tilDato;
-  }
-
-  @JsonIgnore
-  public boolean isGyldig() {
-    LocalDate now = LocalDate.now();
-    return now.isAfter(fraDato) && (tilDato == null || now.isBefore(tilDato));
   }
 
 }

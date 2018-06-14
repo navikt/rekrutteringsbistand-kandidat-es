@@ -13,12 +13,29 @@ public class KursCvLedd {
 
   public KursCvLedd() {}
 
+  public KursCvLedd(String arrangor, String tittel, String beskrivelse, Omfang omfang,
+      LocalDate fraDato, LocalDate tilDato) {
+    super();
+    this.arrangor = arrangor;
+    this.tittel = tittel;
+    this.beskrivelse = beskrivelse;
+    this.omfang = omfang;
+    this.fraDato = fraDato;
+    this.tilDato = tilDato;
+  }
+
   public static class Omfang {
 
     private Integer verdi;
     private String enhet;
 
     public Omfang() {}
+
+    public Omfang(Integer verdi, String enhet) {
+      super();
+      this.verdi = verdi;
+      this.enhet = enhet;
+    }
 
     public Integer getVerdi() {
       return verdi;

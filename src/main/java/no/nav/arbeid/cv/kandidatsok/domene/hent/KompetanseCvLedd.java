@@ -13,6 +13,17 @@ public class KompetanseCvLedd {
 
   public KompetanseCvLedd() {}
 
+  public KompetanseCvLedd(String kompetanseKode, String kompetanseKodeTekst, String alternativTekst,
+      String beskrivelse, LocalDate fraDato, LocalDate tilDato) {
+    super();
+    this.kompetanseKode = kompetanseKode;
+    this.kompetanseKodeTekst = kompetanseKodeTekst;
+    this.alternativTekst = alternativTekst;
+    this.beskrivelse = beskrivelse;
+    this.fraDato = fraDato;
+    this.tilDato = tilDato;
+  }
+
   public String getKompetanseKode() {
     return kompetanseKode;
   }

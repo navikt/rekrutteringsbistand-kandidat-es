@@ -5,6 +5,14 @@ public class AnsfPersonProfilLedd {
   private String ansettelsesforholdKode;
   private String ansettelsesforholdKodeTekst;
 
+  public AnsfPersonProfilLedd() {}
+
+  public AnsfPersonProfilLedd(String ansettelsesforholdKode, String ansettelsesforholdKodeTekst) {
+    super();
+    this.ansettelsesforholdKode = ansettelsesforholdKode;
+    this.ansettelsesforholdKodeTekst = ansettelsesforholdKodeTekst;
+  }
+
   public String getAnsettelsesforholdKode() {
     return ansettelsesforholdKode;
   }

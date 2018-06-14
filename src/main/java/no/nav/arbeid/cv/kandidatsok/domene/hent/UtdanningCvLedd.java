@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 public class UtdanningCvLedd {
 
-  public UtdanningCvLedd() {}
 
   private String utdannelsessted;
   private String alternativtUtdanningsnavn;
@@ -12,6 +11,19 @@ public class UtdanningCvLedd {
   private String nusKodeUtdanningsnavn;
   private LocalDate fraDato;
   private LocalDate tilDato;
+
+  public UtdanningCvLedd() {}
+
+  public UtdanningCvLedd(String utdannelsessted, String alternativtUtdanningsnavn, String nusKode,
+      String nusKodeUtdanningsnavn, LocalDate fraDato, LocalDate tilDato) {
+    super();
+    this.utdannelsessted = utdannelsessted;
+    this.alternativtUtdanningsnavn = alternativtUtdanningsnavn;
+    this.nusKode = nusKode;
+    this.nusKodeUtdanningsnavn = nusKodeUtdanningsnavn;
+    this.fraDato = fraDato;
+    this.tilDato = tilDato;
+  }
 
   public String getUtdannelsessted() {
     return utdannelsessted;

@@ -5,6 +5,14 @@ public class HedePersonProfilLedd {
   private String heltidDeltidKode;
   private String heltidDeltidKodeTekst;
 
+  public HedePersonProfilLedd() {}
+
+  public HedePersonProfilLedd(String heltidDeltidKode, String heltidDeltidKodeTekst) {
+    super();
+    this.heltidDeltidKode = heltidDeltidKode;
+    this.heltidDeltidKodeTekst = heltidDeltidKodeTekst;
+  }
+
   public String getHeltidDeltidKode() {
     return heltidDeltidKode;
   }

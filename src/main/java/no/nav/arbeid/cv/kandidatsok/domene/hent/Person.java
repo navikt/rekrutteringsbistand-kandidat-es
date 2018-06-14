@@ -6,6 +6,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Person implements Serializable {
 
   private static final long serialVersionUID = -3355634825867252499L;
@@ -69,8 +72,47 @@ public class Person implements Serializable {
 
   private List<ArboPersonProfilLedd> arbeidstidsordningJobbonsker = new ArrayList<>();
 
-  private Person() {}
+  public Person() {}
 
+  public Person(Long personId, LocalDate fodselsdato, String fodselsnummer,
+      boolean erFodselsnummerDnr, String formidlingsgruppekode, String etternavn, String fornavn,
+      String statsborgerskap, LocalDate samtykkeDato, String samtykkeStatus, boolean disponererBil,
+      String beskrivelse, String epost, Adresse adresse, String kandidatnummer,
+      LocalDateTime sistEndret, List<UtdanningCvLedd> utdanning, List<YrkeCvLedd> yrkeserfaring,
+      List<SertifikatCvLedd> sertifikater, List<KompetanseCvLedd> kompetanse, List<KursCvLedd> kurs,
+      List<VervCvLedd> verv, List<GeoPersonProfilLedd> geografiJobbonsker,
+      List<YrkePersonProfilLedd> yrkeJobbonsker, List<HedePersonProfilLedd> heltidDeltidJobbonsker,
+      List<AnsfPersonProfilLedd> ansettelsesforholdJobbonsker,
+      List<ArboPersonProfilLedd> arbeidstidsordningJobbonsker) {
+    super();
+    this.personId = personId;
+    this.fodselsdato = fodselsdato;
+    this.fodselsnummer = fodselsnummer;
+    this.erFodselsnummerDnr = erFodselsnummerDnr;
+    this.formidlingsgruppekode = formidlingsgruppekode;
+    this.etternavn = etternavn;
+    this.fornavn = fornavn;
+    this.statsborgerskap = statsborgerskap;
+    this.samtykkeDato = samtykkeDato;
+    this.samtykkeStatus = samtykkeStatus;
+    this.disponererBil = disponererBil;
+    this.beskrivelse = beskrivelse;
+    this.epost = epost;
+    this.adresse = adresse;
+    this.kandidatnummer = kandidatnummer;
+    this.sistEndret = sistEndret;
+    this.utdanning = utdanning;
+    this.yrkeserfaring = yrkeserfaring;
+    this.sertifikater = sertifikater;
+    this.kompetanse = kompetanse;
+    this.kurs = kurs;
+    this.verv = verv;
+    this.geografiJobbonsker = geografiJobbonsker;
+    this.yrkeJobbonsker = yrkeJobbonsker;
+    this.heltidDeltidJobbonsker = heltidDeltidJobbonsker;
+    this.ansettelsesforholdJobbonsker = ansettelsesforholdJobbonsker;
+    this.arbeidstidsordningJobbonsker = arbeidstidsordningJobbonsker;
+  }
 
   public Long getPersonId() {
     return personId;
@@ -289,7 +331,6 @@ public class Person implements Serializable {
       List<ArboPersonProfilLedd> arbeidstidsordningJobbonsker) {
     this.arbeidstidsordningJobbonsker = arbeidstidsordningJobbonsker;
   }
-
 
 }
 

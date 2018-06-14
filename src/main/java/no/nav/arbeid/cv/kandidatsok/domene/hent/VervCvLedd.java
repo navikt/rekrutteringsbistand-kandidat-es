@@ -11,6 +11,14 @@ public class VervCvLedd {
 
   public VervCvLedd() {}
 
+  public VervCvLedd(String organisasjon, String tittel, LocalDate fraDato, LocalDate tilDato) {
+    super();
+    this.organisasjon = organisasjon;
+    this.tittel = tittel;
+    this.fraDato = fraDato;
+    this.tilDato = tilDato;
+  }
+
   public String getOrganisasjon() {
     return organisasjon;
   }

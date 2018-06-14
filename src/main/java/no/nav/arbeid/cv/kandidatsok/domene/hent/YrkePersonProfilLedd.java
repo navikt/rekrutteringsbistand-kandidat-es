@@ -6,6 +6,16 @@ public class YrkePersonProfilLedd {
   private String styrkBeskrivelse;
   private boolean primaertJobbonske;
 
+  public YrkePersonProfilLedd() {}
+
+  public YrkePersonProfilLedd(String styrkKode, String styrkBeskrivelse,
+      boolean primaertJobbonske) {
+    super();
+    this.styrkKode = styrkKode;
+    this.styrkBeskrivelse = styrkBeskrivelse;
+    this.primaertJobbonske = primaertJobbonske;
+  }
+
   public String getStyrkKode() {
     return styrkKode;
   }

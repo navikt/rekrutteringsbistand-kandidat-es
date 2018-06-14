@@ -13,6 +13,17 @@ public class SertifikatCvLedd {
 
   public SertifikatCvLedd() {}
 
+  public SertifikatCvLedd(String utsteder, String sertifikatKode, String sertifikatKodeNavn,
+      String alternativtNavn, LocalDate fraDato, LocalDate tilDato) {
+    super();
+    this.utsteder = utsteder;
+    this.sertifikatKode = sertifikatKode;
+    this.sertifikatKodeNavn = sertifikatKodeNavn;
+    this.alternativtNavn = alternativtNavn;
+    this.fraDato = fraDato;
+    this.tilDato = tilDato;
+  }
+
   public String getUtsteder() {
     return utsteder;
   }

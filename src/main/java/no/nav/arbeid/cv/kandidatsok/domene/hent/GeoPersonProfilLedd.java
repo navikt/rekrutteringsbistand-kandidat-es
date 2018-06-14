@@ -5,6 +5,14 @@ public class GeoPersonProfilLedd {
   private String geografiKode;
   private String geografiKodeTekst;
 
+  public GeoPersonProfilLedd() {}
+
+  public GeoPersonProfilLedd(String geografiKode, String geografiKodeTekst) {
+    super();
+    this.geografiKode = geografiKode;
+    this.geografiKodeTekst = geografiKodeTekst;
+  }
+
   public String getGeografiKode() {
     return geografiKode;
   }

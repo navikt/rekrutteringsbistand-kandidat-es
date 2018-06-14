@@ -14,6 +14,19 @@ public class YrkeCvLedd {
 
   public YrkeCvLedd() {}
 
+  public YrkeCvLedd(String arbeidsgiver, String alternativStillingstittel, String styrkKode,
+      String styrkKodeStillingstittel, boolean utelukketForFremtiden, LocalDate fraDato,
+      LocalDate tilDato) {
+    super();
+    this.arbeidsgiver = arbeidsgiver;
+    this.alternativStillingstittel = alternativStillingstittel;
+    this.styrkKode = styrkKode;
+    this.styrkKodeStillingstittel = styrkKodeStillingstittel;
+    this.utelukketForFremtiden = utelukketForFremtiden;
+    this.fraDato = fraDato;
+    this.tilDato = tilDato;
+  }
+
   public String getArbeidsgiver() {
     return arbeidsgiver;
   }

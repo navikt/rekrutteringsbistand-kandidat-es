@@ -5,8 +5,16 @@ public class ArboPersonProfilLedd {
   private String arbeidstidsordningKode;
   private String arbeidstidsordningKodeTekst;
 
+  public ArboPersonProfilLedd() {}
+
   public String getArbeidstidsordningKode() {
     return arbeidstidsordningKode;
+  }
+
+  public ArboPersonProfilLedd(String arbeidstidsordningKode, String arbeidstidsordningKodeTekst) {
+    super();
+    this.arbeidstidsordningKode = arbeidstidsordningKode;
+    this.arbeidstidsordningKodeTekst = arbeidstidsordningKodeTekst;
   }
 
   public void setArbeidstidsordningKode(String arbeidstidsordningKode) {
