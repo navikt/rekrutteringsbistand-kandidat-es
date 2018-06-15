@@ -258,8 +258,8 @@ public class EsIndexerHttpClient implements EsIndexerClient {
   public long antallIndeksert() {
     long antallIndeksert = 0;
     try {
-      Response response = client.getLowLevelClient().performRequest("GET",
-              String.format("/%s/%s/_count", CV_INDEX, CV_TYPE));
+      Response response = client.getLowLevelClient().
+              performRequest("GET", String.format("/%s/%s/_count", CV_INDEX, CV_TYPE));
       if (response != null &&
               response.getStatusLine().getStatusCode() >= 200 &&
               response.getStatusLine().getStatusCode() < 300) {

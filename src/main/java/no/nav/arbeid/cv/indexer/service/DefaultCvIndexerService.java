@@ -61,6 +61,7 @@ public class DefaultCvIndexerService implements CvIndexerService {
 
       try {
         esCvClient.bulkIndex(esPersoner);
+        oppdaterEsGauge();
       } catch (IOException e) {
         throw new OperationalException(
                 "Infrastrukturfeil ved bulkindeksering av cver: " + e.getMessage(), e);
@@ -87,6 +88,7 @@ public class DefaultCvIndexerService implements CvIndexerService {
         return;
       try {
         esCvClient.bulkSlett(arenaIder);
+        oppdaterEsGauge();
       } catch (IOException e) {
         throw new OperationalException(
             "Infrastrukturfeil ved bulksletting av cver: " + e.getMessage(), e);
