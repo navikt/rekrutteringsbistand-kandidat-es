@@ -32,9 +32,7 @@ public class CvEventListener implements ConsumerSeekAware {
   @KafkaListener(topics = "${ARENACV_TOPIC}", containerFactory = "kafkaListenerContainerFactory")
   public void processConsumerRecord(List<ConsumerRecord<Long, CvEvent>> records) throws Exception {
     LOGGER.info("{} events mottatt.", records.size());
-    final String timerName = "cv.kafka.motta";
-    Timer.Sample sample = Timer.start(meterRegistry);
-    try {
+    Timer.builder("cv.kafka.motta").publishPercentileHistogram().register(meterRegistry).record(() -> {
       meterRegistry.counter("cv.kafka.mottatt").increment(records.size());
       retryTemplate.execute(context -> {
         List<CvEvent> indekserEvents = records.stream().filter(r -> r.value() != null)
@@ -46,12 +44,7 @@ public class CvEventListener implements ConsumerSeekAware {
         cvIndexerService.bulkSlett(arenaIderSomSkalSlettes);
         return null;
       });
-    } finally {
-      sample.stop(Timer.builder(timerName)
-              .description(null)
-              .publishPercentileHistogram(true)
-              .register(meterRegistry));
-    }
+    });
   }
 
 

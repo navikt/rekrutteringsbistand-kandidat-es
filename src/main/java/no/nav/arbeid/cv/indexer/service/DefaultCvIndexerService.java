@@ -44,9 +44,7 @@ public class DefaultCvIndexerService implements CvIndexerService {
 
   @Override
   public void bulkIndekser(List<CvEvent> cvEventer) {
-    final String timerName = "cv.es.bulkindekser";
-    Timer.Sample sample = Timer.start(meterRegistry);
-    try {
+    Timer.builder("cv.es.bulkindekser").publishPercentileHistogram().register(meterRegistry).record(() -> {
       if (cvEventer.isEmpty())
         return;
       List<EsCv> esPersoner = new ArrayList<>(cvEventer.size());
@@ -63,17 +61,13 @@ public class DefaultCvIndexerService implements CvIndexerService {
 
       try {
         esCvClient.bulkIndex(esPersoner);
+        oppdaterEsGauge();
       } catch (IOException e) {
         throw new OperationalException(
                 "Infrastrukturfeil ved bulkindeksering av cver: " + e.getMessage(), e);
       }
       meterRegistry.counter("cv.es.indekser").increment(cvEventer.size());
-    } finally {
-      sample.stop(Timer.builder(timerName)
-              .description(null)
-              .publishPercentileHistogram(true)
-              .register(meterRegistry));
-    }
+    });
   }
 
   private void oppdaterEsGauge() {
@@ -89,24 +83,18 @@ public class DefaultCvIndexerService implements CvIndexerService {
 
   @Override
   public void bulkSlett(List<Long> arenaIder) {
-    final String timerName = "cv.es.bulkslett";
-    Timer.Sample sample = Timer.start(meterRegistry);
-    try {
+    Timer.builder("cv.es.bulkslett").publishPercentileHistogram().register(meterRegistry).record(() -> {
       if (arenaIder.isEmpty())
         return;
       try {
         esCvClient.bulkSlett(arenaIder);
+        oppdaterEsGauge();
       } catch (IOException e) {
         throw new OperationalException(
             "Infrastrukturfeil ved bulksletting av cver: " + e.getMessage(), e);
       }
       meterRegistry.counter("cv.es.slett").increment(arenaIder.size());
-    } finally {
-      sample.stop(Timer.builder(timerName)
-              .description(null)
-              .publishPercentileHistogram(true)
-              .register(meterRegistry));
-    }
+    });
   }
 
 }
