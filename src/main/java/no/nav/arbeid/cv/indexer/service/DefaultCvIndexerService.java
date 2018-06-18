@@ -1,5 +1,6 @@
 package no.nav.arbeid.cv.indexer.service;
 
+import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
 import no.nav.arbeid.cv.events.CvEvent;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class DefaultCvIndexerService implements CvIndexerService {
 
@@ -22,11 +24,19 @@ public class DefaultCvIndexerService implements CvIndexerService {
   private EsIndexerClient esCvClient;
   private EsCvTransformer transformer;
   private MeterRegistry meterRegistry;
+  private DistributionSummary bulkSummary;
+  private AtomicLong antallIndekserteCVer;
 
   public DefaultCvIndexerService(EsIndexerClient esRepo, EsCvTransformer transformer, MeterRegistry meterRegistry) {
     this.esCvClient = esRepo;
     this.transformer = transformer;
     this.meterRegistry = meterRegistry;
+
+    antallIndekserteCVer = meterRegistry.gauge("cv.es.index", new AtomicLong(0));
+    bulkSummary =  DistributionSummary.builder("cv.es.bulkindekser")
+            .description("Antall CV'en mottatt i bulk")
+            .register(meterRegistry);
+
   }
 
   @Override
@@ -67,12 +77,14 @@ public class DefaultCvIndexerService implements CvIndexerService {
                 "Infrastrukturfeil ved bulkindeksering av cver: " + e.getMessage(), e);
       }
       meterRegistry.counter("cv.es.indekser").increment(cvEventer.size());
+      bulkSummary.record(cvEventer.size());
     });
   }
 
-  private void oppdaterEsGauge() {
+  @Override
+  public void oppdaterEsGauge() {
     long antallIndeksert = esCvClient.antallIndeksert();
-    meterRegistry.gauge("cv.es.index", antallIndeksert);
+    antallIndekserteCVer.set(antallIndeksert);
   }
 
   @Override
