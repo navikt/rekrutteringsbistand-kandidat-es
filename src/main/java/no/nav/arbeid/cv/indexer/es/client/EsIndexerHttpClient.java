@@ -170,7 +170,7 @@ public class EsIndexerHttpClient implements EsIndexerClient {
       Response restResponse = client.getLowLevelClient().performRequest("HEAD", "/" + CV_INDEX);
       return restResponse.getStatusLine().getStatusCode() == 200;
     } catch (ResponseException e) {
-      LOGGER.debug("Exception while calling isExistingIndex" + e.getMessage());
+      LOGGER.info("Exception while calling isExistingIndex", e);
     }
     return false;
   }
