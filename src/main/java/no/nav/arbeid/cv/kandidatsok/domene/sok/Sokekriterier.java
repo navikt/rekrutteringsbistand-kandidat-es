@@ -12,7 +12,7 @@ public class Sokekriterier {
   private List<String> stillingstitler;
   private List<String> kompetanser;
   private List<String> utdanninger;
-  private String totalYrkeserfaring;
+  private List<String> totalYrkeserfaring;
   private List<String> utdanningsniva;
   private List<String> geografiList;
   private List<String> styrkKoder;
@@ -45,7 +45,7 @@ public class Sokekriterier {
     return utdanninger;
   }
 
-  public String totalYrkeserfaring() {
+  public List<String> totalYrkeserfaring() {
     return totalYrkeserfaring;
   }
 
@@ -75,7 +75,7 @@ public class Sokekriterier {
     private List<String> stillingstitler;
     private List<String> kompetanser;
     private List<String> utdanninger;
-    private String totalYrkeserfaring;
+    private List<String> totalYrkeserfaring;
     private List<String> utdanningsniva;
     private List<String> geografiList;
     private String styrkKode;
@@ -143,7 +143,7 @@ public class Sokekriterier {
       return this;
     }
 
-    public Builder totalYrkeserfaring(String totalYrkeserfaring) {
+    public Builder totalYrkeserfaring(List<String> totalYrkeserfaring) {
       this.totalYrkeserfaring = totalYrkeserfaring;
       return this;
     }
