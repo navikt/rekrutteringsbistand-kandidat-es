@@ -116,7 +116,7 @@ public class EsSokHttpClient implements EsSokClient {
 
   @Override
   public Sokeresultat sok(String fritekst, List<String> stillingstitler, List<String> kompetanser,
-    List<String> utdanninger, List<String> geografiList, String totalYrkeserfaring,
+    List<String> utdanninger, List<String> geografiList, List<String> totalYrkeserfaring,
     List<String> utdanningsniva, String styrkKode, String nusKode, List<String> styrkKoder,
     List<String> nusKoder) throws IOException {
     Sokekriterier s = Sokekriterier.med().fritekst(fritekst).stillingstitler(stillingstitler)
@@ -135,7 +135,7 @@ public class EsSokHttpClient implements EsSokClient {
         && (sk.stillingstitler() == null || sk.stillingstitler().isEmpty())
         && (sk.kompetanser() == null || sk.kompetanser().isEmpty())
         && (sk.utdanninger() == null || sk.utdanninger().isEmpty())
-        && (StringUtils.isBlank(sk.totalYrkeserfaring()))
+        && (sk.totalYrkeserfaring() == null || sk.totalYrkeserfaring().isEmpty())
         && (sk.utdanningsniva() == null || sk.utdanningsniva().isEmpty())
         && (sk.geografiList() == null || sk.geografiList().isEmpty())
         && (sk.styrkKoder() == null || sk.styrkKoder().isEmpty())
@@ -184,19 +184,12 @@ public class EsSokHttpClient implements EsSokClient {
             .forEach(g -> addGeografiQuery(g, boolQueryBuilder));
       }
 
-      if (StringUtils.isNotBlank(sk.totalYrkeserfaring())) {
-        String[] interval = sk.totalYrkeserfaring().split("-");
-        RangeQueryBuilder totalErfaringQueryBuilder;
-        if (interval.length == 2) {
-          totalErfaringQueryBuilder = QueryBuilders.rangeQuery("totalLengdeYrkeserfaring")
-              .gte(interval[0]).lte(interval[1]);
-          boolQueryBuilder.must(totalErfaringQueryBuilder);
-        } else if (interval.length == 1) {
-          totalErfaringQueryBuilder =
-              QueryBuilders.rangeQuery("totalLengdeYrkeserfaring").gte(interval[0]).lte(null);
-          boolQueryBuilder.must(totalErfaringQueryBuilder);
-        }
-        LOGGER.debug("ADDING totalYrkeserfaringLengde");
+      if (sk.totalYrkeserfaring() != null && !sk.totalYrkeserfaring().isEmpty()) {
+        BoolQueryBuilder totalYrkeserfaringBoolQueryBuilder = QueryBuilders.boolQuery();
+
+        sk.totalYrkeserfaring().stream().filter(StringUtils::isNotBlank)
+            .forEach(te -> addTotalYrkeserfaringQuery(te, totalYrkeserfaringBoolQueryBuilder));
+        boolQueryBuilder.must(totalYrkeserfaringBoolQueryBuilder);
       }
 
       if (sk.utdanningsniva() != null && !sk.utdanningsniva().isEmpty()) {
@@ -276,6 +269,21 @@ public class EsSokHttpClient implements EsSokClient {
         QueryBuilders.regexpQuery("geografiJobbonsker.geografiKode", regex), ScoreMode.None);
     boolQueryBuilder.must(geografiQueryBuilder);
     LOGGER.debug("ADDING geografiJobbonske");
+  }
+
+  private void addTotalYrkeserfaringQuery(String totalYrkeserfaring, BoolQueryBuilder boolQueryBuilder) {
+    String[] interval = totalYrkeserfaring.split("-");
+    RangeQueryBuilder totalErfaringQueryBuilder;
+    if (interval.length == 2) {
+      totalErfaringQueryBuilder = QueryBuilders.rangeQuery("totalLengdeYrkeserfaring")
+          .gte(interval[0]).lte(interval[1]);
+      boolQueryBuilder.should(totalErfaringQueryBuilder);
+    } else if (interval.length == 1) {
+      totalErfaringQueryBuilder =
+          QueryBuilders.rangeQuery("totalLengdeYrkeserfaring").gte(interval[0]).lte(null);
+      boolQueryBuilder.should(totalErfaringQueryBuilder);
+    }
+    LOGGER.debug("ADDING totalYrkeserfaringLengde");
   }
 
   private void addUtdanningsnivaQuery(String utdanningsniva, BoolQueryBuilder boolQueryBuilder) {

@@ -396,7 +396,7 @@ public class IndexCvSuiteTest {
   @Test
   public void testPaTotalYrkeserfaringSkalGiKorrektResultat() throws IOException {
     Sokeresultat sokeresultat =
-        sokClient.sok(Sokekriterier.med().totalYrkeserfaring("37-72").bygg());
+        sokClient.sok(Sokekriterier.med().totalYrkeserfaring(Collections.singletonList("37-72")).bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
     EsCv cv = cver.get(0);

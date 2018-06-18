@@ -13,7 +13,7 @@ public interface EsSokClient {
 
   /** @deprecated Bruk {@link #sok(Sokekriterier)} isteden */
   Sokeresultat sok(String fritekst, List<String> stillingstitler, List<String> kompetanser,
-      List<String> utdanninger, List<String> geografiList, String totalYrkeserfaring,
+      List<String> utdanninger, List<String> geografiList, List<String> totalYrkeserfaring,
       List<String> utdanningsniva, String styrkKode, String nusKode, List<String> styrkKoder,
       List<String> nusKoder) throws IOException;
 

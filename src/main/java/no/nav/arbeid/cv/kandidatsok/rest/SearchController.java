@@ -80,7 +80,7 @@ public class SearchController {
       @RequestParam(name = "kompetanser", required = false) List<String> kompetanser,
       @RequestParam(name = "utdanninger", required = false) List<String> utdanninger,
       @RequestParam(name = "geografiList", required = false) List<String> geografiList,
-      @RequestParam(name = "totalErfaring", required = false) String totalYrkeserfaring,
+      @RequestParam(name = "totalErfaring", required = false) List<String> totalYrkeserfaring,
       @RequestParam(name = "utdanningsniva", required = false) List<String> utdanningsniva,
       @RequestParam(name = "styrkKode", required = false) String styrkKode,
       @RequestParam(name = "nusKode", required = false) String nusKode,
