@@ -143,11 +143,9 @@ public class IndexerCvMapper {
         : liste.parallelStream().map(element -> map(element)).collect(Collectors.toList());
   }
 
-  /* TODO: Skal kompetanse ha tilDato? */
   private KompetanseCvLedd map(EsKompetanse element) {
     return new KompetanseCvLedd(element.getKompKode(), element.getKompKodeNavn(),
-        element.getAlternativtNavn(), element.getBeskrivelse(), mapLocalDate(element.getFraDato()),
-        null);
+        element.getAlternativtNavn(), element.getBeskrivelse(), mapLocalDate(element.getFraDato()));
   }
 
   private List<SertifikatCvLedd> mapSertifikater(List<EsSertifikat> liste) {

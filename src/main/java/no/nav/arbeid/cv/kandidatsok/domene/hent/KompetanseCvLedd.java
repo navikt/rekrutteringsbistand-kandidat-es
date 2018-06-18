@@ -9,19 +9,17 @@ public class KompetanseCvLedd {
   private String alternativTekst;
   private String beskrivelse;
   private LocalDate fraDato;
-  private LocalDate tilDato;
 
   public KompetanseCvLedd() {}
 
   public KompetanseCvLedd(String kompetanseKode, String kompetanseKodeTekst, String alternativTekst,
-      String beskrivelse, LocalDate fraDato, LocalDate tilDato) {
+      String beskrivelse, LocalDate fraDato) {
     super();
     this.kompetanseKode = kompetanseKode;
     this.kompetanseKodeTekst = kompetanseKodeTekst;
     this.alternativTekst = alternativTekst;
     this.beskrivelse = beskrivelse;
     this.fraDato = fraDato;
-    this.tilDato = tilDato;
   }
 
   public String getKompetanseKode() {
@@ -64,11 +62,4 @@ public class KompetanseCvLedd {
     this.fraDato = fraDato;
   }
 
-  public LocalDate getTilDato() {
-    return tilDato;
-  }
-
-  public void setTilDato(LocalDate tilDato) {
-    this.tilDato = tilDato;
-  }
 }

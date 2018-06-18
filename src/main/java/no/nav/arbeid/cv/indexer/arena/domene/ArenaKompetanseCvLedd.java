@@ -9,7 +9,6 @@ public class ArenaKompetanseCvLedd {
   private String alternativTekst;
   private String beskrivelse;
   private LocalDate fraDato;
-  private LocalDate tilDato;
 
   public ArenaKompetanseCvLedd() {}
 
@@ -53,11 +52,4 @@ public class ArenaKompetanseCvLedd {
     this.fraDato = fraDato;
   }
 
-  public LocalDate getTilDato() {
-    return tilDato;
-  }
-
-  public void setTilDato(LocalDate tilDato) {
-    this.tilDato = tilDato;
-  }
 }
