@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
@@ -80,6 +81,12 @@ public class IndexerServiceConfig {
 
   @Autowired
   private @Value("${es.legg.til.testdata}") boolean leggTilTestdata;
+
+  @Autowired
+  private CvIndexerService cvIndexerService;
+
+  @Autowired
+  private EsIndexerClient esCvClient;
 
   @Bean
   public EsIndexerClient esCvClient() {
@@ -196,7 +203,6 @@ public class IndexerServiceConfig {
 
   @PostConstruct
   public void initES() throws IOException {
-    EsIndexerClient esCvClient = esCvClient();
     try {
       // esCvClient.deleteIndex();
       if (!esCvClient.doesIndexExist()) {
@@ -216,6 +222,8 @@ public class IndexerServiceConfig {
               esCvTransformer().transform(TempCvEventObjectMother.giveMeCvEvent5()));
       esCvClient.bulkIndex(statiskePersoner);
     }
+
+    cvIndexerService.oppdaterEsGauge();
   }
 
   static class TestDataLaster {

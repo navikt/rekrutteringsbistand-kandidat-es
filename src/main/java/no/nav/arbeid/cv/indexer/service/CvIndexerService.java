@@ -10,6 +10,9 @@ public interface CvIndexerService {
 
   public void bulkIndekser(List<CvEvent> cvEventer);
 
+  /** Oppdaterer metrikken for antall CV'er som er indeksert i Elastic Search */
+  void oppdaterEsGauge();
+
   public void slett(Long arenaId);
 
   public void bulkSlett(List<Long> arenaIder);
