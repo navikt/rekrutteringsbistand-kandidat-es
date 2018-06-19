@@ -34,7 +34,7 @@ public class DefaultCvIndexerService implements CvIndexerService {
     this.meterRegistry = meterRegistry;
 
     antallIndekserteCVer = meterRegistry.gauge("cv.es.index", new AtomicLong(0));
-    bulkSummary =  DistributionSummary.builder("cv.es.bulkindekser")
+    bulkSummary =  DistributionSummary.builder("cv.es.bulkindekser.summary")
             .description("Antall CV'en mottatt i bulk")
             .register(meterRegistry);
 
