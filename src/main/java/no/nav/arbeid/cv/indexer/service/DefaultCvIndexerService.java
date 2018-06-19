@@ -2,6 +2,7 @@ package no.nav.arbeid.cv.indexer.service;
 
 import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Tags;
 import io.micrometer.core.instrument.Timer;
 import no.nav.arbeid.cv.events.CvEvent;
 import no.nav.arbeid.cv.indexer.domene.ApplicationException;
@@ -65,6 +66,7 @@ public class DefaultCvIndexerService implements CvIndexerService {
       } catch (Exception e) {
         LOGGER.info("Feil ved transformering av {} cveventer som skal indekseres: {}",
                 cvEventer.size(), e.getMessage(), e);
+        meterRegistry.counter("cv.es.index.feil", Tags.of("type", "applikasjon")).increment();
         throw new ApplicationException(
                 "Feil ved transformering av cveventer som skal indekseres: " + e.getMessage(), e);
       }
@@ -73,6 +75,7 @@ public class DefaultCvIndexerService implements CvIndexerService {
         esCvClient.bulkIndex(esPersoner);
         oppdaterEsGauge();
       } catch (IOException e) {
+        meterRegistry.counter("cv.es.index.feil", Tags.of("type", "infrastruktur")).increment();
         throw new OperationalException(
                 "Infrastrukturfeil ved bulkindeksering av cver: " + e.getMessage(), e);
       }
@@ -102,6 +105,7 @@ public class DefaultCvIndexerService implements CvIndexerService {
         esCvClient.bulkSlett(arenaIder);
         oppdaterEsGauge();
       } catch (IOException e) {
+        meterRegistry.counter("cv.es.slett.feil", Tags.of("type", "infrastruktur")).increment();
         throw new OperationalException(
             "Infrastrukturfeil ved bulksletting av cver: " + e.getMessage(), e);
       }

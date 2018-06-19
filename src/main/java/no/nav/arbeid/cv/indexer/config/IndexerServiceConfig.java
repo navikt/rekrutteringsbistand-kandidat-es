@@ -90,7 +90,7 @@ public class IndexerServiceConfig {
 
   @Bean
   public EsIndexerClient esCvClient() {
-    return new EsIndexerHttpClient(restHighLevelClient(), objectMapper);
+    return new EsIndexerHttpClient(restHighLevelClient(), objectMapper, meterRegistry);
   }
 
   @Bean
