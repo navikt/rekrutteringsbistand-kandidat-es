@@ -2,6 +2,8 @@ package no.nav.arbeid.cv.indexer.es.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Tags;
 import no.nav.arbeid.cv.indexer.domene.*;
 import no.nav.elasticsearch.mapping.MappingBuilder;
 import no.nav.elasticsearch.mapping.MappingBuilderImpl;
@@ -38,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -52,12 +55,13 @@ public class EsIndexerHttpClient implements EsIndexerClient {
   private static final Logger LOGGER = LoggerFactory.getLogger(EsIndexerHttpClient.class);
 
   private final RestHighLevelClient client;
-
   private final ObjectMapper mapper;
+  private final MeterRegistry meterRegistry;
 
-  public EsIndexerHttpClient(RestHighLevelClient client, ObjectMapper objectMapper) {
+  public EsIndexerHttpClient(RestHighLevelClient client, ObjectMapper objectMapper, MeterRegistry meterRegistry) {
     this.client = client;
     this.mapper = objectMapper;
+    this.meterRegistry = meterRegistry;
   }
 
   @Override
@@ -124,7 +128,9 @@ public class EsIndexerHttpClient implements EsIndexerClient {
     bulkRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
     BulkResponse bulkResponse = esExec(() -> client.bulk(bulkRequest));
     if (bulkResponse.hasFailures()) {
+      long antallFeil = 0;
       for (BulkItemResponse bir : bulkResponse.getItems()) {
+        antallFeil += bir.isFailed() ? 1 : 0;
         try {
           if (bir.getFailure() != null) {
             LOGGER.warn(bir.getFailure().getMessage(), bir.getFailure().getCause());
@@ -133,11 +139,13 @@ public class EsIndexerHttpClient implements EsIndexerClient {
             esCver.stream()
                 .filter(esCv -> esCv.getArenaPersonId().toString().equals(bir.getIndex()))
                 .findFirst().ifPresent(
-                    esCv -> LOGGER.warn("Feile ved indeksering av CV: " + esCv.toString()));
+                    esCv -> LOGGER.warn("Feil ved indeksering av CV: " + esCv.toString()));
           }
         } catch (Exception e) {
           LOGGER.warn("Feilet ved parsing av bulkitemresponse..", e);
+          meterRegistry.counter("cv.es.index.feil", Tags.of("type", "infrastruktur")).increment();
         }
+        meterRegistry.counter("cv.es.index.feil", Tags.of("type", "applikasjon")).increment(antallFeil);
         LOGGER.warn("Feilet under indeksering av CVer: " + bulkResponse.buildFailureMessage());
       }
     }
@@ -160,6 +168,10 @@ public class EsIndexerHttpClient implements EsIndexerClient {
     BulkResponse bulkResponse = esExec(() -> client.bulk(bulkRequest));
     if (bulkResponse.hasFailures()) {
       LOGGER.warn("Feilet under sletting av CVer: " + bulkResponse.buildFailureMessage());
+      long antallFeil = Arrays.stream(bulkResponse.getItems())
+              .filter(i -> i.isFailed())
+              .count();
+      meterRegistry.counter("cv.es.slett.feil", Tags.of("type", "infrastruktur")).increment(antallFeil);
     }
     LOGGER.debug("BULKDELETERESPONSE: " + bulkResponse.toString());
   }

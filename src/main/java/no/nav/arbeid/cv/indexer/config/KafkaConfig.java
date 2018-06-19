@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Tags;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -42,7 +44,8 @@ public class KafkaConfig {
       @Value("${kafka.retry.max}") int maxRetries,
       @Value("${kafka.retry.initial_interval}") int initialInterval,
       @Value("${kafka.retry.multiplier}") double multiplier,
-      @Value("${kafka.retry.max_interval}") int maxInterval) {
+      @Value("${kafka.retry.max_interval}") int maxInterval,
+      MeterRegistry meterRegistry) {
     ConcurrentKafkaListenerContainerFactory factory = new ConcurrentKafkaListenerContainerFactory();
     factory.setConcurrency(concurrency);
 
@@ -51,7 +54,7 @@ public class KafkaConfig {
     factory.setConsumerFactory(f);
     factory.setBatchListener(true);
 
-    factory.getContainerProperties().setBatchErrorHandler(batchErrorHandler());
+    factory.getContainerProperties().setBatchErrorHandler(batchErrorHandler(meterRegistry));
     return factory;
   }
 
@@ -87,7 +90,7 @@ public class KafkaConfig {
   }
 
 
-  public ContainerAwareBatchErrorHandler batchErrorHandler() {
+  public ContainerAwareBatchErrorHandler batchErrorHandler(final MeterRegistry meterRegistry) {
     return new ContainerAwareBatchErrorHandler() {
 
       @Override
@@ -103,6 +106,7 @@ public class KafkaConfig {
               mcr.antall, mcr.min, mcr.max, mcr.topicsSomString, mcr.partisjonerSomString,
               e.getMessage(), e);
 
+          meterRegistry.counter("cv.kafka.feil", Tags.of("type", "infrastruktur")).increment();
           mcr.maxPrTopicPartition
               .forEach((topicPartition, offset) -> consumer.seek(topicPartition, offset + 1));
         } else {
@@ -110,6 +114,7 @@ public class KafkaConfig {
               "Applikasjonsfeil ved mottak av batch med {} meldinger. Offset: {} - {}. Topic: {}, partisjon: {}: {}",
               mcr.antall, mcr.min, mcr.max, mcr.topicsSomString, mcr.partisjonerSomString,
               e.getMessage(), e);
+          meterRegistry.counter("cv.kafka.feil", Tags.of("type", "applikasjon")).increment();
           mcr.maxPrTopicPartition
               .forEach((topicPartition, offset) -> consumer.seek(topicPartition, offset + 1));
         }
