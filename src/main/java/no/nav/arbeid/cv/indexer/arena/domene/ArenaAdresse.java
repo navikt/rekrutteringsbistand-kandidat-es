@@ -2,55 +2,32 @@ package no.nav.arbeid.cv.indexer.arena.domene;
 
 import java.time.LocalDate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-@Entity
-@Table(name = "ADRESSEBRUK")
 public class ArenaAdresse {
 
-  @Id
-  @Column(name = "ADRESSEBRUK_ID")
   private Long id;
 
-  @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "objekt_id", insertable = false, updatable = false)
   private ArenaPerson person;
 
-  @Column
   private String landkode;
 
-  @Column
   private String postnr;
 
-  @Column
   private String poststednavn;
 
-  @Column
   private Integer kommunenr;
 
-  @Column
   private String adrlinje1;
 
-  @Column
   private String adrlinje2;
 
-  @Column
   private String adrlinje3;
 
-  @Column(name = "DATO_FRA")
   private LocalDate fraDato;
 
-  @Column(name = "DATO_TIL")
   private LocalDate tilDato;
 
   public ArenaAdresse(Long id, ArenaPerson person, String landkode, String postnr,

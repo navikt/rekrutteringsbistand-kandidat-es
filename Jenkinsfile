@@ -4,22 +4,12 @@ import deploy
 def deployLib = new deploy()
 
 node {
-    def application = "pam-cv-indexer"
+    def application = "pam-kandidatsok-es"
 
     def committer, committerEmail, changelog, pom, releaseVersion, prPomVersion, isSnapshot, isPullRequest, isMaster, isBranch, nextVersion // metadata
 
     def mvnHome = tool "maven-3.3.9"
     def mvn = "${mvnHome}/bin/mvn"
-    def deployEnv = "t6" /* "${env.DEPLOY_ENV}" */
-    def deployPREnv = "t1"
-    def namespace = "t6" /* "${env.NAMESPACE}" */
-    def policies = "app-policies.xml"
-    def notenforced = "not-enforced-urls.txt"
-    def appConfig = "nais.yaml"
-    def dockerRepo = "repo.adeo.no:5443"
-    def zone = 'sbs'
-    def deployPullRequests = false
-
     def color
 
     try {
@@ -32,7 +22,6 @@ node {
             println ("Initialize $BRANCH_NAME")
             if (BRANCH_NAME.contains("PR-")) {
                 println ("Branch is pull request")
-                namespace="default"
                 isPullRequest = true
                 isMaster = false
                 isBranch = false
@@ -70,10 +59,10 @@ node {
         }
 
 
-        stage("build and test backend") {
+        stage("build and test") {
             if (isSnapshot) {
                 // Dette må bort etterhvert - sørg heller for å la maven tildele dynamiske porter til bruk for docker-image!
-                lock('PAM_CV_INDEXER_BYGG') {
+                lock('PAM_KANDIDATSOK_ES_BYGG') {
                     sh "${mvn} clean install -Dit.skip=true -Djava.io.tmpdir=/tmp/${application} -B -e"
                 }
             } else {
@@ -94,31 +83,7 @@ node {
                 }
             }
         }
-
-        stage("publish yaml") {
-            if (!isBranch) {
-              withCredentials([usernamePassword(credentialsId: 'nexusUploader', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-                  sh "curl --user ${env.NEXUS_USERNAME}:${env.NEXUS_PASSWORD} --upload-file ${appConfig} https://repo.adeo.no/repository/raw/nais/${application}/${releaseVersion}/nais.yaml"
-              }
-            }
-        }
-
-        stage("publish openAm files") {
-            withCredentials([usernamePassword(credentialsId: 'nexusUploader', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-                sh "curl --user ${env.NEXUS_USERNAME}:${env.NEXUS_PASSWORD} --upload-file ${policies} https://repo.adeo.no/repository/raw/nais/${application}/${releaseVersion}/am/app-policies.xml"
-                sh "curl --user ${env.NEXUS_USERNAME}:${env.NEXUS_PASSWORD} --upload-file ${notenforced} https://repo.adeo.no/repository/raw/nais/${application}/${releaseVersion}/am/not-enforced-urls.txt"
-            }
-        }
-
-        stage("build and publish docker image") {
-            if (!isBranch) {
-                withCredentials([usernamePassword(credentialsId: 'nexusUploader', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-                    sh "docker build -t ${dockerRepo}/${application}:${releaseVersion} ."
-                    sh "docker login -u ${env.NEXUS_USERNAME} -p ${env.NEXUS_PASSWORD} ${dockerRepo} && docker push ${dockerRepo}/${application}:${releaseVersion}"
-                }
-            }
-        }
-
+        
         stage("new dev version") {
             if (isMaster) {
                 withEnv(['HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088']) {
@@ -131,43 +96,6 @@ node {
                 }
             }
         }
-
-        stage("deploy PR to test") {
-            if (isPullRequest && deployPullRequests) {
-		    callback = "${env.BUILD_URL}input/Deploy/"
-
-		    def deploy = deployLib.deployNaisApp(application, releaseVersion, deployPREnv, zone, namespace, callback, committer, false).key
-
-		    try {
-		        timeout(time: 15, unit: 'MINUTES') {
-		            input id: 'deploy', message: "Check status here:  https://jira.adeo.no/browse/${deploy}"
-		        }
-		    } catch (Exception e) {
-		        throw new Exception("Deploy feilet :( \n Se https://jira.adeo.no/browse/" + deploy + " for detaljer", e)
-		    }
-            } else {
-                print ("Ikke pull-request, eller deploy av pull-requests er avslått - steg ignorert")
-            }
-        }
-
-        stage("deploy to preprod") {
-            if (isMaster) {
-		    callback = "${env.BUILD_URL}input/Deploy/"
-
-		    def deploy = deployLib.deployNaisApp(application, releaseVersion, deployEnv, zone, namespace, callback, committer, false).key
-
-		    try {
-		        timeout(time: 15, unit: 'MINUTES') {
-		            input id: 'deploy', message: "Check status here:  https://jira.adeo.no/browse/${deploy}"
-		        }
-		    } catch (Exception e) {
-		        throw new Exception("Deploy feilet :( \n Se https://jira.adeo.no/browse/" + deploy + " for detaljer", e)
-		    }
-            } else {
-                println ("Pull-requester og brancher deployes ikke til pre-prod. Steg ignorert")
-            }
-        }
-
 
         color = '#BDFFC3'
         GString message = ":heart_eyes_cat: Siste commit på ${application} bygd og deploya OK.\nSiste commit ${changelog}"

@@ -1,2 +1,0 @@
-https://${DomainName}/pam-cv-indexer/*
-https://${DomainName}/pam-cv-indexer

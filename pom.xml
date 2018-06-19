@@ -5,11 +5,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>no.nav.arbeid.pam</groupId>
-	<artifactId>pam-cv-indexer</artifactId>
+	<artifactId>pam-kandidatsok-es</artifactId>
 	<packaging>jar</packaging>
-	<version>122-SNAPSHOT</version>
+	<version>1-SNAPSHOT</version>
 
-	<name>pam-cv-indexer</name>
+	<name>pam-kandidatsok-es</name>
 	<description>Indeksering av CVer i Elasticsearch</description>
 
 	<parent>
@@ -17,126 +17,62 @@
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.0.2.RELEASE</version>
 	</parent>
-
+	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
 
 		<!-- NAVs -->
 		<!-- Tredjeparts -->
 		<!-- <mockito.version>2.7.22</mockito.version> -->
-		<confluent.version>3.3.1</confluent.version>
-		<avro.version>1.8.1</avro.version>
 		<logstash-logback-encoder.version>4.10</logstash-logback-encoder.version>
 		<logback-access.version>2.7.1</logback-access.version>
+		<logback.version>1.2.3</logback.version>
+		<slf4j.version>1.7.9</slf4j.version>
+		<slf4j-test.version>1.1.0</slf4j-test.version>
 		<palantir.version>0.33.0</palantir.version>
 		<poi-ooxml.version>3.16</poi-ooxml.version>
 		<elasticsearch.version>6.2.2</elasticsearch.version>
 		<lucene.version>7.2.1</lucene.version>
 		<prometheus.version>0.1.0</prometheus.version>
-		<oidc-spring-support.version>0.2.1</oidc-spring-support.version>
-		<wiremock.version>2.7.1</wiremock.version>
-		<org-ehcache.version>3.5.0</org-ehcache.version>
-		<slf4j-test.version>1.1.0</slf4j-test.version>
 		<kotlin.version>1.2.41</kotlin.version>
+		<micrometer.version>1.0.5</micrometer.version>
+		<spring.version>5.0.7.RELEASE</spring.version>
+		<jackson.version>2.9.6</jackson.version>
+		<assertj.version>3.9.1</assertj.version>
 	</properties>
 
 	<dependencies>
+		<dependency>
+    		<groupId>com.fasterxml.jackson.core</groupId>
+    		<artifactId>jackson-databind</artifactId>
+    		<version>${jackson.version}</version>
+		</dependency>
+	
 		<dependency>
 			<groupId>com.palantir.docker.compose</groupId>
 			<artifactId>docker-compose-rule-junit4</artifactId>
 			<version>${palantir.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>no.nav.security</groupId>
-			<artifactId>oidc-spring-support</artifactId>
-			<version>${oidc-spring-support.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId>
-			<version>${poi-ooxml.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>no.nav.arbeid.cv.avro</groupId>
-			<artifactId>cv-event</artifactId>
-			<version>11</version>
-		</dependency>
-		<dependency>
-			<groupId>io.confluent</groupId>
-			<artifactId>kafka-avro-serializer</artifactId>
-			<version>${confluent.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-log4j12</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.avro</groupId>
-			<artifactId>avro</artifactId>
-			<version>${avro.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>no.finn.unleash</groupId>
-			<artifactId>unleash-client-java</artifactId>
-			<version>3.0.0</version>
-		</dependency>
-		<!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
-			</dependency> <dependency> <groupId>org.springframework.data</groupId> <artifactId>spring-data-elasticsearch</artifactId>
-			<version>3.0.3.RELEASE</version> </dependency> -->
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-jetty</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>io.micrometer</groupId>
-			<artifactId>micrometer-registry-prometheus</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.kafka</groupId>
-			<artifactId>spring-kafka</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-tomcat</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.rakugakibox.spring.boot</groupId>
-			<artifactId>logback-access-spring-boot-starter</artifactId>
-			<version>${logback-access.version}</version>
+			<artifactId>micrometer-core</artifactId>
+			<version>${micrometer.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.logstash.logback</groupId>
-			<artifactId>logstash-logback-encoder</artifactId>
-			<version>${logstash-logback-encoder.version}</version>
+			<version>${logback.version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
 		</dependency>
 
 		<dependency>
@@ -160,77 +96,38 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.github.tomakehurst</groupId>
-			<artifactId>wiremock</artifactId>
-			<version>${wiremock.version}</version>
-		</dependency>
-
-		<dependency>
 			<groupId>no.nav.elasticsearch</groupId>
 			<artifactId>elasticsearch-mapping-builder</artifactId>
 			<version>6</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-hateoas</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-jcache</artifactId>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-stdlib-jdk8</artifactId>
+			<version>${kotlin.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.ehcache</groupId>
-			<artifactId>ehcache</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-cache</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>io.prometheus</groupId>
-			<artifactId>simpleclient</artifactId>
-			<version>${prometheus.version}</version>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-reflect</artifactId>
+			<version>${kotlin.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>io.prometheus</groupId>
-			<artifactId>simpleclient_common</artifactId>
-			<version>${prometheus.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.prometheus</groupId>
-			<artifactId>simpleclient_hotspot</artifactId>
-			<version>${prometheus.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.prometheus</groupId>
-			<artifactId>simpleclient_servlet</artifactId>
-			<version>${prometheus.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.prometheus</groupId>
-			<artifactId>simpleclient_spring_boot</artifactId>
-			<version>${prometheus.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.prometheus</groupId>
-			<artifactId>simpleclient_spring_web</artifactId>
-			<version>${prometheus.version}</version>
-		</dependency>
-
+    		<groupId>org.springframework</groupId>
+    		<artifactId>spring-context</artifactId>
+    		<version>${spring.version}</version>
+		</dependency>		
+		
 		<!-- test -->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
+  			<groupId>org.assertj</groupId>
+  			<artifactId>assertj-core</artifactId>
+  			<version>${assertj.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>no.nav.security</groupId>
-			<artifactId>oidc-spring-test</artifactId>
-			<version>${oidc-spring-support.version}</version>
+    		<groupId>org.springframework</groupId>
+    		<artifactId>spring-test</artifactId>
+    		<version>${spring.version}</version>
+    		<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
@@ -245,23 +142,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.restdocs</groupId>
-			<!-- <artifactId>spring-restdocs-restassured</artifactId> -->
-			<artifactId>spring-restdocs-mockmvc</artifactId>
-			<version>2.0.1.RELEASE</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-stdlib-jdk8</artifactId>
-			<version>${kotlin.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-reflect</artifactId>
-			<version>${kotlin.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-test</artifactId>
 			<version>${kotlin.version}</version>
@@ -272,18 +152,6 @@
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<executions>
-                    <execution>
-                        <id>build-info</id>
-                        <goals>
-                            <goal>build-info</goal>
-                        </goals>
-                    </execution>
-                </executions>
-			</plugin>
 			<plugin>
 				<groupId>org.jetbrains.kotlin</groupId>
 				<artifactId>kotlin-maven-plugin</artifactId>
@@ -311,6 +179,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
 				<executions>
 					<execution>
 						<id>compile</id>
@@ -334,19 +203,14 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<configuration>
-						<excludes>
-							<exclude>**/*SuiteTest.java</exclude>
-						</excludes>
-					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
 
 	<scm>
-		<connection>scm:git:https://github.com/navikt/pam-cv-indexer.git</connection>
-		<developerConnection>scm:git:https://github.com/navikt/pam-cv-indexer.git</developerConnection>
+		<connection>scm:git:https://github.com/navikt/pam-kandidatsok-es.git</connection>
+		<developerConnection>scm:git:https://github.com/navikt/pam-kandidatsok-es.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 

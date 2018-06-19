@@ -3,9 +3,7 @@ package no.nav.arbeid.cv.indexer.arena.mapper;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -23,21 +21,20 @@ import no.nav.arbeid.cv.indexer.arena.domene.ArenaUtdanningCvLedd;
 import no.nav.arbeid.cv.indexer.arena.domene.ArenaVervCvLedd;
 import no.nav.arbeid.cv.indexer.arena.domene.ArenaYrkeCvLedd;
 import no.nav.arbeid.cv.indexer.arena.domene.ArenaYrkePersonProfilLedd;
-import no.nav.arbeid.cv.indexer.domene.EsAnsettelsesforholdJobbonsker;
-import no.nav.arbeid.cv.indexer.domene.EsArbeidstidsordningJobbonsker;
-import no.nav.arbeid.cv.indexer.domene.EsCv;
-import no.nav.arbeid.cv.indexer.domene.EsForerkort;
-import no.nav.arbeid.cv.indexer.domene.EsGeografiJobbonsker;
-import no.nav.arbeid.cv.indexer.domene.EsHeltidDeltidJobbonsker;
-import no.nav.arbeid.cv.indexer.domene.EsKompetanse;
-import no.nav.arbeid.cv.indexer.domene.EsKurs;
-import no.nav.arbeid.cv.indexer.domene.EsSamletKompetanse;
-import no.nav.arbeid.cv.indexer.domene.EsSertifikat;
-import no.nav.arbeid.cv.indexer.domene.EsSprak;
-import no.nav.arbeid.cv.indexer.domene.EsUtdanning;
-import no.nav.arbeid.cv.indexer.domene.EsVerv;
-import no.nav.arbeid.cv.indexer.domene.EsYrkeJobbonsker;
-import no.nav.arbeid.cv.indexer.domene.EsYrkeserfaring;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsAnsettelsesforholdJobbonsker;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsArbeidstidsordningJobbonsker;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsCv;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsForerkort;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsGeografiJobbonsker;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsHeltidDeltidJobbonsker;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsKompetanse;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsKurs;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsSertifikat;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsSprak;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsUtdanning;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsVerv;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsYrkeJobbonsker;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsYrkeserfaring;
 
 public class ArenaPersonMapper {
 
@@ -76,26 +73,7 @@ public class ArenaPersonMapper {
     esCv.addGeografiJobbonske(p.getGeografiJobbonsker().stream().map(this::mapGeografiJobbonsker)
         .collect(Collectors.toList()));
 
-    esCv.addSamletKompetanse(
-        p.getKompetanse().stream().map(this::mapSamletKompetanseKomp).collect(Collectors.toList()));
-    esCv.addSamletKompetanse(p.getSertifikater().stream().map(this::mapSamletKompetanseSert)
-        .collect(Collectors.toList()));
-    // esCv.addSamletKompetanse(
-    // p.getKurs().stream().map(this::mapSamletKompetanseKurs).collect(Collectors.toList()));
-
     return esCv;
-  }
-
-  private EsSamletKompetanse mapSamletKompetanseKomp(ArenaKompetanseCvLedd a) {
-    return new EsSamletKompetanse(a.getKompetanseKodeTekst());
-  }
-
-  private EsSamletKompetanse mapSamletKompetanseSert(ArenaSertifikatCvLedd a) {
-    return new EsSamletKompetanse(a.getSertifikatKodeNavn());
-  }
-
-  private EsSamletKompetanse mapSamletKompetanseKurs(ArenaKursCvLedd a) {
-    return new EsSamletKompetanse(a.getTittel());
   }
 
   private EsHeltidDeltidJobbonsker mapHeltidDeltidJobbonsker(ArenaHedePersonProfilLedd a) {
@@ -177,7 +155,7 @@ public class ArenaPersonMapper {
   private EsYrkeserfaring mapYrkeserfaring(ArenaYrkeCvLedd a) {
     return new EsYrkeserfaring(toDate(a.getFraDato()), toDate(a.getTilDato()), a.getArbeidsgiver(),
         a.getStyrkKode(), a.getStyrkKodeStillingstittel(), a.getAlternativStillingstittel(), null,
-        null, toYrkeserfaringManeder(toDate(a.getFraDato()), toDate(a.getTilDato())), a.isUtelukketForFremtiden());
+        null, a.isUtelukketForFremtiden());
   }
 
   private Date toDate(LocalDate localDate) {
@@ -194,24 +172,4 @@ public class ArenaPersonMapper {
     return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
   }
 
-  private int toYrkeserfaringManeder(Date fraDato, Date tilDato) {
-    // Should not be possible, but will keep the check just in case
-    if (fraDato == null) {
-      return 0;
-    }
-
-    Calendar fraCalendar = new GregorianCalendar();
-    fraCalendar.setTime(fraDato);
-
-    // If tilDato is null, it is set to the current date
-    Calendar tilCalendar = new GregorianCalendar();
-    if (tilDato == null) {
-      tilCalendar.setTime(new Date());
-    } else {
-      tilCalendar.setTime(tilDato);
-    }
-
-    int diffYear = tilCalendar.get(Calendar.YEAR) - fraCalendar.get(Calendar.YEAR);
-    return diffYear * 12 + tilCalendar.get(Calendar.MONTH) - fraCalendar.get(Calendar.MONTH);
-  }
 }

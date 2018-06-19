@@ -2,25 +2,12 @@ package no.nav.arbeid.cv.indexer.arena.domene;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
-@Entity
-@Table(name = "ARBEIDSMARKEDBRUKER")
 public class ArenaArbeidsmarkedsbruker implements Serializable {
 
   private static final long serialVersionUID = -3568532476315078850L;
 
-  @Id
-  @OneToOne
-  @JoinColumn(name = "person_id")
   private ArenaPerson person;
 
-  @Column(name = "kandidat_nr")
   private String kandidatnummer;
 
   public ArenaArbeidsmarkedsbruker() {}

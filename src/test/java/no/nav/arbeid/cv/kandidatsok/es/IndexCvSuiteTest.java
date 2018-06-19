@@ -1,6 +1,7 @@
 package no.nav.arbeid.cv.kandidatsok.es;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,42 +15,32 @@ import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.OverrideAutoConfiguration;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import no.nav.arbeid.cv.events.CvEvent;
-import no.nav.arbeid.cv.indexer.config.IndexerServiceConfig;
-import no.nav.arbeid.cv.indexer.config.temp.TempCvEventObjectMother;
-import no.nav.arbeid.cv.indexer.es.client.EsIndexerClient;
-import no.nav.arbeid.cv.indexer.service.CvIndexerService;
-import no.nav.arbeid.cv.indexer.service.EsCvTransformer;
-import no.nav.arbeid.cv.kandidatsok.config.KandidatsokServiceConfig;
-import no.nav.arbeid.cv.kandidatsok.domene.es.EsCv;
-import no.nav.arbeid.cv.kandidatsok.domene.sok.Aggregering;
-//import no.nav.arbeid.cv.kandidatsok.domene.sok.EsCv;
-import no.nav.arbeid.cv.kandidatsok.domene.sok.Sokekriterier;
-import no.nav.arbeid.cv.kandidatsok.domene.sok.Sokeresultat;
-import no.nav.arbeid.kandidatsok.es.client.EsSokClient;
-import no.nav.security.spring.oidc.test.TokenGeneratorConfiguration;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.palantir.docker.compose.DockerComposeRule;
+
+import io.micrometer.core.instrument.MeterRegistry;
+import no.nav.arbeid.cv.indexer.config.EsServiceConfig;
+import no.nav.arbeid.cv.kandidatsok.domene.es.EsCvObjectMother;
+import no.nav.arbeid.cv.kandidatsok.es.domene.mapper.KandidatsokTransformer;
+import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Aggregering;
+import no.nav.arbeid.cv.kandidatsok.es.domene.sok.EsCv;
+import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokekriterier;
+import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokeresultat;
+import no.nav.arbeid.kandidatsok.es.client.EsIndexerService;
+import no.nav.arbeid.kandidatsok.es.client.EsSokService;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
-@Ignore("Hopper over denne midlertidig til frontend har skiftet endepunkter")
 public class IndexCvSuiteTest {
-
-  private static final String ES_DOCKER_SERVICE = "elastic_search";
 
   /*
    * For å kunne kjøre denne testen må Linux rekonfigureres litt.. Lag en fil i
@@ -58,40 +49,36 @@ public class IndexCvSuiteTest {
    */
 
   // Kjører "docker-compose up" manuelt istedenfor denne ClassRule:
-  //
-  // @ClassRule
-  // public static DockerComposeRule docker =
-  // DockerComposeRule.builder().file("src/test/resources/docker-compose-kun-es.yml")
-  // // .waitingForHostNetworkedPort(9200, port -> SuccessOrFailure
-  // // .fromBoolean(port.isListeningNow(), "Internal port " + port + " was not listening"))
-  // .build();
+  @ClassRule
+  public static DockerComposeRule docker =
+      DockerComposeRule.builder().file("src/test/resources/docker-compose-kun-es.yml").build();
 
   @Autowired
-  private EsCvTransformer transformer;
+  private EsSokService sokClient;
+
+  @Autowired
+  private EsIndexerService indexerClient;
 
   private KandidatsokTransformer kandidatsokTransformer = new KandidatsokTransformer();
 
-  @Autowired
-  private EsSokClient sokClient;
-
-  @Autowired
-  private EsIndexerClient indexerClient;
-
-  @Autowired
-  private CvIndexerService indexerService;
-
-  @TestConfiguration
-  @OverrideAutoConfiguration(enabled = true)
-  @ImportAutoConfiguration(exclude = {KafkaAutoConfiguration.class,
-      DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
-  @Import({IndexerServiceConfig.class, KandidatsokServiceConfig.class,
-      TokenGeneratorConfiguration.class})
+  @Configuration
+  @Import({EsServiceConfig.class})
   static class TestConfig {
 
     @Bean
     public RestHighLevelClient restHighLevelClient() {
       return new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9250, "http")));
     }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+      return new ObjectMapper();
+    }
+
+    @Bean
+    public MeterRegistry meterRegistry() {
+      return mock(MeterRegistry.class);
+    };
 
   }
 
@@ -105,11 +92,11 @@ public class IndexCvSuiteTest {
 
     indexerClient.createIndex();
 
-    indexerClient.index(transformer.transform(TempCvEventObjectMother.giveMeCvEvent()));
-    indexerClient.index(transformer.transform(TempCvEventObjectMother.giveMeCvEvent2()));
-    indexerClient.index(transformer.transform(TempCvEventObjectMother.giveMeCvEvent3()));
-    indexerClient.index(transformer.transform(TempCvEventObjectMother.giveMeCvEvent4()));
-    indexerClient.index(transformer.transform(TempCvEventObjectMother.giveMeCvEvent5()));
+    indexerClient.index(EsCvObjectMother.giveMeEsCv());
+    indexerClient.index(EsCvObjectMother.giveMeEsCv2());
+    indexerClient.index(EsCvObjectMother.giveMeEsCv3());
+    indexerClient.index(EsCvObjectMother.giveMeEsCv4());
+    indexerClient.index(EsCvObjectMother.giveMeEsCv5());
   }
 
   @After
@@ -126,8 +113,7 @@ public class IndexCvSuiteTest {
 
     assertThat(list.size()).isEqualTo(1);
     EsCv esCv = list.get(0);
-    assertThat(esCv).isEqualTo(kandidatsokTransformer
-        .transformer(transformer.transform(TempCvEventObjectMother.giveMeCvEvent())));
+    assertThat(esCv).isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv()));
   }
 
   @Test
@@ -195,8 +181,7 @@ public class IndexCvSuiteTest {
 
     assertThat(cver.size()).isEqualTo(1);
     EsCv cv = cver.get(0);
-    assertThat(cv).isEqualTo(kandidatsokTransformer
-        .transformer(transformer.transform(TempCvEventObjectMother.giveMeCvEvent4())));
+    assertThat(cv).isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv4()));
   }
 
   @Test
@@ -258,8 +243,7 @@ public class IndexCvSuiteTest {
 
     List<EsCv> cver = sokeresultat.getCver();
     EsCv cv = cver.get(0);
-    assertThat(cv).isEqualTo(kandidatsokTransformer
-        .transformer(transformer.transform(TempCvEventObjectMother.giveMeCvEvent3())));
+    assertThat(cv).isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv3()));
   }
 
   @Test
@@ -268,8 +252,7 @@ public class IndexCvSuiteTest {
 
     List<EsCv> cver = sokeresultat.getCver();
     EsCv cv = cver.get(0);
-    assertThat(cv).isEqualTo(kandidatsokTransformer
-        .transformer(transformer.transform(TempCvEventObjectMother.giveMeCvEvent())));
+    assertThat(cv).isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv()));
   }
 
   @Test
@@ -324,8 +307,7 @@ public class IndexCvSuiteTest {
     EsCv cv = cver.get(0);
 
     assertThat(cver.size()).isEqualTo(1);
-    assertThat(cv).isEqualTo(kandidatsokTransformer
-        .transformer(transformer.transform(TempCvEventObjectMother.giveMeCvEvent5())));
+    assertThat(cv).isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv5()));
   }
 
   @Test
@@ -337,8 +319,7 @@ public class IndexCvSuiteTest {
     EsCv cv = cver.get(0);
 
     assertThat(cver.size()).isEqualTo(1);
-    assertThat(cv).isEqualTo(kandidatsokTransformer
-        .transformer(transformer.transform(TempCvEventObjectMother.giveMeCvEvent3())));
+    assertThat(cv).isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv3()));
   }
 
   @Test
@@ -350,8 +331,7 @@ public class IndexCvSuiteTest {
     EsCv cv = cver.get(0);
 
     assertThat(cver.size()).isEqualTo(1);
-    assertThat(cv).isEqualTo(kandidatsokTransformer
-        .transformer(transformer.transform(TempCvEventObjectMother.giveMeCvEvent3())));
+    assertThat(cv).isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv3()));
   }
 
   @Test
@@ -363,8 +343,7 @@ public class IndexCvSuiteTest {
     EsCv cv = cver.get(0);
 
     assertThat(cver.size()).isEqualTo(1);
-    assertThat(cv).isEqualTo(kandidatsokTransformer
-        .transformer(transformer.transform(TempCvEventObjectMother.giveMeCvEvent5())));
+    assertThat(cv).isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv5()));
   }
 
   @Test
@@ -376,8 +355,7 @@ public class IndexCvSuiteTest {
     EsCv cv = cver.get(0);
 
     assertThat(cver.size()).isEqualTo(1);
-    assertThat(cv).isEqualTo(kandidatsokTransformer
-        .transformer(transformer.transform(TempCvEventObjectMother.giveMeCvEvent2())));
+    assertThat(cv).isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
   }
 
   @Test
@@ -395,14 +373,13 @@ public class IndexCvSuiteTest {
 
   @Test
   public void testPaTotalYrkeserfaringSkalGiKorrektResultat() throws IOException {
-    Sokeresultat sokeresultat =
-        sokClient.sok(Sokekriterier.med().totalYrkeserfaring(Collections.singletonList("37-72")).bygg());
+    Sokeresultat sokeresultat = sokClient
+        .sok(Sokekriterier.med().totalYrkeserfaring(Collections.singletonList("37-72")).bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
     EsCv cv = cver.get(0);
 
-    assertThat(cv).isEqualTo(kandidatsokTransformer
-        .transformer(transformer.transform(TempCvEventObjectMother.giveMeCvEvent2())));
+    assertThat(cv).isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
   }
 
   @Test
@@ -425,8 +402,8 @@ public class IndexCvSuiteTest {
 
     List<EsCv> cverVideregaende = sokeresultatVideregaende.getCver();
 
-//    assertThat(cverVideregaende).contains(kandidatsokTransformer
-//        .transformer(transformer.transform(TempCvEventObjectMother.giveMeCvEvent2())));
+    // assertThat(cverVideregaende).contains(kandidatsokTransformer
+    // .transformer(transformer.transform(TempCvEventObjectMother.giveMeEsCv2())));
   }
 
   @Test
@@ -439,30 +416,31 @@ public class IndexCvSuiteTest {
     List<EsCv> cverIngen = sokeresultatIngen.getCver();
     List<EsCv> cverIngenOgGrunnskole = sokeresultatIngenOgGrunnskole.getCver();
 
-//    assertThat(cverIngen).contains(kandidatsokTransformer
-//        .transformer(transformer.transform(TempCvEventObjectMother.giveMeCvEvent5())));
-//    assertThat(cverIngen).contains(kandidatsokTransformer
-//        .transformer(transformer.transform(TempCvEventObjectMother.giveMeCvEvent2())));
+    // assertThat(cverIngen).contains(kandidatsokTransformer
+    // .transformer(transformer.transform(TempCvEventObjectMother.giveMeEsCv5())));
+    // assertThat(cverIngen).contains(kandidatsokTransformer
+    // .transformer(transformer.transform(TempCvEventObjectMother.giveMeEsCv2())));
     assertThat(cverIngen.size()).isLessThan(cverIngenOgGrunnskole.size());
   }
 
   @Test
   public void skalBulkIndeksereCVerIdempotent() throws Exception {
-    List<CvEvent> bulkEventer = Arrays.asList(TempCvEventObjectMother.giveMeCvEvent(),
-        TempCvEventObjectMother.giveMeCvEvent2(), TempCvEventObjectMother.giveMeCvEvent3(),
-        TempCvEventObjectMother.giveMeCvEvent4(), TempCvEventObjectMother.giveMeCvEvent5());
+    List<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> bulkEventer =
+        Arrays.asList(EsCvObjectMother.giveMeEsCv(), EsCvObjectMother.giveMeEsCv2(),
+            EsCvObjectMother.giveMeEsCv3(), EsCvObjectMother.giveMeEsCv4(),
+            EsCvObjectMother.giveMeEsCv5());
 
     bulkEventer.forEach(e -> e.setArenaPersonId(e.getArenaPersonId() + 9999));
 
     int antallForBulkIndeksering = sokClient.sok(Sokekriterier.med().bygg()).getCver().size();
-    indexerService.bulkIndekser(bulkEventer);
+    indexerClient.bulkIndex(bulkEventer);
     int antallEtterIndeksering = sokClient.sok(Sokekriterier.med().bygg()).getCver().size();
 
     Assertions.assertThat(antallEtterIndeksering - antallForBulkIndeksering)
         .isEqualTo(bulkEventer.size());
 
     // Reindekser
-    indexerService.bulkIndekser(bulkEventer);
+    indexerClient.bulkIndex(bulkEventer);
     antallEtterIndeksering = sokClient.sok(Sokekriterier.med().bygg()).getCver().size();
 
     Assertions.assertThat(antallEtterIndeksering - antallForBulkIndeksering)
@@ -471,12 +449,11 @@ public class IndexCvSuiteTest {
 
   @Test
   public void skalBulkSletteCVer() throws Exception {
-    List<Long> sletteIder =
-        Arrays.asList(TempCvEventObjectMother.giveMeCvEvent().getArenaPersonId(),
-            TempCvEventObjectMother.giveMeCvEvent2().getArenaPersonId());
+    List<Long> sletteIder = Arrays.asList(EsCvObjectMother.giveMeEsCv().getArenaPersonId(),
+        EsCvObjectMother.giveMeEsCv2().getArenaPersonId());
 
     int antallForBulkSletting = sokClient.sok(Sokekriterier.med().bygg()).getCver().size();
-    indexerService.bulkSlett(sletteIder);
+    indexerClient.bulkSlett(sletteIder);
     int antallEtterSletting = sokClient.sok(Sokekriterier.med().bygg()).getCver().size();
 
     Assertions.assertThat(antallForBulkSletting - antallEtterSletting).isEqualTo(sletteIder.size());
@@ -489,8 +466,7 @@ public class IndexCvSuiteTest {
 
     List<EsCv> cver = sokeresultat.getCver();
     EsCv cv = cver.get(0);
-    assertThat(cv).isEqualTo(kandidatsokTransformer
-        .transformer(transformer.transform(TempCvEventObjectMother.giveMeCvEvent5())));
+    assertThat(cv).isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv5()));
   }
 
   @Test

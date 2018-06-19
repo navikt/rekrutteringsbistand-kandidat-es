@@ -2,15 +2,14 @@
 version: '3'
 services:
   elastic_search:
-    #image: docker.adeo.no:5000/pires/docker-elasticsearch:6.0.1
     image: ssense/elasticsearch:latest
     volumes:
       - $PWD/target/data:/data
     privileged: true
     hostname: elastic
     ports:
-      - "9200:9200"
-      - "9300:9300" 
+      - "9250:9200"
+      - "9350:9300" 
     healthcheck:
       test: "curl -f http://localhost:9200"
 
