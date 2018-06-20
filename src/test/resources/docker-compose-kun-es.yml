@@ -8,8 +8,7 @@ services:
     privileged: true
     hostname: elastic
     ports:
-      - "9250:9200"
-      - "9350:9300" 
+      - "${ES_PORT:?MANGLER_VERDI_FOR_ES_PORT}:9200"
     healthcheck:
       test: "curl -f http://localhost:9200"
 

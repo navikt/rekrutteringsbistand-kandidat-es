@@ -9,17 +9,16 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.palantir.docker.compose.configuration.ShutdownStrategy;
+import com.palantir.docker.compose.connection.DockerMachine;
 import org.apache.http.HttpHost;
 import org.assertj.core.api.Assertions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -49,9 +48,15 @@ public class IndexCvSuiteTest {
    */
 
   // Kjører "docker-compose up" manuelt istedenfor denne ClassRule:
+
   @ClassRule
   public static DockerComposeRule docker =
-      DockerComposeRule.builder().file("src/test/resources/docker-compose-kun-es.yml").build();
+      DockerComposeRule.builder().file("src/test/resources/docker-compose-kun-es.yml")
+              .machine(DockerMachine.localMachine()
+                      .withAdditionalEnvironmentVariable("ES_PORT", System.getProperty("ES_PORT"))
+                      .build())
+              .shutdownStrategy(ShutdownStrategy.KILL_DOWN)
+              .build();
 
   @Autowired
   private EsSokService sokClient;
@@ -66,8 +71,9 @@ public class IndexCvSuiteTest {
   static class TestConfig {
 
     @Bean
-    public RestHighLevelClient restHighLevelClient() {
-      return new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9250, "http")));
+    @Autowired
+    public RestHighLevelClient restHighLevelClient(@Value("${ES_PORT}") Integer port) {
+      return new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", port, "http")));
     }
 
     @Bean
