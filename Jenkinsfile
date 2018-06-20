@@ -13,9 +13,14 @@ node {
     def color
 
     try {
-
         stage("checkout") {
             checkout scm
+
+            lastCommit = sh([script: "git log -1", returnStdout: true])
+            if (lastCommit.contains("(from Jenkins pipeline)")) {
+                currentBuild.result = "ABORTED"
+                error("Forrige commit var kun en versjonering fra Jenkins, avbryter bygg for å forhindre evig løkke.")
+            }
         }
 
         stage("initialize") {
