@@ -61,10 +61,7 @@ node {
 
         stage("build and test") {
             if (isSnapshot) {
-                // Dette må bort etterhvert - sørg heller for å la maven tildele dynamiske porter til bruk for docker-image!
-                lock('PAM_KANDIDATSOK_ES_BYGG') {
-                    sh "${mvn} clean install -Dit.skip=true -Djava.io.tmpdir=/tmp/${application} -B -e"
-                }
+                sh "${mvn} clean install -Dit.skip=true -Djava.io.tmpdir=/tmp/${application} -B -e"
             } else {
                 println("POM version is not a SNAPSHOT, it is ${pom.version}. Skipping build and testing of backend")
             }
