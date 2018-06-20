@@ -5,7 +5,6 @@ def deployLib = new deploy()
 
 node {
     def application = "pam-kandidatsok-es"
-
     def committer, committerEmail, changelog, pom, releaseVersion, prPomVersion, isSnapshot, isPullRequest, isMaster, isBranch, nextVersion // metadata
 
     def mvnHome = tool "maven-3.3.9"
