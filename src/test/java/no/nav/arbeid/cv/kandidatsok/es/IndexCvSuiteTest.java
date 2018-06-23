@@ -30,7 +30,7 @@ import com.palantir.docker.compose.DockerComposeRule;
 import io.micrometer.core.instrument.MeterRegistry;
 import no.nav.arbeid.cv.indexer.config.EsServiceConfig;
 import no.nav.arbeid.cv.kandidatsok.domene.es.EsCvObjectMother;
-import no.nav.arbeid.cv.kandidatsok.es.domene.mapper.KandidatsokTransformer;
+import no.nav.arbeid.cv.kandidatsok.domene.es.KandidatsokTransformer;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Aggregering;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.EsCv;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokekriterier;

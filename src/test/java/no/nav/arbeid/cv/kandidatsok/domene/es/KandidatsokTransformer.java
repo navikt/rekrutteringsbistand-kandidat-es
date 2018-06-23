@@ -1,4 +1,4 @@
-package no.nav.arbeid.cv.kandidatsok.es.domene.mapper;
+package no.nav.arbeid.cv.kandidatsok.domene.es;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +32,6 @@ public class KandidatsokTransformer {
   }
 
   private EsYrkeserfaring transformer(no.nav.arbeid.cv.kandidatsok.es.domene.EsYrkeserfaring yrke) {
-    return new EsYrkeserfaring(yrke.getStyrkKodeStillingstittel(), yrke.getYrkeserfaringManeder());
+    return new EsYrkeserfaring(yrke.getStyrkKodeStillingstittel(), yrke.getYrkeserfaringManeder(), yrke.getFraDato());
   }
 }
