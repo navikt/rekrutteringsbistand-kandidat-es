@@ -226,14 +226,11 @@ public class EsCv {
 
   public void addSertifikat(Collection<EsSertifikat> sertifikatListe) {
     if (sertifikatListe != null) {
-      if (sertifikatListe != null) {
-        this.sertifikat.addAll(sertifikatListe);
-        this.addSamletKompetanse(
-            sertifikatListe.stream().map(k -> new EsSamletKompetanse(k.getSertifikatKodeNavn()))
-                .collect(Collectors.toList()));
-      }
+      this.sertifikat.addAll(sertifikatListe);
+      this.addSamletKompetanse(
+          sertifikatListe.stream().map(k -> new EsSamletKompetanse(k.getSertifikatKodeNavn()))
+              .collect(Collectors.toList()));
     }
-    this.sertifikat.addAll(sertifikatListe);
   }
 
   public void addForerkort(EsForerkort forerkort) {
