@@ -1,6 +1,5 @@
-## PAM CV indexer
-Pam CV Indexer er en applikasjon som mottar CV'er fra Kafka og indekserer dem i elastic search.
-DSet tilbyr også et REST-api for å søke i CV'ene som er indeksert i elastic search.
+## PAM Kandidatsok ES
+Pam Kandidatsok ES er et bibliotek som håndterer indexering og søk mot Elasticsearch for bruk i kandidatsøk.
 
 ### Krav for utviklere
 Du trenger Docker installert lokalt, i tillegg til et "vanlig" oppsett med Java og Maven. Se [Auras side om Linux utviklerimage på Confluence](https://confluence.adeo.no/display/AURA/Linux+utviklerimage)
