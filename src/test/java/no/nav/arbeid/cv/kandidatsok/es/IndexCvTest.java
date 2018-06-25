@@ -9,13 +9,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.palantir.docker.compose.configuration.ShutdownStrategy;
-import com.palantir.docker.compose.connection.DockerMachine;
 import org.apache.http.HttpHost;
 import org.assertj.core.api.Assertions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +28,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.palantir.docker.compose.DockerComposeRule;
+import com.palantir.docker.compose.configuration.ShutdownStrategy;
+import com.palantir.docker.compose.connection.DockerMachine;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import no.nav.arbeid.cv.indexer.config.EsServiceConfig;
@@ -39,7 +43,7 @@ import no.nav.arbeid.kandidatsok.es.client.EsIndexerService;
 import no.nav.arbeid.kandidatsok.es.client.EsSokService;
 
 @RunWith(SpringRunner.class)
-public class IndexCvSuiteTest {
+public class IndexCvTest {
 
   /*
    * For å kunne kjøre denne testen må Linux rekonfigureres litt.. Lag en fil i
@@ -52,11 +56,9 @@ public class IndexCvSuiteTest {
   @ClassRule
   public static DockerComposeRule docker =
       DockerComposeRule.builder().file("src/test/resources/docker-compose-kun-es.yml")
-              .machine(DockerMachine.localMachine()
-                      .withAdditionalEnvironmentVariable("ES_PORT", System.getProperty("ES_PORT"))
-                      .build())
-              .shutdownStrategy(ShutdownStrategy.KILL_DOWN)
-              .build();
+          .machine(DockerMachine.localMachine()
+              .withAdditionalEnvironmentVariable("ES_PORT", System.getProperty("ES_PORT")).build())
+          .shutdownStrategy(ShutdownStrategy.KILL_DOWN).build();
 
   @Autowired
   private EsSokService sokClient;
@@ -305,9 +307,18 @@ public class IndexCvSuiteTest {
   }
 
   @Test
-  public void testSamletKompetanseSkalGiResultatVedSokPaSprak() throws IOException {
+  public void testSamletKompetanseSkalIkkeGiResultatVedSokPaSprak() throws IOException {
     Sokeresultat sokeresultat =
         sokClient.sok(Sokekriterier.med().kompetanser(Collections.singletonList("Dansk")).bygg());
+
+    List<EsCv> cver = sokeresultat.getCver();
+    assertThat(cver.size()).isEqualTo(0);
+  }
+  
+  @Test
+  public void testSokPaSprak() throws IOException {
+    Sokeresultat sokeresultat =
+        sokClient.sok(Sokekriterier.med().sprak(Collections.singletonList("Dansk")).bygg());
 
     List<EsCv> cver = sokeresultat.getCver();
     EsCv cv = cver.get(0);
