@@ -264,15 +264,12 @@ public class EsCv {
   public void addSprak(Collection<EsSprak> sprakListe) {
     if (sprakListe != null) {
       this.sprak.addAll(sprakListe);
-      this.addSamletKompetanse(sprakListe.stream()
-          .map(s -> new EsSamletKompetanse(s.getSprakKodeTekst())).collect(Collectors.toList()));
     }
   }
 
   public void addKurs(EsKurs kurs) {
     if (kurs != null) {
       this.kurs.add(kurs);
-      this.addSamletKompetanse(Collections.singletonList(new EsSamletKompetanse(kurs.getTittel())));
     }
   }
 
@@ -303,7 +300,6 @@ public class EsCv {
   public void addSamletKompetanse(Collection<EsSamletKompetanse> samletKompetanseListe) {
     this.samletKompetanse.addAll(samletKompetanseListe);
   }
-
 
   // gettere
 

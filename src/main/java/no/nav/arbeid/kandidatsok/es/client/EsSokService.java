@@ -21,6 +21,8 @@ public interface EsSokService {
 
   List<String> typeAheadYrkeJobbonsker(String prefix) throws IOException;
 
+  List<String> typeAheadSprak(String prefix) throws IOException;
+
   EsCv hent(String kandidatnr) throws IOException;
 
 }

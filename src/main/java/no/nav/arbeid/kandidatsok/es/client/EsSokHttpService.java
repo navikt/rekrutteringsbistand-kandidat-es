@@ -64,6 +64,11 @@ public class EsSokHttpService implements EsSokService {
   }
 
   @Override
+  public List<String> typeAheadSprak(String prefix) throws IOException {
+    return typeAhead(prefix, "sprak.sprakKodeTekst.completion");
+  }
+  
+  @Override
   public List<String> typeAheadKompetanse(String prefix) throws IOException {
     return typeAhead(prefix, "samletKompetanse.samletKompetanseTekst.completion");
   }
@@ -136,7 +141,8 @@ public class EsSokHttpService implements EsSokService {
         && (sk.utdanningsniva() == null || sk.utdanningsniva().isEmpty())
         && (sk.geografiList() == null || sk.geografiList().isEmpty())
         && (sk.styrkKoder() == null || sk.styrkKoder().isEmpty())
-        && (sk.nusKoder() == null || sk.nusKoder().isEmpty())) {
+        && (sk.nusKoder() == null || sk.nusKoder().isEmpty())
+        && (sk.sprak() == null || sk.sprak().isEmpty())) {
       LOGGER.debug("MATCH ALL!");
       queryBuilder = QueryBuilders.matchAllQuery();
 
@@ -169,6 +175,11 @@ public class EsSokHttpService implements EsSokService {
       if (sk.kompetanser() != null && !sk.kompetanser().isEmpty()) {
         sk.kompetanser().stream().filter(StringUtils::isNotBlank)
             .forEach(k -> addKompetanseQuery(k, boolQueryBuilder));
+      }
+      
+      if (sk.sprak() != null && !sk.sprak().isEmpty()) {
+        sk.sprak().stream().filter(StringUtils::isNotBlank)
+            .forEach(k -> addSprakQuery(k, boolQueryBuilder));
       }
 
       if (sk.utdanninger() != null && !sk.utdanninger().isEmpty()) {
@@ -249,6 +260,14 @@ public class EsSokHttpService implements EsSokService {
         ScoreMode.None);
     boolQueryBuilder.must(kompetanseQueryBuilder);
     LOGGER.debug("ADDING kompetanse");
+  }
+  
+  private void addSprakQuery(String sprak, BoolQueryBuilder boolQueryBuilder) {
+    NestedQueryBuilder sprakQueryBuilder = QueryBuilders.nestedQuery("sprak",
+        QueryBuilders.matchQuery("sprak.sprakKodeTekst", sprak),
+        ScoreMode.None);
+    boolQueryBuilder.must(sprakQueryBuilder);
+    LOGGER.debug("ADDING sprak");
   }
 
   private void addGeografiQuery(String geografi, BoolQueryBuilder boolQueryBuilder) {
