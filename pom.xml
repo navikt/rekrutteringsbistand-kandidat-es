@@ -240,11 +240,11 @@
 			<name>Maven repo i iApp-sonen</name>
 			<url>https://repo.adeo.no/repository</url>
 		</repository>
-		<repository>
+		<!-- <repository>
 			<id>palantir</id>
 			<name>Repo for palantir</name>
 			<url>https://dl.bintray.com/palantir/releases</url>
-		</repository>
+		</repository> -->
 		<repository>
 			<id>confluent</id>
 			<name>Maven repo i iApp-sonen (confluent)</name>
