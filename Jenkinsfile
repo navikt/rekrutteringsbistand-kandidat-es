@@ -86,7 +86,7 @@ node {
         }
 
         stage("publish artifact") {
-           withCredentials([usernamePassword(credentialsId: 'deployer', usernameVariable: 'DEP_USERNAME', passwordVariable: 'DEP_PASSWORD')]) {
+           withCredentials([usernamePassword(credentialsId: 'nexusUploader', usernameVariable: 'DEP_USERNAME', passwordVariable: 'DEP_PASSWORD')]) {
                sh "${mvn} clean deploy -Dusername=${env.DEP_USERNAME} -Dpassword=${env.DEP_PASSWORD} -DskipTests -B -e"
            }
         }
