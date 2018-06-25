@@ -30,4 +30,5 @@ public class HeleEsServiceConfig {
   public EsServiceConfig esServiceConfig() {
     return new EsServiceConfig(esClientConfig().restHighLevelClient(), objectMapper, meterRegistry);
   }
+  
 }

@@ -297,7 +297,7 @@ public class EsCv {
     this.yrkeJobbonsker.addAll(yrkeJobbonskerListe);
   }
 
-  public void addSamletKompetanse(Collection<EsSamletKompetanse> samletKompetanseListe) {
+  private void addSamletKompetanse(Collection<EsSamletKompetanse> samletKompetanseListe) {
     this.samletKompetanse.addAll(samletKompetanseListe);
   }
 
