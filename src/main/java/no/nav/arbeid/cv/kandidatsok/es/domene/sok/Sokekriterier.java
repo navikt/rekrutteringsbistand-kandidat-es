@@ -17,6 +17,7 @@ public class Sokekriterier {
   private List<String> geografiList;
   private List<String> styrkKoder;
   private List<String> nusKoder;
+  private List<String> sprak;
   private String etternavn;
 
   private Sokekriterier() {};
@@ -27,6 +28,10 @@ public class Sokekriterier {
 
   public String fritekst() {
     return fritekst;
+  }
+
+  public List<String> sprak() {
+    return sprak;
   }
 
   public List<String> yrkeJobbonsker() {
@@ -77,6 +82,7 @@ public class Sokekriterier {
     private List<String> utdanninger;
     private List<String> totalYrkeserfaring;
     private List<String> utdanningsniva;
+    private List<String> sprak;
     private List<String> geografiList;
     private String styrkKode;
     private String nusKode;
@@ -88,19 +94,21 @@ public class Sokekriterier {
       Sokekriterier s = new Sokekriterier();
       s.etternavn = etternavn;
       s.fritekst = fritekst;
-      s.geografiList =
-          geografiList == null ? null : Collections.unmodifiableList(new ArrayList<>(geografiList));
-      s.kompetanser =
-          kompetanser == null ? null : Collections.unmodifiableList(new ArrayList<>(kompetanser));
+      s.geografiList = geografiList == null ? Collections.emptyList()
+          : Collections.unmodifiableList(new ArrayList<>(geografiList));
+      s.kompetanser = kompetanser == null ? Collections.emptyList()
+          : Collections.unmodifiableList(new ArrayList<>(kompetanser));
       s.totalYrkeserfaring = totalYrkeserfaring;
-      s.utdanningsniva = utdanningsniva == null ? null
+      s.utdanningsniva = utdanningsniva == null ? Collections.emptyList()
           : Collections.unmodifiableList(new ArrayList<>(utdanningsniva));
-      s.stillingstitler = stillingstitler == null ? null
+      s.stillingstitler = stillingstitler == null ? Collections.emptyList()
           : Collections.unmodifiableList(new ArrayList<>(stillingstitler));
-      s.yrkeJobbonsker = yrkeJobbonsker == null ? null
+      s.yrkeJobbonsker = yrkeJobbonsker == null ? Collections.emptyList()
           : Collections.unmodifiableList(new ArrayList<>(yrkeJobbonsker));
-      s.utdanninger =
-          utdanninger == null ? null : Collections.unmodifiableList(new ArrayList<>(utdanninger));
+      s.utdanninger = utdanninger == null ? Collections.emptyList()
+          : Collections.unmodifiableList(new ArrayList<>(utdanninger));
+      s.sprak = sprak == null ? Collections.emptyList()
+          : Collections.unmodifiableList(new ArrayList<>(sprak));
 
       List<String> tmpNuskoder = nusKoder == null ? new ArrayList<>() : new ArrayList<>(nusKoder);
       if (StringUtils.isNotBlank(nusKode)) {
@@ -130,6 +138,11 @@ public class Sokekriterier {
 
     public Builder stillingstitler(List<String> stillingstitler) {
       this.stillingstitler = stillingstitler;
+      return this;
+    }
+
+    public Builder sprak(List<String> sprak) {
+      this.sprak = sprak;
       return this;
     }
 
