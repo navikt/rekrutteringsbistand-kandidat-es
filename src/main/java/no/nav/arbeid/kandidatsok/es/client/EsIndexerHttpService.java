@@ -141,7 +141,7 @@ public class EsIndexerHttpService implements EsIndexerService {
                         .increment(antallFeil);
                 LOGGER.warn(
                         "Feilet under indeksering av CVer: " + bulkResponse.buildFailureMessage());
-                LOGGER.info("Finner du feilen? {}", esCver);
+                // LOGGER.info("Finner du feilen? {}", esCver);
 
             }
         }
