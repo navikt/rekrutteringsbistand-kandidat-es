@@ -269,19 +269,19 @@ public class EsCv {
     public void addKurs(EsKurs kurs) {
         if (kurs != null) {
             this.kurs.add(kurs);
-            if (StringUtils.isNotBlank(kurs.getTittel())) {
-                this.addSamletKompetanse(
-                        Collections.singletonList(new EsSamletKompetanse(kurs.getTittel())));
-            }
+//            if (StringUtils.isNotBlank(kurs.getTittel())) {
+//                this.addSamletKompetanse(
+//                        Collections.singletonList(new EsSamletKompetanse(kurs.getTittel())));
+//            }
         }
     }
 
     public void addKurs(Collection<EsKurs> kursListe) {
         if (kursListe != null) {
             this.kurs.addAll(kursListe);
-            this.addSamletKompetanse(kursListe.stream().map(s -> s.getTittel())
-                    .filter(t -> StringUtils.isNotBlank(t)).map(t -> new EsSamletKompetanse(t))
-                    .collect(Collectors.toList()));
+            // this.addSamletKompetanse(kursListe.stream().map(s -> s.getTittel())
+            // .filter(t -> StringUtils.isNotBlank(t)).map(t -> new EsSamletKompetanse(t))
+            // .collect(Collectors.toList()));
         }
     }
 

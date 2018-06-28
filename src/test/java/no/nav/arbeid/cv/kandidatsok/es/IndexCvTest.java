@@ -365,6 +365,7 @@ public class IndexCvTest {
     }
 
     @Test
+    @Ignore
     public void testSamletKompetanseSkalGiResultatVedSokPaKurs() throws IOException {
         Sokeresultat sokeresultat = sokClient.sok(
                 Sokekriterier.med().kompetanser(Collections.singletonList("Spring Boot")).bygg());
