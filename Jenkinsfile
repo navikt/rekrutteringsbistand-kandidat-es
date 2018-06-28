@@ -5,7 +5,7 @@ def deployLib = new deploy()
 
 node {
     def application = "pam-kandidatsok-es"
-    def committer, committerEmail, changelog, pom, releaseVersion, prPomVersion, isSnapshot, isPullRequest, isMaster, isBranch, nextVersion // metadata
+    def committer, committerEmail, changelog, pom, releaseVersion, prPomVersion, isSnapshot, isPullRequest, isMaster, isBranch, versionList, nextVersion // metadata
 
     def mvnHome = tool "maven-3.3.9"
     def mvn = "${mvnHome}/bin/mvn"
@@ -90,12 +90,13 @@ node {
                sh "${mvn} clean deploy -Dusername=${env.DEP_USERNAME} -Dpassword=${env.DEP_PASSWORD} -DskipTests -B -e"
            }
         }
-        
+
         stage("new dev version") {
             if (isMaster) {
                 withEnv(['HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088']) {
                     withCredentials([string(credentialsId: 'navikt-ci-oauthtoken', variable: 'token')]) {
-                        nextVersion = (releaseVersion.toInteger() + 1) + "-SNAPSHOT"
+                        versionList = releaseVersion.tokenize(".")
+                        nextVersion = (versionList.dropRight(1) + (versionList.last().toInteger() + 1)).join(".") + "-SNAPSHOT"
                         sh "${mvn} versions:set -B -DnewVersion=${nextVersion} -DgenerateBackupPoms=false"
                         sh "git commit -am \"updated to new dev-version ${nextVersion} after release by ${committer} (from Jenkins pipeline)\""
                         sh "git push -u https://${token}:x-oauth-basic@github.com/navikt/${application}.git $BRANCH_NAME"
