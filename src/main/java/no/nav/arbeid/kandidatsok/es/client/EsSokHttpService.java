@@ -569,6 +569,25 @@ public class EsSokHttpService implements EsSokService {
         return liste.stream().findFirst().orElse(new no.nav.arbeid.cv.kandidatsok.es.domene.EsCv());
     }
 
+    @Override
+    public Sokeresultat hentKandidater(List<String> kandidatnummer) throws IOException {
+        SearchResponse searchResponse = esExec(() -> search(QueryBuilders.termsQuery("arenaKandidatnr", kandidatnummer), 0, 100));
+        Sokeresultat usortertSokeresultat = toSokeresultat(searchResponse);
+        List<EsCv> sorterteCver = sorterSokeresultater(usortertSokeresultat.getCver(), kandidatnummer);
+        return new Sokeresultat(usortertSokeresultat.getTotaltAntallTreff(), sorterteCver, usortertSokeresultat.getAggregeringer());
+    }
+
+    private List<EsCv> sorterSokeresultater(List<EsCv> cver, List<String> kandidatnr) {
+        Map<String, EsCv> kandidater = cver.stream()
+                .collect(toMap(EsCv::getArenaKandidatnr,
+                        Function.identity()));
+
+        return kandidatnr.stream()
+                .map(kandidater::get)
+                .filter(Objects::nonNull)
+                .collect(toList());
+    }
+
     private no.nav.arbeid.cv.kandidatsok.es.domene.EsCv mapEsCvHent(SearchHit hit) {
         try {
             return mapper.readValue(hit.getSourceAsString(),

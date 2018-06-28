@@ -25,4 +25,6 @@ public interface EsSokService {
 
     EsCv hent(String kandidatnr) throws IOException;
 
+    Sokeresultat hentKandidater(List<String> kandidatnummer) throws IOException;
+
 }
