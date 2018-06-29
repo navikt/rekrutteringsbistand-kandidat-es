@@ -9,20 +9,22 @@ import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokeresultat;
 
 public interface EsSokService {
 
-  Sokeresultat sok(Sokekriterier sokekriterier) throws IOException;
+    Sokeresultat sok(Sokekriterier sokekriterier) throws IOException;
 
-  List<String> typeAheadKompetanse(String prefix) throws IOException;
+    List<String> typeAheadKompetanse(String prefix) throws IOException;
 
-  List<String> typeAheadUtdanning(String prefix) throws IOException;
+    List<String> typeAheadUtdanning(String prefix) throws IOException;
 
-  List<String> typeAheadYrkeserfaring(String prefix) throws IOException;
+    List<String> typeAheadYrkeserfaring(String prefix) throws IOException;
 
-  List<String> typeAheadGeografi(String prefix) throws IOException;
+    List<String> typeAheadGeografi(String prefix) throws IOException;
 
-  List<String> typeAheadYrkeJobbonsker(String prefix) throws IOException;
+    List<String> typeAheadYrkeJobbonsker(String prefix) throws IOException;
 
-  List<String> typeAheadSprak(String prefix) throws IOException;
+    List<String> typeAheadSprak(String prefix) throws IOException;
 
-  EsCv hent(String kandidatnr) throws IOException;
+    EsCv hent(String kandidatnr) throws IOException;
+
+    Sokeresultat hentKandidater(List<String> kandidatnummer) throws IOException;
 
 }
