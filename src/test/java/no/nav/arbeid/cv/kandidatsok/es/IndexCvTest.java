@@ -1,5 +1,6 @@
 package no.nav.arbeid.cv.kandidatsok.es;
 
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.http.HttpHost;
 import org.assertj.core.api.Assertions;
@@ -89,7 +91,7 @@ public class IndexCvTest {
         @Bean
         public MeterRegistry meterRegistry() {
             return mock(MeterRegistry.class);
-        };
+        }
 
     }
 
@@ -204,7 +206,7 @@ public class IndexCvTest {
         Sokeresultat sokeresultat = sokClient.sok(Sokekriterier.med()
                 .stillingstitler(Collections.singletonList("Industrimekaniker")).bygg());
         Sokeresultat sokeresultat2 = sokClient.sok(Sokekriterier.med()
-                .stillingstitler(Arrays.asList("Progger", "Industrimekaniker")).bygg());
+                .stillingstitler(asList("Progger", "Industrimekaniker")).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         List<EsCv> cver2 = sokeresultat2.getCver();
@@ -217,7 +219,7 @@ public class IndexCvTest {
         Sokeresultat sokeresultat = sokClient.sok(Sokekriterier.med()
                 .kompetanser(Collections.singletonList("Programvareutvikler")).bygg());
         Sokeresultat sokeresultat2 = sokClient.sok(Sokekriterier.med()
-                .kompetanser(Arrays.asList("Programvareutvikler", "Nyhetsanker")).bygg());
+                .kompetanser(asList("Programvareutvikler", "Nyhetsanker")).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         List<EsCv> cver2 = sokeresultat2.getCver();
@@ -230,7 +232,7 @@ public class IndexCvTest {
         Sokeresultat sokeresultat = sokClient.sok(Sokekriterier.med()
                 .utdanninger(Collections.singletonList("Bygg og anlegg")).bygg());
         Sokeresultat sokeresultat2 = sokClient.sok(Sokekriterier.med()
-                .utdanninger(Arrays.asList("Bygg og anlegg", "master i sikkerhet")).bygg());
+                .utdanninger(asList("Bygg og anlegg", "master i sikkerhet")).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         List<EsCv> cver2 = sokeresultat2.getCver();
@@ -396,7 +398,7 @@ public class IndexCvTest {
         Sokeresultat sokeresultat = sokClient.sok(
                 Sokekriterier.med().geografiList(Collections.singletonList("NO34.3434.1")).bygg());
         Sokeresultat sokeresultat2 = sokClient.sok(
-                Sokekriterier.med().geografiList(Arrays.asList("NO34.3434.1", "NO21.2020")).bygg());
+                Sokekriterier.med().geografiList(asList("NO34.3434.1", "NO21.2020")).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         List<EsCv> cver2 = sokeresultat2.getCver();
@@ -421,7 +423,7 @@ public class IndexCvTest {
         Sokeresultat sokeresultat = sokClient.sok(
                 Sokekriterier.med().utdanningsniva(Collections.singletonList("Master")).bygg());
         Sokeresultat sokeresultat1 = sokClient.sok(
-                Sokekriterier.med().utdanningsniva(Arrays.asList("Master", "Fagskole")).bygg());
+                Sokekriterier.med().utdanningsniva(asList("Master", "Fagskole")).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         List<EsCv> cver1 = sokeresultat1.getCver();
@@ -445,7 +447,7 @@ public class IndexCvTest {
         Sokeresultat sokeresultatIngen = sokClient
                 .sok(Sokekriterier.med().utdanningsniva(Collections.singletonList("Ingen")).bygg());
         Sokeresultat sokeresultatIngenOgGrunnskole = sokClient
-                .sok(Sokekriterier.med().utdanningsniva(Arrays.asList("Ingen", "Master")).bygg());
+                .sok(Sokekriterier.med().utdanningsniva(asList("Ingen", "Master")).bygg());
 
         List<EsCv> cverIngen = sokeresultatIngen.getCver();
         List<EsCv> cverIngenOgGrunnskole = sokeresultatIngenOgGrunnskole.getCver();
@@ -460,7 +462,7 @@ public class IndexCvTest {
     @Test
     public void skalBulkIndeksereCVerIdempotent() throws Exception {
         List<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> bulkEventer =
-                Arrays.asList(EsCvObjectMother.giveMeEsCv(), EsCvObjectMother.giveMeEsCv2(),
+                asList(EsCvObjectMother.giveMeEsCv(), EsCvObjectMother.giveMeEsCv2(),
                         EsCvObjectMother.giveMeEsCv3(), EsCvObjectMother.giveMeEsCv4(),
                         EsCvObjectMother.giveMeEsCv5());
 
@@ -483,7 +485,7 @@ public class IndexCvTest {
 
     @Test
     public void skalBulkSletteCVer() throws Exception {
-        List<Long> sletteIder = Arrays.asList(EsCvObjectMother.giveMeEsCv().getArenaPersonId(),
+        List<Long> sletteIder = asList(EsCvObjectMother.giveMeEsCv().getArenaPersonId(),
                 EsCvObjectMother.giveMeEsCv2().getArenaPersonId());
 
         int antallForBulkSletting = sokClient.sok(Sokekriterier.med().bygg()).getCver().size();
@@ -520,5 +522,39 @@ public class IndexCvTest {
     @Test
     public void skalKunneIndeksereOppCvUtenKompetanser() throws IOException {
         indexerClient.index(EsCvObjectMother.giveMeCvUtenKompetanse());
+    }
+
+    @Test
+    public void hentKandidaterBevarerRekkefolge() throws IOException {
+        String KANDIDATNUMMER1 = "N883773";
+        String KANDIDATNUMMER2 = "S221234";
+        String KANDIDATNUMMER3 = "H738234";
+        List<String> kandidatnummer1 = asList(KANDIDATNUMMER1, KANDIDATNUMMER2, KANDIDATNUMMER3);
+        List<String> kandidatnummer2 = asList(KANDIDATNUMMER3, KANDIDATNUMMER1, KANDIDATNUMMER2);
+
+        Sokeresultat resultat1 = sokClient.hentKandidater(kandidatnummer1);
+        List<String> resultatkandidatnummer1 = resultat1.getCver().stream()
+                .map(EsCv::getArenaKandidatnr)
+                .collect(Collectors.toList());
+        assertThat(resultatkandidatnummer1).isEqualTo(kandidatnummer1);
+
+        Sokeresultat resultat2 = sokClient.hentKandidater(kandidatnummer2);
+        List<String> resultatkandidatnummer2 = resultat2.getCver().stream()
+                .map(EsCv::getArenaKandidatnr)
+                .collect(Collectors.toList());
+        assertThat(resultatkandidatnummer2).isEqualTo(kandidatnummer2);
+    }
+
+    @Test
+    public void hentKandidaterHandtererIkkeeksisterendeKandidatnummer() throws IOException {
+        String KANDIDATNUMMER1 = "N883773";
+        String KANDIDATNUMMER2 = "S221234";
+        List<String> kandidatnummer = asList(KANDIDATNUMMER1, "IKKEEKSISTERNDE_KANDIDATNUMMER", KANDIDATNUMMER2);
+
+        Sokeresultat resultat = sokClient.hentKandidater(kandidatnummer);
+        List<String> resultatkandidatnummer = resultat.getCver().stream()
+                .map(EsCv::getArenaKandidatnr)
+                .collect(Collectors.toList());
+        assertThat(resultatkandidatnummer).isEqualTo(asList(KANDIDATNUMMER1, KANDIDATNUMMER2));
     }
 }
