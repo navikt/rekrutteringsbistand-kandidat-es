@@ -95,7 +95,7 @@ node {
             if (isMaster) {
                 withEnv(['HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088']) {
                     withCredentials([string(credentialsId: 'navikt-ci-oauthtoken', variable: 'token')]) {
-                        majorMinorVersion = sh(script: "echo 1.2.3.4.55 | perl -pe 's/\\.\\d+\\s*\$//g'", returnStdout: true).trim()
+                        majorMinorVersion = sh(script: "echo ${releaseVersion} | perl -pe 's/\\.\\d+\\s*\$//g'", returnStdout: true).trim()
                         patchVersion = releaseVersion.tokenize(".").last().toInteger() + 1
                         nextVersion = "${majorMinorVersion}.${patchVersion}-SNAPSHOT"
                         sh "${mvn} versions:set -B -DnewVersion=${nextVersion} -DgenerateBackupPoms=false"
