@@ -32,7 +32,7 @@ node {
                 prPomVersion = "$BRANCH_NAME".replaceAll("-", "_") + "-SNAPSHOT"
                 sh "env"
                 println ("Setter ny pom versjon $prPomVersion")
-                sh "${mvn} versions:set -B -DnewVersion=${prPomVersion} -DgenerateBackupPoms=false"                         
+                sh "${mvn} versions:set -B -DnewVersion=${prPomVersion} -DgenerateBackupPoms=false"
             } else if (BRANCH_NAME.contains("master")) {
                 isPullRequest = false
                 isMaster = true
@@ -45,7 +45,7 @@ node {
                 branchPomVersion = "$BRANCH_NAME".replaceAll("-", "_") + "-SNAPSHOT"
                 sh "env"
                 println ("Setter ny pom versjon $branchPomVersion")
-                sh "${mvn} versions:set -B -DnewVersion=${branchPomVersion} -DgenerateBackupPoms=false"                         
+                sh "${mvn} versions:set -B -DnewVersion=${branchPomVersion} -DgenerateBackupPoms=false"
             }
             pom = readMavenPom file: 'pom.xml'
             releaseVersion = isPullRequest ? "$BRANCH_NAME".replaceAll("-", "_") + "_$BUILD_NUMBER" : pom.version.tokenize("-")[0]
@@ -112,6 +112,7 @@ node {
 
     } catch (e) {
         color = '#FF0004'
+        println "Exception: ${e.message}"
         GString message = ":crying_cat_face: :crying_cat_face: :crying_cat_face: :crying_cat_face: :crying_cat_face: :crying_cat_face: Halp sad cat! \n Siste commit på ${application} gikk ikkje gjennom. Sjå logg for meir info ${env.BUILD_URL}\nLast commit ${changelog}"
         slackSend color: color, channel: '#pam_bygg', message: message, teamDomain: 'nav-it', tokenCredentialId: 'pam-slack'
     }
