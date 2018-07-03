@@ -573,16 +573,16 @@ public class EsSokHttpService implements EsSokService {
     public Sokeresultat hentKandidater(List<String> kandidatnummer) throws IOException {
         SearchResponse searchResponse = esExec(() -> search(QueryBuilders.termsQuery("arenaKandidatnr", kandidatnummer), 0, 100));
         Sokeresultat usortertSokeresultat = toSokeresultat(searchResponse);
-        List<EsCv> sorterteCver = sorterSokeresultater(usortertSokeresultat.getCver(), kandidatnummer);
+        List<EsCv> sorterteCver = sorterSokeresultaterBasertPaaRequestRekkefolge(usortertSokeresultat.getCver(), kandidatnummer);
         return new Sokeresultat(usortertSokeresultat.getTotaltAntallTreff(), sorterteCver, usortertSokeresultat.getAggregeringer());
     }
 
-    private List<EsCv> sorterSokeresultater(List<EsCv> cver, List<String> kandidatnr) {
+    private List<EsCv> sorterSokeresultaterBasertPaaRequestRekkefolge(List<EsCv> cver, List<String> kandidatrekkefolge) {
         Map<String, EsCv> kandidater = cver.stream()
                 .collect(toMap(EsCv::getArenaKandidatnr,
                         Function.identity()));
 
-        return kandidatnr.stream()
+        return kandidatrekkefolge.stream()
                 .map(kandidater::get)
                 .filter(Objects::nonNull)
                 .collect(toList());
