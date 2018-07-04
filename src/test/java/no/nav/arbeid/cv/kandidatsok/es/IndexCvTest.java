@@ -560,21 +560,21 @@ public class IndexCvTest {
 
     @Test
     public void sokMedIngenUtdanningSkalGiFlerResultaterSelvOmManSpesifisererUtdanning() throws IOException {
-        Sokeresultat sokeresultatMaster = sokClient
+        Sokeresultat sokeresultatVideregaende = sokClient
             .sok(Sokekriterier.med()
                 .utdanningsniva(Collections.singletonList("Videregaende"))
                 .utdanninger(Collections.singletonList("Bygg og anlegg"))
                 .bygg());
 
-        Sokeresultat sokeresultatMasterOgIngenUtdanning = sokClient
+        Sokeresultat sokeresultatVideregaendeOgIngenUtdanning = sokClient
             .sok(Sokekriterier.med()
-                .utdanningsniva(asList("Ingen", "Master"))
+                .utdanningsniva(asList("Ingen", "Videregaende"))
                 .utdanninger(Collections.singletonList("Bygg og anlegg"))
                 .bygg());
 
-        List<EsCv> cverMaster = sokeresultatMaster.getCver();
-        List<EsCv> cverMasterOgIngenUtdanning = sokeresultatMasterOgIngenUtdanning.getCver();
-        assertThat(cverMaster.size()).isLessThan(cverMasterOgIngenUtdanning.size());
+        List<EsCv> cverVideregaende = sokeresultatVideregaende.getCver();
+        List<EsCv> cverVideregaendeOgIngenUtdanning = sokeresultatVideregaendeOgIngenUtdanning.getCver();
+        assertThat(cverVideregaende.size()).isLessThan(cverVideregaendeOgIngenUtdanning.size());
     }
 
 }
