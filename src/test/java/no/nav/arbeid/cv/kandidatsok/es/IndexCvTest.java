@@ -557,4 +557,24 @@ public class IndexCvTest {
                 .collect(Collectors.toList());
         assertThat(resultatkandidatnummer).isEqualTo(asList(KANDIDATNUMMER1, KANDIDATNUMMER2));
     }
+
+    @Test
+    public void sokMedIngenUtdanningSkalGiFlerResultaterSelvOmManSpesifisererUtdanning() throws IOException {
+        Sokeresultat sokeresultatMaster = sokClient
+            .sok(Sokekriterier.med()
+                .utdanningsniva(Collections.singletonList("Videregaende"))
+                .utdanninger(Collections.singletonList("Bygg og anlegg"))
+                .bygg());
+
+        Sokeresultat sokeresultatMasterOgIngenUtdanning = sokClient
+            .sok(Sokekriterier.med()
+                .utdanningsniva(asList("Ingen", "Master"))
+                .utdanninger(Collections.singletonList("Bygg og anlegg"))
+                .bygg());
+
+        List<EsCv> cverMaster = sokeresultatMaster.getCver();
+        List<EsCv> cverMasterOgIngenUtdanning = sokeresultatMasterOgIngenUtdanning.getCver();
+        assertThat(cverMaster.size()).isLessThan(cverMasterOgIngenUtdanning.size());
+    }
+
 }
