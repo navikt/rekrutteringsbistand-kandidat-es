@@ -182,11 +182,6 @@ public class EsSokHttpService implements EsSokService {
                         .forEach(k -> addSprakQuery(k, boolQueryBuilder));
             }
 
-            if (sk.utdanninger() != null && !sk.utdanninger().isEmpty()) {
-                sk.utdanninger().stream().filter(StringUtils::isNotBlank)
-                        .forEach(u -> addUtdanningerQuery(u, boolQueryBuilder));
-            }
-
             if (sk.geografiList() != null && !sk.geografiList().isEmpty()) {
                 sk.geografiList().stream().filter(StringUtils::isNotBlank)
                         .forEach(g -> addGeografiQuery(g, boolQueryBuilder));
@@ -200,13 +195,45 @@ public class EsSokHttpService implements EsSokService {
                 boolQueryBuilder.must(totalYrkeserfaringBoolQueryBuilder);
             }
 
-            if (sk.utdanningsniva() != null && !sk.utdanningsniva().isEmpty()) {
-                BoolQueryBuilder utdanningsnivaBoolQueryBuilder = QueryBuilders.boolQuery();
 
-                sk.utdanningsniva().stream().filter(StringUtils::isNotBlank)
-                        .forEach(u -> addUtdanningsnivaQuery(u, utdanningsnivaBoolQueryBuilder));
+            if (utdanningIsSet(sk)) {
 
-                boolQueryBuilder.must(utdanningsnivaBoolQueryBuilder);
+                BoolQueryBuilder utdanningBoolQueryBuilderOver = QueryBuilders.boolQuery();
+                BoolQueryBuilder utdanningBoolQueryBuilder = QueryBuilders.boolQuery();
+                BoolQueryBuilder utdanningerBoolQueryBuilder = QueryBuilders.boolQuery();
+                BoolQueryBuilder utdanningsNivaBoolQueryBuilder = QueryBuilders.boolQuery();
+                BoolQueryBuilder ingenUtdanningBoolQueryBuilder = QueryBuilders.boolQuery();
+
+                if(utdanningerIsPresent(sk)) {
+                    sk.utdanninger().stream().filter(StringUtils::isNotBlank)
+                        .forEach(u -> addUtdanningerQuery(u, utdanningerBoolQueryBuilder));
+                }
+
+                if (utdanningsNivaIsPresent(sk)) {
+                    sk.utdanningsniva().stream().filter(StringUtils::isNotBlank).filter(u -> !u
+                        .equals("Ingen"))
+                        .forEach(u -> addUtdanningsnivaQuery(u, utdanningsNivaBoolQueryBuilder));
+                }
+
+                utdanningBoolQueryBuilder.must(utdanningerBoolQueryBuilder);
+                utdanningBoolQueryBuilder.must(utdanningsNivaBoolQueryBuilder);
+
+                if (sk.utdanningsniva().contains("Ingen")) {
+                    addUtdanningsnivaQuery("Ingen", ingenUtdanningBoolQueryBuilder);
+                }
+
+                if(ingenUtdanning(sk)) {
+                    boolQueryBuilder.must(ingenUtdanningBoolQueryBuilder);
+                }
+                else if (!sk.utdanningsniva().contains("Ingen")){
+                    boolQueryBuilder.must(utdanningBoolQueryBuilder);
+                } else  {
+                    utdanningBoolQueryBuilderOver.should(utdanningBoolQueryBuilder);
+                    utdanningBoolQueryBuilderOver.should(ingenUtdanningBoolQueryBuilder);
+
+                    boolQueryBuilder.must(utdanningBoolQueryBuilderOver);
+                }
+
                 LOGGER.debug("ADDING utdanningsniva");
             }
 
@@ -231,6 +258,23 @@ public class EsSokHttpService implements EsSokService {
         final AbstractQueryBuilder<?> qb = queryBuilder;
         SearchResponse searchResponse = esExec(() -> search(qb, 0, 100));
         return toSokeresultat(searchResponse);
+    }
+
+    private boolean utdanningsNivaIsPresent(Sokekriterier sk) {
+        return sk.utdanningsniva() != null && !sk.utdanningsniva().isEmpty();
+    }
+
+    private boolean utdanningerIsPresent(Sokekriterier sk) {
+        return sk.utdanninger() != null && !sk.utdanninger().isEmpty();
+    }
+
+    private boolean ingenUtdanning(Sokekriterier sk) {
+        return sk.utdanningsniva().size() == 1 && sk.utdanningsniva().get(0).equals("Ingen") && sk.utdanninger().size() == 0;
+    }
+
+    private boolean utdanningIsSet(Sokekriterier sk) {
+        return (utdanningsNivaIsPresent(sk)) || (utdanningerIsPresent(
+            sk));
     }
 
     private void addYrkeJobbonskerQuery(String yrkeJobbonske, BoolQueryBuilder boolQueryBuilder) {
