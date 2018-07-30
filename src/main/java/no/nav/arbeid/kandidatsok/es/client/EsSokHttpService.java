@@ -198,11 +198,12 @@ public class EsSokHttpService implements EsSokService {
 
             if (utdanningIsSet(sk)) {
 
-                BoolQueryBuilder utdanningBoolQueryBuilderOver = QueryBuilders.boolQuery();
-                BoolQueryBuilder utdanningBoolQueryBuilder = QueryBuilders.boolQuery();
                 BoolQueryBuilder utdanningerBoolQueryBuilder = QueryBuilders.boolQuery();
                 BoolQueryBuilder utdanningsNivaBoolQueryBuilder = QueryBuilders.boolQuery();
                 BoolQueryBuilder ingenUtdanningBoolQueryBuilder = QueryBuilders.boolQuery();
+
+                BoolQueryBuilder utdanningBoolQueryBuilderMinor = QueryBuilders.boolQuery();
+                BoolQueryBuilder utdanningBoolQueryBuilderMajor = QueryBuilders.boolQuery();
 
                 if(utdanningerIsPresent(sk)) {
                     sk.utdanninger().stream().filter(StringUtils::isNotBlank)
@@ -215,8 +216,8 @@ public class EsSokHttpService implements EsSokService {
                         .forEach(u -> addUtdanningsnivaQuery(u, utdanningsNivaBoolQueryBuilder));
                 }
 
-                utdanningBoolQueryBuilder.must(utdanningerBoolQueryBuilder);
-                utdanningBoolQueryBuilder.must(utdanningsNivaBoolQueryBuilder);
+                utdanningBoolQueryBuilderMinor.must(utdanningerBoolQueryBuilder);
+                utdanningBoolQueryBuilderMinor.must(utdanningsNivaBoolQueryBuilder);
 
                 if (sk.utdanningsniva().contains("Ingen")) {
                     addUtdanningsnivaQuery("Ingen", ingenUtdanningBoolQueryBuilder);
@@ -226,12 +227,12 @@ public class EsSokHttpService implements EsSokService {
                     boolQueryBuilder.must(ingenUtdanningBoolQueryBuilder);
                 }
                 else if (!sk.utdanningsniva().contains("Ingen")){
-                    boolQueryBuilder.must(utdanningBoolQueryBuilder);
+                    boolQueryBuilder.must(utdanningBoolQueryBuilderMinor);
                 } else  {
-                    utdanningBoolQueryBuilderOver.should(utdanningBoolQueryBuilder);
-                    utdanningBoolQueryBuilderOver.should(ingenUtdanningBoolQueryBuilder);
+                    utdanningBoolQueryBuilderMajor.should(utdanningBoolQueryBuilderMinor);
+                    utdanningBoolQueryBuilderMajor.should(ingenUtdanningBoolQueryBuilder);
 
-                    boolQueryBuilder.must(utdanningBoolQueryBuilderOver);
+                    boolQueryBuilder.must(utdanningBoolQueryBuilderMajor);
                 }
 
                 LOGGER.debug("ADDING utdanningsniva");
