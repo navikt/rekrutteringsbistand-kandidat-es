@@ -98,7 +98,8 @@ public class Sokekriterier {
           : Collections.unmodifiableList(new ArrayList<>(geografiList));
       s.kompetanser = kompetanser == null ? Collections.emptyList()
           : Collections.unmodifiableList(new ArrayList<>(kompetanser));
-      s.totalYrkeserfaring = totalYrkeserfaring;
+      s.totalYrkeserfaring = totalYrkeserfaring == null ? Collections.emptyList()
+          : Collections.unmodifiableList(new ArrayList<>(totalYrkeserfaring));
       s.utdanningsniva = utdanningsniva == null ? Collections.emptyList()
           : Collections.unmodifiableList(new ArrayList<>(utdanningsniva));
       s.stillingstitler = stillingstitler == null ? Collections.emptyList()
