@@ -131,8 +131,188 @@ public class EsSokHttpService implements EsSokService {
     @Override
     public Sokeresultat sok(Sokekriterier sk) throws IOException {
 
-        AbstractQueryBuilder<?> queryBuilder = null;
-        if (StringUtils.isBlank(sk.fritekst())
+        if (sokUtenKriterier(sk)) {
+            LOGGER.debug("MATCH ALL!");
+            return toSokeresultat(esExec(() -> search(QueryBuilders.matchAllQuery(), 0, 100)));
+        }
+
+        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+
+        if (StringUtils.isNotBlank(sk.fritekst())) {
+            addFritekstToQuery(sk.fritekst(), queryBuilder);
+        }
+
+        if (isNotEmpty(sk.yrkeJobbonsker())) {
+            addJobbonskerToQuery(sk.yrkeJobbonsker(), queryBuilder);
+        }
+
+        if (isNotEmpty(sk.stillingstitler())) {
+            addStillingstitlerToQuery(sk.stillingstitler(), queryBuilder);
+        }
+
+        if (isNotEmpty(sk.kompetanser())) {
+            addKompetanserToQuery(sk.kompetanser(), queryBuilder);
+        }
+
+        if (isNotEmpty(sk.sprak())) {
+            addSprakToQuery(sk.sprak(), queryBuilder);
+        }
+
+        if (isNotEmpty(sk.geografiList())) {
+            addGeografiToQuery(sk.geografiList(), queryBuilder);
+        }
+
+        if (isNotEmpty(sk.totalYrkeserfaring())) {
+            addYrkeserfaringToQuery(sk.totalYrkeserfaring(), queryBuilder);
+        }
+
+        if (utdanningIsSet(sk)) {
+            addUtdanningToQuery(sk.utdanninger(), sk.utdanningsniva(), queryBuilder);
+        }
+
+        if (isNotEmpty(sk.styrkKoder())) {
+            addStyrkKoderToQuery(sk.styrkKoder(), queryBuilder);
+        }
+
+        if (isNotEmpty(sk.nusKoder())) {
+            addNusKoderToQuery(sk.nusKoder(), queryBuilder);
+        }
+
+        if (StringUtils.isNotBlank(sk.etternavn())) {
+            addEtternavnToQuery(sk.etternavn(), queryBuilder);
+        }
+
+        return toSokeresultat(esExec(() -> search(queryBuilder, 0, 100)));
+    }
+
+    private void addEtternavnToQuery(String etternavn, BoolQueryBuilder boolQueryBuilder) {
+        boolQueryBuilder.should(new MatchQueryBuilder("etternavn", etternavn));
+    }
+
+    private void addNusKoderToQuery(List<String> nusKoder, BoolQueryBuilder boolQueryBuilder) {
+        nusKoder.stream()
+                .filter(StringUtils::isNotBlank)
+                .forEach(k -> addNusKodeQuery(k, boolQueryBuilder));
+    }
+
+    private void addStyrkKoderToQuery(List<String> styrkKoder, BoolQueryBuilder boolQueryBuilder) {
+        styrkKoder.stream()
+                .filter(StringUtils::isNotBlank)
+                .forEach(k -> addStyrkKodeQuery(k, boolQueryBuilder));
+    }
+
+    private boolean isNotEmpty(List<?> list) {
+        return list != null && !list.isEmpty();
+    }
+
+    private BoolQueryBuilder makeIngenUtdanningQuery() {
+        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+        addUtdanningsnivaQuery("Ingen", queryBuilder);
+        return queryBuilder;
+    }
+
+
+    private BoolQueryBuilder makeUtdanningQuery(List<String> utdanninger, List<String> utdanningsniva) {
+
+        BoolQueryBuilder utdanningerBuilder = QueryBuilders.boolQuery();
+        BoolQueryBuilder utdanningsnivaBuilder = QueryBuilders.boolQuery();
+
+        if (isNotEmpty(utdanninger)) {
+            utdanninger.stream()
+                    .filter(StringUtils::isNotBlank)
+                    .forEach(u -> addUtdanningerQuery(u, utdanningerBuilder));
+        }
+
+        if (isNotEmpty(utdanningsniva)) {
+            utdanningsniva.stream().filter(StringUtils::isNotBlank)
+                    .filter(u -> !u.equals("Ingen"))
+                    .forEach(u -> addUtdanningsnivaQuery(u, utdanningsnivaBuilder));
+        }
+
+
+        BoolQueryBuilder utdanningQueryBuilder = QueryBuilders.boolQuery();
+
+        utdanningQueryBuilder.must(utdanningerBuilder);
+        utdanningQueryBuilder.must(utdanningsnivaBuilder);
+
+        return utdanningQueryBuilder;
+    }
+
+    private void addUtdanningToQuery(List<String> utdanninger, List<String> utdanningsniva, BoolQueryBuilder boolQueryBuilder) {
+        if (utdanningsniva.contains("Ingen")) {
+            if (utdanningsniva.size() == 1 && utdanninger.isEmpty()) {
+                boolQueryBuilder.must(makeIngenUtdanningQuery());
+
+            } else {
+                BoolQueryBuilder utdanningEllerIngenQuery = QueryBuilders.boolQuery();
+
+                utdanningEllerIngenQuery.should(makeIngenUtdanningQuery());
+                utdanningEllerIngenQuery.should(makeUtdanningQuery(utdanninger, utdanningsniva));
+
+                boolQueryBuilder.must(utdanningEllerIngenQuery);
+            }
+
+        } else {
+            boolQueryBuilder.must(makeUtdanningQuery(utdanninger, utdanningsniva));
+        }
+
+        LOGGER.debug("ADDING utdanningsniva");
+    }
+
+    private void addYrkeserfaringToQuery(List<String> yrkeserfaring, BoolQueryBuilder boolQueryBuilder) {
+        BoolQueryBuilder yrkeserfaringQueryBuilder = QueryBuilders.boolQuery();
+
+        yrkeserfaring.stream()
+                .filter(StringUtils::isNotBlank)
+                .forEach(te -> addTotalYrkeserfaringQuery(te, yrkeserfaringQueryBuilder));
+
+        boolQueryBuilder.must(yrkeserfaringQueryBuilder);
+    }
+
+    private void addGeografiToQuery(List<String> geografi, BoolQueryBuilder boolQueryBuilder) {
+        geografi.stream()
+                .filter(StringUtils::isNotBlank)
+                .forEach(g -> addGeografiQuery(g, boolQueryBuilder));
+    }
+
+    private void addSprakToQuery(List<String> sprak, BoolQueryBuilder boolQueryBuilder) {
+        sprak.stream()
+                .filter(StringUtils::isNotBlank)
+                .forEach(k -> addSprakQuery(k, boolQueryBuilder));
+    }
+
+    private void addKompetanserToQuery(List<String> kompetanser, BoolQueryBuilder boolQueryBuilder) {
+        kompetanser.stream()
+                .filter(StringUtils::isNotBlank)
+                .forEach(k -> addKompetanseQuery(k, boolQueryBuilder));
+    }
+
+    private void addStillingstitlerToQuery(List<String> stillingstitler, BoolQueryBuilder boolQueryBuilder) {
+        stillingstitler.stream()
+                .filter(StringUtils::isNotBlank)
+                .forEach(s -> addStillingsTitlerQuery(s, boolQueryBuilder));
+    }
+
+    private void addJobbonskerToQuery(List<String> jobbonsker, BoolQueryBuilder boolQueryBuilder) {
+        BoolQueryBuilder yrkeJobbonskerBoolQueryBuilder = QueryBuilders.boolQuery();
+
+        jobbonsker.stream()
+                .filter(StringUtils::isNotBlank)
+                .forEach(y -> addYrkeJobbonskerQuery(y, yrkeJobbonskerBoolQueryBuilder));
+
+        boolQueryBuilder.must(yrkeJobbonskerBoolQueryBuilder);
+        LOGGER.debug("ADDING onsket stilling");
+    }
+
+    private void addFritekstToQuery(String fritekst, BoolQueryBuilder boolQueryBuilder) {
+        MultiMatchQueryBuilder fritekstQueryBuilder =
+                QueryBuilders.multiMatchQuery(fritekst, "fritekst");
+        boolQueryBuilder.must(fritekstQueryBuilder);
+        LOGGER.debug("ADDING fritekst");
+    }
+
+    private boolean sokUtenKriterier(Sokekriterier sk) {
+        return StringUtils.isBlank(sk.fritekst())
                 && (sk.yrkeJobbonsker() == null || sk.yrkeJobbonsker().isEmpty())
                 && (sk.stillingstitler() == null || sk.stillingstitler().isEmpty())
                 && (sk.kompetanser() == null || sk.kompetanser().isEmpty())
@@ -142,123 +322,7 @@ public class EsSokHttpService implements EsSokService {
                 && (sk.geografiList() == null || sk.geografiList().isEmpty())
                 && (sk.styrkKoder() == null || sk.styrkKoder().isEmpty())
                 && (sk.nusKoder() == null || sk.nusKoder().isEmpty())
-                && (sk.sprak() == null || sk.sprak().isEmpty())) {
-            LOGGER.debug("MATCH ALL!");
-            queryBuilder = QueryBuilders.matchAllQuery();
-
-        } else {
-
-            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-
-            if (StringUtils.isNotBlank(sk.fritekst())) {
-                MultiMatchQueryBuilder fritekstQueryBuilder =
-                        QueryBuilders.multiMatchQuery(sk.fritekst(), "fritekst");
-                boolQueryBuilder.must(fritekstQueryBuilder);
-                LOGGER.debug("ADDING fritekst");
-            }
-
-            if (sk.yrkeJobbonsker() != null && !sk.yrkeJobbonsker().isEmpty()) {
-                BoolQueryBuilder yrkeJobbonskerBoolQueryBuilder = QueryBuilders.boolQuery();
-
-                sk.yrkeJobbonsker().stream().filter(StringUtils::isNotBlank)
-                        .forEach(y -> addYrkeJobbonskerQuery(y, yrkeJobbonskerBoolQueryBuilder));
-
-                boolQueryBuilder.must(yrkeJobbonskerBoolQueryBuilder);
-                LOGGER.debug("ADDING onsket stilling");
-            }
-
-            if (sk.stillingstitler() != null && !sk.stillingstitler().isEmpty()) {
-                sk.stillingstitler().stream().filter(StringUtils::isNotBlank)
-                        .forEach(s -> addStillingsTitlerQuery(s, boolQueryBuilder));
-            }
-
-            if (sk.kompetanser() != null && !sk.kompetanser().isEmpty()) {
-                sk.kompetanser().stream().filter(StringUtils::isNotBlank)
-                        .forEach(k -> addKompetanseQuery(k, boolQueryBuilder));
-            }
-
-            if (sk.sprak() != null && !sk.sprak().isEmpty()) {
-                sk.sprak().stream().filter(StringUtils::isNotBlank)
-                        .forEach(k -> addSprakQuery(k, boolQueryBuilder));
-            }
-
-            if (sk.geografiList() != null && !sk.geografiList().isEmpty()) {
-                sk.geografiList().stream().filter(StringUtils::isNotBlank)
-                        .forEach(g -> addGeografiQuery(g, boolQueryBuilder));
-            }
-
-            if (sk.totalYrkeserfaring() != null && !sk.totalYrkeserfaring().isEmpty()) {
-                BoolQueryBuilder totalYrkeserfaringBoolQueryBuilder = QueryBuilders.boolQuery();
-
-                sk.totalYrkeserfaring().stream().filter(StringUtils::isNotBlank)
-                        .forEach(te -> addTotalYrkeserfaringQuery(te, totalYrkeserfaringBoolQueryBuilder));
-                boolQueryBuilder.must(totalYrkeserfaringBoolQueryBuilder);
-            }
-
-
-            if (utdanningIsSet(sk)) {
-
-                BoolQueryBuilder utdanningerBoolQueryBuilder = QueryBuilders.boolQuery();
-                BoolQueryBuilder utdanningsNivaBoolQueryBuilder = QueryBuilders.boolQuery();
-                BoolQueryBuilder ingenUtdanningBoolQueryBuilder = QueryBuilders.boolQuery();
-
-                BoolQueryBuilder utdanningBoolQueryBuilderMinor = QueryBuilders.boolQuery();
-                BoolQueryBuilder utdanningBoolQueryBuilderMajor = QueryBuilders.boolQuery();
-
-                if(utdanningerIsPresent(sk)) {
-                    sk.utdanninger().stream().filter(StringUtils::isNotBlank)
-                        .forEach(u -> addUtdanningerQuery(u, utdanningerBoolQueryBuilder));
-                }
-
-                if (utdanningsNivaIsPresent(sk)) {
-                    sk.utdanningsniva().stream().filter(StringUtils::isNotBlank).filter(u -> !u
-                        .equals("Ingen"))
-                        .forEach(u -> addUtdanningsnivaQuery(u, utdanningsNivaBoolQueryBuilder));
-                }
-
-                utdanningBoolQueryBuilderMinor.must(utdanningerBoolQueryBuilder);
-                utdanningBoolQueryBuilderMinor.must(utdanningsNivaBoolQueryBuilder);
-
-                if (sk.utdanningsniva().contains("Ingen")) {
-                    addUtdanningsnivaQuery("Ingen", ingenUtdanningBoolQueryBuilder);
-                }
-
-                if(ingenUtdanning(sk)) {
-                    boolQueryBuilder.must(ingenUtdanningBoolQueryBuilder);
-                }
-                else if (!sk.utdanningsniva().contains("Ingen")){
-                    boolQueryBuilder.must(utdanningBoolQueryBuilderMinor);
-                } else  {
-                    utdanningBoolQueryBuilderMajor.should(utdanningBoolQueryBuilderMinor);
-                    utdanningBoolQueryBuilderMajor.should(ingenUtdanningBoolQueryBuilder);
-
-                    boolQueryBuilder.must(utdanningBoolQueryBuilderMajor);
-                }
-
-                LOGGER.debug("ADDING utdanningsniva");
-            }
-
-            if (sk.styrkKoder() != null && !sk.styrkKoder().isEmpty()) {
-                sk.styrkKoder().stream().filter(StringUtils::isNotBlank)
-                        .forEach(k -> addStyrkKodeQuery(k, boolQueryBuilder));
-            }
-
-            if (sk.nusKoder() != null) {
-                sk.nusKoder().stream().filter(StringUtils::isNotBlank)
-                        .forEach(k -> addNusKodeQuery(k, boolQueryBuilder));
-            }
-
-            if (StringUtils.isNotBlank(sk.etternavn())) {
-                MatchQueryBuilder etternavnQueryBuilder =
-                        new MatchQueryBuilder("etternavn", sk.etternavn());
-                boolQueryBuilder.should(etternavnQueryBuilder);
-            }
-            queryBuilder = boolQueryBuilder;
-        }
-
-        final AbstractQueryBuilder<?> qb = queryBuilder;
-        SearchResponse searchResponse = esExec(() -> search(qb, 0, 100));
-        return toSokeresultat(searchResponse);
+                && (sk.sprak() == null || sk.sprak().isEmpty());
     }
 
     private boolean utdanningsNivaIsPresent(Sokekriterier sk) {
@@ -269,13 +333,8 @@ public class EsSokHttpService implements EsSokService {
         return sk.utdanninger() != null && !sk.utdanninger().isEmpty();
     }
 
-    private boolean ingenUtdanning(Sokekriterier sk) {
-        return sk.utdanningsniva().size() == 1 && sk.utdanningsniva().get(0).equals("Ingen") && sk.utdanninger().size() == 0;
-    }
-
     private boolean utdanningIsSet(Sokekriterier sk) {
-        return (utdanningsNivaIsPresent(sk)) || (utdanningerIsPresent(
-            sk));
+        return (utdanningsNivaIsPresent(sk)) || (utdanningerIsPresent(sk));
     }
 
     private void addYrkeJobbonskerQuery(String yrkeJobbonske, BoolQueryBuilder boolQueryBuilder) {
