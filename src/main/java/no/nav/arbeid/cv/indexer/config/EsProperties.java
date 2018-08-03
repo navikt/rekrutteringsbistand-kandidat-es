@@ -1,5 +1,7 @@
 package no.nav.arbeid.cv.indexer.config;
 
+import java.util.Optional;
+
 public interface EsProperties {
 
   String getUser();
@@ -19,5 +21,9 @@ public interface EsProperties {
   int getPort();
 
   String getScheme();
+
+  default Optional<String> getApiKey() {
+    return Optional.empty();
+  }
 
 }
