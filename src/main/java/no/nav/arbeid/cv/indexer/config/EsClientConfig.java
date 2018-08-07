@@ -73,6 +73,22 @@ public class EsClientConfig {
             .builder(new HttpHost(props.getHostname(), props.getPort(), props.getScheme()));
         addPathPrefix(builder);
         addApiKeyHeader(builder);
+
+        if (props.getUser() != null && !props.getUser().isEmpty() && props.getPassword() != null && !props.getPassword().isEmpty()) {
+          builder.setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback() {
+            @Override
+            public HttpAsyncClientBuilder customizeHttpClient(
+                    HttpAsyncClientBuilder httpClientBuilder) {
+
+              final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+              credentialsProvider.setCredentials(AuthScope.ANY,
+                      new UsernamePasswordCredentials(props.getUser(), props.getPassword()));
+
+              return httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+            }
+          });
+        }
+
         return new RestHighLevelClient(builder);
 
       }
