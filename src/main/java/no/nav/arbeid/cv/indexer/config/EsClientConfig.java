@@ -64,12 +64,14 @@ public class EsClientConfig {
                 return httpClientBuilder.setSSLContext(sslContext);
               }
             });
+        addPathPrefix(builder);
         addApiKeyHeader(builder);
         return new RestHighLevelClient(builder);
 
       } else {
         RestClientBuilder builder = RestClient
             .builder(new HttpHost(props.getHostname(), props.getPort(), props.getScheme()));
+        addPathPrefix(builder);
         addApiKeyHeader(builder);
         return new RestHighLevelClient(builder);
 
@@ -79,6 +81,11 @@ public class EsClientConfig {
     }
   }
 
+  private void addPathPrefix(RestClientBuilder builder) {
+    if (props.getPathPrefix().isPresent()) {
+      builder.setPathPrefix(props.getPathPrefix().get());
+    }
+  }
   private void addApiKeyHeader(RestClientBuilder builder) {
     if (props.getApiKey().isPresent()) {
       Header apiKeyHeader = new BasicHeader("x-nav-apiKey", props.getApiKey().get());

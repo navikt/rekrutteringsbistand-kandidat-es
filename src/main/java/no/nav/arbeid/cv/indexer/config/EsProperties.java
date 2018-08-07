@@ -26,4 +26,8 @@ public interface EsProperties {
     return Optional.empty();
   }
 
+  default Optional<String> getPathPrefix() {
+    return Optional.empty();
+  }
+
 }
