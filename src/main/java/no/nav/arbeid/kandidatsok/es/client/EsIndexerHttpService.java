@@ -130,7 +130,7 @@ public class EsIndexerHttpService implements EsIndexerService {
                                 .findFirst();
 
                         LOGGER.warn("Feilet ved indeksering av CV {}: " + bir.getFailure().getMessage(),
-                                cvMedFeil.isPresent() && LOGGER.isTraceEnabled() ? cvMedFeil.get().toString() : "",
+                                cvMedFeil.isPresent() && LOGGER.isTraceEnabled() ? mapper.writeValueAsString(cvMedFeil.get()) : "",
                                 bir.getFailure().getCause());
                     }
                 } catch (Exception e) {
