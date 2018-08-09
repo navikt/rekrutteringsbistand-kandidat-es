@@ -3,6 +3,7 @@ package no.nav.arbeid.kandidatsok.es.client;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.http.util.EntityUtils;
 import org.elasticsearch.ElasticsearchStatusException;
@@ -124,13 +125,13 @@ public class EsIndexerHttpService implements EsIndexerService {
                 antallFeil += bir.isFailed() ? 1 : 0;
                 try {
                     if (bir.getFailure() != null) {
-                        LOGGER.warn(bir.getFailure().getMessage(), bir.getFailure().getCause());
-                    }
-                    if (bir.getResponse() == null) {
-                        esCver.stream().filter(
-                                esCv -> esCv.getArenaPersonId().toString().equals(bir.getIndex()))
-                                .findFirst().ifPresent(esCv -> LOGGER
-                                        .warn("Feil ved indeksering av CV: " + esCv.toString()));
+                        Optional<EsCv> cvMedFeil = esCver.stream().filter(
+                                esCv -> ("" + esCv.getArenaPersonId()).trim().equals(bir.getFailure().getId()))
+                                .findFirst();
+
+                        LOGGER.warn("Feilet ved indeksering av CV {}: " + bir.getFailure().getMessage(),
+                                cvMedFeil.isPresent() && LOGGER.isTraceEnabled() ? cvMedFeil.get().toString() : "",
+                                bir.getFailure().getCause());
                     }
                 } catch (Exception e) {
                     LOGGER.warn("Feilet ved parsing av bulkitemresponse..", e);
@@ -139,14 +140,11 @@ public class EsIndexerHttpService implements EsIndexerService {
                 }
                 meterRegistry.counter("cv.es.index.feil", Tags.of("type", "applikasjon"))
                         .increment(antallFeil);
-                LOGGER.warn(
-                        "Feilet under indeksering av CVer: " + bulkResponse.buildFailureMessage());
-                // LOGGER.info("Finner du feilen? {}", esCver);
-
             }
+            LOGGER.warn(
+                    "Feilet under indeksering av CVer: " + bulkResponse.buildFailureMessage());
         }
         LOGGER.debug("BULKINDEX tidsbruk: " + bulkResponse.getTook());
-
     }
 
     @Override

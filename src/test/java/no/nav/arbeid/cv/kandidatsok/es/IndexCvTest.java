@@ -21,6 +21,7 @@ import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -128,6 +129,19 @@ public class IndexCvTest {
         EsCv esCv = list.get(0);
         assertThat(esCv)
                 .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv()));
+    }
+
+    @Test
+    @Ignore("Brukes til utforskende testing")
+    public void skalLoggFeilVedBulkIndeksereCVMedNullfelter() throws Exception {
+        List<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> bulkEventer =
+                asList(EsCvObjectMother.giveMeEsCv(),
+                        EsCvObjectMother.giveMeEsCvMedFeil(),
+                        EsCvObjectMother.giveMeEsCv2());
+
+        bulkEventer.forEach(e -> e.setArenaPersonId(e.getArenaPersonId() + 9998));
+        indexerClient.bulkIndex(bulkEventer);
+
     }
 
     @Test
