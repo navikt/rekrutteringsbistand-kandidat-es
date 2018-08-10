@@ -2,15 +2,21 @@ package no.nav.arbeid.cv.kandidatsok.es;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.Tags;
 import org.apache.http.HttpHost;
 import org.assertj.core.api.Assertions;
 import org.elasticsearch.client.RestClient;
@@ -71,6 +77,9 @@ public class IndexCvTest {
     @Autowired
     private EsIndexerService indexerClient;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     private KandidatsokTransformer kandidatsokTransformer = new KandidatsokTransformer();
 
     @Configuration
@@ -91,9 +100,12 @@ public class IndexCvTest {
 
         @Bean
         public MeterRegistry meterRegistry() {
-            return mock(MeterRegistry.class);
-        }
+            Counter counter = mock(Counter.class);
+            MeterRegistry meterRegistry = mock(MeterRegistry.class);
+            when(meterRegistry.counter(anyString(), any(Tags.class))).thenReturn(counter);
 
+            return meterRegistry;
+        }
     }
 
     @Before
@@ -129,6 +141,26 @@ public class IndexCvTest {
         EsCv esCv = list.get(0);
         assertThat(esCv)
                 .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv()));
+    }
+
+    @Test
+    public void skalIkkeFeileMedIllegalArgumentFraES() throws Exception {
+        no.nav.arbeid.cv.kandidatsok.es.domene.EsCv cv1 =
+                objectMapper.readValue(
+                        new InputStreamReader(
+                            getClass().getResourceAsStream("/utfordrende_cv1.json"), "ISO-8859-1"),
+                        no.nav.arbeid.cv.kandidatsok.es.domene.EsCv.class);
+        no.nav.arbeid.cv.kandidatsok.es.domene.EsCv cv2 =
+                objectMapper.readValue(
+                        new InputStreamReader(
+                                getClass().getResourceAsStream("/utfordrende_cv2.json"), "ISO-8859-1"),
+                        no.nav.arbeid.cv.kandidatsok.es.domene.EsCv.class);
+
+        List<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> bulkEventer =
+                asList(cv1, cv2);
+
+        int antallIndeksert = indexerClient.bulkIndex(bulkEventer);
+        assertThat(antallIndeksert).isEqualTo(bulkEventer.size());
     }
 
     @Test

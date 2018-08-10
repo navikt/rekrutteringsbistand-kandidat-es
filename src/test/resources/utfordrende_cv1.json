@@ -1,0 +1,240 @@
+{
+    "adresselinje1": "Arbeids- og velferdsdirektoratet",
+    "adresselinje2": "Sannergata 2",
+    "adresselinje3": "",
+    "annenerfaring": [],
+    "ansettelsesforholdJobbonsker": [],
+    "arbeidstidsordningJobbonsker": [],
+    "arenaKandidatnr": "HJ430105",
+    "arenaPersonId": 478315,
+    "beskrivelse": "Selvstendig og probleml\u00f8sende",
+    "disponererBil": false,
+    "epostadresse": "spammenot@mailinator.com",
+    "etternavn": "Nordmann",
+    "fodselsdato": "2018-08-06T22:00:00.000+0000",
+    "fodselsdatoErDnr": false,
+    "fodselsnummer": "01017012345",
+    "forerkort": [],
+    "formidlingsgruppekode": "ARBS",
+    "fornavn": "Ola",
+    "geografiJobbonsker": [
+        {
+            "geografiKode": "PH",
+            "geografiKodeTekst": "Filippinene"
+        },
+        {
+            "geografiKode": "TH",
+            "geografiKodeTekst": "Thailand"
+        },
+        {
+            "geografiKode": "NO12.1201",
+            "geografiKodeTekst": "Bergen"
+        },
+        {
+            "geografiKode": "NO12.1201.2",
+            "geografiKodeTekst": "Bergen/Bydel \u00c5sane"
+        }
+    ],
+    "heltidDeltidJobbonsker": [],
+    "kommunenummer": 1,
+    "kompetanse": [
+        {
+            "alternativtNavn": null,
+            "beskrivelse": "Fagbrev som isolat\u00f8r",
+            "fraDato": "2016-04-03T22:00:00.000+0000",
+            "kompKode": "507",
+            "kompKodeNavn": "Autorisasjon"
+        }
+    ],
+    "kurs": [
+        {
+            "arrangor": "ifos",
+            "beskrivelse": "",
+            "fraDato": "2003-08-31T22:00:00.000+0000",
+            "omfangEnhet": "MND",
+            "omfangVerdi": 4,
+            "tilDato": null,
+            "tittel": "kapslingskurs"
+        }
+    ],
+    "landkode": "NO",
+    "postnummer": "0557",
+    "poststed": "Oslo",
+    "samletKompetanse": [
+        {
+            "samletKompetanseTekst": "Autorisasjon"
+        },
+        {
+            "samletKompetanseTekst": "Personl\u00f8fterbevis lift klasse C"
+        }
+    ],
+    "samtykkeDato": "2017-08-07T22:00:00.000+0000",
+    "samtykkeStatus": "G",
+    "sertifikat": [
+        {
+            "alternativtNavn": null,
+            "fraDato": "2006-07-31T22:00:00.000+0000",
+            "sertifikatKode": "A2.6952",
+            "sertifikatKodeNavn": "Personl\u00f8fterbevis lift klasse C",
+            "tilDato": null,
+            "utsteder": ""
+        }
+    ],
+    "sprak": [
+        {
+            "alternativTekst": null,
+            "beskrivelse": "flytende",
+            "fraDato": "2016-04-03T22:00:00.000+0000",
+            "sprakKode": "4201",
+            "sprakKodeTekst": "Engelsk"
+        }
+    ],
+    "statsborgerskap": "NO",
+    "tidsstempel": "2017-11-02T23:00:00.000+0000",
+    "totalLengdeYrkeserfaring": 301,
+    "utdanning": [
+        {
+            "alternativGrad": "allmenfag",
+            "fraDato": "1994-07-31T22:00:00.000+0000",
+            "nusKode": "401105",
+            "nusKodeGrad": "Studiespesialisering, studiekompetansegivende enkeltfag/delkurs, Vg3",
+            "tilDato": "1999-05-31T22:00:00.000+0000",
+            "utdannelsessted": "\u00c5sane Gymnas"
+        },
+        {
+            "alternativGrad": "Blikkenslagerarbeid og annet tynnplatearbeid, videreg\u00e5ende, avsluttende utdanning",
+            "fraDato": "2011-05-31T22:00:00.000+0000",
+            "nusKode": "459902",
+            "nusKodeGrad": "Blikkenslagerarbeid og annet tynnplatearbeid, videreg\u00e5ende, avsluttende utdanning",
+            "tilDato": null,
+            "utdannelsessted": "Ifos/fagbrev som isolat\u00f8r"
+        }
+    ],
+    "verv": [],
+    "yrkeJobbonsker": [
+        {
+            "primaertJobbonske": true,
+            "styrkBeskrivelse": "Offshore-arbeider",
+            "styrkKode": "8113.23"
+        },
+        {
+            "primaertJobbonske": false,
+            "styrkBeskrivelse": "Isolat\u00f8r",
+            "styrkKode": "7124.01"
+        }
+    ],
+    "yrkeserfaring": [
+        {
+            "alternativStillingstittel": "salmaker/hjepearbeider",
+            "arbeidsgiver": "Zorba A/S",
+            "fraDato": "1998-04-30T22:00:00.000+0000",
+            "naceKode": null,
+            "organisasjonsnummer": null,
+            "styrkKode": "7534.04",
+            "styrkKode3Siffer": "753",
+            "styrkKode4Siffer": "7534",
+            "styrkKodeStillingstittel": "Salmaker",
+            "tilDato": "2001-01-31T23:00:00.000+0000",
+            "utelukketForFremtiden": false,
+            "yrkeserfaringManeder": 33
+        },
+        {
+            "alternativStillingstittel": "servering, arb.uke",
+            "arbeidsgiver": "Burger King",
+            "fraDato": "1993-01-31T23:00:00.000+0000",
+            "naceKode": null,
+            "organisasjonsnummer": null,
+            "styrkKode": "5131.03",
+            "styrkKode3Siffer": "513",
+            "styrkKode4Siffer": "5131",
+            "styrkKodeStillingstittel": "L\u00e6rling (servit\u00f8r)",
+            "tilDato": "1993-01-31T23:00:00.000+0000",
+            "utelukketForFremtiden": false,
+            "yrkeserfaringManeder": 0
+        },
+        {
+            "alternativStillingstittel": "avisbud, deltid",
+            "arbeidsgiver": "BA/BT",
+            "fraDato": "1989-12-31T23:00:00.000+0000",
+            "naceKode": null,
+            "organisasjonsnummer": null,
+            "styrkKode": "",
+            "styrkKode3Siffer": null,
+            "styrkKode4Siffer": null,
+            "styrkKodeStillingstittel": "",
+            "tilDato": "1996-05-31T22:00:00.000+0000",
+            "utelukketForFremtiden": false,
+            "yrkeserfaringManeder": 77
+        },
+        {
+            "alternativStillingstittel": "piccolo, ekstrahjelp",
+            "arbeidsgiver": "SAS Radisson, Bryggen",
+            "fraDato": "1996-09-30T22:00:00.000+0000",
+            "naceKode": null,
+            "organisasjonsnummer": null,
+            "styrkKode": "",
+            "styrkKode3Siffer": null,
+            "styrkKode4Siffer": null,
+            "styrkKodeStillingstittel": "",
+            "tilDato": "1997-08-31T22:00:00.000+0000",
+            "utelukketForFremtiden": false,
+            "yrkeserfaringManeder": 11
+        },
+        {
+            "alternativStillingstittel": "mont\u00f8r",
+            "arbeidsgiver": "Addecco",
+            "fraDato": "2001-04-30T22:00:00.000+0000",
+            "naceKode": null,
+            "organisasjonsnummer": null,
+            "styrkKode": "8212.02",
+            "styrkKode3Siffer": "821",
+            "styrkKode4Siffer": "8212",
+            "styrkKodeStillingstittel": "Operat\u00f8r (produksjon av elektronisk utstyr)",
+            "tilDato": "2001-07-31T22:00:00.000+0000",
+            "utelukketForFremtiden": false,
+            "yrkeserfaringManeder": 3
+        },
+        {
+            "alternativStillingstittel": "Salmakere",
+            "arbeidsgiver": "Zorba",
+            "fraDato": "2001-08-31T22:00:00.000+0000",
+            "naceKode": null,
+            "organisasjonsnummer": null,
+            "styrkKode": "7534.04",
+            "styrkKode3Siffer": "753",
+            "styrkKode4Siffer": "7534",
+            "styrkKodeStillingstittel": "Salmaker",
+            "tilDato": "2002-11-30T23:00:00.000+0000",
+            "utelukketForFremtiden": false,
+            "yrkeserfaringManeder": 15
+        },
+        {
+            "alternativStillingstittel": "Isolat\u00f8r",
+            "arbeidsgiver": "Kaefer IKM",
+            "fraDato": "2004-09-30T22:00:00.000+0000",
+            "naceKode": null,
+            "organisasjonsnummer": null,
+            "styrkKode": "7124.01",
+            "styrkKode3Siffer": "712",
+            "styrkKode4Siffer": "7124",
+            "styrkKodeStillingstittel": "Isolat\u00f8r",
+            "tilDato": "2006-08-31T22:00:00.000+0000",
+            "utelukketForFremtiden": false,
+            "yrkeserfaringManeder": 23
+        },
+        {
+            "alternativStillingstittel": "isolat\u00f8r",
+            "arbeidsgiver": "StS",
+            "fraDato": "2006-12-31T23:00:00.000+0000",
+            "naceKode": null,
+            "organisasjonsnummer": null,
+            "styrkKode": "7124.01",
+            "styrkKode3Siffer": "712",
+            "styrkKode4Siffer": "7124",
+            "styrkKodeStillingstittel": "Isolat\u00f8r",
+            "tilDato": null,
+            "utelukketForFremtiden": false,
+            "yrkeserfaringManeder": 139
+        }
+    ]
+}

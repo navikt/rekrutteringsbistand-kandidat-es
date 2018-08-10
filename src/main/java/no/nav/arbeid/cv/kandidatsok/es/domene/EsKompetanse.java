@@ -1,14 +1,14 @@
 package no.nav.arbeid.cv.kandidatsok.es.domene;
 
-import java.util.Date;
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+import com.fasterxml.jackson.annotation.JsonInclude;
 import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
 import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
 import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
 import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
+
+import java.util.Date;
+import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsKompetanse {
@@ -22,6 +22,7 @@ public class EsKompetanse {
   @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
   @ElasticKeywordField
   @ElasticCompletionField
+  @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private String kompKodeNavn;
 
   @ElasticTextField
