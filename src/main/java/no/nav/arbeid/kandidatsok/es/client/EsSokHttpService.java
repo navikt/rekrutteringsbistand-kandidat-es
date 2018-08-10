@@ -290,7 +290,7 @@ public class EsSokHttpService implements EsSokService {
     private void addStillingstitlerToQuery(List<String> stillingstitler, BoolQueryBuilder boolQueryBuilder) {
         stillingstitler.stream()
                 .filter(StringUtils::isNotBlank)
-                .forEach(s -> addStillingsTitlerQuery(s, boolQueryBuilder));
+                .forEach(s -> addStillingsTitlerQuery(s, boolQueryBuilder, true));
     }
 
     private void addJobbonskerToQuery(List<String> jobbonsker, BoolQueryBuilder boolQueryBuilder) {
@@ -301,6 +301,9 @@ public class EsSokHttpService implements EsSokService {
                 .forEach(y -> addYrkeJobbonskerQuery(y, yrkeJobbonskerBoolQueryBuilder));
 
         boolQueryBuilder.must(yrkeJobbonskerBoolQueryBuilder);
+        
+        jobbonsker.stream().filter(StringUtils::isNotBlank).forEach(
+                y -> addStillingsTitlerQuery(y, boolQueryBuilder, false));
         LOGGER.debug("ADDING onsket stilling");
     }
 
@@ -343,11 +346,15 @@ public class EsSokHttpService implements EsSokService {
         boolQueryBuilder.should(yrkeJobbonskeQueryBuilder);
     }
 
-    private void addStillingsTitlerQuery(String stillingstittel, BoolQueryBuilder boolQueryBuilder) {
+    private void addStillingsTitlerQuery(String stillingstittel, BoolQueryBuilder boolQueryBuilder, boolean must) {
         NestedQueryBuilder yrkeserfaringQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
                 QueryBuilders.matchQuery("yrkeserfaring.styrkKodeStillingstittel", stillingstittel),
                 ScoreMode.None);
-        boolQueryBuilder.must(yrkeserfaringQueryBuilder);
+        if( must) {
+            boolQueryBuilder.must(yrkeserfaringQueryBuilder);
+        } else {
+            boolQueryBuilder.should(yrkeserfaringQueryBuilder);
+        }
         LOGGER.debug("ADDING yrkeserfaring");
     }
 
