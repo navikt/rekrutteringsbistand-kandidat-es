@@ -9,7 +9,7 @@ public interface EsIndexerService {
 
   void index(EsCv esCv) throws IOException;
 
-  void bulkIndex(List<EsCv> esCver) throws IOException;
+  int bulkIndex(List<EsCv> esCver) throws IOException;
 
   void bulkSlett(List<Long> arenaPersonIder) throws IOException;
 

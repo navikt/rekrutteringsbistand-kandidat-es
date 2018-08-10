@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -61,7 +62,7 @@ public class IndexCvTest {
 
     // Kjører "docker-compose up" manuelt istedenfor denne ClassRule:
 
-    @ClassRule
+/*    @ClassRule
     public static DockerComposeRule docker =
             DockerComposeRule.builder().file("src/test/resources/docker-compose-kun-es.yml")
                     .machine(DockerMachine.localMachine()
@@ -69,7 +70,7 @@ public class IndexCvTest {
                                     System.getProperty("ES_PORT"))
                             .build())
                     .shutdownStrategy(ShutdownStrategy.KILL_DOWN).build();
-
+*/
     @Autowired
     private EsSokService sokClient;
 
@@ -145,14 +146,21 @@ public class IndexCvTest {
     @Test
     public void skalIkkeFeileMedIllegalArgumentFraES() throws Exception {
         no.nav.arbeid.cv.kandidatsok.es.domene.EsCv cv1 =
-                objectMapper.readValue(getClass().getResourceAsStream("/utfordrende_cv1.json"), no.nav.arbeid.cv.kandidatsok.es.domene.EsCv.class);
+                objectMapper.readValue(
+                        new InputStreamReader(
+                            getClass().getResourceAsStream("/utfordrende_cv1.json"), "ISO-8859-1"),
+                        no.nav.arbeid.cv.kandidatsok.es.domene.EsCv.class);
         no.nav.arbeid.cv.kandidatsok.es.domene.EsCv cv2 =
-                objectMapper.readValue(getClass().getResourceAsStream("/utfordrende_cv2.json"), no.nav.arbeid.cv.kandidatsok.es.domene.EsCv.class);
+                objectMapper.readValue(
+                        new InputStreamReader(
+                                getClass().getResourceAsStream("/utfordrende_cv2.json"), "ISO-8859-1"),
+                        no.nav.arbeid.cv.kandidatsok.es.domene.EsCv.class);
 
         List<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> bulkEventer =
                 asList(cv1, cv2);
 
-        indexerClient.bulkIndex(bulkEventer);
+        int antallIndeksert = indexerClient.bulkIndex(bulkEventer);
+        assertThat(antallIndeksert).isEqualTo(bulkEventer.size());
     }
 
     @Test

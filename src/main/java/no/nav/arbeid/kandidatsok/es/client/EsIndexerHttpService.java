@@ -94,7 +94,7 @@ public class EsIndexerHttpService implements EsIndexerService {
     }
 
     @Override
-    public void bulkIndex(List<EsCv> esCver) throws IOException {
+    public int bulkIndex(List<EsCv> esCver) throws IOException {
         BulkRequest bulkRequest = Requests.bulkRequest();
         Long currentArenaId = 0l;
         try {
@@ -119,6 +119,8 @@ public class EsIndexerHttpService implements EsIndexerService {
         LOGGER.info("Sender bulk indexrequest med {} cv'er", esCver.size());
         bulkRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
         BulkResponse bulkResponse = esExec(() -> client.bulk(bulkRequest));
+        int antallIndeksert = esCver.size();
+
         if (bulkResponse.hasFailures()) {
             long antallFeil = 0;
             for (BulkItemResponse bir : bulkResponse.getItems()) {
@@ -141,10 +143,12 @@ public class EsIndexerHttpService implements EsIndexerService {
                 meterRegistry.counter("cv.es.index.feil", Tags.of("type", "applikasjon"))
                         .increment(antallFeil);
             }
+            antallIndeksert -= antallFeil;
             LOGGER.warn(
                     "Feilet under indeksering av CVer: " + bulkResponse.buildFailureMessage());
         }
         LOGGER.debug("BULKINDEX tidsbruk: " + bulkResponse.getTook());
+        return antallIndeksert;
     }
 
     @Override
