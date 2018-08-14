@@ -1,18 +1,13 @@
 package no.nav.arbeid.cv.kandidatsok.es.domene;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import no.nav.elasticsearch.mapping.annotations.*;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Objects;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import no.nav.elasticsearch.mapping.annotations.ElasticBooleanField;
-import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
-import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
-import no.nav.elasticsearch.mapping.annotations.ElasticIntegerField;
-import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
-import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsYrkeserfaring {
@@ -37,6 +32,7 @@ public class EsYrkeserfaring {
 
   @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
   @ElasticKeywordField
+  @JsonInclude(JsonInclude.Include.NON_EMPTY)
   @ElasticCompletionField
   private String styrkKodeStillingstittel;
 
