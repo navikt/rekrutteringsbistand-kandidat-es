@@ -606,7 +606,9 @@ public class EsSokHttpService implements EsSokService {
 
     private EsCv mapEsCv(SearchHit hit) {
         try {
-            return mapper.readValue(hit.getSourceAsString(), EsCv.class);
+            EsCv esCv = mapper.readValue(hit.getSourceAsString(), EsCv.class);
+            esCv.setScore(hit.getScore());
+            return esCv;
         } catch (IOException e) {
             LOGGER.warn("Klarte ikke å parse CV fra Elasticsearch, returnerer null", e);
             return null;
