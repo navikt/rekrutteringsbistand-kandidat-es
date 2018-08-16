@@ -305,9 +305,7 @@ public class IndexCvTest {
         Sokeresultat sokeresultat = sokClient.sok(Sokekriterier.med().styrkKode("5684.05").bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
-        EsCv cv = cver.get(0);
-        assertThat(cv)
-                .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv3()));
+        assertThat(cver).contains(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv3()));
     }
 
     @Test
@@ -316,7 +314,7 @@ public class IndexCvTest {
 
         List<EsCv> cver = sokeresultat.getCver();
         EsCv cv = cver.get(0);
-        assertThat(cv).isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv()));
+        assertThat(cver).contains(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv()));
     }
 
     @Test

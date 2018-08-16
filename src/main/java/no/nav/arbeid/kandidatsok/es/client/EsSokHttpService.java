@@ -342,14 +342,14 @@ public class EsSokHttpService implements EsSokService {
 
     private void addYrkeJobbonskerQuery(String yrkeJobbonske, BoolQueryBuilder boolQueryBuilder) {
         NestedQueryBuilder yrkeJobbonskeQueryBuilder = QueryBuilders.nestedQuery("yrkeJobbonsker",
-                QueryBuilders.matchQuery("yrkeJobbonsker.styrkBeskrivelse", yrkeJobbonske), ScoreMode.None);
+                QueryBuilders.matchQuery("yrkeJobbonsker.styrkBeskrivelse", yrkeJobbonske), ScoreMode.Total);
         boolQueryBuilder.should(yrkeJobbonskeQueryBuilder);
     }
 
     private void addStillingsTitlerQuery(String stillingstittel, BoolQueryBuilder boolQueryBuilder, boolean must) {
         NestedQueryBuilder yrkeserfaringQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
                 QueryBuilders.matchQuery("yrkeserfaring.styrkKodeStillingstittel", stillingstittel),
-                ScoreMode.None);
+                ScoreMode.Total);
         if( must) {
             boolQueryBuilder.must(yrkeserfaringQueryBuilder);
         } else {
@@ -360,7 +360,7 @@ public class EsSokHttpService implements EsSokService {
 
     private void addUtdanningerQuery(String utdanning, BoolQueryBuilder boolQueryBuilder) {
         NestedQueryBuilder utdanningQueryBuilder = QueryBuilders.nestedQuery("utdanning",
-                QueryBuilders.matchQuery("utdanning.nusKodeGrad", utdanning), ScoreMode.None);
+                QueryBuilders.matchQuery("utdanning.nusKodeGrad", utdanning), ScoreMode.Total);
         boolQueryBuilder.must(utdanningQueryBuilder);
         LOGGER.debug("ADDING utdanning");
     }
@@ -368,7 +368,7 @@ public class EsSokHttpService implements EsSokService {
     private void addKompetanseQuery(String kompetanse, BoolQueryBuilder boolQueryBuilder) {
         NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("samletKompetanse",
                 QueryBuilders.matchQuery("samletKompetanse.samletKompetanseTekst", kompetanse),
-                ScoreMode.None);
+                ScoreMode.Total);
         boolQueryBuilder.must(kompetanseQueryBuilder);
         LOGGER.debug("ADDING kompetanse");
     }
@@ -376,7 +376,7 @@ public class EsSokHttpService implements EsSokService {
     private void addSprakQuery(String sprak, BoolQueryBuilder boolQueryBuilder) {
         NestedQueryBuilder sprakQueryBuilder = QueryBuilders.nestedQuery("sprak",
                 QueryBuilders.matchQuery("sprak.sprakKodeTekst", sprak),
-                ScoreMode.None);
+                ScoreMode.Total);
         boolQueryBuilder.must(sprakQueryBuilder);
         LOGGER.debug("ADDING sprak");
     }
@@ -393,7 +393,7 @@ public class EsSokHttpService implements EsSokService {
         }
 
         NestedQueryBuilder geografiQueryBuilder = QueryBuilders.nestedQuery("geografiJobbonsker",
-                QueryBuilders.regexpQuery("geografiJobbonsker.geografiKode", regex), ScoreMode.None);
+                QueryBuilders.regexpQuery("geografiJobbonsker.geografiKode", regex), ScoreMode.Total);
         boolQueryBuilder.must(geografiQueryBuilder);
         LOGGER.debug("ADDING geografiJobbonske");
     }
@@ -445,10 +445,10 @@ public class EsSokHttpService implements EsSokService {
             BoolQueryBuilder boolQueryBuilder1 = QueryBuilders.boolQuery();
 
             NestedQueryBuilder includeUtdanningsnivaQueryBuilder = QueryBuilders.nestedQuery("utdanning",
-                    QueryBuilders.regexpQuery("utdanning.nusKode", searchRegex), ScoreMode.None);
+                    QueryBuilders.regexpQuery("utdanning.nusKode", searchRegex), ScoreMode.Total);
 
             NestedQueryBuilder excludeUtdanningsnivaQueryBuilder1 = QueryBuilders.nestedQuery("utdanning",
-                    QueryBuilders.regexpQuery("utdanning.nusKode", excludeRegex), ScoreMode.None);
+                    QueryBuilders.regexpQuery("utdanning.nusKode", excludeRegex), ScoreMode.Total);
 
             boolQueryBuilder1.must(includeUtdanningsnivaQueryBuilder);
             boolQueryBuilder1.mustNot(excludeUtdanningsnivaQueryBuilder1);
@@ -459,7 +459,7 @@ public class EsSokHttpService implements EsSokService {
             BoolQueryBuilder boolQueryBuilder1 = QueryBuilders.boolQuery();
 
             NestedQueryBuilder utdanningsnivaQueryBuilder = QueryBuilders.nestedQuery("utdanning",
-                    QueryBuilders.existsQuery("utdanning.nusKode"), ScoreMode.None);
+                    QueryBuilders.existsQuery("utdanning.nusKode"), ScoreMode.Total);
 
             boolQueryBuilder1.mustNot(utdanningsnivaQueryBuilder);
             boolQueryBuilder.should(boolQueryBuilder1);
@@ -468,10 +468,10 @@ public class EsSokHttpService implements EsSokService {
             BoolQueryBuilder boolQueryBuilder1 = QueryBuilders.boolQuery();
 
             NestedQueryBuilder includeKompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
-                    QueryBuilders.matchQuery("kompetanse.kompKode", "501"), ScoreMode.None);
+                    QueryBuilders.matchQuery("kompetanse.kompKode", "501"), ScoreMode.Total);
 
             NestedQueryBuilder excludeUtdanningsnivaQueryBuilder = QueryBuilders.nestedQuery("utdanning",
-                    QueryBuilders.regexpQuery("utdanning.nusKode", excludeRegex), ScoreMode.None);
+                    QueryBuilders.regexpQuery("utdanning.nusKode", excludeRegex), ScoreMode.Total);
 
             boolQueryBuilder1.must(includeKompetanseQueryBuilder);
             boolQueryBuilder1.mustNot(excludeUtdanningsnivaQueryBuilder);
@@ -482,10 +482,10 @@ public class EsSokHttpService implements EsSokService {
             BoolQueryBuilder boolQueryBuilder1 = QueryBuilders.boolQuery();
 
             NestedQueryBuilder includeKompetanseQueryBuilder = QueryBuilders.nestedQuery("kompetanse",
-                    QueryBuilders.matchQuery("kompetanse.kompKode", "506"), ScoreMode.None);
+                    QueryBuilders.matchQuery("kompetanse.kompKode", "506"), ScoreMode.Total);
 
             NestedQueryBuilder excludeUtdanningsnivaQueryBuilder = QueryBuilders.nestedQuery("utdanning",
-                    QueryBuilders.regexpQuery("utdanning.nusKode", excludeRegex), ScoreMode.None);
+                    QueryBuilders.regexpQuery("utdanning.nusKode", excludeRegex), ScoreMode.Total);
 
             boolQueryBuilder1.must(includeKompetanseQueryBuilder);
             boolQueryBuilder1.mustNot(excludeUtdanningsnivaQueryBuilder);
@@ -496,20 +496,20 @@ public class EsSokHttpService implements EsSokService {
 
     private void addNusKodeQuery(String nusKode, BoolQueryBuilder boolQueryBuilder) {
         NestedQueryBuilder nusKodeQueryBuilder = QueryBuilders.nestedQuery("utdanning",
-                QueryBuilders.termQuery("utdanning.nusKode", nusKode), ScoreMode.None);
+                QueryBuilders.termQuery("utdanning.nusKode", nusKode), ScoreMode.Total);
         boolQueryBuilder.must(nusKodeQueryBuilder);
         LOGGER.debug("ADDING nuskode");
     }
 
     private void addStyrkKodeQuery(String styrkKode, BoolQueryBuilder boolQueryBuilder) {
         NestedQueryBuilder styrkKodeQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
-                QueryBuilders.termQuery("yrkeserfaring.styrkKode", styrkKode), ScoreMode.None);
+                QueryBuilders.termQuery("yrkeserfaring.styrkKode", styrkKode), ScoreMode.Total);
         boolQueryBuilder.must(styrkKodeQueryBuilder);
         LOGGER.debug("ADDING styrkKode");
     }
 
     private Sokeresultat toSokeresultat(SearchResponse searchResponse) {
-        LOGGER.debug("Totalt antall treff: " + searchResponse.getHits().getTotalHits());
+        LOGGER.debug("Totalt antall treff: " + searchResponse.getHits().getTotalHits());        
         List<EsCv> cver = toCvList(searchResponse);
         List<Aggregering> aggregeringer = toAggregeringList(searchResponse);
         return new Sokeresultat(searchResponse.getHits().getTotalHits(), cver, aggregeringer);
@@ -601,12 +601,14 @@ public class EsSokHttpService implements EsSokService {
 
         SearchResponse searchResponse = client.search(searchRequest);
         LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
+        LOGGER.info("Søketid: {}", searchResponse.getTook());
         return searchResponse;
     }
 
     private EsCv mapEsCv(SearchHit hit) {
         try {
             EsCv esCv = mapper.readValue(hit.getSourceAsString(), EsCv.class);
+            LOGGER.debug("Score for {} er {} ", esCv.getArenaKandidatnr(), hit.getScore());
             esCv.setScore(hit.getScore());
             return esCv;
         } catch (IOException e) {
