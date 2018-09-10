@@ -22,6 +22,7 @@ public interface EsProperties {
 
   String getScheme();
 
+  default int getRequestTimeoutMS() { return 30000; }
   default Optional<String> getApiKey() {
     return Optional.empty();
   }

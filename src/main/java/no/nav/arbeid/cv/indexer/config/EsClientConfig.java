@@ -23,6 +23,7 @@ import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.message.BasicHeader;
@@ -61,9 +62,15 @@ public class EsClientConfig {
                     new UsernamePasswordCredentials(props.getUser(), props.getPassword()));
 
                 httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+
+                RequestConfig requestConfig = RequestConfig.custom()
+                        .setSocketTimeout(props.getRequestTimeoutMS())
+                        .build();
+                httpClientBuilder.setDefaultRequestConfig(requestConfig);
                 return httpClientBuilder.setSSLContext(sslContext);
               }
             });
+        builder.setMaxRetryTimeoutMillis(props.getRequestTimeoutMS());
         addPathPrefix(builder);
         addApiKeyHeader(builder);
         return new RestHighLevelClient(builder);
