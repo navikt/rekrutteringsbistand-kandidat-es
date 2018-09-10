@@ -80,6 +80,7 @@ public class EsClientConfig {
             .builder(new HttpHost(props.getHostname(), props.getPort(), props.getScheme()));
         addPathPrefix(builder);
         addApiKeyHeader(builder);
+        builder.setMaxRetryTimeoutMillis(props.getRequestTimeoutMS());
 
         if (props.getUser() != null && !props.getUser().isEmpty() && props.getPassword() != null && !props.getPassword().isEmpty()) {
           builder.setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback() {
@@ -91,6 +92,10 @@ public class EsClientConfig {
               credentialsProvider.setCredentials(AuthScope.ANY,
                       new UsernamePasswordCredentials(props.getUser(), props.getPassword()));
 
+              RequestConfig requestConfig = RequestConfig.custom()
+                      .setSocketTimeout(props.getRequestTimeoutMS())
+                      .build();
+              httpClientBuilder.setDefaultRequestConfig(requestConfig);
               return httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
             }
           });
