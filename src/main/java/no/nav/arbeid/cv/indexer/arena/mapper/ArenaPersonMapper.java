@@ -43,7 +43,7 @@ public class ArenaPersonMapper {
   public EsCv map(ArenaPerson p) {
     EsCv esCv = new EsCv(p.getFodselsnummer(), p.getFornavn(), p.getEtternavn(),
         toDate(p.getFodselsdato()), p.isErFodselsnummerDnr(), p.getFormidlingsgruppekode(),
-        p.getEpost(), p.getStatsborgerskap(), p.getPersonId(), p.getKandidatnummer(),
+        p.getEpost(), p.getMobiltelefon(), p.getTelefon(), p.getStatsborgerskap(), p.getPersonId(), p.getKandidatnummer(),
         p.getBeskrivelse(), p.getSamtykkeStatus(), toDate(p.getSamtykkeDato()),
         p.getAdresse() == null ? "" : p.getAdresse().getAdrlinje1(),
         p.getAdresse() == null ? "" : p.getAdresse().getAdrlinje2(),

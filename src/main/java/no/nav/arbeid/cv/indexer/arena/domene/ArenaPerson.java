@@ -41,6 +41,10 @@ public class ArenaPerson implements Serializable {
 
   private String epost;
 
+  private String mobiltelefon;
+
+  private String telefon;
+
   private ArenaAdresse adresse;
 
   private String kandidatnummer;
@@ -198,6 +202,22 @@ public class ArenaPerson implements Serializable {
 
   public void setEpost(String epost) {
     this.epost = epost;
+  }
+
+  public String getMobiltelefon() {
+    return mobiltelefon;
+  }
+
+  public void setMobiltelefon(String mobiltelefon) {
+    this.mobiltelefon = mobiltelefon;
+  }
+
+  public String getTelefon() {
+    return telefon;
+  }
+
+  public void setTelefon(String telefon) {
+    this.telefon = telefon;
   }
 
   public List<ArenaUtdanningCvLedd> getUtdanning() {
