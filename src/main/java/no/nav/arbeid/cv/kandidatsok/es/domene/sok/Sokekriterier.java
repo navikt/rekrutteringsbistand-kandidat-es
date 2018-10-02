@@ -1,10 +1,10 @@
 package no.nav.arbeid.cv.kandidatsok.es.domene.sok;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
 
 public class Sokekriterier {
   private String fritekst;
@@ -19,6 +19,7 @@ public class Sokekriterier {
   private List<String> nusKoder;
   private List<String> sprak;
   private String etternavn;
+  private Boolean maaBoInnenforGeografi;
 
   private Sokekriterier() {};
 
@@ -74,6 +75,10 @@ public class Sokekriterier {
     return etternavn;
   }
 
+  public Boolean maaBoInnenforGeografi() {
+    return maaBoInnenforGeografi;
+  }
+
   public static class Builder {
     private String fritekst;
     private List<String> yrkeJobbonsker;
@@ -89,6 +94,7 @@ public class Sokekriterier {
     private List<String> styrkKoder;
     private List<String> nusKoder;
     private String etternavn;
+    private boolean maaBoInnenforGeografi;
 
     public Sokekriterier bygg() {
       Sokekriterier s = new Sokekriterier();
@@ -123,6 +129,8 @@ public class Sokekriterier {
         tmpStyrkkoder.add(styrkKode);
       }
       s.styrkKoder = tmpStyrkkoder.isEmpty() ? null : Collections.unmodifiableList(tmpStyrkkoder);
+
+      s.maaBoInnenforGeografi = maaBoInnenforGeografi;
 
       return s;
     }
@@ -194,6 +202,11 @@ public class Sokekriterier {
 
     public Builder etternavn(String etternavn) {
       this.etternavn = etternavn;
+      return this;
+    }
+
+    public Builder maaBoInnenforGeografi(boolean maaBoInnenforGeografi) {
+      this.maaBoInnenforGeografi = maaBoInnenforGeografi;
       return this;
     }
   }

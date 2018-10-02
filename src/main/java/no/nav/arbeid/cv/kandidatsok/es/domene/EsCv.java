@@ -1,25 +1,10 @@
 package no.nav.arbeid.cv.kandidatsok.es.domene;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import no.nav.elasticsearch.mapping.annotations.*;
 
-import no.nav.elasticsearch.mapping.annotations.ElasticBooleanField;
-import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
-import no.nav.elasticsearch.mapping.annotations.ElasticDocument;
-import no.nav.elasticsearch.mapping.annotations.ElasticIntegerField;
-import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
-import no.nav.elasticsearch.mapping.annotations.ElasticLongField;
-import no.nav.elasticsearch.mapping.annotations.ElasticNestedField;
-import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @ElasticDocument
@@ -93,7 +78,7 @@ public class EsCv {
     @ElasticKeywordField
     private String landkode;
 
-    @ElasticLongField
+    @ElasticKeywordField
     private Integer kommunenummer;
 
     @ElasticBooleanField
