@@ -1,27 +1,13 @@
 package no.nav.arbeid.cv.kandidatsok.domene.es;
 
+import no.nav.arbeid.cv.kandidatsok.es.domene.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsAnsettelsesforholdJobbonsker;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsArbeidstidsordningJobbonsker;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsCv;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsForerkort;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsGeografiJobbonsker;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsHeltidDeltidJobbonsker;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsKompetanse;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsKurs;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsSertifikat;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsSprak;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsUtdanning;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsVerv;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsYrkeJobbonsker;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsYrkeserfaring;
 
 public class EsCvObjectMother {
 
@@ -351,7 +337,7 @@ public class EsCvObjectMother {
         ArrayList<EsVerv> vervListe = new ArrayList<>();
         vervListe.add(verv);
 
-        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Hamar", "NO10.1010");
+        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Oslo", "NO03");
 
         EsGeografiJobbonsker geografiJobbonsker1 =
                 new EsGeografiJobbonsker("Lillehammer", "NO10.1011");
@@ -393,7 +379,7 @@ public class EsCvObjectMother {
 
         EsCv esCv = new EsCv("01016012345", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
                 "unnasluntrer@mailinator.com", "(+47) 22334455", "12345678", "NO", 1L, "S221234", // Kan ik
-                "", "N", d("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
+                "", "N", d("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 402, false,
                 new Date());
         esCv.addUtdanning(utdanningsListe);
         esCv.addYrkeserfaring(yrkeserfaringsListe);

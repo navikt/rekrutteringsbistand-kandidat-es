@@ -401,11 +401,18 @@ public class EsSokHttpService implements EsSokService {
         String regex ="";
 
         if(geografiKoder.length == 1){
-            String fylkeskode = geografiKoder[0].substring(2,4);
-            regex += fylkeskode + ".*";
+            if (geografiKoder[0].startsWith("NO0")) {
+                String fylkeskode = geografiKoder[0].substring(3,4);
+                regex += fylkeskode + ".*";
+            }
+            else{
+                String fylkeskode = geografiKoder[0].substring(2,4);
+                regex += fylkeskode + ".*";
+            }
+
         }
         else{
-            regex += geografiKoder[1];
+            regex += geografiKoder[1].substring(0,4);
         }
 
         RegexpQueryBuilder kommunenummerQueryBuilder = QueryBuilders.regexpQuery("kommunenummer", regex);
