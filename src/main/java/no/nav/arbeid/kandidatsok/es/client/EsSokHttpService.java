@@ -398,13 +398,14 @@ public class EsSokHttpService implements EsSokService {
 
     private void addKommunenummerQuery(String geografi, BoolQueryBuilder boolQueryBuilder) {
         String[] geografiKoder = geografi.split("\\.");
-        String regex = geografi + "|NO";
+        String regex ="";
 
-        if (geografiKoder.length > 1) {
-            regex += "|" + geografiKoder[0];
-            if (geografiKoder[1].length() > 4) {
-                regex += "|" + geografiKoder[0] + "." + geografiKoder[1].substring(0, 4);
-            }
+        if(geografiKoder.length == 1){
+            String fylkeskode = geografiKoder[0].substring(2,4);
+            regex += fylkeskode + ".*";
+        }
+        else{
+            regex += geografiKoder[1];
         }
 
         RegexpQueryBuilder kommunenummerQueryBuilder = QueryBuilders.regexpQuery("kommunenummer", regex);

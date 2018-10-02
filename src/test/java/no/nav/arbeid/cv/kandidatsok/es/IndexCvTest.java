@@ -448,7 +448,7 @@ public class IndexCvTest {
         Sokeresultat sokeresultat = sokClient.sok(
                 Sokekriterier.med().geografiList(Collections.singletonList("NO34.3434.1")).bygg());
         Sokeresultat sokeresultat2 = sokClient.sok(
-                Sokekriterier.med().geografiList(asList("NO34.3434.1")).maaBoInnenforGeografi(true).bygg());
+                Sokekriterier.med().geografiList(asList("NO34.3434")).maaBoInnenforGeografi(true).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         List<EsCv> cver2 = sokeresultat2.getCver();
