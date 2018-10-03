@@ -342,7 +342,7 @@ public class EsCvObjectMother {
         EsGeografiJobbonsker geografiJobbonsker1 =
                 new EsGeografiJobbonsker("Lillehammer", "NO10.1011");
 
-        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Hedmark", "NO10");
+        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Hedmark", "NO50");
 
         ArrayList<EsGeografiJobbonsker> geografiJobbonskerListe = new ArrayList<>();
         geografiJobbonskerListe.add(geografiJobbonsker);
@@ -379,7 +379,7 @@ public class EsCvObjectMother {
 
         EsCv esCv = new EsCv("01016012345", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
                 "unnasluntrer@mailinator.com", "(+47) 22334455", "12345678", "NO", 1L, "S221234", // Kan ik
-                "", "N", d("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 402, false,
+                "", "N", d("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 5001, false,
                 new Date());
         esCv.addUtdanning(utdanningsListe);
         esCv.addYrkeserfaring(yrkeserfaringsListe);
@@ -523,7 +523,7 @@ public class EsCvObjectMother {
         ArrayList<EsVerv> vervListe = new ArrayList<>();
         vervListe.add(verv);
 
-        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Hedmark", "NO10");
+        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Hedmark", "NO03");
 
         EsGeografiJobbonsker geografiJobbonsker1 =
                 new EsGeografiJobbonsker("Stavanger", "NO21.2020");

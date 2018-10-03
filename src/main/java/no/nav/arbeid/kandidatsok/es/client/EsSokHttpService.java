@@ -268,9 +268,14 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addKommunenummerToQuery(List<String> geografi, BoolQueryBuilder boolQueryBuilder) {
+
+        BoolQueryBuilder kommunenummerQueryBuilder = QueryBuilders.boolQuery();
+
         geografi.stream()
                 .filter(StringUtils::isNotBlank)
-                .forEach(g -> addKommunenummerQuery(g, boolQueryBuilder));
+                .forEach(g -> addKommunenummerQuery(g, kommunenummerQueryBuilder));
+
+        boolQueryBuilder.must(kommunenummerQueryBuilder);
     }
 
     private void addSprakToQuery(List<String> sprak, BoolQueryBuilder boolQueryBuilder) {
@@ -416,7 +421,7 @@ public class EsSokHttpService implements EsSokService {
         }
 
         RegexpQueryBuilder kommunenummerQueryBuilder = QueryBuilders.regexpQuery("kommunenummer", regex);
-        boolQueryBuilder.must(kommunenummerQueryBuilder);
+        boolQueryBuilder.should(kommunenummerQueryBuilder);
 
         LOGGER.debug("ADDING kommunenummer");
     }
