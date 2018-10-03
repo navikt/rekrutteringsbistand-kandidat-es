@@ -78,8 +78,11 @@ public class EsCv {
     @ElasticKeywordField
     private String landkode;
 
-    @ElasticKeywordField
+    @ElasticLongField
     private Integer kommunenummer;
+
+    @ElasticKeywordField
+    private Integer kommunenummerkw;
 
     @ElasticBooleanField
     private Boolean disponererBil;
@@ -142,7 +145,7 @@ public class EsCv {
             String mobiltelefon, String telefon, String statsborgerskap, Long arenaPersonId, String arenaKandidatnr, String beskrivelse,
             String samtykkeStatus, Date samtykkeDato, String adresselinje1, String adresselinje2,
             String adresselinje3, String postnummer, String poststed, String landkode,
-            Integer kommunenummer, Boolean disponererBil, Date tidsstempel) {
+            Integer kommunenummer, Boolean disponererBil, Date tidsstempel, Integer kommunenummerkw) {
         this.fodselsnummer = fodselsnummer;
         this.fornavn = fornavn;
         this.etternavn = etternavn;
@@ -167,6 +170,7 @@ public class EsCv {
         this.kommunenummer = kommunenummer;
         this.disponererBil = disponererBil;
         this.tidsstempel = tidsstempel;
+        this.kommunenummerkw = kommunenummerkw;
     }
 
     // Adderfunksjoner
@@ -388,6 +392,10 @@ public class EsCv {
         return kommunenummer;
     }
 
+    public Integer getKommunenummerkw() {
+        return kommunenummerkw;
+    }
+
     public Boolean getDisponererBil() {
         return disponererBil;
     }
@@ -491,6 +499,7 @@ public class EsCv {
                 && Objects.equals(poststed, esCv.poststed)
                 && Objects.equals(landkode, esCv.landkode)
                 && Objects.equals(kommunenummer, esCv.kommunenummer)
+                && Objects.equals(kommunenummerkw, esCv.kommunenummerkw)
                 && Objects.equals(disponererBil, esCv.disponererBil)
                 && Objects.equals(tidsstempel, esCv.tidsstempel)
                 && Objects.equals(utdanning, esCv.utdanning)
@@ -515,7 +524,7 @@ public class EsCv {
         return Objects.hash(fodselsnummer, fornavn, etternavn, fodselsdato, fodselsdatoErDnr,
                 formidlingsgruppekode, epostadresse, mobiltelefon, telefon, statsborgerskap, arenaPersonId,
                 arenaKandidatnr, beskrivelse, samtykkeStatus, samtykkeDato, adresselinje1,
-                adresselinje2, adresselinje3, postnummer, poststed, landkode, kommunenummer,
+                adresselinje2, adresselinje3, postnummer, poststed, landkode, kommunenummer, kommunenummerkw,
                 disponererBil, tidsstempel, utdanning, yrkeserfaring, kompetanse, annenerfaring,
                 sertifikat, forerkort, sprak, kurs, verv, geografiJobbonsker, yrkeJobbonsker,
                 heltidDeltidJobbonsker, ansettelsesforholdJobbonsker, arbeidstidsordningJobbonsker,
@@ -536,6 +545,7 @@ public class EsCv {
                 + ", adresselinje2='" + adresselinje2 + '\'' + ", adresselinje3='" + adresselinje3
                 + '\'' + ", postnummer='" + postnummer + '\'' + ", poststed='" + poststed + '\''
                 + ", landkode='" + landkode + '\'' + ", kommunenummer=" + kommunenummer
+                + ", kommunenummerkw=" + kommunenummerkw
                 + ", disponererBil=" + disponererBil + ", tidsstempel=" + tidsstempel
                 + ", utdanning=" + utdanning + ", yrkeserfaring=" + yrkeserfaring + ", kompetanse="
                 + kompetanse + ", annenerfaring=" + annenerfaring + ", sertifikat=" + sertifikat

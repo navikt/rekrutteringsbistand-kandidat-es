@@ -420,7 +420,7 @@ public class EsSokHttpService implements EsSokService {
             regex += geografiKoder[1].substring(0,4);
         }
 
-        RegexpQueryBuilder kommunenummerQueryBuilder = QueryBuilders.regexpQuery("kommunenummer", regex);
+        RegexpQueryBuilder kommunenummerQueryBuilder = QueryBuilders.regexpQuery("kommunenummerkw", regex);
         boolQueryBuilder.should(kommunenummerQueryBuilder);
 
         LOGGER.debug("ADDING kommunenummer");
