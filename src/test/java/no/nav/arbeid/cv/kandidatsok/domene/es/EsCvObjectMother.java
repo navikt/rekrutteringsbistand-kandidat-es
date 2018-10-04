@@ -1,27 +1,13 @@
 package no.nav.arbeid.cv.kandidatsok.domene.es;
 
+import no.nav.arbeid.cv.kandidatsok.es.domene.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsAnsettelsesforholdJobbonsker;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsArbeidstidsordningJobbonsker;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsCv;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsForerkort;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsGeografiJobbonsker;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsHeltidDeltidJobbonsker;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsKompetanse;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsKurs;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsSertifikat;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsSprak;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsUtdanning;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsVerv;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsYrkeJobbonsker;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsYrkeserfaring;
 
 public class EsCvObjectMother {
 
@@ -196,7 +182,7 @@ public class EsCvObjectMother {
 
         EsCv esCv = new EsCv("01016012345", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
                 "unnasluntrer@mailinator.com", "(+47) 22334455", "12345678", "NO", 1L, "CV51953", "", "J", d("2016-05-30"),
-                "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false, new Date());
+                "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false, new Date(), 301);
         esCv.addUtdanning(EsUtdanningListe);
         esCv.addYrkeserfaring(yrkeserfaringListe);
         esCv.addKompetanse(kompetanseListee);
@@ -351,12 +337,12 @@ public class EsCvObjectMother {
         ArrayList<EsVerv> vervListe = new ArrayList<>();
         vervListe.add(verv);
 
-        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Hamar", "NO10.1010");
+        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Oslo", "NO03");
 
         EsGeografiJobbonsker geografiJobbonsker1 =
                 new EsGeografiJobbonsker("Lillehammer", "NO10.1011");
 
-        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Hedmark", "NO10");
+        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Hedmark", "NO50");
 
         ArrayList<EsGeografiJobbonsker> geografiJobbonskerListe = new ArrayList<>();
         geografiJobbonskerListe.add(geografiJobbonsker);
@@ -393,8 +379,8 @@ public class EsCvObjectMother {
 
         EsCv esCv = new EsCv("01016012345", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
                 "unnasluntrer@mailinator.com", "(+47) 22334455", "12345678", "NO", 1L, "S221234", // Kan ik
-                "", "N", d("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
-                new Date());
+                "", "N", d("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 5001, false,
+                new Date(), 301);
         esCv.addUtdanning(utdanningsListe);
         esCv.addYrkeserfaring(yrkeserfaringsListe);
         esCv.addKompetanse(kompetanseList);
@@ -537,7 +523,7 @@ public class EsCvObjectMother {
         ArrayList<EsVerv> vervListe = new ArrayList<>();
         vervListe.add(verv);
 
-        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Hedmark", "NO10");
+        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Hedmark", "NO03");
 
         EsGeografiJobbonsker geografiJobbonsker1 =
                 new EsGeografiJobbonsker("Stavanger", "NO21.2020");
@@ -591,7 +577,7 @@ public class EsCvObjectMother {
 
         EsCv esCv = new EsCv("05236984567", "KARI", "NORDMANN", d("1980-02-10"), false, "ARBS",
                 "unnasluntrer2@mailinator.com", "(+47) 22334455", "12345678", "NO", 2L, "H738234", "", "J", d("2016-05-30"),
-                "Dinvei 2", "", "", "1337", "HUSKER IKKE", "NO", 301, false, new Date());
+                "Dinvei 2", "", "", "1337", "HUSKER IKKE", "NO", 301, false, new Date(), 401);
         esCv.addUtdanning(utdanningListe);
         esCv.addYrkeserfaring(yrkeserfaringListe);
         esCv.addKompetanse(kompetanseListe);
@@ -780,7 +766,7 @@ public class EsCvObjectMother {
 
         EsCv esCv = new EsCv("04265983651", "HANS", "NORDMANN", d("1955-11-04"), false, "ARBS",
                 "alltidmed@mailinator.com", "(+47) 22334455", "12345678", "NO", 3L, "S738893", "", "J", d("2016-05-30"),
-                "Minvei 1", "", "", "2323", "INGEBERG", "NO", 301, false, new Date());
+                "Minvei 1", "", "", "2323", "INGEBERG", "NO", 301, false, new Date(), 301);
         esCv.addUtdanning(utdanningListe);
         esCv.addYrkeserfaring(yrkeserfaringListe);
         esCv.addKompetanse(kompetanseListe);
@@ -971,7 +957,7 @@ public class EsCvObjectMother {
 
         EsCv esCv = new EsCv("09568410230", "HANNE", "NORDMANN", d("2002-06-04"), false, "ARBS",
                 "erjegmed@mailinator.com", "(+47) 22334455", "12345678", "NO", 4L, "K838829", "", "J", d("2016-05-30"),
-                "Noensvei 1", "", "", "7012", "TRONDHEIM", "NO", 301, false, new Date());
+                "Noensvei 1", "", "", "7012", "TRONDHEIM", "NO", 301, false, new Date(), 301);
         esCv.addUtdanning(utdanningListe);
         esCv.addYrkeserfaring(yrkeserfaringListe);
         esCv.addKompetanse(kompetanseListe);
@@ -1158,7 +1144,7 @@ public class EsCvObjectMother {
 
         EsCv esCv = new EsCv("03050316895", "BOB", "NORDMANN", d("1964-09-01"), false, "ARBS",
                 "bobob@mailinator.com", "(+47) 22334455", "12345678", "NO", 5L, "N883773", "", "J", d("2016-05-30"), "Minvei 90",
-                "", "", "0565", "OSLO", "NO", 301, false, new Date());
+                "", "", "0565", "OSLO", "NO", 301, false, new Date(), 301);
         esCv.addUtdanning(utdanningListe);
         esCv.addYrkeserfaring(yrkeserfaringListe);
         esCv.addKompetanse(kompetanseListe);
@@ -1327,7 +1313,7 @@ public class EsCvObjectMother {
 
         EsCv esCv = new EsCv("03050316895", "BOB", "NORDMANN", d("1964-09-01"), false, "ARBS",
                 "bobob@mailinator.com", "(+47) 22334455", "12345678", "NO", 5L, "N883773", "", "J", d("2016-05-30"), "Minvei 90",
-                "", "", "0565", "OSLO", "NO", 301, false, new Date());
+                "", "", "0565", "OSLO", "NO", 301, false, new Date(), 301);
         esCv.addUtdanning(utdanningListe);
         esCv.addYrkeserfaring(yrkeserfaringListe);
         esCv.addKompetanse(kompetanseListe);
@@ -1521,7 +1507,7 @@ public class EsCvObjectMother {
         EsCv esCv = new EsCv("01016012345", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
                 "unnasluntrer@mailinator.com", "(+47) 22334455", "12345678", "NO", 1L, "S221234", // Kan ik
                 "", "N", d("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
-                new Date());
+                new Date(), 301);
         esCv.addUtdanning(utdanningsListe);
         esCv.addYrkeserfaring(yrkeserfaringsListe);
         esCv.addKompetanse(kompetanseList);

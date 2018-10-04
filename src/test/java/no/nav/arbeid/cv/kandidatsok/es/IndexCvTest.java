@@ -1,46 +1,12 @@
 package no.nav.arbeid.cv.kandidatsok.es;
 
-import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import io.micrometer.core.instrument.Counter;
-import io.micrometer.core.instrument.Tags;
-import org.apache.http.HttpHost;
-import org.assertj.core.api.Assertions;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit4.SpringRunner;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.palantir.docker.compose.DockerComposeRule;
 import com.palantir.docker.compose.configuration.ShutdownStrategy;
 import com.palantir.docker.compose.connection.DockerMachine;
-
+import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Tags;
 import no.nav.arbeid.cv.indexer.config.EsServiceConfig;
 import no.nav.arbeid.cv.kandidatsok.domene.es.EsCvObjectMother;
 import no.nav.arbeid.cv.kandidatsok.domene.es.KandidatsokTransformer;
@@ -50,6 +16,33 @@ import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokekriterier;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokeresultat;
 import no.nav.arbeid.kandidatsok.es.client.EsIndexerService;
 import no.nav.arbeid.kandidatsok.es.client.EsSokService;
+import org.apache.http.HttpHost;
+import org.assertj.core.api.Assertions;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.junit.*;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 public class IndexCvTest {
@@ -443,6 +436,19 @@ public class IndexCvTest {
                 Sokekriterier.med().geografiList(Collections.singletonList("NO34.3434.1")).bygg());
         Sokeresultat sokeresultat2 = sokClient.sok(
                 Sokekriterier.med().geografiList(asList("NO34.3434.1", "NO21.2020")).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver2 = sokeresultat2.getCver();
+
+        assertThat(cver.size()).isGreaterThan(cver2.size());
+    }
+
+    @Test
+    public void testSokPaBostedGirBegrensendeResultat() throws IOException {
+        Sokeresultat sokeresultat = sokClient.sok(
+                Sokekriterier.med().geografiList(Collections.singletonList("NO34.3434.1")).bygg());
+        Sokeresultat sokeresultat2 = sokClient.sok(
+                Sokekriterier.med().geografiList(asList("NO34.3434")).maaBoInnenforGeografi(true).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         List<EsCv> cver2 = sokeresultat2.getCver();

@@ -1,40 +1,15 @@
 package no.nav.arbeid.cv.indexer.arena.mapper;
 
+import no.nav.arbeid.cv.indexer.arena.domene.*;
+import no.nav.arbeid.cv.kandidatsok.es.domene.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import no.nav.arbeid.cv.indexer.arena.domene.ArenaAnsfPersonProfilLedd;
-import no.nav.arbeid.cv.indexer.arena.domene.ArenaArboPersonProfilLedd;
-import no.nav.arbeid.cv.indexer.arena.domene.ArenaGeoPersonProfilLedd;
-import no.nav.arbeid.cv.indexer.arena.domene.ArenaHedePersonProfilLedd;
-import no.nav.arbeid.cv.indexer.arena.domene.ArenaKompetanseCvLedd;
-import no.nav.arbeid.cv.indexer.arena.domene.ArenaKursCvLedd;
-import no.nav.arbeid.cv.indexer.arena.domene.ArenaPerson;
-import no.nav.arbeid.cv.indexer.arena.domene.ArenaSertifikatCvLedd;
-import no.nav.arbeid.cv.indexer.arena.domene.ArenaUtdanningCvLedd;
-import no.nav.arbeid.cv.indexer.arena.domene.ArenaVervCvLedd;
-import no.nav.arbeid.cv.indexer.arena.domene.ArenaYrkeCvLedd;
-import no.nav.arbeid.cv.indexer.arena.domene.ArenaYrkePersonProfilLedd;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsAnsettelsesforholdJobbonsker;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsArbeidstidsordningJobbonsker;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsCv;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsForerkort;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsGeografiJobbonsker;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsHeltidDeltidJobbonsker;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsKompetanse;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsKurs;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsSertifikat;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsSprak;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsUtdanning;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsVerv;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsYrkeJobbonsker;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsYrkeserfaring;
 
 public class ArenaPersonMapper {
 
@@ -52,7 +27,7 @@ public class ArenaPersonMapper {
         p.getAdresse() == null ? "" : p.getAdresse().getPoststednavn(),
         p.getAdresse() == null ? null : p.getAdresse().getLandkode(),
         p.getAdresse() == null ? null : p.getAdresse().getKommunenr(), p.isDisponererBil(),
-        toDate(p.getSistEndret()));
+        toDate(p.getSistEndret()), p.getAdresse() == null ? null : p.getAdresse().getKommunenr());
     esCv.addYrkeserfaring(
         p.getYrkeserfaring().stream().map(this::mapYrkeserfaring).collect(Collectors.toList()));
     esCv.addUtdanning(
