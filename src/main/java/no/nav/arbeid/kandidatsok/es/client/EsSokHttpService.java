@@ -417,7 +417,13 @@ public class EsSokHttpService implements EsSokService {
 
         }
         else{
-            regex += geografiKoder[1].substring(0,4);
+
+            if(geografiKoder[1].startsWith("0")){
+                regex += geografiKoder[1].substring(1, 4);
+            }
+            else{
+                regex += geografiKoder[1].substring(0,4);
+            }
         }
 
         RegexpQueryBuilder kommunenummerQueryBuilder = QueryBuilders.regexpQuery("kommunenummerkw", regex);
