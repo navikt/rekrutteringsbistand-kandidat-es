@@ -406,6 +406,11 @@ public class EsSokHttpService implements EsSokService {
         String regex ="";
 
         if(geografiKoder.length == 1){
+
+            if(geografiKoder[0].length()<4){
+                return;
+            }
+
             if (geografiKoder[0].startsWith("NO0")) {
                 String fylkeskode = geografiKoder[0].substring(3,4);
                 regex += fylkeskode + ".*";
@@ -414,7 +419,6 @@ public class EsSokHttpService implements EsSokService {
                 String fylkeskode = geografiKoder[0].substring(2,4);
                 regex += fylkeskode + ".*";
             }
-
         }
         else{
 
