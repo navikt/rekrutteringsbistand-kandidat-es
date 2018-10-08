@@ -52,6 +52,11 @@ public class EsSokHttpService implements EsSokService {
     }
 
     @Override
+    public List<String> typeAheadForerkort(String prefix) throws IOException {
+        return typeAhead(prefix, "forerkort.forerkortKodeKlasse.completion");
+    }
+
+    @Override
     public List<String> typeAheadSprak(String prefix) throws IOException {
         return typeAhead(prefix, "sprak.sprakKodeTekst.completion");
     }
@@ -172,6 +177,10 @@ public class EsSokHttpService implements EsSokService {
 
         if (StringUtils.isNotBlank(sk.etternavn())) {
             addEtternavnToQuery(sk.etternavn(), queryBuilder);
+        }
+
+        if (isNotEmpty(sk.forerkort())) {
+            addForerkortToQuery(sk.forerkort(), queryBuilder);
         }
 
         return toSokeresultat(esExec(() -> search(queryBuilder, 0, 100)));
@@ -317,6 +326,12 @@ public class EsSokHttpService implements EsSokService {
         LOGGER.debug("ADDING fritekst");
     }
 
+    private void addForerkortToQuery(List<String> forerkort, BoolQueryBuilder boolQueryBuilder) {
+        forerkort.stream()
+                .filter(StringUtils::isNotBlank)
+                .forEach(s -> addForerkortQuery(s, boolQueryBuilder));
+    }
+
     private boolean sokUtenKriterier(Sokekriterier sk) {
         return StringUtils.isBlank(sk.fritekst())
                 && (sk.yrkeJobbonsker() == null || sk.yrkeJobbonsker().isEmpty())
@@ -399,6 +414,14 @@ public class EsSokHttpService implements EsSokService {
                 QueryBuilders.regexpQuery("geografiJobbonsker.geografiKode", regex), ScoreMode.Total);
         boolQueryBuilder.must(geografiQueryBuilder);
         LOGGER.debug("ADDING geografiJobbonske");
+    }
+
+    private void addForerkortQuery(String forerkort, BoolQueryBuilder boolQueryBuilder) {
+        NestedQueryBuilder forerkortQueryBuilder = QueryBuilders.nestedQuery("sertifikat",
+                QueryBuilders.matchQuery("forerkort.forerkortKodeKlasse", forerkort),
+                ScoreMode.Total);
+        boolQueryBuilder.must(forerkortQueryBuilder);
+        LOGGER.debug("ADDING førerkort");
     }
 
     private void addKommunenummerQuery(String geografi, BoolQueryBuilder boolQueryBuilder) {

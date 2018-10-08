@@ -23,6 +23,8 @@ public interface EsSokService {
 
     List<String> typeAheadSprak(String prefix) throws IOException;
 
+    List<String> typeAheadForerkort(String prefix) throws IOException;
+
     EsCv hent(String kandidatnr) throws IOException;
 
     Sokeresultat hentKandidater(List<String> kandidatnummer) throws IOException;
