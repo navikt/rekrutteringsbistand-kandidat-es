@@ -404,16 +404,13 @@ public class IndexCvTest {
     }
 
     @Test
-    public void testSamletKompetanseSkalGiResultatVedSokPaForerkort() throws IOException {
+    public void testSamletKompetanseSkalIkkeGiResultatVedSokPaForerkort() throws IOException {
         Sokeresultat sokeresultat = sokClient.sok(
                 Sokekriterier.med().kompetanser(Collections.singletonList("Traktorlappen")).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
-        EsCv cv = cver.get(0);
 
-        assertThat(cver.size()).isEqualTo(1);
-        assertThat(cv)
-                .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv3()));
+        assertThat(cver.size()).isEqualTo(0);
     }
 
     @Test
