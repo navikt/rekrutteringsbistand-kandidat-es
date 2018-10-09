@@ -52,11 +52,6 @@ public class EsSokHttpService implements EsSokService {
     }
 
     @Override
-    public List<String> typeAheadForerkort(String prefix) throws IOException {
-        return typeAhead(prefix, "forerkort.forerkortKodeKlasse.completion");
-    }
-
-    @Override
     public List<String> typeAheadSprak(String prefix) throws IOException {
         return typeAhead(prefix, "sprak.sprakKodeTekst.completion");
     }

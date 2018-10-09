@@ -24,7 +24,6 @@ public class EsForerkort {
   private String forerkortKode;
 
   @ElasticKeywordField
-  @ElasticCompletionField
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private String forerkortKodeKlasse;
 
