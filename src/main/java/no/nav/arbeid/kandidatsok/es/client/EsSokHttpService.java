@@ -343,7 +343,8 @@ public class EsSokHttpService implements EsSokService {
                 && (sk.geografiList() == null || sk.geografiList().isEmpty())
                 && (sk.styrkKoder() == null || sk.styrkKoder().isEmpty())
                 && (sk.nusKoder() == null || sk.nusKoder().isEmpty())
-                && (sk.sprak() == null || sk.sprak().isEmpty());
+                && (sk.sprak() == null || sk.sprak().isEmpty())
+                && (sk.forerkort() == null || sk.forerkort().isEmpty());
     }
 
     private boolean utdanningsNivaIsPresent(Sokekriterier sk) {
@@ -417,8 +418,8 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addForerkortQuery(String forerkort, BoolQueryBuilder boolQueryBuilder) {
-        NestedQueryBuilder forerkortQueryBuilder = QueryBuilders.nestedQuery("sertifikat",
-                QueryBuilders.matchQuery("forerkort.forerkortKodeKlasse", forerkort),
+        NestedQueryBuilder forerkortQueryBuilder = QueryBuilders.nestedQuery("forerkort",
+                QueryBuilders.termQuery("forerkort.forerkortKodeKlasse", forerkort),
                 ScoreMode.Total);
         boolQueryBuilder.must(forerkortQueryBuilder);
         LOGGER.debug("ADDING førerkort");

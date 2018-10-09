@@ -280,6 +280,19 @@ public class IndexCvTest {
     }
 
     @Test
+    public void testForerkortGirMindreTreff() throws IOException {
+        Sokeresultat sokeresultat = sokClient.sok(Sokekriterier.med()
+                .forerkort(Collections.singletonList("Førerkort: Kl. A (tung motorsykkel)")).bygg());
+        Sokeresultat sokeresultat2 = sokClient.sok(Sokekriterier.med()
+                .forerkort(asList("Førerkort: Kl. A (tung motorsykkel)", "Førerkort: Kl. A (Moped)")).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver2 = sokeresultat2.getCver();
+
+        assertThat(cver.size()).isGreaterThan(cver2.size());
+    }
+
+    @Test
     public void testStemOrdSkalGiSammeResultat() throws IOException {
         Sokeresultat sokeresultat = sokClient.sok(
                 Sokekriterier.med().stillingstitler(Collections.singletonList("Progger")).bygg());

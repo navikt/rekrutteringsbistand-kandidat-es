@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
 import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
 import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
@@ -24,6 +25,7 @@ public class EsForerkort {
 
   @ElasticKeywordField
   @ElasticCompletionField
+  @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private String forerkortKodeKlasse;
 
   @ElasticTextField

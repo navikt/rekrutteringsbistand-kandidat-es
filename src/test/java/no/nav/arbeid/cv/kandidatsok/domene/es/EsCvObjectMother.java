@@ -262,21 +262,13 @@ public class EsCvObjectMother {
         kompetanseList.add(kompetanse3);
         kompetanseList.add(kompetanse4);
 
-
-
-        EsSertifikat sertifikat1 = new EsSertifikat(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
-
-        EsSertifikat sertifikat2 = new EsSertifikat(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
-
-        EsSertifikat sertifikat3 = new EsSertifikat(d("1996-02-01"), d("2020-12-01"), "V1.6110",
+        EsSertifikat sertifikat1 = new EsSertifikat(d("1996-02-01"), d("2020-12-01"), "V1.6110",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 12 tonn",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 12 tonn", "");
-        EsSertifikat sertifikat4 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
+        EsSertifikat sertifikat2 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn", "");
-        EsSertifikat sertifikat5 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
+        EsSertifikat sertifikat3 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn", "");
 
@@ -284,8 +276,6 @@ public class EsCvObjectMother {
         sertifikatListe.add(sertifikat1);
         sertifikatListe.add(sertifikat2);
         sertifikatListe.add(sertifikat3);
-        sertifikatListe.add(sertifikat4);
-        sertifikatListe.add(sertifikat5);
 
         EsForerkort forerkort1 = new EsForerkort(d("1994-08-01"), null, "V1.6050",
                 "Førerkort: Kl. A (tung motorsykkel)", null, "");
@@ -453,21 +443,13 @@ public class EsCvObjectMother {
         kompetanseListe.add(kompetanse3);
         kompetanseListe.add(kompetanse4);
 
-
-
-        EsSertifikat EsSertifikat1 = new EsSertifikat(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
-
-        EsSertifikat EsSertifikat2 = new EsSertifikat(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
-
-        EsSertifikat EsSertifikat3 = new EsSertifikat(d("1996-02-01"), d("2020-12-01"), "V1.6110",
+        EsSertifikat EsSertifikat1 = new EsSertifikat(d("1996-02-01"), d("2020-12-01"), "V1.6110",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn", "");
-        EsSertifikat EsSertifikat4 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
+        EsSertifikat EsSertifikat2 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn", "");
-        EsSertifikat EsSertifikat5 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
+        EsSertifikat EsSertifikat3 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn", "");
 
@@ -475,8 +457,6 @@ public class EsCvObjectMother {
         EsSertifikatListe.add(EsSertifikat1);
         EsSertifikatListe.add(EsSertifikat2);
         EsSertifikatListe.add(EsSertifikat3);
-        EsSertifikatListe.add(EsSertifikat4);
-        EsSertifikatListe.add(EsSertifikat5);
 
         EsForerkort forerkort1 = new EsForerkort(d("1994-08-01"), null, "V1.6050",
                 "Førerkort: Kl. A (tung motorsykkel)", null, "");
@@ -648,19 +628,12 @@ public class EsCvObjectMother {
         kompetanseListe.add(kompetanse4);
 
 
-
-        EsSertifikat EsSertifikat1 = new EsSertifikat(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
-
-        EsSertifikat EsSertifikat2 = new EsSertifikat(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
-
-        EsSertifikat EsSertifikat3 = new EsSertifikat(d("1996-02-01"), d("2020-12-01"), "V1.6110",
+        EsSertifikat EsSertifikat1 = new EsSertifikat(d("1996-02-01"), d("2020-12-01"), "V1.6110",
                 "Truckførerbevis", "Truckførerbevis", "");
-        EsSertifikat EsSertifikat4 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
+        EsSertifikat EsSertifikat2 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn", "");
-        EsSertifikat EsSertifikat5 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
+        EsSertifikat EsSertifikat3 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn", "");
 
@@ -668,8 +641,6 @@ public class EsCvObjectMother {
         EsSertifikatListe.add(EsSertifikat1);
         EsSertifikatListe.add(EsSertifikat2);
         EsSertifikatListe.add(EsSertifikat3);
-        EsSertifikatListe.add(EsSertifikat4);
-        EsSertifikatListe.add(EsSertifikat5);
 
         EsForerkort forerkort1 = new EsForerkort(d("1994-08-01"), null, "V1.6050",
                 "Førerkort: Kl. A (tung motorsykkel)", null, "");
@@ -839,20 +810,13 @@ public class EsCvObjectMother {
         kompetanseListe.add(kompetanse4);
 
 
-
-        EsSertifikat EsSertifikat1 = new EsSertifikat(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
-
-        EsSertifikat EsSertifikat2 = new EsSertifikat(d("1991-01-01"), null, "V1.6090",
-                "Førerkort: Kl. M (Moped)", null, "");
-
-        EsSertifikat EsSertifikat3 = new EsSertifikat(d("1996-02-01"), d("2020-12-01"), "V1.6110",
+        EsSertifikat EsSertifikat1 = new EsSertifikat(d("1996-02-01"), d("2020-12-01"), "V1.6110",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn", "");
-        EsSertifikat EsSertifikat4 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
+        EsSertifikat EsSertifikat2 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn", "");
-        EsSertifikat EsSertifikat5 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
+        EsSertifikat EsSertifikat3 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn", "");
 
@@ -860,8 +824,6 @@ public class EsCvObjectMother {
         EsSertifikatListe.add(EsSertifikat1);
         EsSertifikatListe.add(EsSertifikat2);
         EsSertifikatListe.add(EsSertifikat3);
-        EsSertifikatListe.add(EsSertifikat4);
-        EsSertifikatListe.add(EsSertifikat5);
 
         EsForerkort forerkort1 = new EsForerkort(d("1994-08-01"), null, "V1.6050",
                 "Førerkort: Kl. A (tung motorsykkel)", null, "");
@@ -1026,20 +988,13 @@ public class EsCvObjectMother {
         kompetanseListe.add(kompetanse4);
 
 
-
-        EsSertifikat EsSertifikat1 = new EsSertifikat(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
-
-        EsSertifikat EsSertifikat2 = new EsSertifikat(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
-
-        EsSertifikat EsSertifikat3 = new EsSertifikat(d("1996-02-01"), d("2020-12-01"), "V1.6110",
+        EsSertifikat EsSertifikat1 = new EsSertifikat(d("1996-02-01"), d("2020-12-01"), "V1.6110",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn", "");
-        EsSertifikat EsSertifikat4 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
+        EsSertifikat EsSertifikat2 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn", "");
-        EsSertifikat EsSertifikat5 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
+        EsSertifikat EsSertifikat3 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn", "");
 
@@ -1047,8 +1002,6 @@ public class EsCvObjectMother {
         EsSertifikatListe.add(EsSertifikat1);
         EsSertifikatListe.add(EsSertifikat2);
         EsSertifikatListe.add(EsSertifikat3);
-        EsSertifikatListe.add(EsSertifikat4);
-        EsSertifikatListe.add(EsSertifikat5);
 
         EsForerkort forerkort1 = new EsForerkort(d("1994-08-01"), null, "V1.6050",
                 "Førerkort: Kl. A (tung motorsykkel)", null, "");
@@ -1196,19 +1149,14 @@ public class EsCvObjectMother {
 
         ArrayList<EsKompetanse> kompetanseListe = new ArrayList<>();
 
-        EsSertifikat EsSertifikat1 = new EsSertifikat(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
 
-        EsSertifikat EsSertifikat2 = new EsSertifikat(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
-
-        EsSertifikat EsSertifikat3 = new EsSertifikat(d("1996-02-01"), d("2020-12-01"), "V1.6110",
+        EsSertifikat EsSertifikat1 = new EsSertifikat(d("1996-02-01"), d("2020-12-01"), "V1.6110",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn", "");
-        EsSertifikat EsSertifikat4 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
+        EsSertifikat EsSertifikat2 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn", "");
-        EsSertifikat EsSertifikat5 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
+        EsSertifikat EsSertifikat3 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn", "");
 
@@ -1216,8 +1164,6 @@ public class EsCvObjectMother {
         EsSertifikatListe.add(EsSertifikat1);
         EsSertifikatListe.add(EsSertifikat2);
         EsSertifikatListe.add(EsSertifikat3);
-        EsSertifikatListe.add(EsSertifikat4);
-        EsSertifikatListe.add(EsSertifikat5);
 
         EsForerkort forerkort1 = new EsForerkort(d("1994-08-01"), null, "V1.6050",
                 "Førerkort: Kl. A (tung motorsykkel)", null, "");
@@ -1391,19 +1337,13 @@ public class EsCvObjectMother {
 
 
 
-        EsSertifikat sertifikat1 = new EsSertifikat(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
-
-        EsSertifikat sertifikat2 = new EsSertifikat(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
-
-        EsSertifikat sertifikat3 = new EsSertifikat(d("1996-02-01"), d("2020-12-01"), "V1.6110",
+        EsSertifikat sertifikat1 = new EsSertifikat(d("1996-02-01"), d("2020-12-01"), "V1.6110",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 12 tonn",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 12 tonn", "");
-        EsSertifikat sertifikat4 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
+        EsSertifikat sertifikat2 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn", "");
-        EsSertifikat sertifikat5 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
+        EsSertifikat sertifikat3 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn", "");
 
@@ -1411,8 +1351,6 @@ public class EsCvObjectMother {
         sertifikatListe.add(sertifikat1);
         sertifikatListe.add(sertifikat2);
         sertifikatListe.add(sertifikat3);
-        sertifikatListe.add(sertifikat4);
-        sertifikatListe.add(sertifikat5);
 
         EsForerkort forerkort1 = new EsForerkort(d("1994-08-01"), null, "V1.6050",
                 "Førerkort: Kl. A (tung motorsykkel)", null, "");
