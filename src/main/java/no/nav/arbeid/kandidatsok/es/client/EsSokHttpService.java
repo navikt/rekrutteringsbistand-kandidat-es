@@ -121,7 +121,7 @@ public class EsSokHttpService implements EsSokService {
 
         if (sokUtenKriterier(sk)) {
             LOGGER.debug("MATCH ALL!");
-            return toSokeresultat(esExec(() -> search(QueryBuilders.matchAllQuery(), 0, 100)));
+            return toSokeresultat(esExec(() -> search(QueryBuilders.matchAllQuery(), sk.fraIndex(), sk.antallResultater())));
         }
 
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
@@ -174,7 +174,7 @@ public class EsSokHttpService implements EsSokService {
             addEtternavnToQuery(sk.etternavn(), queryBuilder);
         }
 
-        return toSokeresultat(esExec(() -> search(queryBuilder, 0, 100)));
+        return toSokeresultat(esExec(() -> search(queryBuilder, sk.fraIndex(), sk.antallResultater())));
     }
 
     private void addEtternavnToQuery(String etternavn, BoolQueryBuilder boolQueryBuilder) {

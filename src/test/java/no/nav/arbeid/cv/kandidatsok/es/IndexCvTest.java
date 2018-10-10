@@ -49,8 +49,7 @@ public class IndexCvTest {
 
     /*
      * For å kunne kjøre denne testen må Linux rekonfigureres litt.. Lag en fil i
-     * /etc/sysctl.d/01-increase_vm_max_map_count.conf som inneholder følgende: vm.max_map_count =
-     * 262144
+     * /etc/sysctl.d/01-increase_vm_max_map_count.conf som inneholder følgende: vm.max_map_count = 262144
      */
 
     // Kjører "docker-compose up" manuelt istedenfor denne ClassRule:
@@ -116,6 +115,7 @@ public class IndexCvTest {
         indexerClient.index(EsCvObjectMother.giveMeEsCv3());
         indexerClient.index(EsCvObjectMother.giveMeEsCv4());
         indexerClient.index(EsCvObjectMother.giveMeEsCv5());
+        indexerClient.index(EsCvObjectMother.giveMeEsCv6());
     }
 
     @After
@@ -627,4 +627,22 @@ public class IndexCvTest {
         assertThat(cverVideregaende.size()).isLessThan(cverVideregaendeOgIngenUtdanning.size());
     }
 
+    @Test
+    public void sokMedDoktorgradSkalIkkeGiResulatMedKandidaterUtenDoktorgrad() throws IOException {
+        Sokeresultat sokeresultatDoktorgrad = sokClient
+                .sok(Sokekriterier.med().utdanningsniva(Collections.singletonList("Doktorgrad")).bygg());
+
+        assertThat(sokeresultatDoktorgrad.getCver()).hasSize(1);
+    }
+
+    @Test
+    public void sokMedFraTilSkalReturnereRiktigAntallKandidater() throws IOException {
+        Sokeresultat sokeresultat = sokClient.sok(Sokekriterier.med().antallResultater(1).bygg());
+        assertThat(sokeresultat.getCver()).hasSize(1);
+
+        //fra og med tredje posisjon
+        //av totalt 6 i indexen
+        Sokeresultat sokeresultat2 = sokClient.sok(Sokekriterier.med().fraIndex(2).antallResultater(5).bygg());
+        assertThat(sokeresultat2.getCver()).hasSize(3);
+    }
 }
