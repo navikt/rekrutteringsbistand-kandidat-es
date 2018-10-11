@@ -303,7 +303,10 @@ public class IndexCvTest {
 
     @Test
     public void testSokPaNusKode() throws IOException {
-        Sokeresultat sokeresultat = sokClient.sok(Sokekriterier.med().nusKode("786595").bygg());
+        Sokeresultat sokeresultatAlle = sokClient.sok(Sokekriterier.med().bygg());
+        assertThat(sokeresultatAlle.getCver()).hasSize(6);
+
+        Sokeresultat sokeresultat = sokClient.sok(Sokekriterier.med().nusKode("355211").bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         EsCv cv = cver.get(0);
