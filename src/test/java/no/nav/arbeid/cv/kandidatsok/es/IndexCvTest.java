@@ -185,7 +185,7 @@ public class IndexCvTest {
 
         List<EsCv> cver = sokeresultat.getCver();
 
-        assertThat(cver.size()).isEqualTo(5);
+        assertThat(cver.size()).isEqualTo(6);
     }
 
     @Test
@@ -200,7 +200,7 @@ public class IndexCvTest {
 
         assertThat(cver1.size()).isLessThan(cver.size());
         assertThat(cver1.size()).isEqualTo(1);
-        assertThat(cver.size()).isEqualTo(3);
+        assertThat(cver.size()).isEqualTo(4);
     }
 
     @Test
@@ -303,7 +303,10 @@ public class IndexCvTest {
 
     @Test
     public void testSokPaNusKode() throws IOException {
-        Sokeresultat sokeresultat = sokClient.sok(Sokekriterier.med().nusKode("786595").bygg());
+        Sokeresultat sokeresultatAlle = sokClient.sok(Sokekriterier.med().bygg());
+        assertThat(sokeresultatAlle.getCver()).hasSize(6);
+
+        Sokeresultat sokeresultat = sokClient.sok(Sokekriterier.med().nusKode("355211").bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         EsCv cv = cver.get(0);
@@ -643,6 +646,6 @@ public class IndexCvTest {
         //fra og med tredje posisjon
         //av totalt 6 i indexen
         Sokeresultat sokeresultat2 = sokClient.sok(Sokekriterier.med().fraIndex(2).antallResultater(5).bygg());
-        assertThat(sokeresultat2.getCver()).hasSize(3);
+        assertThat(sokeresultat2.getCver()).hasSize(4);
     }
 }

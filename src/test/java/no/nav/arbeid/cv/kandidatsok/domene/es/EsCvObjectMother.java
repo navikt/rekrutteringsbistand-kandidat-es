@@ -1523,19 +1523,13 @@ public class EsCvObjectMother {
 
 
     public static EsCv giveMeEsCv6() {
-        EsUtdanning utdanning = new EsUtdanning(d("1988-08-20"), d("1989-06-20"), "Otta vgs. Otta",
-                "355211", "Mekaniske fag, grunnkurs", "GK maskin/mekaniker");
 
-        EsUtdanning utdanning1 = new EsUtdanning(d("1988-08-20"), d("1989-06-20"),
-                "Høyskolen i Gjøvik", "699905", "Vitenskapsteori og forskningsmetode", "Master i sikkerhet");
 
         EsUtdanning utdanning2 = new EsUtdanning(d("1988-08-20"), d("1989-06-20"),
-                "UiO", "838", "Sosialantropologiske fag", "Sosialantropologi gr. fag");
+                "UiO", "838838", "Sosialantropologiske fag", "Sosialantropologi gr. fag");
 
 
         ArrayList<EsUtdanning> utdanningsListe = new ArrayList<>();
-        utdanningsListe.add(utdanning);
-        utdanningsListe.add(utdanning1);
         utdanningsListe.add(utdanning2);
 
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(d("2000-01-01"), d("2000-01-10"),
@@ -1587,8 +1581,6 @@ public class EsCvObjectMother {
         kompetanseList.add(kompetanse2);
         kompetanseList.add(kompetanse3);
         kompetanseList.add(kompetanse4);
-
-
 
         EsSertifikat sertifikat1 = new EsSertifikat(d("1994-08-01"), null, "V1.6050",
                 "Førerkort: Kl. A (tung motorsykkel)", null, "");
@@ -1703,8 +1695,8 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv("01016012345", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
-                "unnasluntrer@mailinator.com", "(+47) 22334455", "12345678", "NO", 1L, "S221234", // Kan ik
+        EsCv esCv = new EsCv("01016034215", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
+                "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", 6L, "S229934", // Kan ik
                 "", "N", d("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301);
         esCv.addUtdanning(utdanningsListe);
