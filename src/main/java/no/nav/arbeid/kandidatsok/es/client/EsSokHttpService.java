@@ -102,7 +102,7 @@ public class EsSokHttpService implements EsSokService {
         searchRequest.types(CV_TYPE);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         CompletionSuggestionBuilder suggestionBuilder =
-                SuggestBuilders.completionSuggestion(suggestionField).text(prefix).skipDuplicates(true);
+                SuggestBuilders.completionSuggestion(suggestionField).text(prefix).skipDuplicates(true).size(100);
 
         SuggestBuilder suggestBuilder = new SuggestBuilder();
         suggestBuilder.addSuggestion("typeahead", suggestionBuilder);
