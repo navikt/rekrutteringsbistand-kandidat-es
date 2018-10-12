@@ -1,8 +1,7 @@
 package no.nav.arbeid.cv.kandidatsok.domene.es;
 
 import no.nav.arbeid.cv.kandidatsok.es.domene.*;
-import no.nav.arbeid.pam.kodeverk.ansettelse.Ansettelsesform;
-import no.nav.arbeid.pam.kodeverk.ansettelse.Omfang;
+import no.nav.arbeid.pam.kodeverk.ansettelse.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -358,27 +357,41 @@ public class EsCvObjectMother {
         ArrayList<EsYrkeJobbonsker> yrkeJobbonskerListe = new ArrayList<>();
         yrkeJobbonskerListe.add(yrkeJobbonsker);
 
-        EsOmfangJobbonsker heltidDeltidJobbonsker =
-                new EsOmfangJobbonsker("HeltidDeltidKode", "HeltidDeltidKode Tekst");
+        EsOmfangJobbonsker omfangJobbonsker =
+                new EsOmfangJobbonsker(Omfang.HELTID.getId(), Omfang.HELTID.defaultTekst());
 
-        ArrayList<EsOmfangJobbonsker> heltidDeltidJobbonskerListe = new ArrayList<>();
-        heltidDeltidJobbonskerListe.add(heltidDeltidJobbonsker);
+        List<EsOmfangJobbonsker> omfangJobbonskerList = new ArrayList<>();
+        omfangJobbonskerList.add(omfangJobbonsker);
 
         EsAnsettelsesformJobbonsker ansettelsesforholdJobbonsker =
-                new EsAnsettelsesformJobbonsker("Ansettelsesforhold Kode",
-                        "Ansettelsesforhold Kode tekst");
+                new EsAnsettelsesformJobbonsker(Ansettelsesform.FAST.getId(), Ansettelsesform.FAST.defaultTekst());
 
-        ArrayList<EsAnsettelsesformJobbonsker> ansettelsesforholdJobbonskerListe =
+        List<EsAnsettelsesformJobbonsker> ansettelsesforholdJobbonskerListe =
                 new ArrayList<>();
         ansettelsesforholdJobbonskerListe.add(ansettelsesforholdJobbonsker);
 
         EsArbeidstidsordningJobbonsker arbeidstidsordningJobbonsker =
-                new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
-                        "Arbeidstidsordning Kode Tekst");
+                new EsArbeidstidsordningJobbonsker(Arbeidstidsordning.SKIFT.getId(),
+                        Arbeidstidsordning.SKIFT.defaultTekst());
 
-        ArrayList<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonskerListe =
+        List<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonskerListe =
                 new ArrayList<>();
         arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
+
+
+        EsArbeidstidJobbonsker arbeidstidJobbonsker = new EsArbeidstidJobbonsker(Arbeidstid.DAGTID.getId(), Arbeidstid.DAGTID.defaultTekst());
+        List<EsArbeidstidJobbonsker> arbeidstidJobbonskerList = new ArrayList<>();
+        arbeidstidJobbonskerList.add(arbeidstidJobbonsker);
+
+
+        EsArbeidsdagerJobbonsker arbeidsdagerJobbonskerLoerdag =
+                new EsArbeidsdagerJobbonsker(Arbeidsdager.LOERDAG.getId(), Arbeidsdager.LOERDAG.defaultTekst());
+        EsArbeidsdagerJobbonsker arbeidsdagerJobbonskerSoendag =
+                new EsArbeidsdagerJobbonsker(Arbeidsdager.SOENDAG.getId(), Arbeidsdager.SOENDAG.defaultTekst());
+
+        List<EsArbeidsdagerJobbonsker> arbeidsdagerJobbonskerList = new ArrayList<>();
+        arbeidsdagerJobbonskerList.add(arbeidsdagerJobbonskerLoerdag);
+        arbeidsdagerJobbonskerList.add(arbeidsdagerJobbonskerSoendag);
 
         EsCv esCv = new EsCv("01016012345", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
                 "unnasluntrer@mailinator.com", "(+47) 22334455", "12345678", "NO", 1L, "S221234", // Kan ik
@@ -394,6 +407,12 @@ public class EsCvObjectMother {
         esCv.addVerv(vervListe);
         esCv.addGeografiJobbonske(geografiJobbonskerListe);
         esCv.addYrkeJobbonske(yrkeJobbonskerListe);
+        esCv.addArbeidstidsordningJobbonsker(arbeidstidsordningJobbonskerListe);
+        esCv.addOmfangJobbonske(omfangJobbonskerList);
+        esCv.addAnsettelsesformJobbonske(ansettelsesforholdJobbonskerListe);
+        esCv.addArbeidsdagerJobbonsker(arbeidsdagerJobbonskerList);
+        esCv.addArbeidstidJobbonsker(arbeidstidJobbonskerList);
+
         return esCv;
     }
 

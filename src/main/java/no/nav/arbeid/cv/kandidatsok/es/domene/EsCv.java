@@ -307,11 +307,11 @@ public class EsCv {
         this.yrkeJobbonsker.addAll(yrkeJobbonskerListe);
     }
 
-    public void addHeltidDeltidJobbonsker(Collection<EsOmfangJobbonsker> omfangJobbonsker){
+    public void addOmfangJobbonske(Collection<EsOmfangJobbonsker> omfangJobbonsker){
         this.omfangJobbonsker.addAll(omfangJobbonsker);
     }
 
-    public void addAnsettelsesforholdJobbonsker(Collection<EsAnsettelsesformJobbonsker> ansettelsesformJobbonsker){
+    public void addAnsettelsesformJobbonske(Collection<EsAnsettelsesformJobbonsker> ansettelsesformJobbonsker){
         this.ansettelsesformJobbonsker.addAll(ansettelsesformJobbonsker);
     }
 

@@ -27,7 +27,7 @@
 		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
 
 		<!-- NAVs -->
-		<pam-ansettelseskodeverk.version>1</pam-ansettelseskodeverk.version>
+		<pam-ansettelseskodeverk.version>1.13</pam-ansettelseskodeverk.version>
 
 		<!-- Tredjeparts -->
 		<!-- <mockito.version>2.7.22</mockito.version> -->
