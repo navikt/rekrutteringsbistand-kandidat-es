@@ -121,7 +121,7 @@ public class EsSokHttpService implements EsSokService {
 
         if (sokUtenKriterier(sk)) {
             LOGGER.debug("MATCH ALL!");
-            return toSokeresultat(esExec(() -> search(QueryBuilders.matchAllQuery(), 0, 100)));
+            return toSokeresultat(esExec(() -> search(QueryBuilders.matchAllQuery(), sk.fraIndex(), sk.antallResultater())));
         }
 
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
@@ -178,7 +178,7 @@ public class EsSokHttpService implements EsSokService {
             addForerkortToQuery(sk.forerkort(), queryBuilder);
         }
 
-        return toSokeresultat(esExec(() -> search(queryBuilder, 0, 100)));
+        return toSokeresultat(esExec(() -> search(queryBuilder, sk.fraIndex(), sk.antallResultater())));
     }
 
     private void addEtternavnToQuery(String etternavn, BoolQueryBuilder boolQueryBuilder) {
@@ -308,7 +308,7 @@ public class EsSokHttpService implements EsSokService {
                 .forEach(y -> addYrkeJobbonskerQuery(y, yrkeJobbonskerBoolQueryBuilder));
 
         boolQueryBuilder.must(yrkeJobbonskerBoolQueryBuilder);
-        
+
         jobbonsker.stream().filter(StringUtils::isNotBlank).forEach(
                 y -> addStillingsTitlerQuery(y, boolQueryBuilder, false));
         LOGGER.debug("ADDING onsket stilling");
@@ -425,6 +425,11 @@ public class EsSokHttpService implements EsSokService {
         String regex ="";
 
         if(geografiKoder.length == 1){
+
+            if(geografiKoder[0].length()<4){
+                return;
+            }
+
             if (geografiKoder[0].startsWith("NO0")) {
                 String fylkeskode = geografiKoder[0].substring(3,4);
                 regex += fylkeskode + ".*";
@@ -433,7 +438,6 @@ public class EsSokHttpService implements EsSokService {
                 String fylkeskode = geografiKoder[0].substring(2,4);
                 regex += fylkeskode + ".*";
             }
-
         }
         else{
 
@@ -562,7 +566,7 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private Sokeresultat toSokeresultat(SearchResponse searchResponse) {
-        LOGGER.debug("Totalt antall treff: " + searchResponse.getHits().getTotalHits());        
+        LOGGER.debug("Totalt antall treff: " + searchResponse.getHits().getTotalHits());
         List<EsCv> cver = toCvList(searchResponse);
         List<Aggregering> aggregeringer = toAggregeringList(searchResponse);
         return new Sokeresultat(searchResponse.getHits().getTotalHits(), cver, aggregeringer);

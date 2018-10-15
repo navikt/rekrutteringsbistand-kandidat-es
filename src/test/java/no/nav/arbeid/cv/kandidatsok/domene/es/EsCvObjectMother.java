@@ -1460,4 +1460,193 @@ public class EsCvObjectMother {
     }
 
 
+    public static EsCv giveMeEsCv6() {
+
+
+        EsUtdanning utdanning2 = new EsUtdanning(d("1988-08-20"), d("1989-06-20"),
+                "UiO", "838838", "Sosialantropologiske fag", "Sosialantropologi gr. fag");
+
+
+        ArrayList<EsUtdanning> utdanningsListe = new ArrayList<>();
+        utdanningsListe.add(utdanning2);
+
+        EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(d("2000-01-01"), d("2000-01-10"),
+                "Stentransport, Kragerø", "8341.01", "",
+                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false);
+
+        EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(d("2003-01-01"), d("2003-02-01"),
+                "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
+                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false);
+
+        EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(d("2003-04-01"), d("2003-05-01"),
+                "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
+                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false);
+
+        EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(d("2005-08-01"), d("2005-09-01"),
+                "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", "Industrimekaniker",
+                "YRKE_ORGNR", "YRKE_NACEKODE", false);
+
+        EsYrkeserfaring yrkeserfaring5 = new EsYrkeserfaring(d("2016-06-01"), d("2016-07-01"),
+                "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", "Sjåfør kl. 2", "YRKE_ORGNR",
+                "YRKE_NACEKODE", false);
+
+        EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(d("2017-10-01"), d("2017-12-01"),
+                "NLI  Grenland", "7233.03", "Industrimekaniker", "Industrimekaniker", "YRKE_ORGNR",
+                "YRKE_NACEKODE", false);
+
+        ArrayList<EsYrkeserfaring> yrkeserfaringsListe = new ArrayList<>();
+        yrkeserfaringsListe.add(yrkeserfaring1);
+        yrkeserfaringsListe.add(yrkeserfaring2);
+        yrkeserfaringsListe.add(yrkeserfaring3);
+        yrkeserfaringsListe.add(yrkeserfaring4);
+        yrkeserfaringsListe.add(yrkeserfaring5);
+        yrkeserfaringsListe.add(yrkeserfaring6);
+
+        EsKompetanse kompetanse1 = new EsKompetanse(d("2016-03-14"), "3020813",
+                "Maskin- og kranførerarbeid", null, null);
+
+        EsKompetanse kompetanse2 = new EsKompetanse(d("2016-03-14"), "3281301",
+                "Mekanisk arbeid generelt", "Mekanisk arbeid generelt", null);
+
+        EsKompetanse kompetanse3 = new EsKompetanse(d("2016-03-14"), "506",
+                "Landtransport generelt", "Landtransport generelt", null);
+
+        EsKompetanse kompetanse4 = new EsKompetanse(d("2016-03-14"), "212", "Industri (bransje)",
+                "Mekanisk industri (bransje)", null);
+
+        ArrayList<EsKompetanse> kompetanseList = new ArrayList<>();
+        kompetanseList.add(kompetanse1);
+        kompetanseList.add(kompetanse2);
+        kompetanseList.add(kompetanse3);
+        kompetanseList.add(kompetanse4);
+
+        EsSertifikat sertifikat1 = new EsSertifikat(d("1994-08-01"), null, "V1.6050",
+                "Førerkort: Kl. A (tung motorsykkel)", null, "");
+
+        EsSertifikat sertifikat2 = new EsSertifikat(d("1991-01-01"), null, "V1.6070",
+                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
+
+        EsSertifikat sertifikat3 = new EsSertifikat(d("1996-02-01"), d("2020-12-01"), "V1.6110",
+                "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 12 tonn",
+                "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 12 tonn", "");
+        EsSertifikat sertifikat4 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
+                "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
+                "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn", "");
+        EsSertifikat sertifikat5 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
+                "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
+                "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn", "");
+
+        ArrayList<EsSertifikat> sertifikatListe = new ArrayList<>();
+        sertifikatListe.add(sertifikat1);
+        sertifikatListe.add(sertifikat2);
+        sertifikatListe.add(sertifikat3);
+        sertifikatListe.add(sertifikat4);
+        sertifikatListe.add(sertifikat5);
+
+        EsForerkort forerkort1 = new EsForerkort(d("1994-08-01"), null, "V1.6050",
+                "Førerkort: Kl. A (tung motorsykkel)", null, "");
+
+        EsForerkort forerkort2 = new EsForerkort(d("1991-01-01"), null, "V1.6070",
+                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
+
+        EsForerkort forerkort3 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6110",
+                "Førerkort: Kl. CE (lastebil og tilhenger)", null, "");
+
+        EsForerkort forerkort4 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6145",
+                "Førerkort: Kl. DE (buss og tilhenger)", null, "");
+
+        ArrayList<EsForerkort> forerkortListe = new ArrayList<>();
+        forerkortListe.add(forerkort1);
+        forerkortListe.add(forerkort2);
+        forerkortListe.add(forerkort3);
+        forerkortListe.add(forerkort4);
+
+
+        EsSprak sprak1 =
+                new EsSprak(d("2012-12-01"), "78874", "Norsk(skriftlig)", "Norwegian", "Morsmål");
+
+        EsSprak sprak2 =
+                new EsSprak(d("2012-12-01"), "78874", "Norsk(muntlig)", "Norwegian", "Morsmål");
+
+        ArrayList<EsSprak> sprakListe = new ArrayList<>();
+        sprakListe.add(sprak1);
+        sprakListe.add(sprak2);
+
+        EsKurs kurs1 = new EsKurs(d("2012-12-01"), null, "Akseloppretting", "Easy-Laser", null,
+                null, null);
+
+        EsKurs kurs2 = new EsKurs(d("2015-06-01"), null, "Varme arbeider Sertifikat",
+                "Norsk brannvernforening", "ÅR", 5, null);
+
+        EsKurs kurs3 = new EsKurs(d("2016-02-01"), null, "Flensarbeid for Norsk Olje og Gass",
+                "Torqlite Europa a/s", "ÅR", 4, null);
+
+
+        ArrayList<EsKurs> kursListe = new ArrayList<>();
+        kursListe.add(kurs1);
+        kursListe.add(kurs2);
+        kursListe.add(kurs3);
+
+        EsVerv verv =
+                new EsVerv(d("2000-01-15"), d("2001-01-15"), "Verv organisasjon", "verv tittel");
+
+        ArrayList<EsVerv> vervListe = new ArrayList<>();
+        vervListe.add(verv);
+
+        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Hamar", "NO10.1010");
+
+        EsGeografiJobbonsker geografiJobbonsker1 =
+                new EsGeografiJobbonsker("Lillehammer", "NO10.1011");
+
+        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Hedmark", "NO10");
+
+        ArrayList<EsGeografiJobbonsker> geografiJobbonskerListe = new ArrayList<>();
+        geografiJobbonskerListe.add(geografiJobbonsker);
+        geografiJobbonskerListe.add(geografiJobbonsker1);
+        geografiJobbonskerListe.add(geografiJobbonsker2);
+
+        EsYrkeJobbonsker yrkeJobbonsker = new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode",
+                "Yrke jobb ønske Styrk beskrivelse", true);
+
+        ArrayList<EsYrkeJobbonsker> yrkeJobbonskerListe = new ArrayList<>();
+        yrkeJobbonskerListe.add(yrkeJobbonsker);
+
+        EsHeltidDeltidJobbonsker heltidDeltidJobbonsker =
+                new EsHeltidDeltidJobbonsker("HeltidDeltidKode", "HeltidDeltidKode Tekst");
+
+        ArrayList<EsHeltidDeltidJobbonsker> heltidDeltidJobbonskerListe = new ArrayList<>();
+        heltidDeltidJobbonskerListe.add(heltidDeltidJobbonsker);
+
+        EsAnsettelsesforholdJobbonsker ansettelsesforholdJobbonsker =
+                new EsAnsettelsesforholdJobbonsker("Ansettelsesforhold Kode",
+                        "Ansettelsesforhold Kode tekst");
+
+        ArrayList<EsAnsettelsesforholdJobbonsker> ansettelsesforholdJobbonskerListe =
+                new ArrayList<>();
+        ansettelsesforholdJobbonskerListe.add(ansettelsesforholdJobbonsker);
+
+        EsArbeidstidsordningJobbonsker arbeidstidsordningJobbonsker =
+                new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
+                        "Arbeidstidsordning Kode Tekst");
+
+        ArrayList<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonskerListe =
+                new ArrayList<>();
+        arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
+
+        EsCv esCv = new EsCv("01016034215", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
+                "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", 6L, "S229934", // Kan ik
+                "", "N", d("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
+                new Date(), 301);
+        esCv.addUtdanning(utdanningsListe);
+        esCv.addYrkeserfaring(yrkeserfaringsListe);
+        esCv.addKompetanse(kompetanseList);
+        esCv.addSertifikat(sertifikatListe);
+        esCv.addForerkort(forerkortListe);
+        esCv.addSprak(sprakListe);
+        esCv.addKurs(kursListe);
+        esCv.addVerv(vervListe);
+        esCv.addGeografiJobbonske(geografiJobbonskerListe);
+        esCv.addYrkeJobbonske(yrkeJobbonskerListe);
+        return esCv;
+    }
 }

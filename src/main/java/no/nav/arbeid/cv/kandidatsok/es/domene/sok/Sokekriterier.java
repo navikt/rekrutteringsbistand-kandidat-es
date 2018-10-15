@@ -21,6 +21,8 @@ public class Sokekriterier {
   private String etternavn;
   private Boolean maaBoInnenforGeografi;
   private List<String> forerkort;
+  private int antallResultater;
+  private int fraIndex;
 
   private Sokekriterier() {};
 
@@ -84,6 +86,14 @@ public class Sokekriterier {
     return forerkort;
   }
 
+  public int fraIndex() {
+    return this.fraIndex;
+  }
+
+  public int antallResultater() {
+    return this.antallResultater;
+  }
+
   public static class Builder {
     private String fritekst;
     private List<String> yrkeJobbonsker;
@@ -99,6 +109,8 @@ public class Sokekriterier {
     private List<String> styrkKoder;
     private List<String> nusKoder;
     private String etternavn;
+    private int fra = 0;
+    private int antallResultater = 100;
     private boolean maaBoInnenforGeografi;
     private List<String> forerkort;
 
@@ -140,6 +152,9 @@ public class Sokekriterier {
       s.styrkKoder = tmpStyrkkoder.isEmpty() ? null : Collections.unmodifiableList(tmpStyrkkoder);
 
       s.maaBoInnenforGeografi = maaBoInnenforGeografi;
+
+      s.fraIndex = fra;
+      s.antallResultater = antallResultater;
 
       return s;
     }
@@ -211,6 +226,16 @@ public class Sokekriterier {
 
     public Builder etternavn(String etternavn) {
       this.etternavn = etternavn;
+      return this;
+    }
+
+    public Builder fraIndex(int fra) {
+      this.fra = fra;
+      return this;
+    }
+
+    public Builder antallResultater(int antall) {
+      this.antallResultater = antall;
       return this;
     }
 
