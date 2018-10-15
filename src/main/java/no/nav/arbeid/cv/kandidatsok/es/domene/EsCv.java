@@ -245,9 +245,6 @@ public class EsCv {
     public void addForerkort(Collection<EsForerkort> forerkortListe) {
         if (forerkortListe != null) {
             this.forerkort.addAll(forerkortListe);
-            this.addSamletKompetanse(forerkortListe.stream()
-                    .map(k -> new EsSamletKompetanse(k.getForerkortKodeKlasse()))
-                    .collect(Collectors.toList()));
         }
     }
 

@@ -20,6 +20,7 @@ public class Sokekriterier {
   private List<String> sprak;
   private String etternavn;
   private Boolean maaBoInnenforGeografi;
+  private List<String> forerkort;
   private int antallResultater;
   private int fraIndex;
 
@@ -81,6 +82,9 @@ public class Sokekriterier {
     return maaBoInnenforGeografi;
   }
 
+  public List<String> forerkort() {
+    return forerkort;
+  }
 
   public int fraIndex() {
     return this.fraIndex;
@@ -108,6 +112,8 @@ public class Sokekriterier {
     private int fra = 0;
     private int antallResultater = 100;
     private boolean maaBoInnenforGeografi;
+    private List<String> forerkort;
+
 
     public Sokekriterier bygg() {
       Sokekriterier s = new Sokekriterier();
@@ -129,6 +135,8 @@ public class Sokekriterier {
           : Collections.unmodifiableList(new ArrayList<>(utdanninger));
       s.sprak = sprak == null ? Collections.emptyList()
           : Collections.unmodifiableList(new ArrayList<>(sprak));
+      s.forerkort = forerkort == null ? Collections.emptyList()
+              : Collections.unmodifiableList(new ArrayList<>(forerkort));
 
       List<String> tmpNuskoder = nusKoder == null ? new ArrayList<>() : new ArrayList<>(nusKoder);
       if (StringUtils.isNotBlank(nusKode)) {
@@ -231,10 +239,13 @@ public class Sokekriterier {
       return this;
     }
 
-
-
     public Builder maaBoInnenforGeografi(boolean maaBoInnenforGeografi) {
       this.maaBoInnenforGeografi = maaBoInnenforGeografi;
+      return this;
+    }
+
+    public Builder forerkort(List<String> forerkort) {
+      this.forerkort = forerkort;
       return this;
     }
   }

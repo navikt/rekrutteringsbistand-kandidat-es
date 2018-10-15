@@ -174,6 +174,10 @@ public class EsSokHttpService implements EsSokService {
             addEtternavnToQuery(sk.etternavn(), queryBuilder);
         }
 
+        if (isNotEmpty(sk.forerkort())) {
+            addForerkortToQuery(sk.forerkort(), queryBuilder);
+        }
+
         return toSokeresultat(esExec(() -> search(queryBuilder, sk.fraIndex(), sk.antallResultater())));
     }
 
@@ -304,7 +308,7 @@ public class EsSokHttpService implements EsSokService {
                 .forEach(y -> addYrkeJobbonskerQuery(y, yrkeJobbonskerBoolQueryBuilder));
 
         boolQueryBuilder.must(yrkeJobbonskerBoolQueryBuilder);
-        
+
         jobbonsker.stream().filter(StringUtils::isNotBlank).forEach(
                 y -> addStillingsTitlerQuery(y, boolQueryBuilder, false));
         LOGGER.debug("ADDING onsket stilling");
@@ -315,6 +319,12 @@ public class EsSokHttpService implements EsSokService {
                 QueryBuilders.multiMatchQuery(fritekst, "fritekst");
         boolQueryBuilder.must(fritekstQueryBuilder);
         LOGGER.debug("ADDING fritekst");
+    }
+
+    private void addForerkortToQuery(List<String> forerkort, BoolQueryBuilder boolQueryBuilder) {
+        forerkort.stream()
+                .filter(StringUtils::isNotBlank)
+                .forEach(s -> addForerkortQuery(s, boolQueryBuilder));
     }
 
     private boolean sokUtenKriterier(Sokekriterier sk) {
@@ -328,7 +338,8 @@ public class EsSokHttpService implements EsSokService {
                 && (sk.geografiList() == null || sk.geografiList().isEmpty())
                 && (sk.styrkKoder() == null || sk.styrkKoder().isEmpty())
                 && (sk.nusKoder() == null || sk.nusKoder().isEmpty())
-                && (sk.sprak() == null || sk.sprak().isEmpty());
+                && (sk.sprak() == null || sk.sprak().isEmpty())
+                && (sk.forerkort() == null || sk.forerkort().isEmpty());
     }
 
     private boolean utdanningsNivaIsPresent(Sokekriterier sk) {
@@ -399,6 +410,14 @@ public class EsSokHttpService implements EsSokService {
                 QueryBuilders.regexpQuery("geografiJobbonsker.geografiKode", regex), ScoreMode.Total);
         boolQueryBuilder.must(geografiQueryBuilder);
         LOGGER.debug("ADDING geografiJobbonske");
+    }
+
+    private void addForerkortQuery(String forerkort, BoolQueryBuilder boolQueryBuilder) {
+        NestedQueryBuilder forerkortQueryBuilder = QueryBuilders.nestedQuery("forerkort",
+                QueryBuilders.termQuery("forerkort.forerkortKodeKlasse", forerkort),
+                ScoreMode.Total);
+        boolQueryBuilder.must(forerkortQueryBuilder);
+        LOGGER.debug("ADDING førerkort");
     }
 
     private void addKommunenummerQuery(String geografi, BoolQueryBuilder boolQueryBuilder) {
@@ -547,7 +566,7 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private Sokeresultat toSokeresultat(SearchResponse searchResponse) {
-        LOGGER.debug("Totalt antall treff: " + searchResponse.getHits().getTotalHits());        
+        LOGGER.debug("Totalt antall treff: " + searchResponse.getHits().getTotalHits());
         List<EsCv> cver = toCvList(searchResponse);
         List<Aggregering> aggregeringer = toAggregeringList(searchResponse);
         return new Sokeresultat(searchResponse.getHits().getTotalHits(), cver, aggregeringer);
