@@ -18,9 +18,7 @@ import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms.Bucket;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.search.sort.FieldSortBuilder;
-import org.elasticsearch.search.sort.ScoreSortBuilder;
-import org.elasticsearch.search.sort.SortOrder;
+import org.elasticsearch.search.sort.*;
 import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilders;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
@@ -121,21 +119,22 @@ public class EsSokHttpService implements EsSokService {
 
         if (sokUtenKriterier(sk)) {
             LOGGER.debug("MATCH ALL!");
-            return toSokeresultat(esExec(() -> search(QueryBuilders.matchAllQuery(), sk.fraIndex(), sk.antallResultater())));
+            return toSokeresultat(esExec(() -> search(QueryBuilders.matchAllQuery(), sk.fraIndex(), sk.antallResultater(), null)));
         }
 
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+        BoolQueryBuilder sortQueryBuilder = QueryBuilders.boolQuery();
 
         if (StringUtils.isNotBlank(sk.fritekst())) {
             addFritekstToQuery(sk.fritekst(), queryBuilder);
         }
 
         if (isNotEmpty(sk.yrkeJobbonsker())) {
-            addJobbonskerToQuery(sk.yrkeJobbonsker(), queryBuilder);
+            addJobbonskerToQuery(sk.yrkeJobbonsker(), queryBuilder, sortQueryBuilder);
         }
 
         if (isNotEmpty(sk.stillingstitler())) {
-            addStillingstitlerToQuery(sk.stillingstitler(), queryBuilder);
+            addStillingstitlerToQuery(sk.stillingstitler(), queryBuilder, sortQueryBuilder);
         }
 
         if (isNotEmpty(sk.kompetanser())) {
@@ -178,7 +177,7 @@ public class EsSokHttpService implements EsSokService {
             addForerkortToQuery(sk.forerkort(), queryBuilder);
         }
 
-        return toSokeresultat(esExec(() -> search(queryBuilder, sk.fraIndex(), sk.antallResultater())));
+        return toSokeresultat(esExec(() -> search(queryBuilder, sk.fraIndex(), sk.antallResultater(), sortQueryBuilder)));
     }
 
     private void addEtternavnToQuery(String etternavn, BoolQueryBuilder boolQueryBuilder) {
@@ -294,13 +293,13 @@ public class EsSokHttpService implements EsSokService {
                 .forEach(k -> addKompetanseQuery(k, boolQueryBuilder));
     }
 
-    private void addStillingstitlerToQuery(List<String> stillingstitler, BoolQueryBuilder boolQueryBuilder) {
+    private void addStillingstitlerToQuery(List<String> stillingstitler, BoolQueryBuilder boolQueryBuilder, BoolQueryBuilder sortQueryBuilder) {
         stillingstitler.stream()
                 .filter(StringUtils::isNotBlank)
-                .forEach(s -> addStillingsTitlerQuery(s, boolQueryBuilder, true));
+                .forEach(s -> addStillingsTitlerQuery(s, boolQueryBuilder, true, sortQueryBuilder));
     }
 
-    private void addJobbonskerToQuery(List<String> jobbonsker, BoolQueryBuilder boolQueryBuilder) {
+    private void addJobbonskerToQuery(List<String> jobbonsker, BoolQueryBuilder boolQueryBuilder, BoolQueryBuilder sortQueryBuilder) {
         BoolQueryBuilder yrkeJobbonskerBoolQueryBuilder = QueryBuilders.boolQuery();
 
         jobbonsker.stream()
@@ -310,7 +309,7 @@ public class EsSokHttpService implements EsSokService {
         boolQueryBuilder.must(yrkeJobbonskerBoolQueryBuilder);
 
         jobbonsker.stream().filter(StringUtils::isNotBlank).forEach(
-                y -> addStillingsTitlerQuery(y, boolQueryBuilder, false));
+                y -> addStillingsTitlerQuery(y, boolQueryBuilder, false, sortQueryBuilder));
         LOGGER.debug("ADDING onsket stilling");
     }
 
@@ -360,7 +359,7 @@ public class EsSokHttpService implements EsSokService {
         boolQueryBuilder.should(yrkeJobbonskeQueryBuilder);
     }
 
-    private void addStillingsTitlerQuery(String stillingstittel, BoolQueryBuilder boolQueryBuilder, boolean must) {
+    private void addStillingsTitlerQuery(String stillingstittel, BoolQueryBuilder boolQueryBuilder, boolean must, BoolQueryBuilder sortBoolQueryBuilder) {
         NestedQueryBuilder yrkeserfaringQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
                 QueryBuilders.matchQuery("yrkeserfaring.styrkKodeStillingstittel", stillingstittel),
                 ScoreMode.Total);
@@ -370,6 +369,10 @@ public class EsSokHttpService implements EsSokService {
             boolQueryBuilder.should(yrkeserfaringQueryBuilder);
         }
         LOGGER.debug("ADDING yrkeserfaring");
+
+        MatchQueryBuilder matchQueryBuilder =
+                QueryBuilders.matchQuery("yrkeserfaring.styrkKodeStillingstittel", stillingstittel);
+        sortBoolQueryBuilder.should(matchQueryBuilder);
     }
 
     private void addUtdanningerQuery(String utdanning, BoolQueryBuilder boolQueryBuilder) {
@@ -610,15 +613,24 @@ public class EsSokHttpService implements EsSokService {
                 .getBuckets();
     }
 
-    private SearchResponse search(AbstractQueryBuilder<?> queryBuilder, int from, int size)
+    private SearchResponse search(AbstractQueryBuilder<?> queryBuilder, int from, int size, BoolQueryBuilder sortQueryBuilder)
             throws IOException {
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(queryBuilder);
         searchSourceBuilder.from(from);
         searchSourceBuilder.size(size);
-        // Dette er defaulten, så egentlig unødvendig å sette:
-        searchSourceBuilder.sort(new ScoreSortBuilder().order(SortOrder.DESC));
-        searchSourceBuilder.sort(new FieldSortBuilder("_uid").order(SortOrder.ASC));
+
+        // Sortering på nyeste relevante arbeidserfaring
+        if (sortQueryBuilder != null && sortQueryBuilder.hasClauses()) {
+            sortQueryBuilder.minimumShouldMatch(1);
+            FieldSortBuilder fieldSortBuilder = new FieldSortBuilder("yrkeserfaring.tilDato")
+                    .setNestedSort(new NestedSortBuilder("yrkeserfaring")
+                            .setFilter(sortQueryBuilder))
+                    .sortMode(SortMode.MAX)
+                    .order(SortOrder.DESC);
+
+            searchSourceBuilder.sort(fieldSortBuilder);
+        }
 
         TermsAggregationBuilder yrkesAggregation3Siffer =
                 AggregationBuilders.terms("nested").field("yrkeserfaring.styrkKode3Siffer");
@@ -743,7 +755,7 @@ public class EsSokHttpService implements EsSokService {
 
     @Override
     public Sokeresultat hentKandidater(List<String> kandidatnummer) throws IOException {
-        SearchResponse searchResponse = esExec(() -> search(QueryBuilders.termsQuery("arenaKandidatnr", kandidatnummer), 0, 100));
+        SearchResponse searchResponse = esExec(() -> search(QueryBuilders.termsQuery("arenaKandidatnr", kandidatnummer), 0, 100, null));
         Sokeresultat usortertSokeresultat = toSokeresultat(searchResponse);
         List<EsCv> sorterteCver = sorterSokeresultaterBasertPaaRequestRekkefolge(usortertSokeresultat.getCver(), kandidatnummer);
         return new Sokeresultat(usortertSokeresultat.getTotaltAntallTreff(), sorterteCver, usortertSokeresultat.getAggregeringer());
