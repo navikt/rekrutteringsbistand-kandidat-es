@@ -549,11 +549,13 @@ public class EsCvObjectMother {
 
         EsYrkeJobbonsker yrkeJobbonsker2 =
                 new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Bonde", true);
+        EsYrkeJobbonsker yrkeJobbonsker3 = new EsYrkeJobbonsker("1010.01", "Butikkmedarbeider", true);
 
         ArrayList<EsYrkeJobbonsker> yrkeJobbonskerListe = new ArrayList<>();
         yrkeJobbonskerListe.add(yrkeJobbonsker);
         yrkeJobbonskerListe.add(yrkeJobbonsker1);
         yrkeJobbonskerListe.add(yrkeJobbonsker2);
+        yrkeJobbonskerListe.add(yrkeJobbonsker3);
 
         EsOmfangJobbonsker EsHeltidDeltidJobbonsker =
                 new EsOmfangJobbonsker("HeltidDeltidKode", "HeltidDeltidKode Tekst");
@@ -979,7 +981,7 @@ public class EsCvObjectMother {
                 "Lang transport A.S.", "8332.03", "Lastebil- og trailersjåfør", "Sjåfør kl. 3",
                 "YRKE_ORGNR", "YRKE_NACEKODE", false);
 
-        EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(d("2017-10-01"), d("2017-11-01"),
+        EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(d("2017-10-01"), d(null),
                 "Mekken mekk", "7233.03", "Industrimekaniker", "Industrimekaniker", "YRKE_ORGNR",
                 "YRKE_NACEKODE", false);
 

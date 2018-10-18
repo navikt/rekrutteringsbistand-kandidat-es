@@ -591,12 +591,15 @@ public class IndexCvTest {
         EsCv cv1 = cver.get(0);
         EsCv cv2 = cver.get(1);
         EsCv cv3 = cver.get(2);
+        EsCv cv4 = cver.get(3);
         assertThat(cv1)
                 .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv5()));
         assertThat(cv2)
                 .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv3()));
         assertThat(cv3)
                 .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv4()));
+        assertThat(cv4)
+                .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
     }
 
     @Test

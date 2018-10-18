@@ -15,7 +15,7 @@ public class EsYrkeserfaring {
   @ElasticDateField
   private Date fraDato;
 
-  @ElasticDateField
+  @ElasticDateField(nullValue = "2099-12-31")
   private Date tilDato;
 
   @ElasticTextField
