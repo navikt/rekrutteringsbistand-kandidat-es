@@ -603,6 +603,25 @@ public class IndexCvTest {
     }
 
     @Test
+    public void sokPaTruckoererbevisT1SkalGiRiktigResultat() throws IOException {
+        List<String> typeaheadResultat = sokClient.typeAheadKompetanse("Truckførerbevis T1 Lavt");
+
+        String typeaheadElement = typeaheadResultat.get(0);
+        assertThat(typeaheadElement)
+                .isEqualTo("Truckførerbevis T1 Lavtløftende plukktruck, palletruck m/perm. førerplass");
+
+        Sokeresultat sokeresultat = sokClient.sok(Sokekriterier.med()
+                .kompetanser(Collections.singletonList(typeaheadElement)).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        assertThat(cver.size()).isEqualTo(1);
+        EsCv cv1 = cver.get(0);
+        assertThat(cv1)
+                .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv3()));
+    }
+
+
+    @Test
     public void skalKunneIndeksereOppCvUtenKompetanser() throws IOException {
         indexerClient.index(EsCvObjectMother.giveMeCvUtenKompetanse());
     }

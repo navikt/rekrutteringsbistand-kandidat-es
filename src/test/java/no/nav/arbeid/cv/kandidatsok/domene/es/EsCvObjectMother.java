@@ -660,11 +660,15 @@ public class EsCvObjectMother {
         EsSertifikat EsSertifikat3 = new EsSertifikat(d("1995-01-01"), null, "A1.6820",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn", "");
+        EsSertifikat EsSertifikat4 = new EsSertifikat(d("1999-01-01"), null, "L2.7000",
+                "Truckførerbevis T1 Lavtløftende plukktruck, palletruck m/perm. førerplass",
+                "Truckførerbevis T1 Lavtløftende plukktruck, palletruck m/perm. førerplass", "");
 
-        ArrayList<EsSertifikat> EsSertifikatListe = new ArrayList<>();
-        EsSertifikatListe.add(EsSertifikat1);
-        EsSertifikatListe.add(EsSertifikat2);
-        EsSertifikatListe.add(EsSertifikat3);
+        ArrayList<EsSertifikat> esSertifikatListe = new ArrayList<>();
+        esSertifikatListe.add(EsSertifikat1);
+        esSertifikatListe.add(EsSertifikat2);
+        esSertifikatListe.add(EsSertifikat3);
+        esSertifikatListe.add(EsSertifikat4);
 
         EsForerkort forerkort1 = new EsForerkort(d("1994-08-01"), null, "V1.6050",
                 "Førerkort: Kl. A (tung motorsykkel)", null, "");
@@ -765,7 +769,7 @@ public class EsCvObjectMother {
         esCv.addUtdanning(utdanningListe);
         esCv.addYrkeserfaring(yrkeserfaringListe);
         esCv.addKompetanse(kompetanseListe);
-        esCv.addSertifikat(EsSertifikatListe);
+        esCv.addSertifikat(esSertifikatListe);
         esCv.addForerkort(forerkortListe);
         esCv.addSprak(sprakListe);
         esCv.addKurs(kursListe);
