@@ -12,9 +12,9 @@ import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsSamletKompetanse {
 
-  @ElasticTextField(analyzer = "norwegian")
-//  @ElasticKeywordField
-  @ElasticCompletionField(maxInputLength = @IntValue(80))
+//  @ElasticTextField(analyzer = "norwegian")
+  @ElasticKeywordField
+  @ElasticCompletionField(maxInputLength = @IntValue(100))
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private String samletKompetanseTekst;
 
