@@ -355,13 +355,13 @@ public class EsSokHttpService implements EsSokService {
 
     private void addYrkeJobbonskerQuery(String yrkeJobbonske, BoolQueryBuilder boolQueryBuilder) {
         NestedQueryBuilder yrkeJobbonskeQueryBuilder = QueryBuilders.nestedQuery("yrkeJobbonsker",
-                QueryBuilders.matchQuery("yrkeJobbonsker.styrkBeskrivelse", yrkeJobbonske), ScoreMode.Total);
+                QueryBuilders.matchQuery("yrkeJobbonsker.styrkBeskrivelse", yrkeJobbonske).operator(Operator.AND), ScoreMode.Total);
         boolQueryBuilder.should(yrkeJobbonskeQueryBuilder);
     }
 
     private void addStillingsTitlerQuery(String stillingstittel, BoolQueryBuilder boolQueryBuilder, boolean must, BoolQueryBuilder sortBoolQueryBuilder) {
         NestedQueryBuilder yrkeserfaringQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
-                QueryBuilders.matchQuery("yrkeserfaring.styrkKodeStillingstittel", stillingstittel),
+                QueryBuilders.matchQuery("yrkeserfaring.styrkKodeStillingstittel", stillingstittel).operator(Operator.AND),
                 ScoreMode.Total);
         if( must) {
             boolQueryBuilder.must(yrkeserfaringQueryBuilder);
@@ -377,14 +377,14 @@ public class EsSokHttpService implements EsSokService {
 
     private void addUtdanningerQuery(String utdanning, BoolQueryBuilder boolQueryBuilder) {
         NestedQueryBuilder utdanningQueryBuilder = QueryBuilders.nestedQuery("utdanning",
-                QueryBuilders.matchQuery("utdanning.nusKodeGrad", utdanning), ScoreMode.Total);
+                QueryBuilders.matchQuery("utdanning.nusKodeGrad", utdanning).operator(Operator.AND), ScoreMode.Total);
         boolQueryBuilder.must(utdanningQueryBuilder);
         LOGGER.debug("ADDING utdanning");
     }
 
     private void addKompetanseQuery(String kompetanse, BoolQueryBuilder boolQueryBuilder) {
         NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("samletKompetanse",
-                QueryBuilders.matchQuery("samletKompetanse.samletKompetanseTekst", kompetanse),
+                QueryBuilders.matchQuery("samletKompetanse.samletKompetanseTekst", kompetanse).operator(Operator.AND),
                 ScoreMode.Total);
         boolQueryBuilder.must(kompetanseQueryBuilder);
         LOGGER.debug("ADDING kompetanse");
@@ -392,7 +392,7 @@ public class EsSokHttpService implements EsSokService {
 
     private void addSprakQuery(String sprak, BoolQueryBuilder boolQueryBuilder) {
         NestedQueryBuilder sprakQueryBuilder = QueryBuilders.nestedQuery("sprak",
-                QueryBuilders.matchQuery("sprak.sprakKodeTekst", sprak),
+                QueryBuilders.matchQuery("sprak.sprakKodeTekst", sprak).operator(Operator.AND),
                 ScoreMode.Total);
         boolQueryBuilder.must(sprakQueryBuilder);
         LOGGER.debug("ADDING sprak");

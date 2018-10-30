@@ -71,7 +71,7 @@ public class EsYrkeserfaring {
     this.yrkeserfaringManeder = yrkeserfaringManeder;
     this.utelukketForFremtiden = utelukketForFremtiden;
   }
-  
+
   public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
       String styrkKodeStillingstittel, String alternativStillingstittel, String organisasjonsnummer,
       String naceKode, Boolean utelukketForFremtiden) {
@@ -90,7 +90,7 @@ public class EsYrkeserfaring {
     this.yrkeserfaringManeder = toYrkeserfaringManeder(fraDato, tilDato);
     this.utelukketForFremtiden = utelukketForFremtiden;
   }
-  
+
   private static int toYrkeserfaringManeder(Date fraDato, Date tilDato) {
     // Should not be possible, but will keep the check just in case
     if (fraDato == null) {
@@ -155,7 +155,7 @@ public class EsYrkeserfaring {
   public int getYrkeserfaringManeder() {
     return yrkeserfaringManeder;
   }
-  
+
   public Boolean getUtelukketForFremtiden() {
     return utelukketForFremtiden;
   }

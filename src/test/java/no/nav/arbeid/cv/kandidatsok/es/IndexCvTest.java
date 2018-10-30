@@ -54,7 +54,7 @@ public class IndexCvTest {
 
     // Kjører "docker-compose up" manuelt istedenfor denne ClassRule:
 
-    @ClassRule
+    //@ClassRule
     public static DockerComposeRule docker =
             DockerComposeRule.builder().file("src/test/resources/docker-compose-kun-es.yml")
                     .machine(DockerMachine.localMachine()
@@ -79,10 +79,9 @@ public class IndexCvTest {
     static class TestConfig {
 
         @Bean
-        @Autowired
-        public RestHighLevelClient restHighLevelClient(@Value("${ES_PORT}") Integer port) {
+        public RestHighLevelClient restHighLevelClient() {
             return new RestHighLevelClient(
-                    RestClient.builder(new HttpHost("localhost", port, "http")));
+                    RestClient.builder(new HttpHost("localhost", 9250, "http")));
         }
 
         @Bean
@@ -118,10 +117,10 @@ public class IndexCvTest {
         indexerClient.index(EsCvObjectMother.giveMeEsCv6());
     }
 
-    @After
-    public void after() throws IOException {
-        indexerClient.deleteIndex();
-    }
+//    @After
+//    public void after() throws IOException {
+//        indexerClient.deleteIndex();
+//    }
 
     @Test
     public void test() throws IOException {
@@ -604,11 +603,11 @@ public class IndexCvTest {
 
     @Test
     public void sokPaTruckoererbevisT1SkalGiRiktigResultat() throws IOException {
-        List<String> typeaheadResultat = sokClient.typeAheadKompetanse("Truckførerbevis T1 Lavt");
+        List<String> typeaheadResultat = sokClient.typeAheadKompetanse("Truckførerbevis T3 Svin");
 
         String typeaheadElement = typeaheadResultat.get(0);
         assertThat(typeaheadElement)
-                .isEqualTo("Truckførerbevis T1 Lavtløftende plukktruck, palletruck m/perm. førerplass");
+                .isEqualTo("Truckførerbevis T3 Svinggaffel og høytløftende plukktruck, sidestablende og førerløftende truck");
 
         Sokeresultat sokeresultat = sokClient.sok(Sokekriterier.med()
                 .kompetanser(Collections.singletonList(typeaheadElement)).bygg());
@@ -696,5 +695,29 @@ public class IndexCvTest {
         //av totalt 6 i indexen
         Sokeresultat sokeresultat2 = sokClient.sok(Sokekriterier.med().fraIndex(2).antallResultater(5).bygg());
         assertThat(sokeresultat2.getCver()).hasSize(4);
+    }
+
+    @Test
+    public void sokPaaYrkeSkalIkkeGiTreffPaaLignendeYrker() throws IOException {
+        Sokeresultat sokeresultatKonsulentData = sokClient
+                .sok(Sokekriterier.med()
+                        .yrkeJobbonsker(Collections.singletonList("Konsulent (data)"))
+                        .bygg());
+
+        Sokeresultat sokeresultatKonsulentBank = sokClient
+                .sok(Sokekriterier.med()
+                        .yrkeJobbonsker(Collections.singletonList("Konsulent (bank)"))
+                        .bygg());
+
+
+        List<EsCv> cverKonsulentData = sokeresultatKonsulentData.getCver();
+        assertThat(cverKonsulentData.size()).isEqualTo(1);
+        List<EsCv> cverKonsulentBank = sokeresultatKonsulentBank.getCver();
+        assertThat(cverKonsulentBank.size()).isEqualTo(1);
+
+        EsCv cv1Data = cverKonsulentData.get(0);
+        EsCv cv1Bank = cverKonsulentBank.get(0);
+        assertThat(cv1Data).isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv3()));
+        assertThat(cv1Bank).isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv5()));
     }
 }

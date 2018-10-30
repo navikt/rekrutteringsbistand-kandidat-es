@@ -661,7 +661,7 @@ public class EsCvObjectMother {
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn", "");
         EsSertifikat EsSertifikat4 = new EsSertifikat(d("1999-01-01"), null, "L2.7000",
-                "Truckførerbevis T1 Lavtløftende plukktruck, palletruck m/perm. førerplass",
+                "Truckførerbevis T3 Svinggaffel og høytløftende plukktruck, sidestablende og førerløftende truck",
                 "Truckførerbevis T1 Lavtløftende plukktruck, palletruck m/perm. førerplass", "");
 
         ArrayList<EsSertifikat> esSertifikatListe = new ArrayList<>();
@@ -736,10 +736,14 @@ public class EsCvObjectMother {
         EsYrkeJobbonsker yrkeJobbonsker2 =
                 new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Tester", true);
 
+        EsYrkeJobbonsker yrkeJobbonsker3 =
+                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Konsulent (data)", true);
+
         ArrayList<EsYrkeJobbonsker> yrkeJobbonskerListe = new ArrayList<>();
         yrkeJobbonskerListe.add(yrkeJobbonsker);
         yrkeJobbonskerListe.add(yrkeJobbonsker1);
         yrkeJobbonskerListe.add(yrkeJobbonsker2);
+        yrkeJobbonskerListe.add(yrkeJobbonsker3);
 
         EsOmfangJobbonsker EsHeltidDeltidJobbonsker =
                 new EsOmfangJobbonsker("HeltidDeltidKode", "HeltidDeltidKode Tekst");
@@ -791,13 +795,13 @@ public class EsCvObjectMother {
                 "Jokah", "1010.01", "Butikkmedarbeider", "Butikkmedarbeider", "YRKE_ORGNR",
                 "YRKE_NACEKODE", false);
 
-        EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(d("2003-01-01"), d("2003-04-01"),
-                "Nærbutikkern", "1010.01", "Butikkmedarbeider(klesbutikk)",
-                "Butikkmedarbeider(klebutikk)", "YRKE_ORGNR", "YRKE_NACEKODE", false);
+        EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(d("2003-01-01"), d(null),
+                "Nærbutikkern", "1010.01", "Grafisk designer",
+                "Grafisk designer", "YRKE_ORGNR", "YRKE_NACEKODE", false);
 
         EsYrkeserfaring yrkeserfaring3 =
                 new EsYrkeserfaring(d("2003-04-01"), d("2003-07-01"), "Tv tv tv", "5684.05",
-                        "Nyhetspresentør", "Nyhetspresentør", "YRKE_ORGNR", "YRKE_NACEKODE", false);
+                        "Miljøarbeider (sosiale fagfelt)", "Nyhetspresentør", "YRKE_ORGNR", "YRKE_NACEKODE", false);
 
         EsYrkeserfaring yrkeserfaring4 =
                 new EsYrkeserfaring(d("2005-08-01"), d("2016-07-01"), "Vard Group,avd.Brevik",
@@ -809,7 +813,7 @@ public class EsCvObjectMother {
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(d("2017-10-01"), null,
                 "Dukketeateret Rena", "5124.46", "Skuespiller(dukketeater)",
-                "Skuespiller(dukketeater)", "YRKE_ORGNR", "YRKE_NACEKODE", false);
+                "Skuespiller (dukketeater)", "YRKE_ORGNR", "YRKE_NACEKODE", false);
 
         ArrayList<EsYrkeserfaring> yrkeserfaringListe = new ArrayList<>();
         yrkeserfaringListe.add(yrkeserfaring1);
@@ -914,10 +918,10 @@ public class EsCvObjectMother {
         geografiJobbonskerListe.add(geografiJobbonsker3);
 
         EsYrkeJobbonsker yrkeJobbonsker =
-                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Butikkmedarbeider", true);
+                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Konsulent (bank)", true);
 
         EsYrkeJobbonsker yrkeJobbonsker1 =
-                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Butikkmedarbeider", true);
+                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Designer", true);
 
         ArrayList<EsYrkeJobbonsker> yrkeJobbonskerListe = new ArrayList<>();
         yrkeJobbonskerListe.add(yrkeJobbonsker);
@@ -1096,10 +1100,14 @@ public class EsCvObjectMother {
         EsYrkeJobbonsker yrkeJobbonsker2 =
                 new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Butikkmedarbeider", true);
 
+        EsYrkeJobbonsker yrkeJobbonsker3 =
+                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Konsulent (bank)", true);
+
         ArrayList<EsYrkeJobbonsker> yrkeJobbonskerListe = new ArrayList<>();
         yrkeJobbonskerListe.add(yrkeJobbonsker);
         yrkeJobbonskerListe.add(yrkeJobbonsker1);
         yrkeJobbonskerListe.add(yrkeJobbonsker2);
+        yrkeJobbonskerListe.add(yrkeJobbonsker3);
 
         EsOmfangJobbonsker EsHeltidDeltidJobbonsker =
                 new EsOmfangJobbonsker("HeltidDeltidKode", "HeltidDeltidKode Tekst");
