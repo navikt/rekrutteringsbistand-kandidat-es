@@ -661,7 +661,7 @@ public class EsCvObjectMother {
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn", "");
         EsSertifikat EsSertifikat4 = new EsSertifikat(d("1999-01-01"), null, "L2.7000",
-                "Truckførerbevis T3 Svinggaffel og høytløftende plukktruck, sidestablende og førerløftende truck",
+                "Truckførerbevis T1 Lavtløftende plukktruck, palletruck m/perm. førerplass",
                 "Truckførerbevis T1 Lavtløftende plukktruck, palletruck m/perm. førerplass", "");
 
         ArrayList<EsSertifikat> esSertifikatListe = new ArrayList<>();
