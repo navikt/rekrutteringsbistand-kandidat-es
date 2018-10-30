@@ -54,7 +54,7 @@ public class IndexCvTest {
 
     // Kjører "docker-compose up" manuelt istedenfor denne ClassRule:
 
-    //@ClassRule
+    @ClassRule
     public static DockerComposeRule docker =
             DockerComposeRule.builder().file("src/test/resources/docker-compose-kun-es.yml")
                     .machine(DockerMachine.localMachine()
@@ -79,9 +79,9 @@ public class IndexCvTest {
     static class TestConfig {
 
         @Bean
-        public RestHighLevelClient restHighLevelClient() {
+        public RestHighLevelClient restHighLevelClient(@Value("${ES_PORT}") Integer port) {
             return new RestHighLevelClient(
-                    RestClient.builder(new HttpHost("localhost", 9250, "http")));
+                    RestClient.builder(new HttpHost("localhost", port, "http")));
         }
 
         @Bean
@@ -117,10 +117,10 @@ public class IndexCvTest {
         indexerClient.index(EsCvObjectMother.giveMeEsCv6());
     }
 
-//    @After
-//    public void after() throws IOException {
-//        indexerClient.deleteIndex();
-//    }
+    @After
+    public void after() throws IOException {
+        indexerClient.deleteIndex();
+    }
 
     @Test
     public void test() throws IOException {
@@ -603,11 +603,11 @@ public class IndexCvTest {
 
     @Test
     public void sokPaTruckoererbevisT1SkalGiRiktigResultat() throws IOException {
-        List<String> typeaheadResultat = sokClient.typeAheadKompetanse("Truckførerbevis T3 Svin");
+        List<String> typeaheadResultat = sokClient.typeAheadKompetanse("Truckførerbevis T1 Lavt");
 
         String typeaheadElement = typeaheadResultat.get(0);
         assertThat(typeaheadElement)
-                .isEqualTo("Truckførerbevis T3 Svinggaffel og høytløftende plukktruck, sidestablende og førerløftende truck");
+                .isEqualTo("Truckførerbevis T1 Lavtløftende plukktruck, palletruck m/perm. førerplass");
 
         Sokeresultat sokeresultat = sokClient.sok(Sokekriterier.med()
                 .kompetanser(Collections.singletonList(typeaheadElement)).bygg());

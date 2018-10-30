@@ -813,7 +813,7 @@ public class EsCvObjectMother {
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(d("2017-10-01"), null,
                 "Dukketeateret Rena", "5124.46", "Skuespiller(dukketeater)",
-                "Skuespiller (dukketeater)", "YRKE_ORGNR", "YRKE_NACEKODE", false);
+                "Skuespiller(dukketeater)", "YRKE_ORGNR", "YRKE_NACEKODE", false);
 
         ArrayList<EsYrkeserfaring> yrkeserfaringListe = new ArrayList<>();
         yrkeserfaringListe.add(yrkeserfaring1);
