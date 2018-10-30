@@ -697,4 +697,28 @@ public class IndexCvTest {
         Sokeresultat sokeresultat2 = sokClient.sok(Sokekriterier.med().fraIndex(2).antallResultater(5).bygg());
         assertThat(sokeresultat2.getCver()).hasSize(4);
     }
+
+    @Test
+    public void sokPaaYrkeSkalIkkeGiTreffPaaLignendeYrker() throws IOException {
+        Sokeresultat sokeresultatKonsulentData = sokClient
+                .sok(Sokekriterier.med()
+                        .yrkeJobbonsker(Collections.singletonList("Konsulent (data)"))
+                        .bygg());
+
+        Sokeresultat sokeresultatKonsulentBank = sokClient
+                .sok(Sokekriterier.med()
+                        .yrkeJobbonsker(Collections.singletonList("Konsulent (bank)"))
+                        .bygg());
+
+
+        List<EsCv> cverKonsulentData = sokeresultatKonsulentData.getCver();
+        assertThat(cverKonsulentData.size()).isEqualTo(1);
+        List<EsCv> cverKonsulentBank = sokeresultatKonsulentBank.getCver();
+        assertThat(cverKonsulentBank.size()).isEqualTo(1);
+
+        EsCv cv1Data = cverKonsulentData.get(0);
+        EsCv cv1Bank = cverKonsulentBank.get(0);
+        assertThat(cv1Data).isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv3()));
+        assertThat(cv1Bank).isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv5()));
+    }
 }

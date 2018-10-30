@@ -736,10 +736,14 @@ public class EsCvObjectMother {
         EsYrkeJobbonsker yrkeJobbonsker2 =
                 new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Tester", true);
 
+        EsYrkeJobbonsker yrkeJobbonsker3 =
+                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Konsulent (data)", true);
+
         ArrayList<EsYrkeJobbonsker> yrkeJobbonskerListe = new ArrayList<>();
         yrkeJobbonskerListe.add(yrkeJobbonsker);
         yrkeJobbonskerListe.add(yrkeJobbonsker1);
         yrkeJobbonskerListe.add(yrkeJobbonsker2);
+        yrkeJobbonskerListe.add(yrkeJobbonsker3);
 
         EsOmfangJobbonsker EsHeltidDeltidJobbonsker =
                 new EsOmfangJobbonsker("HeltidDeltidKode", "HeltidDeltidKode Tekst");
@@ -1096,10 +1100,14 @@ public class EsCvObjectMother {
         EsYrkeJobbonsker yrkeJobbonsker2 =
                 new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Butikkmedarbeider", true);
 
+        EsYrkeJobbonsker yrkeJobbonsker3 =
+                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Konsulent (bank)", true);
+
         ArrayList<EsYrkeJobbonsker> yrkeJobbonskerListe = new ArrayList<>();
         yrkeJobbonskerListe.add(yrkeJobbonsker);
         yrkeJobbonskerListe.add(yrkeJobbonsker1);
         yrkeJobbonskerListe.add(yrkeJobbonsker2);
+        yrkeJobbonskerListe.add(yrkeJobbonsker3);
 
         EsOmfangJobbonsker EsHeltidDeltidJobbonsker =
                 new EsOmfangJobbonsker("HeltidDeltidKode", "HeltidDeltidKode Tekst");

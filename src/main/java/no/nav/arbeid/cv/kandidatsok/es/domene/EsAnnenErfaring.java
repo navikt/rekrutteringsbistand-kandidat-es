@@ -17,7 +17,7 @@ public class EsAnnenErfaring {
   @ElasticDateField
   private Date tilDato;
 
-  @ElasticTextField
+  @ElasticTextField(analyzer = "norwegian")
   private String beskrivelse;
 
   public EsAnnenErfaring() {}
