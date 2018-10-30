@@ -79,6 +79,7 @@ public class IndexCvTest {
     static class TestConfig {
 
         @Bean
+        @Autowired
         public RestHighLevelClient restHighLevelClient(@Value("${ES_PORT}") Integer port) {
             return new RestHighLevelClient(
                     RestClient.builder(new HttpHost("localhost", port, "http")));
