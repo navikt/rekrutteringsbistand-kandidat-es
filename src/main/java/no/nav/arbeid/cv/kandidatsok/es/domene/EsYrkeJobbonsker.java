@@ -14,7 +14,7 @@ public class EsYrkeJobbonsker {
   @ElasticKeywordField
   private String styrkKode;
 
-  @ElasticTextField
+  @ElasticTextField(analyzer = "norwegian")
   @ElasticKeywordField
   @ElasticCompletionField
   @JsonInclude(JsonInclude.Include.NON_EMPTY)

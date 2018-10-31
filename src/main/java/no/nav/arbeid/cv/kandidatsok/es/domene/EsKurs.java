@@ -19,7 +19,7 @@ public class EsKurs {
   @ElasticDateField
   private Date tilDato;
 
-  @ElasticTextField
+  @ElasticTextField(analyzer = "norwegian")
   private String tittel;
 
   @ElasticTextField
@@ -31,7 +31,7 @@ public class EsKurs {
   @ElasticIntegerField
   private Integer omfangVerdi;
 
-  @ElasticTextField
+  @ElasticTextField(analyzer = "norwegian")
   private String beskrivelse;
 
   public EsKurs() {}

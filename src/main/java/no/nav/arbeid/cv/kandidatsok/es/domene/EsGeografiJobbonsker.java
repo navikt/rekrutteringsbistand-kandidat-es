@@ -11,7 +11,7 @@ import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsGeografiJobbonsker {
 
-  @ElasticTextField
+  @ElasticTextField(analyzer = "norwegian")
   @ElasticKeywordField
   @ElasticCompletionField
   private String geografiKodeTekst;

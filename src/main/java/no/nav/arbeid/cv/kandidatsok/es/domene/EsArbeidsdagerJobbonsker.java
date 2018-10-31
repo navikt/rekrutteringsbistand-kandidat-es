@@ -12,7 +12,7 @@ public class EsArbeidsdagerJobbonsker {
   @ElasticKeywordField
   private String arbeidsdagerKode;
 
-  @ElasticTextField
+  @ElasticTextField(analyzer = "norwegian")
   @ElasticKeywordField
   private String arbeidsdagerKodeTekst;
 

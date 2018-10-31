@@ -13,7 +13,7 @@ public class EsAnsettelsesformJobbonsker {
   @ElasticKeywordField
   private String ansettelsesformKode;
 
-  @ElasticTextField
+  @ElasticTextField(analyzer = "norwegian")
   @ElasticKeywordField
   private String ansettelsesformKodeTekst;
 

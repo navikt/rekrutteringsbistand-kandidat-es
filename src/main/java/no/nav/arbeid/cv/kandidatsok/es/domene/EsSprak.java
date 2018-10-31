@@ -19,7 +19,7 @@ public class EsSprak {
   @ElasticKeywordField
   private String sprakKode;
 
-  @ElasticTextField
+  @ElasticTextField(analyzer = "norwegian")
   @ElasticCompletionField
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private String sprakKodeTekst;
