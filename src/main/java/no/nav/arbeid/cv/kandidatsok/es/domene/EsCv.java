@@ -93,8 +93,8 @@ public class EsCv {
     @ElasticBooleanField
     private Boolean doed;
     
-    @ElasticIntegerField
-    private Integer frKode;
+    @ElasticKeywordField
+    private String frKode;
     
     @ElasticKeywordField
     private String kvalifiseringsgruppekode;
@@ -176,7 +176,7 @@ public class EsCv {
             String samtykkeStatus, Date samtykkeDato, String adresselinje1, String adresselinje2,
             String adresselinje3, String postnummer, String poststed, String landkode,
             Integer kommunenummer, Boolean disponererBil, Date tidsstempel, Integer kommunenummerkw,
-            Boolean doed, Integer frKode, String kvalifiseringsgruppekode, String hovedmaalkode, String orgenhet,
+            Boolean doed, String frKode, String kvalifiseringsgruppekode, String hovedmaalkode, String orgenhet,
             Boolean fritattKandidatsok, Boolean fritattAgKandidatsok) {
         this.fodselsnummer = fodselsnummer;
         this.fornavn = fornavn;
@@ -396,7 +396,7 @@ public class EsCv {
         return fritattAgKandidatsok;
     }
     
-    public Integer getFrKode() {
+    public String getFrKode() {
         return frKode;
     }
     
