@@ -2,6 +2,7 @@ package no.nav.arbeid.kandidatsok.es.client;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import no.nav.arbeid.cv.kandidatsok.es.domene.EsCv;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokekriterier;
@@ -23,7 +24,7 @@ public interface EsSokService {
 
     List<String> typeAheadSprak(String prefix) throws IOException;
 
-    EsCv hent(String kandidatnr) throws IOException;
+    Optional<EsCv> hent(String kandidatnr) throws IOException;
 
     Sokeresultat hentKandidater(List<String> kandidatnummer) throws IOException;
 
