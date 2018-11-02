@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static java.util.stream.Collectors.toList;
@@ -681,7 +682,8 @@ public class EsSokHttpService implements EsSokService {
             esCv.setScore(hit.getScore());
             return esCv;
         } catch (IOException e) {
-            LOGGER.warn("Klarte ikke å parse CV fra Elasticsearch, returnerer null", e);
+            LOGGER.warn("Klarte ikke å parse CV {} fra Elasticsearch, returnerer null",
+                    hit.getSourceAsString(), e);
             return null;
         }
     }
@@ -720,7 +722,7 @@ public class EsSokHttpService implements EsSokService {
     }
 
     @Override
-    public no.nav.arbeid.cv.kandidatsok.es.domene.EsCv hent(String kandidatnr) throws IOException {
+    public Optional<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> hent(String kandidatnr) throws IOException {
         BoolQueryBuilder queryBuilder =
                 QueryBuilders.boolQuery().must(QueryBuilders.matchQuery("arenaKandidatnr", kandidatnr));
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
@@ -744,13 +746,16 @@ public class EsSokHttpService implements EsSokService {
                 StreamSupport.stream(searchResponse.getHits().spliterator(), false)
                         .map(hit -> mapEsCvHent(hit)).filter(Objects::nonNull).collect(toList());
         if (liste.size() == 0) {
-            LOGGER.warn("Ikke funnet CVen");
-            return new no.nav.arbeid.cv.kandidatsok.es.domene.EsCv();
+            LOGGER.warn("Finner ikke CV for kandidat {}", kandidatnr);
+            return Optional.empty();
         } else if (liste.size() > 1) {
-            LOGGER.warn("Funnet mer enn én CV!");
-            return liste.stream().findFirst().orElse(new no.nav.arbeid.cv.kandidatsok.es.domene.EsCv());
+            LOGGER.error("Fant mer enn én CV for kandidat {}. Fant {} CVer: {}",
+                    kandidatnr, liste.size(),
+                    liste.stream()
+                            .map(cv -> String.format("(person_id: %s, kandidatnr: %s)", cv.getArenaPersonId(), cv.getArenaKandidatnr()))
+                            .collect(Collectors.joining(", ")));
         }
-        return liste.stream().findFirst().orElse(new no.nav.arbeid.cv.kandidatsok.es.domene.EsCv());
+        return liste.stream().findFirst();
     }
 
     @Override
@@ -777,7 +782,8 @@ public class EsSokHttpService implements EsSokService {
             return mapper.readValue(hit.getSourceAsString(),
                     no.nav.arbeid.cv.kandidatsok.es.domene.EsCv.class);
         } catch (IOException e) {
-            LOGGER.warn("Klarte ikke å parse CV fra Elasticsearch, returnerer null", e);
+            LOGGER.warn("Klarte ikke å parse CV fra Elasticsearch id {}, docId {}, CV: {}, returnerer null",
+                    hit.getId(), hit.docId(), hit.getSourceAsString(), e);
             return null;
         }
     }
