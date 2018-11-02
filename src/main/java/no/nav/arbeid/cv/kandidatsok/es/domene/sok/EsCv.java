@@ -17,14 +17,14 @@ public class EsCv {
     private Long arenaPersonId;
 
     private String arenaKandidatnr;
-    
+
     private int totalLengdeYrkeserfaring;
 
     private List<EsUtdanning> utdanning = new ArrayList<>();
 
     private List<EsYrkeserfaring> yrkeserfaring = new ArrayList<>();
 
-    private float score = Float.NEGATIVE_INFINITY; //Default fra Elasticsearch..
+    private float score = Float.NEGATIVE_INFINITY; // Default fra Elasticsearch..
 
     public EsCv() {}
 

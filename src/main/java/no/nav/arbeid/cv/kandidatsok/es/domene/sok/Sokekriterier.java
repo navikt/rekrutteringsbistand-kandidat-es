@@ -1,10 +1,10 @@
 package no.nav.arbeid.cv.kandidatsok.es.domene.sok;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class Sokekriterier {
   private String fritekst;

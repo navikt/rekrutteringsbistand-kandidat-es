@@ -1,17 +1,37 @@
 package no.nav.arbeid.cv.kandidatsok.domene.es;
 
 import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
-import no.nav.arbeid.cv.kandidatsok.es.domene.*;
-import no.nav.arbeid.pam.kodeverk.ansettelse.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsAnsettelsesformJobbonsker;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsArbeidsdagerJobbonsker;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsArbeidstidJobbonsker;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsArbeidstidsordningJobbonsker;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsCv;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsForerkort;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsGeografiJobbonsker;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsKompetanse;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsKurs;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsOmfangJobbonsker;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsSertifikat;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsSprak;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsUtdanning;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsVerv;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsYrkeJobbonsker;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsYrkeserfaring;
+import no.nav.arbeid.pam.kodeverk.ansettelse.Ansettelsesform;
+import no.nav.arbeid.pam.kodeverk.ansettelse.Arbeidsdager;
+import no.nav.arbeid.pam.kodeverk.ansettelse.Arbeidstid;
+import no.nav.arbeid.pam.kodeverk.ansettelse.Arbeidstidsordning;
+import no.nav.arbeid.pam.kodeverk.ansettelse.Omfang;
 
 public class EsCvObjectMother {
 
