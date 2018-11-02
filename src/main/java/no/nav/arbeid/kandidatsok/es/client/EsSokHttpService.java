@@ -287,11 +287,6 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addFilterForArbeidsgivereSok(BoolQueryBuilder boolQueryBuilder) {
-        System.out.println("*****************************************************");
-        System.out.println("****************AG FILTER FOR SØK********************");
-        System.out.println("*****************************************************");
-
-        // Valgt mustNot for å håndtere null-verdier likt som FALSE
         addFilterForArbeidsgivereHent(boolQueryBuilder);
         boolQueryBuilder.mustNot(QueryBuilders.termQuery("fritattAgKandidatsok", Boolean.TRUE));
     }
@@ -306,10 +301,6 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addFilterForVeiledereSok(BoolQueryBuilder boolQueryBuilder) {
-        System.out.println("*****************************************************");
-        System.out.println("*************VEILEDER FILTER FOR SØK*****************");
-        System.out.println("*****************************************************");
-        // Valgt mustNot for å håndtere null-verdier likt som FALSE
         addFilterForVeiledereHent(boolQueryBuilder);
     }
 
