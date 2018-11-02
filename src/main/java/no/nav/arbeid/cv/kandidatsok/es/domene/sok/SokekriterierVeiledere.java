@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class Sokekriterier {
+public class SokekriterierVeiledere {
     private String fritekst;
     private List<String> yrkeJobbonsker;
     private List<String> stillingstitler;
@@ -26,7 +26,7 @@ public class Sokekriterier {
 
     private boolean tomtSok = true;
 
-    private Sokekriterier() {};
+    private SokekriterierVeiledere() {};
 
     public static Builder med() {
         return new Builder();
@@ -133,8 +133,8 @@ public class Sokekriterier {
         private List<String> forerkort;
         private boolean tomtSok = true;
 
-        public Sokekriterier bygg() {
-            Sokekriterier s = new Sokekriterier();
+        public SokekriterierVeiledere bygg() {
+            SokekriterierVeiledere s = new SokekriterierVeiledere();
             s.etternavn = etternavn;
             s.fritekst = fritekst;
             s.geografiList = geografiList == null ? Collections.emptyList()

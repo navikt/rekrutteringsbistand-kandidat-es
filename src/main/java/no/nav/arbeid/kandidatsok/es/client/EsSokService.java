@@ -6,11 +6,14 @@ import java.util.Optional;
 
 import no.nav.arbeid.cv.kandidatsok.es.domene.EsCv;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokekriterier;
+import no.nav.arbeid.cv.kandidatsok.es.domene.sok.SokekriterierVeiledere;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokeresultat;
 
 public interface EsSokService {
 
-    Sokeresultat sok(Sokekriterier sokekriterier) throws IOException;
+    Sokeresultat arbeidsgiverSok(Sokekriterier sokekriterier) throws IOException;
+    
+    Sokeresultat veilederSok(SokekriterierVeiledere sokekriterier) throws IOException;
 
     List<String> typeAheadKompetanse(String prefix) throws IOException;
 
@@ -24,8 +27,14 @@ public interface EsSokService {
 
     List<String> typeAheadSprak(String prefix) throws IOException;
 
-    Optional<EsCv> hent(String kandidatnr) throws IOException;
+    Optional<EsCv> arbeidsgiverHent(String kandidatnr) throws IOException;
 
-    Sokeresultat hentKandidater(List<String> kandidatnummer) throws IOException;
+    Optional<EsCv> veilederHent(String kandidatnr) throws IOException;
+    
+    Sokeresultat arbeidsgiverHentKandidater(List<String> kandidatnummer) throws IOException;
+    
+    Sokeresultat veilederHentKandidater(List<String> kandidatnummer) throws IOException;
+
+    
 
 }
