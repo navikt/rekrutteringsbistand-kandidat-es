@@ -1,10 +1,23 @@
 package no.nav.arbeid.cv.kandidatsok.es.domene;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import no.nav.elasticsearch.mapping.annotations.*;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import no.nav.elasticsearch.mapping.annotations.ElasticBooleanField;
+import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
+import no.nav.elasticsearch.mapping.annotations.ElasticDocument;
+import no.nav.elasticsearch.mapping.annotations.ElasticIntegerField;
+import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
+import no.nav.elasticsearch.mapping.annotations.ElasticLongField;
+import no.nav.elasticsearch.mapping.annotations.ElasticNestedField;
+import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @ElasticDocument
