@@ -20,7 +20,6 @@ import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.index.query.AbstractQueryBuilder;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
@@ -56,9 +55,14 @@ import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Aggregering;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Aggregeringsfelt;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.EsCv;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokekriterier;
+import no.nav.arbeid.cv.kandidatsok.es.domene.sok.SokekriterierVeiledere;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokeresultat;
 
 public class EsSokHttpService implements EsSokService {
+
+    private static enum UseCase {
+        AG_SOK, AG_HENT, VEIL_SOK, VEIL_HENT;
+    }
 
     private static final String CV_INDEX = "cvindex";
     private static final String CV_TYPE = "cvtype";
@@ -140,17 +144,22 @@ public class EsSokHttpService implements EsSokService {
                 .collect(toList());
     }
 
-    @Override
-    public Sokeresultat sok(Sokekriterier sk) throws IOException {
+    private void matchAllQuery(BoolQueryBuilder boolQueryBuilder) {
+        boolQueryBuilder.must(QueryBuilders.matchAllQuery());
+    }
 
-        if (sokUtenKriterier(sk)) {
-            LOGGER.debug("MATCH ALL!");
-            return toSokeresultat(esExec(() -> search(QueryBuilders.matchAllQuery(), sk.fraIndex(),
-                    sk.antallResultater(), null)));
-        }
+    @Override
+    public Sokeresultat arbeidsgiverSok(Sokekriterier sk) throws IOException {
 
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
         BoolQueryBuilder sortQueryBuilder = QueryBuilders.boolQuery();
+
+        if (sk.isTomtSok()) {
+            LOGGER.debug("MATCH ALL!");
+            matchAllQuery(queryBuilder);
+            return toSokeresultat(esExec(() -> search(UseCase.AG_SOK, queryBuilder, sk.fraIndex(),
+                    sk.antallResultater(), null)));
+        }
 
         if (StringUtils.isNotBlank(sk.fritekst())) {
             addFritekstToQuery(sk.fritekst(), queryBuilder);
@@ -184,7 +193,7 @@ public class EsSokHttpService implements EsSokService {
             addYrkeserfaringToQuery(sk.totalYrkeserfaring(), queryBuilder);
         }
 
-        if (utdanningIsSet(sk)) {
+        if (sk.isUtdanningSet()) {
             addUtdanningToQuery(sk.utdanninger(), sk.utdanningsniva(), queryBuilder);
         }
 
@@ -204,8 +213,104 @@ public class EsSokHttpService implements EsSokService {
             addForerkortToQuery(sk.forerkort(), queryBuilder);
         }
 
-        return toSokeresultat(esExec(() -> search(queryBuilder, sk.fraIndex(),
+        return toSokeresultat(esExec(() -> search(UseCase.AG_SOK, queryBuilder, sk.fraIndex(),
                 sk.antallResultater(), sortQueryBuilder)));
+    }
+
+    @Override
+    public Sokeresultat veilederSok(SokekriterierVeiledere sk) throws IOException {
+
+        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+        BoolQueryBuilder sortQueryBuilder = QueryBuilders.boolQuery();
+
+        if (sk.isTomtSok()) {
+            LOGGER.debug("MATCH ALL!");
+            matchAllQuery(queryBuilder);
+            return toSokeresultat(esExec(() -> search(UseCase.VEIL_SOK, queryBuilder, sk.fraIndex(),
+                    sk.antallResultater(), null)));
+        }
+
+        if (StringUtils.isNotBlank(sk.fritekst())) {
+            addFritekstToQuery(sk.fritekst(), queryBuilder);
+        }
+
+        if (isNotEmpty(sk.yrkeJobbonsker())) {
+            addJobbonskerToQuery(sk.yrkeJobbonsker(), queryBuilder, sortQueryBuilder);
+        }
+
+        if (isNotEmpty(sk.stillingstitler())) {
+            addStillingstitlerToQuery(sk.stillingstitler(), queryBuilder, sortQueryBuilder);
+        }
+
+        if (isNotEmpty(sk.kompetanser())) {
+            addKompetanserToQuery(sk.kompetanser(), queryBuilder);
+        }
+
+        if (isNotEmpty(sk.sprak())) {
+            addSprakToQuery(sk.sprak(), queryBuilder);
+        }
+
+        if (isNotEmpty(sk.geografiList())) {
+            addGeografiToQuery(sk.geografiList(), queryBuilder);
+        }
+
+        if (sk.maaBoInnenforGeografi()) {
+            addKommunenummerToQuery(sk.geografiList(), queryBuilder);
+        }
+
+        if (isNotEmpty(sk.totalYrkeserfaring())) {
+            addYrkeserfaringToQuery(sk.totalYrkeserfaring(), queryBuilder);
+        }
+
+        if (sk.isUtdanningSet()) {
+            addUtdanningToQuery(sk.utdanninger(), sk.utdanningsniva(), queryBuilder);
+        }
+
+        if (isNotEmpty(sk.styrkKoder())) {
+            addStyrkKoderToQuery(sk.styrkKoder(), queryBuilder);
+        }
+
+        if (isNotEmpty(sk.nusKoder())) {
+            addNusKoderToQuery(sk.nusKoder(), queryBuilder);
+        }
+
+        if (StringUtils.isNotBlank(sk.etternavn())) {
+            addEtternavnToQuery(sk.etternavn(), queryBuilder);
+        }
+
+        if (isNotEmpty(sk.forerkort())) {
+            addForerkortToQuery(sk.forerkort(), queryBuilder);
+        }
+
+        return toSokeresultat(esExec(() -> search(UseCase.VEIL_SOK, queryBuilder, sk.fraIndex(),
+                sk.antallResultater(), sortQueryBuilder)));
+    }
+
+    private void addFilterForArbeidsgivereSok(BoolQueryBuilder boolQueryBuilder) {
+        addFilterForArbeidsgivereHent(boolQueryBuilder);
+        boolQueryBuilder.mustNot(QueryBuilders.termQuery("fritattAgKandidatsok", Boolean.TRUE));
+    }
+
+    private void addFilterForArbeidsgivereHent(BoolQueryBuilder boolQueryBuilder) {
+        // Valgt mustNot for å håndtere null-verdier likt som FALSE
+        boolQueryBuilder.mustNot(QueryBuilders.termQuery("doed", Boolean.TRUE));
+        boolQueryBuilder.mustNot(QueryBuilders.termsQuery("frKode", "6", "7"));
+        boolQueryBuilder.must(QueryBuilders.termsQuery("formidlingsgruppekode", "ARBS", "RARBS",
+                "PARBS", "JOBBS"));
+        boolQueryBuilder.mustNot(QueryBuilders.termQuery("fritattKandidatsok", Boolean.TRUE));
+    }
+
+    private void addFilterForVeiledereSok(BoolQueryBuilder boolQueryBuilder) {
+        addFilterForVeiledereHent(boolQueryBuilder);
+    }
+
+    private void addFilterForVeiledereHent(BoolQueryBuilder boolQueryBuilder) {
+        // Valgt mustNot for å håndtere null-verdier likt som FALSE
+        boolQueryBuilder.mustNot(QueryBuilders.termQuery("doed", Boolean.TRUE));
+        boolQueryBuilder.mustNot(QueryBuilders.termsQuery("frKode", "6", "7"));
+        boolQueryBuilder
+                .must(QueryBuilders.termsQuery("formidlingsgruppekode", "ARBS", "RARBS", "PARBS"));
+        boolQueryBuilder.mustNot(QueryBuilders.termQuery("fritattKandidatsok", Boolean.TRUE));
     }
 
     private void addEtternavnToQuery(String etternavn, BoolQueryBuilder boolQueryBuilder) {
@@ -346,33 +451,6 @@ public class EsSokHttpService implements EsSokService {
     private void addForerkortToQuery(List<String> forerkort, BoolQueryBuilder boolQueryBuilder) {
         forerkort.stream().filter(StringUtils::isNotBlank)
                 .forEach(s -> addForerkortQuery(s, boolQueryBuilder));
-    }
-
-    private boolean sokUtenKriterier(Sokekriterier sk) {
-        return StringUtils.isBlank(sk.fritekst())
-                && (sk.yrkeJobbonsker() == null || sk.yrkeJobbonsker().isEmpty())
-                && (sk.stillingstitler() == null || sk.stillingstitler().isEmpty())
-                && (sk.kompetanser() == null || sk.kompetanser().isEmpty())
-                && (sk.utdanninger() == null || sk.utdanninger().isEmpty())
-                && (sk.totalYrkeserfaring() == null || sk.totalYrkeserfaring().isEmpty())
-                && (sk.utdanningsniva() == null || sk.utdanningsniva().isEmpty())
-                && (sk.geografiList() == null || sk.geografiList().isEmpty())
-                && (sk.styrkKoder() == null || sk.styrkKoder().isEmpty())
-                && (sk.nusKoder() == null || sk.nusKoder().isEmpty())
-                && (sk.sprak() == null || sk.sprak().isEmpty())
-                && (sk.forerkort() == null || sk.forerkort().isEmpty());
-    }
-
-    private boolean utdanningsNivaIsPresent(Sokekriterier sk) {
-        return sk.utdanningsniva() != null && !sk.utdanningsniva().isEmpty();
-    }
-
-    private boolean utdanningerIsPresent(Sokekriterier sk) {
-        return sk.utdanninger() != null && !sk.utdanninger().isEmpty();
-    }
-
-    private boolean utdanningIsSet(Sokekriterier sk) {
-        return (utdanningsNivaIsPresent(sk)) || (utdanningerIsPresent(sk));
     }
 
     private void addYrkeJobbonskerQuery(String yrkeJobbonske, BoolQueryBuilder boolQueryBuilder) {
@@ -648,8 +726,26 @@ public class EsSokHttpService implements EsSokService {
                 .get("nested")).getBuckets();
     }
 
-    private SearchResponse search(AbstractQueryBuilder<?> queryBuilder, int from, int size,
-            BoolQueryBuilder sortQueryBuilder) throws IOException {
+    private SearchResponse search(UseCase useCase, BoolQueryBuilder queryBuilder, int from,
+            int size, BoolQueryBuilder sortQueryBuilder) throws IOException {
+
+        switch (useCase) {
+            case AG_SOK:
+                addFilterForArbeidsgivereSok(queryBuilder);
+                break;
+            case AG_HENT:
+                addFilterForArbeidsgivereHent(queryBuilder);
+                break;
+            case VEIL_SOK:
+                addFilterForVeiledereSok(queryBuilder);
+                break;
+            case VEIL_HENT:
+                addFilterForVeiledereHent(queryBuilder);
+                break;
+            default:
+                addFilterForVeiledereSok(queryBuilder);
+        }
+
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(queryBuilder);
         searchSourceBuilder.from(from);
@@ -757,10 +853,28 @@ public class EsSokHttpService implements EsSokService {
     }
 
     @Override
-    public Optional<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> hent(String kandidatnr)
+    public Optional<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> arbeidsgiverHent(String kandidatnr)
             throws IOException {
+        return hentFelles(true, kandidatnr);
+    }
+
+    @Override
+    public Optional<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> veilederHent(String kandidatnr)
+            throws IOException {
+        return hentFelles(false, kandidatnr);
+    }
+
+    private Optional<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> hentFelles(boolean isAg,
+            String kandidatnr) throws IOException {
+
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery()
-                .must(QueryBuilders.matchQuery("arenaKandidatnr", kandidatnr));
+                .must(QueryBuilders.termQuery("arenaKandidatnr", kandidatnr));
+        if (isAg) {
+            addFilterForArbeidsgivereHent(queryBuilder);
+        } else {
+            addFilterForVeiledereHent(queryBuilder);
+        }
+
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(queryBuilder);
         searchSourceBuilder.from(0);
@@ -795,11 +909,26 @@ public class EsSokHttpService implements EsSokService {
         return liste.stream().findFirst();
     }
 
+    private BoolQueryBuilder kandidatnrQuery(List<String> kandidatnummer) {
+        return QueryBuilders.boolQuery()
+                .must(QueryBuilders.termsQuery("arenaKandidatnr", kandidatnummer));
+    }
+
     @Override
-    public Sokeresultat hentKandidater(List<String> kandidatnummer) throws IOException {
+    public Sokeresultat arbeidsgiverHentKandidater(List<String> kandidatnummer) throws IOException {
         SearchResponse searchResponse =
-                esExec(() -> search(QueryBuilders.termsQuery("arenaKandidatnr", kandidatnummer), 0,
-                        100, null));
+                esExec(() -> search(UseCase.AG_SOK, kandidatnrQuery(kandidatnummer), 0, 100, null));
+        Sokeresultat usortertSokeresultat = toSokeresultat(searchResponse);
+        List<EsCv> sorterteCver = sorterSokeresultaterBasertPaaRequestRekkefolge(
+                usortertSokeresultat.getCver(), kandidatnummer);
+        return new Sokeresultat(usortertSokeresultat.getTotaltAntallTreff(), sorterteCver,
+                usortertSokeresultat.getAggregeringer());
+    }
+
+    @Override
+    public Sokeresultat veilederHentKandidater(List<String> kandidatnummer) throws IOException {
+        SearchResponse searchResponse = esExec(
+                () -> search(UseCase.VEIL_SOK, kandidatnrQuery(kandidatnummer), 0, 100, null));
         Sokeresultat usortertSokeresultat = toSokeresultat(searchResponse);
         List<EsCv> sorterteCver = sorterSokeresultaterBasertPaaRequestRekkefolge(
                 usortertSokeresultat.getCver(), kandidatnummer);
