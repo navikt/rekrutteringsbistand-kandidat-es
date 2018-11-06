@@ -20,6 +20,8 @@ public class EsCv {
 
     private int totalLengdeYrkeserfaring;
 
+    private String kvalifiseringsgruppekode;
+
     private List<EsUtdanning> utdanning = new ArrayList<>();
 
     private List<EsYrkeserfaring> yrkeserfaring = new ArrayList<>();
@@ -29,14 +31,15 @@ public class EsCv {
     public EsCv() {}
 
     public EsCv(String fodselsnummer, String formidlingsgruppekode, Long arenaPersonId,
-            String arenaKandidatnr, int totalLengdeYrkeserfaring, List<EsUtdanning> utdanning,
-            List<EsYrkeserfaring> yrkeserfaring) {
+            String arenaKandidatnr, int totalLengdeYrkeserfaring, String kvalifiseringsgruppekode,
+            List<EsUtdanning> utdanning, List<EsYrkeserfaring> yrkeserfaring) {
         super();
         this.fodselsnummer = fodselsnummer;
         this.formidlingsgruppekode = formidlingsgruppekode;
         this.arenaPersonId = arenaPersonId;
         this.arenaKandidatnr = arenaKandidatnr;
         this.totalLengdeYrkeserfaring = totalLengdeYrkeserfaring;
+        this.kvalifiseringsgruppekode = kvalifiseringsgruppekode;
         this.utdanning = utdanning;
         this.yrkeserfaring = yrkeserfaring;
     }
@@ -78,6 +81,9 @@ public class EsCv {
         return formidlingsgruppekode;
     }
 
+    public String getKvalifiseringsgruppekode() {
+        return kvalifiseringsgruppekode;
+    }
 
     public Long getArenaPersonId() {
         return arenaPersonId;
@@ -114,23 +120,24 @@ public class EsCv {
                 && Objects.equals(arenaKandidatnr, esCv.arenaKandidatnr)
                 && Objects.equals(utdanning, esCv.utdanning)
                 && Objects.equals(yrkeserfaring, esCv.yrkeserfaring)
-                && Objects.equals(totalLengdeYrkeserfaring, esCv.totalLengdeYrkeserfaring);
+                && Objects.equals(totalLengdeYrkeserfaring, esCv.totalLengdeYrkeserfaring)
+                && Objects.equals(kvalifiseringsgruppekode, esCv.kvalifiseringsgruppekode);
     }
 
     @Override
     public int hashCode() {
 
         return Objects.hash(fodselsnummer, formidlingsgruppekode, arenaPersonId, arenaKandidatnr,
-                utdanning, yrkeserfaring, totalLengdeYrkeserfaring);
+                utdanning, yrkeserfaring, totalLengdeYrkeserfaring, kvalifiseringsgruppekode);
     }
 
     @Override
     public String toString() {
         return "EsCv{" + "fodselsnummer='" + fodselsnummer + '\'' + ", formidlingsgruppekode='"
-                + formidlingsgruppekode + '\'' + ", arenaPersonId=" + arenaPersonId
-                + ", arenaKandidatnr='" + arenaKandidatnr + '\'' + ", utdanning=" + utdanning
-                + ", yrkeserfaring=" + yrkeserfaring + ", totalLengdeYrkeserfaring="
-                + totalLengdeYrkeserfaring + '}';
+                + formidlingsgruppekode + '\'' + ", kvalifiseringsgruppekode='" + kvalifiseringsgruppekode + '\''
+                + ", arenaPersonId=" + arenaPersonId + ", arenaKandidatnr='" + arenaKandidatnr
+                + '\'' + ", utdanning=" + utdanning + ", yrkeserfaring=" + yrkeserfaring
+                + ", totalLengdeYrkeserfaring=" + totalLengdeYrkeserfaring + '}';
     }
 
 }
