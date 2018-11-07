@@ -18,6 +18,7 @@ public class SokekriterierVeiledere {
     private List<String> styrkKoder;
     private List<String> nusKoder;
     private List<String> sprak;
+    private List<String> kvalifiseringsgruppeKoder;
     private String etternavn;
     private Boolean maaBoInnenforGeografi;
     private List<String> forerkort;
@@ -75,6 +76,10 @@ public class SokekriterierVeiledere {
     public List<String> nusKoder() {
         return nusKoder;
     }
+    
+    public List<String> kvalifiseringsgruppeKoder() {
+        return kvalifiseringsgruppeKoder;
+    }
 
     public String etternavn() {
         return etternavn;
@@ -122,6 +127,7 @@ public class SokekriterierVeiledere {
         private List<String> utdanningsniva;
         private List<String> sprak;
         private List<String> geografiList;
+        private List<String> kvalifiseringsgruppeKoder;
         private String styrkKode;
         private String nusKode;
         private List<String> styrkKoder;
@@ -155,6 +161,8 @@ public class SokekriterierVeiledere {
                     : Collections.unmodifiableList(new ArrayList<>(sprak));
             s.forerkort = forerkort == null ? Collections.emptyList()
                     : Collections.unmodifiableList(new ArrayList<>(forerkort));
+            s.kvalifiseringsgruppeKoder = kvalifiseringsgruppeKoder == null ? Collections.emptyList()
+                    : Collections.unmodifiableList(new ArrayList<>(kvalifiseringsgruppeKoder));
 
             List<String> tmpNuskoder =
                     nusKoder == null ? new ArrayList<>() : new ArrayList<>(nusKoder);
@@ -212,6 +220,12 @@ public class SokekriterierVeiledere {
 
         public Builder utdanninger(List<String> utdanninger) {
             this.utdanninger = utdanninger;
+            this.tomtSok = false;
+            return this;
+        }
+        
+        public Builder kvalifiseringsgruppeKoder(List<String> kvalifiseringsgruppeKoder) {
+            this.kvalifiseringsgruppeKoder = kvalifiseringsgruppeKoder;
             this.tomtSok = false;
             return this;
         }
