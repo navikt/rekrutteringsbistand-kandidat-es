@@ -281,6 +281,10 @@ public class EsSokHttpService implements EsSokService {
         if (isNotEmpty(sk.forerkort())) {
             addForerkortToQuery(sk.forerkort(), queryBuilder);
         }
+        
+        if (isNotEmpty(sk.kvalifiseringsgruppeKoder())) {
+            addKvalifiseringsgruppeKoderToQuery(sk.kvalifiseringsgruppeKoder(), queryBuilder);
+        }
 
         return toSokeresultat(esExec(() -> search(UseCase.VEIL_SOK, queryBuilder, sk.fraIndex(),
                 sk.antallResultater(), sortQueryBuilder)));
@@ -452,6 +456,11 @@ public class EsSokHttpService implements EsSokService {
         forerkort.stream().filter(StringUtils::isNotBlank)
                 .forEach(s -> addForerkortQuery(s, boolQueryBuilder));
     }
+    
+    private void addKvalifiseringsgruppeKoderToQuery(List<String> kvalifiseringsgruppeKoder, BoolQueryBuilder boolQueryBuilder) {
+        kvalifiseringsgruppeKoder.stream().filter(StringUtils::isNotBlank)
+        .forEach(s -> addKvalifiseringsgruppekodeQuery(s, boolQueryBuilder));
+    }
 
     private void addYrkeJobbonskerQuery(String yrkeJobbonske, BoolQueryBuilder boolQueryBuilder) {
         NestedQueryBuilder yrkeJobbonskeQueryBuilder = QueryBuilders.nestedQuery("yrkeJobbonsker",
@@ -528,6 +537,11 @@ public class EsSokHttpService implements EsSokService {
                 ScoreMode.Total);
         boolQueryBuilder.must(forerkortQueryBuilder);
         LOGGER.debug("ADDING førerkort");
+    }
+    
+    private void addKvalifiseringsgruppekodeQuery(String kvalifiseringsgruppekode, BoolQueryBuilder boolQueryBuilder) {
+        boolQueryBuilder.must(QueryBuilders.termQuery("kvalifiseringsgruppekode", kvalifiseringsgruppekode));        
+        LOGGER.debug("ADDING kvalifiseringsgruppekode");
     }
 
     private void addKommunenummerQuery(String geografi, BoolQueryBuilder boolQueryBuilder) {
