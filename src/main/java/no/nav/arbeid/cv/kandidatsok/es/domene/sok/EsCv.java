@@ -2,6 +2,7 @@ package no.nav.arbeid.cv.kandidatsok.es.domene.sok;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,6 +12,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class EsCv {
 
     private String fodselsnummer;
+      
+    private String fornavn;
+
+    private String etternavn;
+
+    private Date fodselsdato;
+
+    private Boolean fodselsdatoErDnr;
 
     private String formidlingsgruppekode;
 
@@ -32,6 +41,7 @@ public class EsCv {
 
     public EsCv(String fodselsnummer, String formidlingsgruppekode, Long arenaPersonId,
             String arenaKandidatnr, int totalLengdeYrkeserfaring, String kvalifiseringsgruppekode,
+            String fornavn, String etternavn, Date fodselsdato, Boolean fodselsdatoErDnr,
             List<EsUtdanning> utdanning, List<EsYrkeserfaring> yrkeserfaring) {
         super();
         this.fodselsnummer = fodselsnummer;
@@ -40,6 +50,10 @@ public class EsCv {
         this.arenaKandidatnr = arenaKandidatnr;
         this.totalLengdeYrkeserfaring = totalLengdeYrkeserfaring;
         this.kvalifiseringsgruppekode = kvalifiseringsgruppekode;
+        this.fornavn = fornavn;
+        this.etternavn = etternavn;
+        this.fodselsdato = fodselsdato;
+        this.fodselsdatoErDnr = fodselsdatoErDnr;
         this.utdanning = utdanning;
         this.yrkeserfaring = yrkeserfaring;
     }
@@ -92,6 +106,22 @@ public class EsCv {
     public String getArenaKandidatnr() {
         return arenaKandidatnr;
     }
+    
+    public String getFornavn() {
+        return fornavn;
+    }
+    
+    public String getEtternavn() {
+        return etternavn;
+    }
+    
+    public Date getFodselsdato() {
+        return fodselsdato;
+    }
+    
+    public Boolean getFodselsdatoErDnr() {
+        return fodselsdatoErDnr;
+    }
 
     public int getTotalLengdeYrkeserfaring() {
         return totalLengdeYrkeserfaring;
@@ -121,23 +151,31 @@ public class EsCv {
                 && Objects.equals(utdanning, esCv.utdanning)
                 && Objects.equals(yrkeserfaring, esCv.yrkeserfaring)
                 && Objects.equals(totalLengdeYrkeserfaring, esCv.totalLengdeYrkeserfaring)
-                && Objects.equals(kvalifiseringsgruppekode, esCv.kvalifiseringsgruppekode);
+                && Objects.equals(kvalifiseringsgruppekode, esCv.kvalifiseringsgruppekode)
+                && Objects.equals(fornavn, esCv.fornavn)
+                && Objects.equals(etternavn, esCv.etternavn)
+                && Objects.equals(fodselsdato, esCv.fodselsdato)
+                && Objects.equals(fodselsdatoErDnr, esCv.fodselsdatoErDnr);
     }
 
     @Override
     public int hashCode() {
-
         return Objects.hash(fodselsnummer, formidlingsgruppekode, arenaPersonId, arenaKandidatnr,
-                utdanning, yrkeserfaring, totalLengdeYrkeserfaring, kvalifiseringsgruppekode);
+                utdanning, yrkeserfaring, totalLengdeYrkeserfaring, kvalifiseringsgruppekode, 
+                fornavn, etternavn, fodselsdato, fodselsdatoErDnr);
     }
 
     @Override
     public String toString() {
-        return "EsCv{" + "fodselsnummer='" + fodselsnummer + '\'' + ", formidlingsgruppekode='"
-                + formidlingsgruppekode + '\'' + ", kvalifiseringsgruppekode='" + kvalifiseringsgruppekode + '\''
-                + ", arenaPersonId=" + arenaPersonId + ", arenaKandidatnr='" + arenaKandidatnr
-                + '\'' + ", utdanning=" + utdanning + ", yrkeserfaring=" + yrkeserfaring
-                + ", totalLengdeYrkeserfaring=" + totalLengdeYrkeserfaring + '}';
+        return "EsCv [fodselsnummer=" + fodselsnummer + ", fornavn=" + fornavn + ", etternavn="
+                + etternavn + ", fodselsdato=" + fodselsdato + ", fodselsdatoErDnr="
+                + fodselsdatoErDnr + ", formidlingsgruppekode=" + formidlingsgruppekode
+                + ", arenaPersonId=" + arenaPersonId + ", arenaKandidatnr=" + arenaKandidatnr
+                + ", totalLengdeYrkeserfaring=" + totalLengdeYrkeserfaring
+                + ", kvalifiseringsgruppekode=" + kvalifiseringsgruppekode + ", utdanning="
+                + utdanning + ", yrkeserfaring=" + yrkeserfaring + ", score=" + score + "]";
     }
+
+    
 
 }
