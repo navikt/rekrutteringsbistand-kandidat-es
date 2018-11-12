@@ -753,4 +753,14 @@ public class IndexCvTest {
         assertThat(cv1Bank)
                 .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv5()));
     }
+    
+    @Test
+    public void sokPaKvalifiseringsgruppekodeSkalGiKorrektResultat() throws IOException {
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
+                .kvalifiseringsgruppeKoder(Collections.singletonList("IKVAL")).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        assertThat(cver).hasSize(1);        
+        assertThat(cver).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));                
+    }
 }
