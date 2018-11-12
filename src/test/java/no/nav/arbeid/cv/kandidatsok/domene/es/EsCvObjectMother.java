@@ -356,9 +356,9 @@ public class EsCvObjectMother {
         EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Oslo", "NO03");
 
         EsGeografiJobbonsker geografiJobbonsker1 =
-                new EsGeografiJobbonsker("Lillehammer", "NO10.1011");
+                new EsGeografiJobbonsker("Lillehammer", "NO05.0501");
 
-        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Hedmark", "NO50");
+        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Hedmark", "NO04");
 
         ArrayList<EsGeografiJobbonsker> geografiJobbonskerListe = new ArrayList<>();
         geografiJobbonskerListe.add(geografiJobbonsker);
@@ -549,21 +549,17 @@ public class EsCvObjectMother {
         ArrayList<EsVerv> vervListe = new ArrayList<>();
         vervListe.add(verv);
 
-        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Hedmark", "NO03");
+        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Hedmark", "NO04");
 
         EsGeografiJobbonsker geografiJobbonsker1 =
-                new EsGeografiJobbonsker("Stavanger", "NO21.2020");
+                new EsGeografiJobbonsker("Stavanger", "NO11.1103");
 
-        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Førde", "NO08.2929");
-
-        EsGeografiJobbonsker geografiJobbonsker3 =
-                new EsGeografiJobbonsker("Trondheim(Bydel Heimdal)", "NO50.50014");
+        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Førde", "NO14.1432");
 
         ArrayList<EsGeografiJobbonsker> geografiJobbonskerListe = new ArrayList<>();
         geografiJobbonskerListe.add(geografiJobbonsker);
         geografiJobbonskerListe.add(geografiJobbonsker1);
         geografiJobbonskerListe.add(geografiJobbonsker2);
-        geografiJobbonskerListe.add(geografiJobbonsker3);
 
         EsYrkeJobbonsker yrkeJobbonsker =
                 new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Javaprogrammerer", true);
@@ -741,17 +737,16 @@ public class EsCvObjectMother {
         ArrayList<EsVerv> vervListe = new ArrayList<>();
         vervListe.add(verv);
 
-        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Hedmark", "NO10");
+        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Hedmark", "NO04");
 
         EsGeografiJobbonsker geografiJobbonsker1 =
-                new EsGeografiJobbonsker("Bergen(bydel Fana)", "NO34.3434.1");
+                new EsGeografiJobbonsker("Bergen", "NO12.1201");
 
-        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Hordaland", "NO34");
+        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Hordaland", "NO12");
 
         ArrayList<EsGeografiJobbonsker> geografiJobbonskerListe = new ArrayList<>();
         geografiJobbonskerListe.add(geografiJobbonsker);
         geografiJobbonskerListe.add(geografiJobbonsker1);
-        geografiJobbonskerListe.add(geografiJobbonsker2);
 
         EsYrkeJobbonsker yrkeJobbonsker =
                 new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Ordfører", true);
@@ -929,12 +924,12 @@ public class EsCvObjectMother {
         ArrayList<EsVerv> vervListe = new ArrayList<>();
         vervListe.add(verv);
 
-        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Oslo", "NO01.1000");
+        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Oslo", "NO03.0301");
 
         EsGeografiJobbonsker geografiJobbonsker1 =
-                new EsGeografiJobbonsker("Akershus", "NO02.1210");
+                new EsGeografiJobbonsker("Akershus", "NO02");
 
-        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Bærum", "NO02.1212");
+        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Bærum", "NO02.1219");
 
         EsGeografiJobbonsker geografiJobbonsker3 = new EsGeografiJobbonsker("Norge", "NO");
 
@@ -1108,11 +1103,11 @@ public class EsCvObjectMother {
         ArrayList<EsVerv> vervListe = new ArrayList<>();
         vervListe.add(verv);
 
-        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Harstad", "NO18.8740");
+        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Harstad", "NO19.1903");
 
         EsGeografiJobbonsker geografiJobbonsker1 = new EsGeografiJobbonsker("Nordland", "NO18");
 
-        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Tromsø", "NO19.8809");
+        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Tromsø", "NO19.1902");
 
         ArrayList<EsGeografiJobbonsker> geografiJobbonskerListe = new ArrayList<>();
         geografiJobbonskerListe.add(geografiJobbonsker);
@@ -1275,11 +1270,11 @@ public class EsCvObjectMother {
         ArrayList<EsVerv> vervListe = new ArrayList<>();
         vervListe.add(verv);
 
-        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Harstad", "NO18.8740");
+        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Harstad", "NO19.1903");
 
         EsGeografiJobbonsker geografiJobbonsker1 = new EsGeografiJobbonsker("Nordland", "NO18");
 
-        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Tromsø", "NO19.8809");
+        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Tromsø", "NO19.1902");
 
         ArrayList<EsGeografiJobbonsker> geografiJobbonskerListe = new ArrayList<>();
         geografiJobbonskerListe.add(geografiJobbonsker);
@@ -1468,12 +1463,12 @@ public class EsCvObjectMother {
         ArrayList<EsVerv> vervListe = new ArrayList<>();
         vervListe.add(verv);
 
-        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Hamar", "NO10.1010");
+        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Hamar", "NO04.0403");
 
         EsGeografiJobbonsker geografiJobbonsker1 =
-                new EsGeografiJobbonsker("Lillehammer", "NO10.1011");
+                new EsGeografiJobbonsker("Lillehammer", "NO05.0501");
 
-        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Hedmark", "NO10");
+        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Hedmark", "NO04");
 
         ArrayList<EsGeografiJobbonsker> geografiJobbonskerListe = new ArrayList<>();
         geografiJobbonskerListe.add(geografiJobbonsker);
@@ -1659,12 +1654,12 @@ public class EsCvObjectMother {
         ArrayList<EsVerv> vervListe = new ArrayList<>();
         vervListe.add(verv);
 
-        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Hamar", "NO10.1010");
+        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Hamar", "NO04.0403");
 
         EsGeografiJobbonsker geografiJobbonsker1 =
-                new EsGeografiJobbonsker("Lillehammer", "NO10.1011");
+                new EsGeografiJobbonsker("Lillehammer", "NO05.0501");
 
-        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Hedmark", "NO10");
+        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Hedmark", "NO04");
 
         ArrayList<EsGeografiJobbonsker> geografiJobbonskerListe = new ArrayList<>();
         geografiJobbonskerListe.add(geografiJobbonsker);
@@ -1848,12 +1843,12 @@ public class EsCvObjectMother {
         ArrayList<EsVerv> vervListe = new ArrayList<>();
         vervListe.add(verv);
 
-        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Hamar", "NO10.1010");
+        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Hamar", "NO04.0403");
 
         EsGeografiJobbonsker geografiJobbonsker1 =
-                new EsGeografiJobbonsker("Lillehammer", "NO10.1011");
+                new EsGeografiJobbonsker("Lillehammer", "NO05.0501");
 
-        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Hedmark", "NO10");
+        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Hedmark", "NO04");
 
         ArrayList<EsGeografiJobbonsker> geografiJobbonskerListe = new ArrayList<>();
         geografiJobbonskerListe.add(geografiJobbonsker);
@@ -2037,12 +2032,12 @@ public class EsCvObjectMother {
         ArrayList<EsVerv> vervListe = new ArrayList<>();
         vervListe.add(verv);
 
-        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Hamar", "NO10.1010");
+        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Hamar", "NO04.0403");
 
         EsGeografiJobbonsker geografiJobbonsker1 =
-                new EsGeografiJobbonsker("Lillehammer", "NO10.1011");
+                new EsGeografiJobbonsker("Lillehammer", "NO05.0501");
 
-        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Hedmark", "NO10");
+        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Hedmark", "NO04");
 
         ArrayList<EsGeografiJobbonsker> geografiJobbonskerListe = new ArrayList<>();
         geografiJobbonskerListe.add(geografiJobbonsker);
@@ -2226,12 +2221,12 @@ public class EsCvObjectMother {
         ArrayList<EsVerv> vervListe = new ArrayList<>();
         vervListe.add(verv);
 
-        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Hamar", "NO10.1010");
+        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Hamar", "NO04.0403");
 
         EsGeografiJobbonsker geografiJobbonsker1 =
-                new EsGeografiJobbonsker("Lillehammer", "NO10.1011");
+                new EsGeografiJobbonsker("Lillehammer", "NO05.0501");
 
-        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Hedmark", "NO10");
+        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Hedmark", "NO04");
 
         ArrayList<EsGeografiJobbonsker> geografiJobbonskerListe = new ArrayList<>();
         geografiJobbonskerListe.add(geografiJobbonsker);
@@ -2415,12 +2410,12 @@ public class EsCvObjectMother {
         ArrayList<EsVerv> vervListe = new ArrayList<>();
         vervListe.add(verv);
 
-        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Hamar", "NO10.1010");
+        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Hamar", "NO04.0403");
 
         EsGeografiJobbonsker geografiJobbonsker1 =
-                new EsGeografiJobbonsker("Lillehammer", "NO10.1011");
+                new EsGeografiJobbonsker("Lillehammer", "NO05.0501");
 
-        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Hedmark", "NO10");
+        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Hedmark", "NO04");
 
         ArrayList<EsGeografiJobbonsker> geografiJobbonskerListe = new ArrayList<>();
         geografiJobbonskerListe.add(geografiJobbonsker);
@@ -2604,12 +2599,12 @@ public class EsCvObjectMother {
         ArrayList<EsVerv> vervListe = new ArrayList<>();
         vervListe.add(verv);
 
-        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Hamar", "NO10.1010");
+        EsGeografiJobbonsker geografiJobbonsker = new EsGeografiJobbonsker("Hamar", "NO04.0403");
 
         EsGeografiJobbonsker geografiJobbonsker1 =
-                new EsGeografiJobbonsker("Lillehammer", "NO10.1011");
+                new EsGeografiJobbonsker("Lillehammer", "NO05.0501");
 
-        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Hedmark", "NO10");
+        EsGeografiJobbonsker geografiJobbonsker2 = new EsGeografiJobbonsker("Hedmark", "NO04");
 
         ArrayList<EsGeografiJobbonsker> geografiJobbonskerListe = new ArrayList<>();
         geografiJobbonskerListe.add(geografiJobbonsker);
