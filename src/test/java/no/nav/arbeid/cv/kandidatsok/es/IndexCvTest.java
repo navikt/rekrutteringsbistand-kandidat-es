@@ -476,9 +476,9 @@ public class IndexCvTest {
     @Test
     public void testSokPaFlereGeografiJobbonskerGirBegrensendeResultat() throws IOException {
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().geografiList(Collections.singletonList("NO34.3434.1")).bygg());
+                Sokekriterier.med().geografiList(Collections.singletonList("NO12.1201")).bygg());
         Sokeresultat sokeresultat2 = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().geografiList(asList("NO34.3434.1", "NO21.2020")).bygg());
+                Sokekriterier.med().geografiList(asList("NO12.1201", "NO11.1103")).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         List<EsCv> cver2 = sokeresultat2.getCver();
@@ -489,9 +489,9 @@ public class IndexCvTest {
     @Test
     public void testSokPaBostedGirBegrensendeResultat() throws IOException {
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().geografiList(Collections.singletonList("NO34.3434.1")).bygg());
+                Sokekriterier.med().geografiList(Collections.singletonList("NO12.1201")).bygg());
         Sokeresultat sokeresultat2 = sokClient.arbeidsgiverSok(Sokekriterier.med()
-                .geografiList(asList("NO34.3434")).maaBoInnenforGeografi(true).bygg());
+                .geografiList(asList("NO12.1201")).maaBoInnenforGeografi(true).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         List<EsCv> cver2 = sokeresultat2.getCver();
