@@ -775,7 +775,6 @@ public class EsSokHttpService implements EsSokService {
 
             searchSourceBuilder.sort(fieldSortBuilder);
         }
-        searchSourceBuilder.sort(new ScoreSortBuilder().order(SortOrder.DESC));
         searchSourceBuilder.sort(new FieldSortBuilder("tidsstempel").order(SortOrder.DESC));
 
         TermsAggregationBuilder yrkesAggregation3Siffer =
