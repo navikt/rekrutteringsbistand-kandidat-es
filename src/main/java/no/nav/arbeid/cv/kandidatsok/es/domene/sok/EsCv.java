@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class EsCv {
 
     private String fodselsnummer;
-      
+
     private String fornavn;
 
     private String etternavn;
@@ -20,6 +20,8 @@ public class EsCv {
     private Date fodselsdato;
 
     private Boolean fodselsdatoErDnr;
+
+    private String poststed;
 
     private String formidlingsgruppekode;
 
@@ -39,21 +41,21 @@ public class EsCv {
 
     public EsCv() {}
 
-    public EsCv(String fodselsnummer, String formidlingsgruppekode, Long arenaPersonId,
-            String arenaKandidatnr, int totalLengdeYrkeserfaring, String kvalifiseringsgruppekode,
-            String fornavn, String etternavn, Date fodselsdato, Boolean fodselsdatoErDnr,
-            List<EsUtdanning> utdanning, List<EsYrkeserfaring> yrkeserfaring) {
-        super();
+    public EsCv(String fodselsnummer, String fornavn, String etternavn, Date fodselsdato, Boolean fodselsdatoErDnr,
+                String poststed, String formidlingsgruppekode, Long arenaPersonId, String arenaKandidatnr,
+                int totalLengdeYrkeserfaring, String kvalifiseringsgruppekode, List<EsUtdanning> utdanning,
+                List<EsYrkeserfaring> yrkeserfaring) {
         this.fodselsnummer = fodselsnummer;
+        this.fornavn = fornavn;
+        this.etternavn = etternavn;
+        this.fodselsdato = fodselsdato;
+        this.fodselsdatoErDnr = fodselsdatoErDnr;
+        this.poststed = poststed;
         this.formidlingsgruppekode = formidlingsgruppekode;
         this.arenaPersonId = arenaPersonId;
         this.arenaKandidatnr = arenaKandidatnr;
         this.totalLengdeYrkeserfaring = totalLengdeYrkeserfaring;
         this.kvalifiseringsgruppekode = kvalifiseringsgruppekode;
-        this.fornavn = fornavn;
-        this.etternavn = etternavn;
-        this.fodselsdato = fodselsdato;
-        this.fodselsdatoErDnr = fodselsdatoErDnr;
         this.utdanning = utdanning;
         this.yrkeserfaring = yrkeserfaring;
     }
@@ -106,19 +108,19 @@ public class EsCv {
     public String getArenaKandidatnr() {
         return arenaKandidatnr;
     }
-    
+
     public String getFornavn() {
         return fornavn;
     }
-    
+
     public String getEtternavn() {
         return etternavn;
     }
-    
+
     public Date getFodselsdato() {
         return fodselsdato;
     }
-    
+
     public Boolean getFodselsdatoErDnr() {
         return fodselsdatoErDnr;
     }
@@ -135,47 +137,58 @@ public class EsCv {
         return yrkeserfaring;
     }
 
+    public String getPoststed() {
+        return poststed;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         EsCv esCv = (EsCv) o;
-        return Objects.equals(fodselsnummer, esCv.fodselsnummer)
-                && Objects.equals(formidlingsgruppekode, esCv.formidlingsgruppekode)
-                && Objects.equals(arenaPersonId, esCv.arenaPersonId)
-                && Objects.equals(arenaKandidatnr, esCv.arenaKandidatnr)
-                && Objects.equals(utdanning, esCv.utdanning)
-                && Objects.equals(yrkeserfaring, esCv.yrkeserfaring)
-                && Objects.equals(totalLengdeYrkeserfaring, esCv.totalLengdeYrkeserfaring)
-                && Objects.equals(kvalifiseringsgruppekode, esCv.kvalifiseringsgruppekode)
-                && Objects.equals(fornavn, esCv.fornavn)
-                && Objects.equals(etternavn, esCv.etternavn)
-                && Objects.equals(fodselsdato, esCv.fodselsdato)
-                && Objects.equals(fodselsdatoErDnr, esCv.fodselsdatoErDnr);
+        return totalLengdeYrkeserfaring == esCv.totalLengdeYrkeserfaring &&
+                Objects.equals(fodselsnummer, esCv.fodselsnummer) &&
+                Objects.equals(fornavn, esCv.fornavn) &&
+                Objects.equals(etternavn, esCv.etternavn) &&
+                Objects.equals(fodselsdato, esCv.fodselsdato) &&
+                Objects.equals(fodselsdatoErDnr, esCv.fodselsdatoErDnr) &&
+                Objects.equals(poststed, esCv.poststed) &&
+                Objects.equals(formidlingsgruppekode, esCv.formidlingsgruppekode) &&
+                Objects.equals(arenaPersonId, esCv.arenaPersonId) &&
+                Objects.equals(arenaKandidatnr, esCv.arenaKandidatnr) &&
+                Objects.equals(kvalifiseringsgruppekode, esCv.kvalifiseringsgruppekode) &&
+                Objects.equals(utdanning, esCv.utdanning) &&
+                Objects.equals(yrkeserfaring, esCv.yrkeserfaring);
+
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(fodselsnummer, formidlingsgruppekode, arenaPersonId, arenaKandidatnr,
-                utdanning, yrkeserfaring, totalLengdeYrkeserfaring, kvalifiseringsgruppekode, 
-                fornavn, etternavn, fodselsdato, fodselsdatoErDnr);
+        return Objects.hash(
+                fodselsnummer, fornavn, etternavn, fodselsdato, fodselsdatoErDnr, poststed,
+                formidlingsgruppekode, arenaPersonId, arenaKandidatnr, totalLengdeYrkeserfaring,
+                kvalifiseringsgruppekode, utdanning, yrkeserfaring
+        );
     }
 
     @Override
     public String toString() {
-        return "EsCv [fodselsnummer=" + fodselsnummer + ", fornavn=" + fornavn + ", etternavn="
-                + etternavn + ", fodselsdato=" + fodselsdato + ", fodselsdatoErDnr="
-                + fodselsdatoErDnr + ", formidlingsgruppekode=" + formidlingsgruppekode
-                + ", arenaPersonId=" + arenaPersonId + ", arenaKandidatnr=" + arenaKandidatnr
-                + ", totalLengdeYrkeserfaring=" + totalLengdeYrkeserfaring
-                + ", kvalifiseringsgruppekode=" + kvalifiseringsgruppekode + ", utdanning="
-                + utdanning + ", yrkeserfaring=" + yrkeserfaring + ", score=" + score + "]";
+        return "EsCv{" +
+                "fodselsnummer='" + fodselsnummer + '\'' +
+                ", fornavn='" + fornavn + '\'' +
+                ", etternavn='" + etternavn + '\'' +
+                ", fodselsdato=" + fodselsdato +
+                ", fodselsdatoErDnr=" + fodselsdatoErDnr +
+                ", poststed='" + poststed + '\'' +
+                ", formidlingsgruppekode='" + formidlingsgruppekode + '\'' +
+                ", arenaPersonId=" + arenaPersonId +
+                ", arenaKandidatnr='" + arenaKandidatnr + '\'' +
+                ", totalLengdeYrkeserfaring=" + totalLengdeYrkeserfaring +
+                ", kvalifiseringsgruppekode='" + kvalifiseringsgruppekode + '\'' +
+                ", utdanning=" + utdanning +
+                ", yrkeserfaring=" + yrkeserfaring +
+                ", score=" + score +
+                '}';
     }
-
-    
 
 }
