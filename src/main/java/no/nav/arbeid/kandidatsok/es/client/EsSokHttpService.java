@@ -1,33 +1,14 @@
 package no.nav.arbeid.kandidatsok.es.client;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import no.nav.arbeid.cv.kandidatsok.es.domene.sok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.MatchQueryBuilder;
-import org.elasticsearch.index.query.MultiMatchQueryBuilder;
-import org.elasticsearch.index.query.NestedQueryBuilder;
-import org.elasticsearch.index.query.Operator;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.RangeQueryBuilder;
-import org.elasticsearch.index.query.RegexpQueryBuilder;
+import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
@@ -37,11 +18,7 @@ import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms.Bucket;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.search.sort.FieldSortBuilder;
-import org.elasticsearch.search.sort.NestedSortBuilder;
-import org.elasticsearch.search.sort.ScoreSortBuilder;
-import org.elasticsearch.search.sort.SortMode;
-import org.elasticsearch.search.sort.SortOrder;
+import org.elasticsearch.search.sort.*;
 import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilders;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
@@ -49,14 +26,14 @@ import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
-import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Aggregering;
-import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Aggregeringsfelt;
-import no.nav.arbeid.cv.kandidatsok.es.domene.sok.EsCv;
-import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokekriterier;
-import no.nav.arbeid.cv.kandidatsok.es.domene.sok.SokekriterierVeiledere;
-import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokeresultat;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 public class EsSokHttpService implements EsSokService {
 
@@ -400,8 +377,13 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addGeografiToQuery(List<String> geografi, BoolQueryBuilder boolQueryBuilder) {
+
+        BoolQueryBuilder geografiQueryBuilder = QueryBuilders.boolQuery();
+
         geografi.stream().filter(StringUtils::isNotBlank)
-                .forEach(g -> addGeografiQuery(g, boolQueryBuilder));
+                .forEach(g -> addGeografiQuery(g, geografiQueryBuilder));
+
+        boolQueryBuilder.must(geografiQueryBuilder);
     }
 
     private void addKommunenummerToQuery(List<String> geografi, BoolQueryBuilder boolQueryBuilder) {
@@ -527,7 +509,7 @@ public class EsSokHttpService implements EsSokService {
         NestedQueryBuilder geografiQueryBuilder = QueryBuilders.nestedQuery("geografiJobbonsker",
                 QueryBuilders.regexpQuery("geografiJobbonsker.geografiKode", regex),
                 ScoreMode.Total);
-        boolQueryBuilder.must(geografiQueryBuilder);
+        boolQueryBuilder.should(geografiQueryBuilder);
         LOGGER.debug("ADDING geografiJobbonske");
     }
 
