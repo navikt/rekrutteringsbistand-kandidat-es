@@ -193,6 +193,35 @@ public class EsSokHttpService implements EsSokService {
         return toSokeresultat(esExec(() -> search(UseCase.AG_SOK, queryBuilder, sk.fraIndex(),
                 sk.antallResultater(), sortQueryBuilder)));
     }
+    
+    @Override
+    public Optional<EsCv> veilederSokPaaFnr(String fnr) throws IOException {
+        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+        queryBuilder.must(QueryBuilders.termQuery("fodselsnummer", fnr));
+        addFilterForVeiledereSok(queryBuilder);
+        
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(queryBuilder);
+        
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.indices(CV_INDEX);
+        searchRequest.source(searchSourceBuilder);
+
+        LOGGER.debug("SEARCHREQUEST: " + searchRequest.toString());
+
+        SearchResponse searchResponse = client.search(searchRequest);
+        LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
+        LOGGER.info("Søketid: {}", searchResponse.getTook());
+        LOGGER.debug("Totalt antall treff: " + searchResponse.getHits().getTotalHits());
+        List<EsCv> cver = toCvList(searchResponse);
+        if( cver.size() > 1 ) {
+            LOGGER.warn("Har fått treff på mer enn 1 kandidat ved søk med fødselsnummer");           
+        }
+        if( cver.size() == 0 ) {
+            return Optional.empty();
+        }
+        return Optional.of(cver.iterator().next());
+    }
 
     @Override
     public Sokeresultat veilederSok(SokekriterierVeiledere sk) throws IOException {

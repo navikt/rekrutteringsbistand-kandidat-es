@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
@@ -756,5 +757,18 @@ public class IndexCvTest {
         List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver).hasSize(1);        
         assertThat(cver).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));                
+    }
+    
+    @Test
+    public void sokPaFnrSkalGiKorrektResultat() throws IOException {
+        Optional<EsCv> optional = sokClient.veilederSokPaaFnr("04265983651");
+        assertThat(optional).isPresent();
+        assertThat(optional.get()).isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv3()));
+    }
+    
+    @Test
+    public void sokPaIkkeEksisterendeFnrSkalGiEmpty() throws IOException {
+        Optional<EsCv> optional = sokClient.veilederSokPaaFnr("04265983622");
+        assertThat(optional).isNotPresent();        
     }
 }
