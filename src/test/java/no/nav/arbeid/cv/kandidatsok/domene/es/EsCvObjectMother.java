@@ -205,7 +205,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         EsArbeidstidsordningJobbonskerListe.add(EsArbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv("01016012345", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
+        EsCv esCv = new EsCv("03016012345", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
                 "unnasluntrer@mailinator.com", "(+47) 22334455", "12345678", "NO", 1L, "CV51953",
                 "", "J", d("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, FALSE, null, null, null, null, FALSE, FALSE);
@@ -406,7 +406,7 @@ public class EsCvObjectMother {
         arbeidsdagerJobbonskerList.add(arbeidsdagerJobbonskerLoerdag);
         arbeidsdagerJobbonskerList.add(arbeidsdagerJobbonskerSoendag);
 
-        EsCv esCv = new EsCv("01016012345", "OLA", "NORDMANN", d("1960-01-01"), false, "JOBBS",
+        EsCv esCv = new EsCv("04016012345", "OLA", "NORDMANN", d("1960-01-01"), false, "JOBBS",
                 "unnasluntrer@mailinator.com", "(+47) 22334455", "12345678", "NO", 1L, "S221234", // Kan
                                                                                                   // ik
                 "", "N", d("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 5001, false,
@@ -1502,7 +1502,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv("01016012345", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
+        EsCv esCv = new EsCv("02016012345", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
                 "unnasluntrer@mailinator.com", "(+47) 22334455", "12345678", "NO", 1L, "S221234", // Kan
                                                                                                   // ik
                 "", "N", d("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,

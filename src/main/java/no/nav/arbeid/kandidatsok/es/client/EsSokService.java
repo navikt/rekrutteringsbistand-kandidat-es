@@ -35,6 +35,8 @@ public interface EsSokService {
     
     Sokeresultat veilederHentKandidater(List<String> kandidatnummer) throws IOException;
 
+    Optional<no.nav.arbeid.cv.kandidatsok.es.domene.sok.EsCv> veilederSokPaaFnr(String fnr) throws IOException;
+
     
 
 }
