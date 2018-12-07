@@ -3,7 +3,6 @@ package no.nav.arbeid.cv.indexer.config;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -22,7 +21,7 @@ public class EsServiceConfig {
 
   public EsServiceConfig(RestHighLevelClient restHighLevelClient, ObjectMapper objectMapper,
       MeterRegistry meterRegistry) {
-    this.restHighLevelClient = restHighLevelClient;;
+    this.restHighLevelClient = restHighLevelClient;
     this.objectMapper = objectMapper;
     this.meterRegistry = meterRegistry;
   }
@@ -36,18 +35,6 @@ public class EsServiceConfig {
   public EsIndexerService indexerCvService() {
     return new EsIndexerHttpService(restHighLevelClient, objectMapper, meterRegistry);
   }
-
-  // @PostConstruct
-  // public void initES() throws IOException {
-  // try {
-  // // esCvClient.deleteIndex();
-  // if (!esCvClient.doesIndexExist()) {
-  // esCvClient.createIndex();
-  // }
-  // } catch (Exception e) {
-  // LOGGER.error("Feilet under initialisering av Elasticsearch", e);
-  // }
-  // }
 
 }
 
