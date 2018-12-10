@@ -11,9 +11,10 @@ public class KandidatsokTransformer {
 
   public EsCv transformer(no.nav.arbeid.cv.kandidatsok.es.domene.EsCv cv) {
     return new EsCv(cv.getFodselsnummer(), cv.getFornavn(), cv.getEtternavn(), cv.getFodselsdato(),
-            cv.getFodselsdatoErDnr(), cv.getPoststed(), cv.getFormidlingsgruppekode(), cv.getArenaPersonId(),
-        cv.getArenaKandidatnr(), cv.getTotalLengdeYrkeserfaring(), cv.getKvalifiseringsgruppekode(),
-        transformerUtdListe(cv.getUtdanning()), transformerYrkeListe(cv.getYrkeserfaring()));
+            cv.getFodselsdatoErDnr(), cv.getPoststed(), cv.getEpostadresse(), cv.getTelefon(), cv.getMobiltelefon(), 
+            cv.getFormidlingsgruppekode(), cv.getArenaPersonId(),
+            cv.getArenaKandidatnr(), cv.getTotalLengdeYrkeserfaring(), cv.getKvalifiseringsgruppekode(),
+            transformerUtdListe(cv.getUtdanning()), transformerYrkeListe(cv.getYrkeserfaring()));
   }
 
   private List<EsYrkeserfaring> transformerYrkeListe(
