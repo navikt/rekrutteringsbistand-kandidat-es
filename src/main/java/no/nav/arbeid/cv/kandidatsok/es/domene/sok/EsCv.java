@@ -22,6 +22,12 @@ public class EsCv {
     private Boolean fodselsdatoErDnr;
 
     private String poststed;
+        
+    private String epostadresse;
+
+    private String mobiltelefon;
+
+    private String telefon;
 
     private String formidlingsgruppekode;
 
@@ -42,7 +48,8 @@ public class EsCv {
     public EsCv() {}
 
     public EsCv(String fodselsnummer, String fornavn, String etternavn, Date fodselsdato, Boolean fodselsdatoErDnr,
-                String poststed, String formidlingsgruppekode, Long arenaPersonId, String arenaKandidatnr,
+                String poststed, String epostadresse, String telefon, String mobiltelefon, 
+                String formidlingsgruppekode, Long arenaPersonId, String arenaKandidatnr,
                 int totalLengdeYrkeserfaring, String kvalifiseringsgruppekode, List<EsUtdanning> utdanning,
                 List<EsYrkeserfaring> yrkeserfaring) {
         this.fodselsnummer = fodselsnummer;
@@ -51,6 +58,9 @@ public class EsCv {
         this.fodselsdato = fodselsdato;
         this.fodselsdatoErDnr = fodselsdatoErDnr;
         this.poststed = poststed;
+        this.epostadresse = epostadresse;
+        this.telefon = telefon;
+        this.mobiltelefon = mobiltelefon;
         this.formidlingsgruppekode = formidlingsgruppekode;
         this.arenaPersonId = arenaPersonId;
         this.arenaKandidatnr = arenaKandidatnr;
@@ -87,12 +97,22 @@ public class EsCv {
         this.yrkeserfaring.addAll(yrkeserfaringListe);
     }
 
-
     public String getFodselsnummer() {
         return fodselsnummer;
     }
+    
+    public String getEpostadresse() {
+        return epostadresse;
+    }
 
+    public String getTelefon() {
+        return telefon;
+    }
 
+    public String getMobiltelefon() {
+        return mobiltelefon;
+    }
+    
     public String getFormidlingsgruppekode() {
         return formidlingsgruppekode;
     }
@@ -153,6 +173,9 @@ public class EsCv {
                 Objects.equals(fodselsdato, esCv.fodselsdato) &&
                 Objects.equals(fodselsdatoErDnr, esCv.fodselsdatoErDnr) &&
                 Objects.equals(poststed, esCv.poststed) &&
+                Objects.equals(epostadresse, esCv.epostadresse) &&
+                Objects.equals(telefon, esCv.telefon) &&
+                Objects.equals(mobiltelefon, esCv.mobiltelefon) &&
                 Objects.equals(formidlingsgruppekode, esCv.formidlingsgruppekode) &&
                 Objects.equals(arenaPersonId, esCv.arenaPersonId) &&
                 Objects.equals(arenaKandidatnr, esCv.arenaKandidatnr) &&
@@ -166,6 +189,7 @@ public class EsCv {
     public int hashCode() {
         return Objects.hash(
                 fodselsnummer, fornavn, etternavn, fodselsdato, fodselsdatoErDnr, poststed,
+                epostadresse, telefon, mobiltelefon,
                 formidlingsgruppekode, arenaPersonId, arenaKandidatnr, totalLengdeYrkeserfaring,
                 kvalifiseringsgruppekode, utdanning, yrkeserfaring
         );
@@ -180,6 +204,9 @@ public class EsCv {
                 ", fodselsdato=" + fodselsdato +
                 ", fodselsdatoErDnr=" + fodselsdatoErDnr +
                 ", poststed='" + poststed + '\'' +
+                ", epostadresse='" + epostadresse + '\'' +
+                ", telefon='" + telefon + '\'' +
+                ", mobiltelefon='" + mobiltelefon + '\'' +
                 ", formidlingsgruppekode='" + formidlingsgruppekode + '\'' +
                 ", arenaPersonId=" + arenaPersonId +
                 ", arenaKandidatnr='" + arenaKandidatnr + '\'' +
