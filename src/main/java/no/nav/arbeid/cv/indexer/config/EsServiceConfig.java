@@ -36,17 +36,5 @@ public class EsServiceConfig {
     return new EsIndexerHttpService(restHighLevelClient, objectMapper, meterRegistry);
   }
 
-  // @PostConstruct
-  // public void initES() throws IOException {
-  // try {
-  // // esCvClient.deleteIndex();
-  // if (!esCvClient.doesIndexExist()) {
-  // esCvClient.createIndex();
-  // }
-  // } catch (Exception e) {
-  // LOGGER.error("Feilet under initialisering av Elasticsearch", e);
-  // }
-  // }
-
 }
 
