@@ -19,10 +19,10 @@ public class EsKurs {
   @ElasticDateField
   private Date tilDato;
 
-  @ElasticTextField(analyzer = "norwegian")
+  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
   private String tittel;
 
-  @ElasticTextField
+  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
   private String arrangor;
 
   @ElasticKeywordField
@@ -31,7 +31,7 @@ public class EsKurs {
   @ElasticIntegerField
   private Integer omfangVerdi;
 
-  @ElasticTextField(analyzer = "norwegian")
+  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
   private String beskrivelse;
 
   public EsKurs() {}

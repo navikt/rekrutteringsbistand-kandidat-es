@@ -25,10 +25,10 @@ public class EsKompetanse {
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private String kompKodeNavn;
 
-  @ElasticTextField
+  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")  
   private String alternativtNavn;
 
-  @ElasticTextField
+  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
   private String beskrivelse;
 
   public EsKompetanse() {}

@@ -409,7 +409,7 @@ public class EsCvObjectMother {
         EsCv esCv = new EsCv("04016012345", "OLA", "NORDMANN", d("1960-01-01"), false, "JOBBS",
                 "unnasluntrer@mailinator.com", "(+47) 22334455", "12345678", "NO", 1L, "S221234", // Kan
                                                                                                   // ik
-                "", "N", d("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 5001, false,
+                "hererjeg", "N", d("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 5001, false,
                 new Date(), 301, FALSE, null, "IKVAL", null, null, FALSE, FALSE);
         esCv.addUtdanning(utdanningsListe);
         esCv.addYrkeserfaring(yrkeserfaringsListe);
@@ -602,7 +602,8 @@ public class EsCvObjectMother {
 
         EsCv esCv = new EsCv("05236984567", "KARI", "NORDMANN", d("1980-02-10"), false, "PARBS",
                 "unnasluntrer2@mailinator.com", "(+47) 22334455", "12345678", "NO", 2L, "H738234",
-                "", "J", d("2016-05-30"), "Dinvei 2", "", "", "1337", "HUSKER IKKE", "NO", 301,
+                "Dette er beskrivelsen av hva jeg har gjort i min yrkeskarriere", 
+                "J", d("2016-05-30"), "Dinvei 2", "", "", "1337", "HUSKER IKKE", "NO", 301,
                 false, new Date(), 401, FALSE, null, "IKVAL", null, null, FALSE, FALSE);
         esCv.addUtdanning(utdanningListe);
         esCv.addYrkeserfaring(yrkeserfaringListe);
@@ -789,7 +790,8 @@ public class EsCvObjectMother {
         EsArbeidstidsordningJobbonskerListe.add(EsArbeidstidsordningJobbonsker);
 
         EsCv esCv = new EsCv("04265983651", "HANS", "NORDMANN", d("1955-11-04"), false, "RARBS",
-                "alltidmed@mailinator.com", "(+47) 22334455", "12345678", "NO", 3L, "S738893", "",
+                "alltidmed@mailinator.com", "(+47) 22334455", "12345678", "NO", 3L, "S738893", 
+                "Jeg jobber like godt selvstendig som i team",
                 "J", d("2016-05-30"), "Minvei 1", "", "", "2323", "INGEBERG", "NO", 301, false,
                 new Date(), 301, FALSE, null, "VARIG", null, null, FALSE, FALSE);
         esCv.addUtdanning(utdanningListe);

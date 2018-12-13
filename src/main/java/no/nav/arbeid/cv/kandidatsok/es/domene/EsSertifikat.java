@@ -22,15 +22,16 @@ public class EsSertifikat {
   @ElasticKeywordField
   private String sertifikatKode;
 
+  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
   @ElasticKeywordField
   @ElasticCompletionField
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private String sertifikatKodeNavn;
 
-  @ElasticTextField
+  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
   private String alternativtNavn;
 
-  @ElasticTextField
+  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
   private String utsteder;
 
   public EsSertifikat() {}

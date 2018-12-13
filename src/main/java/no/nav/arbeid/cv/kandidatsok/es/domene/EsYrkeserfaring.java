@@ -18,7 +18,7 @@ public class EsYrkeserfaring {
   @ElasticDateField(nullValue = "2099-12-31")
   private Date tilDato;
 
-  @ElasticTextField
+  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
   private String arbeidsgiver;
 
   @ElasticKeywordField
@@ -36,7 +36,7 @@ public class EsYrkeserfaring {
   @ElasticCompletionField
   private String styrkKodeStillingstittel;
 
-  @ElasticTextField
+  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
   private String alternativStillingstittel;
 
   @ElasticKeywordField

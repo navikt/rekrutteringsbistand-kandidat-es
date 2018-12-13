@@ -9,6 +9,7 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.*;
+import org.elasticsearch.index.search.MatchQuery;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
@@ -138,10 +139,6 @@ public class EsSokHttpService implements EsSokService {
                     sk.antallResultater(), null)));
         }
 
-        if (StringUtils.isNotBlank(sk.fritekst())) {
-            addFritekstToQuery(sk.fritekst(), queryBuilder);
-        }
-
         if (isNotEmpty(sk.yrkeJobbonsker())) {
             addJobbonskerToQuery(sk.yrkeJobbonsker(), queryBuilder, sortQueryBuilder);
         }
@@ -180,10 +177,6 @@ public class EsSokHttpService implements EsSokService {
 
         if (isNotEmpty(sk.nusKoder())) {
             addNusKoderToQuery(sk.nusKoder(), queryBuilder);
-        }
-
-        if (StringUtils.isNotBlank(sk.etternavn())) {
-            addEtternavnToQuery(sk.etternavn(), queryBuilder);
         }
 
         if (isNotEmpty(sk.forerkort())) {
@@ -457,8 +450,8 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addFritekstToQuery(String fritekst, BoolQueryBuilder boolQueryBuilder) {
-        MultiMatchQueryBuilder fritekstQueryBuilder =
-                QueryBuilders.multiMatchQuery(fritekst, "fritekst");
+        MatchQueryBuilder fritekstQueryBuilder =
+                QueryBuilders.matchQuery("fritekst", fritekst);
         boolQueryBuilder.must(fritekstQueryBuilder);
         LOGGER.debug("ADDING fritekst");
     }
