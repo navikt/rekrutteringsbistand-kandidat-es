@@ -19,15 +19,15 @@ public class EsSprak {
   @ElasticKeywordField
   private String sprakKode;
 
-  @ElasticTextField(analyzer = "norwegian")
+  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
   @ElasticCompletionField
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private String sprakKodeTekst;
 
-  @ElasticTextField
+  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
   private String alternativTekst;
 
-  @ElasticTextField
+  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
   private String beskrivelse;
 
   public EsSprak() {}

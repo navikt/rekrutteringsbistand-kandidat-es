@@ -64,7 +64,7 @@ public class EsCv {
     @ElasticKeywordField
     private String arenaKandidatnr;
 
-    @ElasticTextField
+    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
     private String beskrivelse;
 
     @ElasticKeywordField

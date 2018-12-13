@@ -771,4 +771,35 @@ public class IndexCvTest {
         Optional<EsCv> optional = sokClient.veilederSokPaaFnr("04265983622");
         assertThat(optional).isNotPresent();        
     }
+    
+    @Test
+    public void sokMedFritekstSkalGiTreffPaaBeskrivelse() throws IOException {
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("yrkeskarriere").bygg());
+        assertThat(sokeresultat.getCver()).hasSize(1);
+        assertThat(sokeresultat.getCver()).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
+    }
+    
+    @Test
+    public void sokMedFritekstSkalGiTreffPaaBeskrivelseUavhengigAvCasing() throws IOException {
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("YRKESkarriere").bygg());
+        assertThat(sokeresultat.getCver()).hasSize(1);
+        assertThat(sokeresultat.getCver()).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
+    }
+    
+    @Test
+    public void sokMedFritekstSkalGiTreffPaaArbeidsgiver() throws IOException {
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("Awesome").bygg());
+        assertThat(sokeresultat.getCver()).hasSize(1);
+        assertThat(sokeresultat.getCver()).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
+    }
+    
+    @Test
+    public void sokMedFritekstSkalGiTreffVedBrukAvFlereOrd() throws IOException {
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("Awesome yrkeskarriere selvstendig").bygg());
+        assertThat(sokeresultat.getCver()).hasSize(2);
+        assertThat(sokeresultat.getCver()).containsExactlyInAnyOrder(
+                kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()),
+                kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv3()));       
+    }
+ 
 }

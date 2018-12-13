@@ -17,10 +17,10 @@ public class EsVerv {
   @ElasticDateField
   private Date tilDato;
 
-  @ElasticTextField
+  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
   private String organisasjon;
 
-  @ElasticTextField
+  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
   private String tittel;
 
   public EsVerv() {}

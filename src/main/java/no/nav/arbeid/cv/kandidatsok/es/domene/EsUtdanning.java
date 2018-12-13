@@ -19,7 +19,7 @@ public class EsUtdanning {
   @ElasticDateField
   private Date tilDato;
 
-  @ElasticTextField
+  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
   private String utdannelsessted;
 
   @ElasticKeywordField
@@ -30,7 +30,7 @@ public class EsUtdanning {
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private String nusKodeGrad;
 
-  @ElasticTextField
+  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
   private String alternativGrad;
 
   public EsUtdanning() {}

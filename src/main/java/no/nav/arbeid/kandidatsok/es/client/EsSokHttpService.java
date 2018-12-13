@@ -9,6 +9,7 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.*;
+import org.elasticsearch.index.search.MatchQuery;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
@@ -457,8 +458,8 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addFritekstToQuery(String fritekst, BoolQueryBuilder boolQueryBuilder) {
-        MultiMatchQueryBuilder fritekstQueryBuilder =
-                QueryBuilders.multiMatchQuery(fritekst, "fritekst");
+        MatchQueryBuilder fritekstQueryBuilder =
+                QueryBuilders.matchQuery("fritekst", fritekst);
         boolQueryBuilder.must(fritekstQueryBuilder);
         LOGGER.debug("ADDING fritekst");
     }
