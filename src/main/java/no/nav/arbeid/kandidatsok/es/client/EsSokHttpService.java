@@ -139,10 +139,6 @@ public class EsSokHttpService implements EsSokService {
                     sk.antallResultater(), null)));
         }
 
-        if (StringUtils.isNotBlank(sk.fritekst())) {
-            addFritekstToQuery(sk.fritekst(), queryBuilder);
-        }
-
         if (isNotEmpty(sk.yrkeJobbonsker())) {
             addJobbonskerToQuery(sk.yrkeJobbonsker(), queryBuilder, sortQueryBuilder);
         }
@@ -181,10 +177,6 @@ public class EsSokHttpService implements EsSokService {
 
         if (isNotEmpty(sk.nusKoder())) {
             addNusKoderToQuery(sk.nusKoder(), queryBuilder);
-        }
-
-        if (StringUtils.isNotBlank(sk.etternavn())) {
-            addEtternavnToQuery(sk.etternavn(), queryBuilder);
         }
 
         if (isNotEmpty(sk.forerkort())) {

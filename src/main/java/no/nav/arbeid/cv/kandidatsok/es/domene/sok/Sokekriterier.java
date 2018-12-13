@@ -7,7 +7,6 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 public class Sokekriterier {
-    private String fritekst;
     private List<String> yrkeJobbonsker;
     private List<String> stillingstitler;
     private List<String> kompetanser;
@@ -18,7 +17,6 @@ public class Sokekriterier {
     private List<String> styrkKoder;
     private List<String> nusKoder;
     private List<String> sprak;
-    private String etternavn;
     private Boolean maaBoInnenforGeografi;
     private List<String> forerkort;
     private int antallResultater;
@@ -31,11 +29,7 @@ public class Sokekriterier {
     public static Builder med() {
         return new Builder();
     }
-
-    public String fritekst() {
-        return fritekst;
-    }
-
+   
     public List<String> sprak() {
         return sprak;
     }
@@ -76,10 +70,6 @@ public class Sokekriterier {
         return nusKoder;
     }
 
-    public String etternavn() {
-        return etternavn;
-    }
-
     public Boolean maaBoInnenforGeografi() {
         return maaBoInnenforGeografi;
     }
@@ -113,7 +103,6 @@ public class Sokekriterier {
     }
 
     public static class Builder {
-        private String fritekst;
         private List<String> yrkeJobbonsker;
         private List<String> stillingstitler;
         private List<String> kompetanser;
@@ -126,7 +115,6 @@ public class Sokekriterier {
         private String nusKode;
         private List<String> styrkKoder;
         private List<String> nusKoder;
-        private String etternavn;
         private int fra = 0;
         private int antallResultater = 100;
         private boolean maaBoInnenforGeografi;
@@ -135,8 +123,6 @@ public class Sokekriterier {
 
         public Sokekriterier bygg() {
             Sokekriterier s = new Sokekriterier();
-            s.etternavn = etternavn;
-            s.fritekst = fritekst;
             s.geografiList = geografiList == null ? Collections.emptyList()
                     : Collections.unmodifiableList(new ArrayList<>(geografiList));
             s.kompetanser = kompetanser == null ? Collections.emptyList()
@@ -178,12 +164,6 @@ public class Sokekriterier {
             s.tomtSok = tomtSok;
 
             return s;
-        }
-
-        public Builder fritekst(String fritekst) {
-            this.fritekst = fritekst;
-            this.tomtSok = false;
-            return this;
         }
 
         public Builder yrkeJobbonsker(List<String> yrkeJobbonsker) {
@@ -254,12 +234,6 @@ public class Sokekriterier {
 
         public Builder nusKoder(List<String> nusKoder) {
             this.nusKoder = nusKoder;
-            this.tomtSok = false;
-            return this;
-        }
-
-        public Builder etternavn(String etternavn) {
-            this.etternavn = etternavn;
             this.tomtSok = false;
             return this;
         }

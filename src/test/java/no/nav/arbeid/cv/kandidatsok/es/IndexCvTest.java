@@ -134,7 +134,7 @@ public class IndexCvTest {
     @Test
     public void test() throws IOException {
         Sokeresultat sokeres = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().etternavn("NORDMANN").nusKode("355211").bygg());
+                Sokekriterier.med().nusKode("355211").bygg());
         List<EsCv> list = sokeres.getCver();
         sokeres.getAggregeringer();
 
@@ -178,7 +178,7 @@ public class IndexCvTest {
     public void skalOppretteIndexHvisDenIkkeFinnes() throws IOException {
         indexerClient.deleteIndex();
         Sokeresultat sokeres = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().etternavn("NORDMANN").nusKode("355211").bygg());
+                Sokekriterier.med().nusKode("355211").bygg());
         List<EsCv> list = sokeres.getCver();
         assertThat(list.size()).isEqualTo(0);
     }
@@ -209,9 +209,9 @@ public class IndexCvTest {
     @Test
     public void testFlereInputFritekstGirBredereResultat() throws IOException {
         Sokeresultat sokeresultat1 =
-                sokClient.arbeidsgiverSok(Sokekriterier.med().fritekst("javautvikler").bygg());
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().fritekst("industrimekaniker javautvikler").bygg());
+                sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("javautvikler").bygg());
+        Sokeresultat sokeresultat = sokClient.veilederSok(
+                SokekriterierVeiledere.med().fritekst("industrimekaniker javautvikler").bygg());
 
         List<EsCv> cver1 = sokeresultat1.getCver();
         List<EsCv> cver = sokeresultat.getCver();
@@ -230,7 +230,7 @@ public class IndexCvTest {
         Sokeresultat sokeresultatUtdanning = sokClient.arbeidsgiverSok(
                 Sokekriterier.med().utdanninger(Collections.singletonList("og")).bygg());
         Sokeresultat sokeresultatFritekst =
-                sokClient.arbeidsgiverSok(Sokekriterier.med().fritekst("og").bygg());
+                sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("og").bygg());
 
         List<EsCv> cverYrke = sokeresultatYrke.getCver();
         List<EsCv> cverKomp = sokeresultatKomp.getCver();
