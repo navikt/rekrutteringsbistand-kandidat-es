@@ -462,8 +462,10 @@ public class EsSokHttpService implements EsSokService {
     }
     
     private void addKvalifiseringsgruppeKoderToQuery(List<String> kvalifiseringsgruppeKoder, BoolQueryBuilder boolQueryBuilder) {
+        BoolQueryBuilder innerBoolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(innerBoolQueryBuilder);
         kvalifiseringsgruppeKoder.stream().filter(StringUtils::isNotBlank)
-        .forEach(s -> addKvalifiseringsgruppekodeQuery(s, boolQueryBuilder));
+        .forEach(s -> addKvalifiseringsgruppekodeQuery(s, innerBoolQueryBuilder));
     }
 
     private void addYrkeJobbonskerQuery(String yrkeJobbonske, BoolQueryBuilder boolQueryBuilder) {
@@ -544,7 +546,7 @@ public class EsSokHttpService implements EsSokService {
     }
     
     private void addKvalifiseringsgruppekodeQuery(String kvalifiseringsgruppekode, BoolQueryBuilder boolQueryBuilder) {
-        boolQueryBuilder.must(QueryBuilders.termQuery("kvalifiseringsgruppekode", kvalifiseringsgruppekode));        
+        boolQueryBuilder.should(QueryBuilders.termQuery("kvalifiseringsgruppekode", kvalifiseringsgruppekode));        
         LOGGER.debug("ADDING kvalifiseringsgruppekode");
     }
 
