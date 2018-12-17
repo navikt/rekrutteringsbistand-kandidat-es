@@ -760,6 +760,16 @@ public class IndexCvTest {
     }
     
     @Test
+    public void sokPaToKvalifiseringsgruppekodeSkalIkkeInnsnevre() throws IOException {
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
+                .kvalifiseringsgruppeKoder(Arrays.asList("IKVAL", "IBATT")).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        assertThat(cver).hasSize(1);        
+        assertThat(cver).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));                
+    }
+    
+    @Test
     public void sokPaFnrSkalGiKorrektResultat() throws IOException {
         Optional<EsCv> optional = sokClient.veilederSokPaaFnr("04265983651");
         assertThat(optional).isPresent();
