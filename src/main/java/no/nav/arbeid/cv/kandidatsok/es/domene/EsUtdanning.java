@@ -33,7 +33,17 @@ public class EsUtdanning {
   @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
   private String alternativGrad;
 
+  // Her ligger autorisasjon, svennebrev_fagbrev, mesterbrev
+  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
+  private String yrkestatus;
+
   public EsUtdanning() {}
+
+  public EsUtdanning(Date fraDato, Date tilDato, String utdannelsessted, String nusKode, String nusGrad,
+                     String beskrivelse, String yrkestatus) {
+    this(fraDato, tilDato, utdannelsessted, nusKode, nusGrad, beskrivelse);
+    this.yrkestatus = yrkestatus;
+  }
 
   public EsUtdanning(Date fraDato, Date tilDato, String utdannelsessted, String nusKode,
       String nusKodeGrad, String alternativGrad) {
@@ -63,6 +73,10 @@ public class EsUtdanning {
 
   public String getNusKodeGrad() {
     return nusKodeGrad;
+  }
+
+  public String getYrkestatus() {
+    return yrkestatus;
   }
 
   public String getAlternativGrad() {

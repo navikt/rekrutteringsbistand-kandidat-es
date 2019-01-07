@@ -6,6 +6,7 @@ import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
 import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
 import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
 import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.Objects;
@@ -31,6 +32,17 @@ public class EsSprak {
   private String beskrivelse;
 
   public EsSprak() {}
+
+  public EsSprak(String spraaknavn, String ferdighetMuntlig, String ferdighetSkriftlig) {
+      this.sprakKodeTekst = spraaknavn;
+      this.beskrivelse = "";
+      if (StringUtils.isNotBlank(ferdighetMuntlig)) {
+          beskrivelse += "Muntlig: " + ferdighetMuntlig;
+      }
+      if (StringUtils.isNotBlank(ferdighetSkriftlig)) {
+          beskrivelse += " Skriftlig: " + ferdighetSkriftlig;
+      }
+  }
 
   public EsSprak(Date fraDato, String sprakKode, String sprakKodeTekst, String alternativTekst,
       String beskrivelse) {

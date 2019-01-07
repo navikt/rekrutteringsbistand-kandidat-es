@@ -53,6 +53,23 @@ public class EsYrkeserfaring {
 
   public EsYrkeserfaring() {}
 
+  /**
+   *
+   * @param fraDato
+   * @param tilDato
+   * @param arbeidsgiver
+   * @param styrkKode
+   * @param kodeverkStillingstittel stillingstittel som benyttes av kodeverket - enten janzz preferred term eller styrkstillingstittel
+   * @param alternativStillingstittel
+   * @param yrkeserfaringManeder
+   */
+  public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
+                         String kodeverkStillingstittel, String alternativStillingstittel,
+                         int yrkeserfaringManeder) {
+    this(fraDato, tilDato, arbeidsgiver, styrkKode, kodeverkStillingstittel, alternativStillingstittel, "",
+            "", yrkeserfaringManeder, false);
+  }
+
   public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
       String styrkKodeStillingstittel, String alternativStillingstittel, String organisasjonsnummer,
       String naceKode, int yrkeserfaringManeder, Boolean utelukketForFremtiden) {

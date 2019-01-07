@@ -31,7 +31,11 @@ public class EsKompetanse {
   @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
   private String beskrivelse;
 
-  public EsKompetanse() {}
+    public EsKompetanse() {}
+
+    public EsKompetanse(String kompetanse) {
+        this.kompKodeNavn = kompetanse;
+    }
 
   public EsKompetanse(Date fraDato, String kompKode, String kompKodeNavn, String alternativtNavn,
       String beskrivelse) {
