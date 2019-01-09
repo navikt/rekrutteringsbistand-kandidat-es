@@ -168,7 +168,7 @@ public class IndexCvTest {
                 asList(EsCvObjectMother.giveMeEsCv(), EsCvObjectMother.giveMeEsCvMedFeil(),
                         EsCvObjectMother.giveMeEsCv2());
 
-        bulkEventer.forEach(e -> e.setArenaPersonId(e.getArenaPersonId() + 9998));
+        bulkEventer.forEach(e -> e.setKandidatnr(e.getKandidatnr() + 9998));
         indexerClient.bulkIndex(bulkEventer);
 
     }
@@ -191,8 +191,8 @@ public class IndexCvTest {
         List<EsCv> cver = sokeresultat.getCver();
 
         assertThat(cver.size()).isEqualTo(6);
-        assertThat(cver).extracting(Extractors.byName("arenaKandidatnr")).containsExactlyInAnyOrder(
-                "S221234", "N883773", "H738234", "K838829", "S229934", "S738893");
+        assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder(
+                "6L", "5L", "4L", "3L", "2L", "1L");
     }
 
     @Test
@@ -202,8 +202,8 @@ public class IndexCvTest {
         List<EsCv> cver = sokeresultat.getCver();
 
         assertThat(cver.size()).isEqualTo(6);
-        assertThat(cver).extracting(Extractors.byName("arenaKandidatnr")).containsExactlyInAnyOrder(
-                "N883773", "H738234", "K838829", "S229934", "S738893", "K78786");
+        assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder(
+                "11L", "6L", "5L", "4L", "3L", "2L");
     }
 
     @Test
@@ -554,7 +554,7 @@ public class IndexCvTest {
                         EsCvObjectMother.giveMeEsCv3(), EsCvObjectMother.giveMeEsCv4(),
                         EsCvObjectMother.giveMeEsCv5());
 
-        bulkEventer.forEach(e -> e.setArenaPersonId(e.getArenaPersonId() + 9999));
+        bulkEventer.forEach(e -> e.setKandidatnr(e.getKandidatnr() + 9999));
 
         int antallForBulkIndeksering =
                 sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
@@ -576,12 +576,12 @@ public class IndexCvTest {
 
     @Test
     public void skalBulkSletteCVer() throws Exception {
-        List<Long> sletteIder = asList(EsCvObjectMother.giveMeEsCv().getArenaPersonId(),
-                EsCvObjectMother.giveMeEsCv2().getArenaPersonId());
+        List<String> sletteIder = asList(EsCvObjectMother.giveMeEsCv().getKandidatnr(),
+                EsCvObjectMother.giveMeEsCv2().getKandidatnr());
 
         int antallForBulkSletting =
                 sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
-        indexerClient.bulkSlett(sletteIder);
+        indexerClient.bulkSlettKandidatnr(sletteIder);
         int antallEtterSletting =
                 sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
 
@@ -659,33 +659,33 @@ public class IndexCvTest {
 
     @Test
     public void hentKandidaterBevarerRekkefolge() throws IOException {
-        String KANDIDATNUMMER1 = "N883773";
-        String KANDIDATNUMMER2 = "S221234";
-        String KANDIDATNUMMER3 = "H738234";
+        String KANDIDATNUMMER1 = "5L";
+        String KANDIDATNUMMER2 = "1L";
+        String KANDIDATNUMMER3 = "2L";
         List<String> kandidatnummer1 = asList(KANDIDATNUMMER1, KANDIDATNUMMER2, KANDIDATNUMMER3);
         List<String> kandidatnummer2 = asList(KANDIDATNUMMER3, KANDIDATNUMMER1, KANDIDATNUMMER2);
 
         Sokeresultat resultat1 = sokClient.arbeidsgiverHentKandidater(kandidatnummer1);
         List<String> resultatkandidatnummer1 = resultat1.getCver().stream()
-                .map(EsCv::getArenaKandidatnr).collect(Collectors.toList());
+                .map(EsCv::getKandidatnr).collect(Collectors.toList());
         assertThat(resultatkandidatnummer1).isEqualTo(kandidatnummer1);
 
         Sokeresultat resultat2 = sokClient.arbeidsgiverHentKandidater(kandidatnummer2);
         List<String> resultatkandidatnummer2 = resultat2.getCver().stream()
-                .map(EsCv::getArenaKandidatnr).collect(Collectors.toList());
+                .map(EsCv::getKandidatnr).collect(Collectors.toList());
         assertThat(resultatkandidatnummer2).isEqualTo(kandidatnummer2);
     }
 
     @Test
     public void hentKandidaterHandtererIkkeeksisterendeKandidatnummer() throws IOException {
-        String KANDIDATNUMMER1 = "N883773";
-        String KANDIDATNUMMER2 = "S221234";
+        String KANDIDATNUMMER1 = "5L";
+        String KANDIDATNUMMER2 = "1L";
         List<String> kandidatnummer =
                 asList(KANDIDATNUMMER1, "IKKEEKSISTERNDE_KANDIDATNUMMER", KANDIDATNUMMER2);
 
         Sokeresultat resultat = sokClient.arbeidsgiverHentKandidater(kandidatnummer);
         List<String> resultatkandidatnummer = resultat.getCver().stream()
-                .map(EsCv::getArenaKandidatnr).collect(Collectors.toList());
+                .map(EsCv::getKandidatnr).collect(Collectors.toList());
         assertThat(resultatkandidatnummer).isEqualTo(asList(KANDIDATNUMMER1, KANDIDATNUMMER2));
     }
 

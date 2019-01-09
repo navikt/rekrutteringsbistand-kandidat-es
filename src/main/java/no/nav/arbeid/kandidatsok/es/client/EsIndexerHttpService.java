@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.http.util.EntityUtils;
 import org.elasticsearch.ElasticsearchStatusException;
@@ -34,6 +35,7 @@ import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tags;
 import no.nav.arbeid.cv.kandidatsok.es.domene.EsCv;
 import no.nav.arbeid.cv.kandidatsok.es.exception.ApplicationException;
+import no.nav.arbeid.kandidatsok.es.helper.KandidatnrHelper;
 import no.nav.elasticsearch.mapping.MappingBuilder;
 import no.nav.elasticsearch.mapping.MappingBuilderImpl;
 import no.nav.elasticsearch.mapping.ObjectMapping;
@@ -86,7 +88,7 @@ public class EsIndexerHttpService implements EsIndexerService {
         LOGGER.debug("DOKUMENTET: " + jsonString);
 
         IndexRequest request =
-                new IndexRequest(CV_INDEX, CV_TYPE, Long.toString(esCv.getArenaPersonId()));
+                new IndexRequest(CV_INDEX, CV_TYPE, esCv.getKandidatnr());
         request.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
         request.source(jsonString, XContentType.JSON);
         IndexResponse indexResponse = esExec(() -> client.index(request));
@@ -96,23 +98,23 @@ public class EsIndexerHttpService implements EsIndexerService {
     @Override
     public int bulkIndex(List<EsCv> esCver) throws IOException {
         BulkRequest bulkRequest = Requests.bulkRequest();
-        Long currentArenaId = 0l;
+        String currentKandidatnr = "";
         try {
             for (EsCv esCv : esCver) {
-                currentArenaId = esCv.getArenaPersonId();
+                currentKandidatnr = esCv.getKandidatnr();
                 String jsonString = mapper.writeValueAsString(esCv);
                 IndexRequest ir = Requests.indexRequest().source(jsonString, XContentType.JSON)
-                        .index(CV_INDEX).type(CV_TYPE).id(Long.toString(esCv.getArenaPersonId()));
+                        .index(CV_INDEX).type(CV_TYPE).id(currentKandidatnr);
 
                 bulkRequest.add(ir);
             }
         } catch (Exception e) {
             LOGGER.info(
-                    "Greide ikke å serialisere CV til JSON for å bygge opp bulk-indekseringsrequest: {}. ArenaId: {}",
-                    e.getMessage(), currentArenaId, e);
+                    "Greide ikke å serialisere CV til JSON for å bygge opp bulk-indekseringsrequest: {}. Kandidatnr: {}",
+                    e.getMessage(), currentKandidatnr, e);
             throw new ApplicationException(
-                    "Greide ikke å serialisere CV til JSON for å bygge opp bulk-indekseringsrequest. ArenaId: "
-                            + currentArenaId,
+                    "Greide ikke å serialisere CV til JSON for å bygge opp bulk-indekseringsrequest. Kandidatnr: "
+                            + currentKandidatnr,
                     e);
         }
 
@@ -128,7 +130,7 @@ public class EsIndexerHttpService implements EsIndexerService {
                 try {
                     if (bir.getFailure() != null) {
                         Optional<EsCv> cvMedFeil = esCver.stream().filter(
-                                esCv -> ("" + esCv.getArenaPersonId()).trim().equals(bir.getFailure().getId()))
+                                esCv -> (esCv.getKandidatnr()).trim().equals(bir.getFailure().getId()))
                                 .findFirst();
 
                         LOGGER.warn("Feilet ved indeksering av CV {}: " + bir.getFailure().getMessage(),
@@ -150,18 +152,43 @@ public class EsIndexerHttpService implements EsIndexerService {
         LOGGER.debug("BULKINDEX tidsbruk: " + bulkResponse.getTook());
         return antallIndeksert;
     }
-
+    
     @Override
-    public void bulkSlett(List<Long> arenapersoner) throws IOException {
+    public void bulkSlett(List<Long> arenaPersonIder) throws IOException {
+        List<String> kandidatnr = arenaPersonIder.stream().map(KandidatnrHelper::toKandidatnr).collect(Collectors.toList());
+        
         BulkRequest bulkRequest = Requests.bulkRequest();
 
-        for (Long id : arenapersoner) {
-            DeleteRequest dr = Requests.deleteRequest(CV_INDEX).id(Long.toString(id)).type(CV_TYPE);
+        for (String id : kandidatnr) {
+            DeleteRequest dr = Requests.deleteRequest(CV_INDEX).id(id).type(CV_TYPE);
 
             bulkRequest.add(dr);
         }
 
-        LOGGER.info("Sender bulksletting av {} cv'er", arenapersoner.size());
+        LOGGER.info("Sender bulksletting av {} cv'er", kandidatnr.size());
+        bulkRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
+        BulkResponse bulkResponse = esExec(() -> client.bulk(bulkRequest));
+        if (bulkResponse.hasFailures()) {
+            LOGGER.warn("Feilet under sletting av CVer: " + bulkResponse.buildFailureMessage());
+            long antallFeil =
+                    Arrays.stream(bulkResponse.getItems()).filter(i -> i.isFailed()).count();
+            meterRegistry.counter("cv.es.slett.feil", Tags.of("type", "infrastruktur"))
+                    .increment(antallFeil);
+        }
+        LOGGER.debug("BULKDELETERESPONSE: " + bulkResponse.toString());
+    }
+
+    @Override
+    public void bulkSlettKandidatnr(List<String> kandidatnr) throws IOException {
+        BulkRequest bulkRequest = Requests.bulkRequest();
+
+        for (String id : kandidatnr) {
+            DeleteRequest dr = Requests.deleteRequest(CV_INDEX).id(id).type(CV_TYPE);
+
+            bulkRequest.add(dr);
+        }
+
+        LOGGER.info("Sender bulksletting av {} cv'er", kandidatnr.size());
         bulkRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
         BulkResponse bulkResponse = esExec(() -> client.bulk(bulkRequest));
         if (bulkResponse.hasFailures()) {
