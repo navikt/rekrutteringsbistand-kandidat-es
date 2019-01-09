@@ -65,6 +65,13 @@ public class EsCv {
 
     @ElasticKeywordField
     private String kandidatnr;
+    
+    @ElasticKeywordField
+    private String arenaKandidatnr;
+    
+    //Skal fases ut, men må gjøres på en bakoverkompatibel måte..
+    @ElasticLongField
+    private Long arenaPersonId = 0L;
 
     @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
     private String beskrivelse;
@@ -187,7 +194,7 @@ public class EsCv {
 
     public EsCv(String fodselsnummer, String fornavn, String etternavn, Date fodselsdato,
             Boolean fodselsdatoErDnr, String formidlingsgruppekode, String epostadresse,
-            String mobiltelefon, String telefon, String statsborgerskap, String arenaKandidatnr, String beskrivelse,
+            String mobiltelefon, String telefon, String statsborgerskap, String kandidatnr, String beskrivelse,
             String samtykkeStatus, Date samtykkeDato, String adresselinje1, String adresselinje2,
             String adresselinje3, String postnummer, String poststed, String landkode,
             Integer kommunenummer, Boolean disponererBil, Date tidsstempel, Integer kommunenummerkw,
@@ -204,7 +211,8 @@ public class EsCv {
         this.telefon = telefon;
         this.harKontaktinformasjon = !StringUtils.isAllBlank(this.epostadresse, this.mobiltelefon, this.telefon);        
         this.statsborgerskap = statsborgerskap;
-        this.kandidatnr = arenaKandidatnr;
+        this.kandidatnr = kandidatnr;
+        this.arenaKandidatnr = kandidatnr;
         this.beskrivelse = beskrivelse;
         this.samtykkeStatus = samtykkeStatus;
         this.samtykkeDato = samtykkeDato;
@@ -449,6 +457,14 @@ public class EsCv {
 
     public String getKandidatnr() {
         return kandidatnr;
+    }
+    
+    public String getArenaKandidatnr() {
+        return arenaKandidatnr;
+    }
+    
+    public Long getArenaPersonId() {
+        return arenaPersonId;
     }
 
     public String getBeskrivelse() {
