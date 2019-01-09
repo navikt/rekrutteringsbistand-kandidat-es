@@ -581,7 +581,7 @@ public class IndexCvTest {
 
         int antallForBulkSletting =
                 sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
-        indexerClient.bulkSlett(sletteIder);
+        indexerClient.bulkSlettKandidatnr(sletteIder);
         int antallEtterSletting =
                 sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
 

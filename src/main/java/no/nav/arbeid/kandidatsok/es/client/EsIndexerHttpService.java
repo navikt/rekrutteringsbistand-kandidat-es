@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.http.util.EntityUtils;
 import org.elasticsearch.ElasticsearchStatusException;
@@ -34,6 +35,7 @@ import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tags;
 import no.nav.arbeid.cv.kandidatsok.es.domene.EsCv;
 import no.nav.arbeid.cv.kandidatsok.es.exception.ApplicationException;
+import no.nav.arbeid.kandidatsok.es.helper.KandidatnrHelper;
 import no.nav.elasticsearch.mapping.MappingBuilder;
 import no.nav.elasticsearch.mapping.MappingBuilderImpl;
 import no.nav.elasticsearch.mapping.ObjectMapping;
@@ -150,9 +152,34 @@ public class EsIndexerHttpService implements EsIndexerService {
         LOGGER.debug("BULKINDEX tidsbruk: " + bulkResponse.getTook());
         return antallIndeksert;
     }
+    
+    @Override
+    public void bulkSlett(List<Long> arenaPersonIder) throws IOException {
+        List<String> kandidatnr = arenaPersonIder.stream().map(KandidatnrHelper::toKandidatnr).collect(Collectors.toList());
+        
+        BulkRequest bulkRequest = Requests.bulkRequest();
+
+        for (String id : kandidatnr) {
+            DeleteRequest dr = Requests.deleteRequest(CV_INDEX).id(id).type(CV_TYPE);
+
+            bulkRequest.add(dr);
+        }
+
+        LOGGER.info("Sender bulksletting av {} cv'er", kandidatnr.size());
+        bulkRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
+        BulkResponse bulkResponse = esExec(() -> client.bulk(bulkRequest));
+        if (bulkResponse.hasFailures()) {
+            LOGGER.warn("Feilet under sletting av CVer: " + bulkResponse.buildFailureMessage());
+            long antallFeil =
+                    Arrays.stream(bulkResponse.getItems()).filter(i -> i.isFailed()).count();
+            meterRegistry.counter("cv.es.slett.feil", Tags.of("type", "infrastruktur"))
+                    .increment(antallFeil);
+        }
+        LOGGER.debug("BULKDELETERESPONSE: " + bulkResponse.toString());
+    }
 
     @Override
-    public void bulkSlett(List<String> kandidatnr) throws IOException {
+    public void bulkSlettKandidatnr(List<String> kandidatnr) throws IOException {
         BulkRequest bulkRequest = Requests.bulkRequest();
 
         for (String id : kandidatnr) {

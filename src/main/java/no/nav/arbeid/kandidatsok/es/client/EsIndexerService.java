@@ -11,7 +11,9 @@ public interface EsIndexerService {
 
   int bulkIndex(List<EsCv> esCver) throws IOException;
 
-  void bulkSlett(List<String> kandidatnr) throws IOException;
+  void bulkSlettKandidatnr(List<String> kandidatnr) throws IOException;
+  
+  void bulkSlett(List<Long> arenaPersonIder) throws IOException;
 
   void createIndex() throws IOException;
 
