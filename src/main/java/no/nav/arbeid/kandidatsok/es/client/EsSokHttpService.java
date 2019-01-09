@@ -292,6 +292,7 @@ public class EsSokHttpService implements EsSokService {
     private void addFilterForArbeidsgivereSok(BoolQueryBuilder boolQueryBuilder) {
         addFilterForArbeidsgivereHent(boolQueryBuilder);
         boolQueryBuilder.mustNot(QueryBuilders.termQuery("fritattAgKandidatsok", Boolean.TRUE));
+        boolQueryBuilder.must(QueryBuilders.termQuery("harKontaktinformasjon", Boolean.TRUE));
     }
 
     private void addFilterForArbeidsgivereHent(BoolQueryBuilder boolQueryBuilder) {
@@ -828,7 +829,7 @@ public class EsSokHttpService implements EsSokService {
     private EsCv mapEsCv(SearchHit hit) {
         try {
             EsCv esCv = mapper.readValue(hit.getSourceAsString(), EsCv.class);
-            LOGGER.debug("Score for {} er {} ", esCv.getArenaKandidatnr(), hit.getScore());
+            LOGGER.debug("Score for {} er {} ", esCv.getKandidatnr(), hit.getScore());
             esCv.setScore(hit.getScore());
             return esCv;
         } catch (IOException e) {
@@ -889,7 +890,7 @@ public class EsSokHttpService implements EsSokService {
             String kandidatnr) throws IOException {
 
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery()
-                .must(QueryBuilders.termQuery("arenaKandidatnr", kandidatnr));
+                .must(QueryBuilders.termQuery("kandidatnr", kandidatnr));
         if (isAg) {
             addFilterForArbeidsgivereHent(queryBuilder);
         } else {
@@ -923,8 +924,8 @@ public class EsSokHttpService implements EsSokService {
             LOGGER.error("Fant mer enn én CV for kandidat {}. Fant {} CVer: {}", kandidatnr,
                     liste.size(),
                     liste.stream()
-                            .map(cv -> String.format("(person_id: %s, kandidatnr: %s)",
-                                    cv.getArenaPersonId(), cv.getArenaKandidatnr()))
+                            .map(cv -> String.format("(kandidatnr: %s)",
+                                    cv.getKandidatnr()))
                             .collect(Collectors.joining(", ")));
         }
         return liste.stream().findFirst();
@@ -932,7 +933,7 @@ public class EsSokHttpService implements EsSokService {
 
     private BoolQueryBuilder kandidatnrQuery(List<String> kandidatnummer) {
         return QueryBuilders.boolQuery()
-                .must(QueryBuilders.termsQuery("arenaKandidatnr", kandidatnummer));
+                .must(QueryBuilders.termsQuery("kandidatnr", kandidatnummer));
     }
 
     @Override
@@ -960,7 +961,7 @@ public class EsSokHttpService implements EsSokService {
     private List<EsCv> sorterSokeresultaterBasertPaaRequestRekkefolge(List<EsCv> cver,
             List<String> kandidatrekkefolge) {
         Map<String, EsCv> kandidater =
-                cver.stream().collect(toMap(EsCv::getArenaKandidatnr, Function.identity()));
+                cver.stream().collect(toMap(EsCv::getKandidatnr, Function.identity()));
 
         return kandidatrekkefolge.stream().map(kandidater::get).filter(Objects::nonNull)
                 .collect(toList());

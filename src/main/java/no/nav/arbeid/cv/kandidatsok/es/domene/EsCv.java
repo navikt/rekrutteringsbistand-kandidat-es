@@ -52,17 +52,17 @@ public class EsCv {
     @ElasticKeywordField
     private String mobiltelefon;
 
+    @ElasticBooleanField
+    private boolean harKontaktinformasjon;
+    
     @ElasticKeywordField
     private String telefon;
 
     @ElasticKeywordField
     private String statsborgerskap;
 
-    @ElasticLongField
-    private Long arenaPersonId;
-
     @ElasticKeywordField
-    private String arenaKandidatnr;
+    private String kandidatnr;
 
     @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
     private String beskrivelse;
@@ -185,7 +185,7 @@ public class EsCv {
 
     public EsCv(String fodselsnummer, String fornavn, String etternavn, Date fodselsdato,
             Boolean fodselsdatoErDnr, String formidlingsgruppekode, String epostadresse,
-            String mobiltelefon, String telefon, String statsborgerskap, Long arenaPersonId, String arenaKandidatnr, String beskrivelse,
+            String mobiltelefon, String telefon, String statsborgerskap, String arenaKandidatnr, String beskrivelse,
             String samtykkeStatus, Date samtykkeDato, String adresselinje1, String adresselinje2,
             String adresselinje3, String postnummer, String poststed, String landkode,
             Integer kommunenummer, Boolean disponererBil, Date tidsstempel, Integer kommunenummerkw,
@@ -200,9 +200,15 @@ public class EsCv {
         this.epostadresse = epostadresse;
         this.mobiltelefon = mobiltelefon;
         this.telefon = telefon;
+        if((this.epostadresse != null && !this.epostadresse.trim().isEmpty())
+                ||  (this.mobiltelefon != null && !this.mobiltelefon.trim().isEmpty())
+                ||  (this.telefon != null && !this.telefon.trim().isEmpty())) {
+            this.harKontaktinformasjon = true;
+        } else {
+            this.harKontaktinformasjon = false;
+        }
         this.statsborgerskap = statsborgerskap;
-        this.arenaPersonId = arenaPersonId;
-        this.arenaKandidatnr = arenaKandidatnr;
+        this.kandidatnr = arenaKandidatnr;
         this.beskrivelse = beskrivelse;
         this.samtykkeStatus = samtykkeStatus;
         this.samtykkeDato = samtykkeDato;
@@ -436,17 +442,17 @@ public class EsCv {
     public String getTelefon() {
         return telefon;
     }
+    
+    public boolean isHarKontaktinformasjon() {
+        return harKontaktinformasjon;
+    }
 
     public String getStatsborgerskap() {
         return statsborgerskap;
     }
 
-    public Long getArenaPersonId() {
-        return arenaPersonId;
-    }
-
-    public String getArenaKandidatnr() {
-        return arenaKandidatnr;
+    public String getKandidatnr() {
+        return kandidatnr;
     }
 
     public String getBeskrivelse() {
@@ -598,8 +604,7 @@ public class EsCv {
                 && Objects.equals(mobiltelefon, esCv.mobiltelefon)
                 && Objects.equals(telefon, esCv.telefon)
                 && Objects.equals(statsborgerskap, esCv.statsborgerskap)
-                && Objects.equals(arenaPersonId, esCv.arenaPersonId)
-                && Objects.equals(arenaKandidatnr, esCv.arenaKandidatnr)
+                && Objects.equals(kandidatnr, esCv.kandidatnr)
                 && Objects.equals(beskrivelse, esCv.beskrivelse)
                 && Objects.equals(samtykkeStatus, esCv.samtykkeStatus)
                 && Objects.equals(samtykkeDato, esCv.samtykkeDato)
@@ -634,8 +639,8 @@ public class EsCv {
     @Override
     public int hashCode() {
         return Objects.hash(fodselsnummer, fornavn, etternavn, fodselsdato, fodselsdatoErDnr,
-                formidlingsgruppekode, doed, frKode, kvalifiseringsgruppekode, hovedmaalkode, orgenhet, fritattKandidatsok, fritattAgKandidatsok, epostadresse, mobiltelefon, telefon, statsborgerskap, arenaPersonId,
-                arenaKandidatnr, beskrivelse, samtykkeStatus, samtykkeDato, adresselinje1,
+                formidlingsgruppekode, doed, frKode, kvalifiseringsgruppekode, hovedmaalkode, orgenhet, fritattKandidatsok, fritattAgKandidatsok, epostadresse, mobiltelefon, telefon, statsborgerskap,
+                kandidatnr, beskrivelse, samtykkeStatus, samtykkeDato, adresselinje1,
                 adresselinje2, adresselinje3, postnummer, poststed, landkode, kommunenummer, kommunenummerkw,
                 disponererBil, tidsstempel, utdanning, yrkeserfaring, kompetanse, annenerfaring,
                 sertifikat, forerkort, sprak, kurs, verv, geografiJobbonsker, yrkeJobbonsker,
@@ -650,7 +655,7 @@ public class EsCv {
                 + ", fodselsdatoErDnr=" + fodselsdatoErDnr + ", formidlingsgruppekode="
                 + formidlingsgruppekode + ", epostadresse=" + epostadresse + ", mobiltelefon="
                 + mobiltelefon + ", telefon=" + telefon + ", statsborgerskap=" + statsborgerskap
-                + ", arenaPersonId=" + arenaPersonId + ", arenaKandidatnr=" + arenaKandidatnr
+                + ", arenaKandidatnr=" + kandidatnr
                 + ", beskrivelse=" + beskrivelse + ", samtykkeStatus=" + samtykkeStatus
                 + ", samtykkeDato=" + samtykkeDato + ", adresselinje1=" + adresselinje1
                 + ", adresselinje2=" + adresselinje2 + ", adresselinje3=" + adresselinje3
@@ -673,8 +678,8 @@ public class EsCv {
                 + ", totalLengdeYrkeserfaring=" + totalLengdeYrkeserfaring + "]";
     }
 
-    public void setArenaPersonId(long nyArenaPersonId) {
-        this.arenaPersonId = nyArenaPersonId;
+    public void setKandidatnr(String nyArenaKandidatnr) {
+        this.kandidatnr = nyArenaKandidatnr;
     }
 
 }
