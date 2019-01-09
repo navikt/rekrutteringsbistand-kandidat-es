@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.elasticsearch.mapping.annotations.ElasticBooleanField;
@@ -200,13 +202,7 @@ public class EsCv {
         this.epostadresse = epostadresse;
         this.mobiltelefon = mobiltelefon;
         this.telefon = telefon;
-        if((this.epostadresse != null && !this.epostadresse.trim().isEmpty())
-                ||  (this.mobiltelefon != null && !this.mobiltelefon.trim().isEmpty())
-                ||  (this.telefon != null && !this.telefon.trim().isEmpty())) {
-            this.harKontaktinformasjon = true;
-        } else {
-            this.harKontaktinformasjon = false;
-        }
+        this.harKontaktinformasjon = !StringUtils.isAllBlank(this.epostadresse, this.mobiltelefon, this.telefon);        
         this.statsborgerskap = statsborgerskap;
         this.kandidatnr = arenaKandidatnr;
         this.beskrivelse = beskrivelse;
