@@ -36,13 +36,17 @@ public class EsUtdanning {
   // Her ligger autorisasjon, svennebrev_fagbrev, mesterbrev
   @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
   private String yrkestatus;
+  
+  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
+  private String beskrivelse;
 
   public EsUtdanning() {}
 
-  public EsUtdanning(Date fraDato, Date tilDato, String utdannelsessted, String nusKode, String nusGrad,
-                     String beskrivelse, String yrkestatus) {
-    this(fraDato, tilDato, utdannelsessted, nusKode, nusGrad, beskrivelse);
+  public EsUtdanning(Date fraDato, Date tilDato, String utdannelsessted, String nusKode,
+                     String alternativGrad, String beskrivelse, String yrkestatus) {
+    this(fraDato, tilDato, utdannelsessted, nusKode, null, alternativGrad);
     this.yrkestatus = yrkestatus;
+    this.beskrivelse = beskrivelse;
   }
 
   public EsUtdanning(Date fraDato, Date tilDato, String utdannelsessted, String nusKode,
@@ -82,6 +86,10 @@ public class EsUtdanning {
   public String getAlternativGrad() {
     return alternativGrad;
   }
+  
+  public String getBeskrivelse() {
+    return beskrivelse;
+  }
 
   @Override
   public boolean equals(Object o) {
@@ -95,20 +103,21 @@ public class EsUtdanning {
     return Objects.equals(fraDato, that.fraDato) && Objects.equals(tilDato, that.tilDato)
         && Objects.equals(utdannelsessted, that.utdannelsessted)
         && Objects.equals(nusKode, that.nusKode) && Objects.equals(nusKodeGrad, that.nusKodeGrad)
-        && Objects.equals(alternativGrad, that.alternativGrad);
+        && Objects.equals(alternativGrad, that.alternativGrad)
+        && Objects.equals(beskrivelse, that.beskrivelse);
   }
 
   @Override
   public int hashCode() {
 
-    return Objects.hash(fraDato, tilDato, utdannelsessted, nusKode, nusKodeGrad, alternativGrad);
+    return Objects.hash(fraDato, tilDato, utdannelsessted, nusKode, nusKodeGrad, alternativGrad, beskrivelse);
   }
 
   @Override
   public String toString() {
     return "EsUtdanning{" + "fraDato=" + fraDato + ", tilDato=" + tilDato + ", utdannelsessted='"
         + utdannelsessted + '\'' + ", nusKode='" + nusKode + '\'' + ", nusKodeGrad='" + nusKodeGrad
-        + '\'' + ", alternativGrad='" + alternativGrad + '\'' + '}';
+        + '\'' + ", alternativGrad='" + alternativGrad + '\'' + ", beskrivelse='" + beskrivelse + '\'' + '}';
   }
 
 }

@@ -17,8 +17,11 @@ public class EsAnnenErfaring {
   @ElasticDateField
   private Date tilDato;
 
-  @ElasticTextField(analyzer = "norwegian")
+  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
   private String beskrivelse;
+  
+  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
+  private String rolle;
 
   public EsAnnenErfaring() {}
 
@@ -27,6 +30,11 @@ public class EsAnnenErfaring {
     this.tilDato = tilDato;
     this.beskrivelse = beskrivelse;
   }
+  
+  public EsAnnenErfaring(Date fraDato, Date tilDato, String beskrivelse, String rolle) {
+      this(fraDato, tilDato, beskrivelse);
+      this.rolle = rolle;
+    }
 
   public Date getFraDato() {
     return fraDato;
@@ -39,6 +47,10 @@ public class EsAnnenErfaring {
   public String getBeskrivelse() {
     return beskrivelse;
   }
+  
+  public String getRolle() {
+    return rolle;
+  }
 
   @Override
   public boolean equals(Object o) {
@@ -50,19 +62,19 @@ public class EsAnnenErfaring {
     }
     EsAnnenErfaring that = (EsAnnenErfaring) o;
     return Objects.equals(fraDato, that.fraDato) && Objects.equals(tilDato, that.tilDato)
-        && Objects.equals(beskrivelse, that.beskrivelse);
+        && Objects.equals(beskrivelse, that.beskrivelse) && Objects.equals(rolle, that.rolle);
   }
 
   @Override
   public int hashCode() {
 
-    return Objects.hash(fraDato, tilDato, beskrivelse);
+    return Objects.hash(fraDato, tilDato, beskrivelse, rolle);
   }
 
   @Override
   public String toString() {
     return "EsAnnenErfaring{" + "fraDato=" + fraDato + ", tilDato=" + tilDato + ", beskrivelse='"
-        + beskrivelse + '\'' + '}';
+        + beskrivelse + '\'' + ", rolle='" + rolle + '\'' + '}';
   }
 
 }

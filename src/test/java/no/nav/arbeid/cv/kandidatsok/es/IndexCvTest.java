@@ -130,20 +130,7 @@ public class IndexCvTest {
     public void after() throws IOException {
         indexerClient.deleteIndex();
     }
-
-    @Test
-    public void test() throws IOException {
-        Sokeresultat sokeres = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().nusKode("355211").bygg());
-        List<EsCv> list = sokeres.getCver();
-        sokeres.getAggregeringer();
-
-        assertThat(list.size()).isEqualTo(1);
-        EsCv esCv = list.get(0);
-        assertThat(esCv)
-                .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv()));
-    }
-
+    
     @Test
     public void skalIkkeFeileMedIllegalArgumentFraES() throws Exception {
         no.nav.arbeid.cv.kandidatsok.es.domene.EsCv cv1 = objectMapper.readValue(
@@ -172,17 +159,7 @@ public class IndexCvTest {
         indexerClient.bulkIndex(bulkEventer);
 
     }
-
-    @Test
-    @Ignore("Dette gjelder ikke lenger når vi splitter prosjektet!")
-    public void skalOppretteIndexHvisDenIkkeFinnes() throws IOException {
-        indexerClient.deleteIndex();
-        Sokeresultat sokeres = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().nusKode("355211").bygg());
-        List<EsCv> list = sokeres.getCver();
-        assertThat(list.size()).isEqualTo(0);
-    }
-
+    
     @Test
     public void testUtenSokekriterierReturnererAlleTestPersonerForArbeidsgivere()
             throws IOException {
@@ -326,76 +303,7 @@ public class IndexCvTest {
         assertThat(cver.size()).isEqualTo(cverStemOrd.size());
         assertThat(cver.get(0)).isEqualTo(cverStemOrd.get(0));
     }
-
-    @Test
-    public void testSokPaStyrkKode() throws IOException {
-        Sokeresultat sokeresultat =
-                sokClient.arbeidsgiverSok(Sokekriterier.med().styrkKode("5684.05").bygg());
-
-        List<EsCv> cver = sokeresultat.getCver();
-        assertThat(cver)
-                .contains(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv3()));
-    }
-
-    @Test
-    public void testSokPaNusKode() throws IOException {
-        Sokeresultat sokeresultatAlle = sokClient.arbeidsgiverSok(Sokekriterier.med().bygg());
-        assertThat(sokeresultatAlle.getCver()).hasSize(6);
-
-        Sokeresultat sokeresultat =
-                sokClient.arbeidsgiverSok(Sokekriterier.med().nusKode("355211").bygg());
-
-        List<EsCv> cver = sokeresultat.getCver();
-        assertThat(cver)
-                .contains(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv()));
-    }
-
-    @Test
-    public void testSokPaFlereStyrkKoderGirBegrensendeResultat() throws IOException {
-        List<String> styrkKoder = new ArrayList<>();
-        styrkKoder.add("5684.05");
-
-        Sokeresultat sokeresultat =
-                sokClient.arbeidsgiverSok(Sokekriterier.med().styrkKoder(styrkKoder).bygg());
-
-        styrkKoder.add("5124.46");
-
-        Sokeresultat sokeresultatToKoder =
-                sokClient.arbeidsgiverSok(Sokekriterier.med().styrkKoder(styrkKoder).bygg());
-
-        styrkKoder.add("5746.07");
-
-        Sokeresultat sokeresultatTreKoder =
-                sokClient.arbeidsgiverSok(Sokekriterier.med().styrkKoder(styrkKoder).bygg());
-
-        List<EsCv> cver = sokeresultat.getCver();
-        List<EsCv> cver2 = sokeresultatToKoder.getCver();
-        List<EsCv> cver3 = sokeresultatTreKoder.getCver();
-
-        assertThat(cver.size()).isGreaterThan(cver2.size());
-        assertThat(cver2.size()).isGreaterThan(cver3.size());
-    }
-
-    @Test
-    public void testSokPaFlereNusKoderGirBegrensendeResultat() throws IOException {
-        List<String> nusKoder = new ArrayList<>();
-        nusKoder.add("296647");
-
-        Sokeresultat sokeresultat =
-                sokClient.arbeidsgiverSok(Sokekriterier.med().nusKoder(nusKoder).bygg());
-
-        nusKoder.add("456375");
-
-        Sokeresultat sokeresultatToKoder =
-                sokClient.arbeidsgiverSok(Sokekriterier.med().nusKoder(nusKoder).bygg());
-
-        List<EsCv> cver = sokeresultat.getCver();
-        List<EsCv> cver2 = sokeresultatToKoder.getCver();
-
-        assertThat(cver.size()).isGreaterThan(cver2.size());
-
-    }
-
+    
     @Test
     public void testSamletKompetanseSkalIkkeGiResultatVedSokPaSprak() throws IOException {
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
@@ -511,23 +419,12 @@ public class IndexCvTest {
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
                 Sokekriterier.med().utdanningsniva(Collections.singletonList("Master")).bygg());
         Sokeresultat sokeresultat1 = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().utdanningsniva(asList("Master", "Fagskole")).bygg());
+                Sokekriterier.med().utdanningsniva(asList("Master", "Videregaende")).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         List<EsCv> cver1 = sokeresultat1.getCver();
 
         assertThat(cver.size()).isLessThan(cver1.size());
-    }
-
-    @Test
-    public void sokPaVideregaendeSkalGiTreffPaKorrektKompetanse() throws IOException {
-        Sokeresultat sokeresultatVideregaende = sokClient.arbeidsgiverSok(Sokekriterier.med()
-                .utdanningsniva(Collections.singletonList("Videregaende")).bygg());
-
-        List<EsCv> cverVideregaende = sokeresultatVideregaende.getCver();
-
-        // assertThat(cverVideregaende).contains(kandidatsokTransformer
-        // .transformer(transformer.transform(TempCvEventObjectMother.giveMeEsCv2())));
     }
 
     @Test

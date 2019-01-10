@@ -50,6 +50,9 @@ public class EsYrkeserfaring {
 
   @ElasticBooleanField
   private Boolean utelukketForFremtiden;
+  
+  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
+  private String beskrivelse;
 
   public EsYrkeserfaring() {}
 
@@ -64,10 +67,11 @@ public class EsYrkeserfaring {
    * @param yrkeserfaringManeder
    */
   public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
-                         String kodeverkStillingstittel, String alternativStillingstittel,
+                         String kodeverkStillingstittel, String alternativStillingstittel, String beskrivelse,
                          int yrkeserfaringManeder) {
-    this(fraDato, tilDato, arbeidsgiver, styrkKode, kodeverkStillingstittel, alternativStillingstittel, "",
-            "", yrkeserfaringManeder, false);
+    this(fraDato, tilDato, arbeidsgiver, styrkKode, kodeverkStillingstittel, alternativStillingstittel, null,
+            null, yrkeserfaringManeder, false);
+    this.beskrivelse = beskrivelse;
   }
 
   public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
@@ -172,6 +176,10 @@ public class EsYrkeserfaring {
   public int getYrkeserfaringManeder() {
     return yrkeserfaringManeder;
   }
+  
+  public String getBeskrivelse() {
+    return beskrivelse;
+  }
 
   public Boolean getUtelukketForFremtiden() {
     return utelukketForFremtiden;
@@ -191,6 +199,7 @@ public class EsYrkeserfaring {
         && Objects.equals(styrkKode, that.styrkKode)
         && Objects.equals(styrkKodeStillingstittel, that.styrkKodeStillingstittel)
         && Objects.equals(alternativStillingstittel, that.alternativStillingstittel)
+        && Objects.equals(beskrivelse, that.beskrivelse)
         && Objects.equals(organisasjonsnummer, that.organisasjonsnummer)
         && Objects.equals(naceKode, that.naceKode)
         && Objects.equals(yrkeserfaringManeder, that.yrkeserfaringManeder)
@@ -201,7 +210,7 @@ public class EsYrkeserfaring {
   public int hashCode() {
 
     return Objects.hash(fraDato, tilDato, arbeidsgiver, styrkKode, styrkKodeStillingstittel,
-        alternativStillingstittel, organisasjonsnummer, naceKode, yrkeserfaringManeder, utelukketForFremtiden);
+        alternativStillingstittel, beskrivelse, organisasjonsnummer, naceKode, yrkeserfaringManeder, utelukketForFremtiden);
   }
 
   @Override
@@ -209,7 +218,8 @@ public class EsYrkeserfaring {
     return "EsYrkeserfaring{" + "fraDato=" + fraDato + ", tilDato=" + tilDato + ", arbeidsgiver='"
         + arbeidsgiver + '\'' + ", styrkKode='" + styrkKode + '\'' + ", styrkKodeStillingstittel='"
         + styrkKodeStillingstittel + '\'' + ", alternativStillingstittel='"
-        + alternativStillingstittel + '\'' + ", organisasjonsnummer='" + organisasjonsnummer + '\''
+        + alternativStillingstittel + '\'' + ", beskrivelse='"
+        + beskrivelse + '\'' + ", organisasjonsnummer='" + organisasjonsnummer + '\''
         + ", naceKode='" + naceKode + '\'' + ", yrkeserfaringManeder='" + yrkeserfaringManeder
         + '\'' + ", utelukketForFremtiden='" + utelukketForFremtiden
         + '\'' + '}';
