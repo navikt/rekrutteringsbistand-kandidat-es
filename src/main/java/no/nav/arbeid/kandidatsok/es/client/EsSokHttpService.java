@@ -1,15 +1,32 @@
 package no.nav.arbeid.kandidatsok.es.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import no.nav.arbeid.cv.kandidatsok.es.domene.sok.*;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.index.query.*;
-import org.elasticsearch.index.search.MatchQuery;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.NestedQueryBuilder;
+import org.elasticsearch.index.query.Operator;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.RangeQueryBuilder;
+import org.elasticsearch.index.query.RegexpQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
@@ -19,7 +36,11 @@ import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms.Bucket;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.search.sort.*;
+import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.NestedSortBuilder;
+import org.elasticsearch.search.sort.ScoreSortBuilder;
+import org.elasticsearch.search.sort.SortMode;
+import org.elasticsearch.search.sort.SortOrder;
 import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilders;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
@@ -27,14 +48,14 @@ import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
+import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Aggregering;
+import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Aggregeringsfelt;
+import no.nav.arbeid.cv.kandidatsok.es.domene.sok.EsCv;
+import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokekriterier;
+import no.nav.arbeid.cv.kandidatsok.es.domene.sok.SokekriterierVeiledere;
+import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokeresultat;
 
 public class EsSokHttpService implements EsSokService {
 
@@ -171,14 +192,6 @@ public class EsSokHttpService implements EsSokService {
             addUtdanningToQuery(sk.utdanninger(), sk.utdanningsniva(), queryBuilder);
         }
 
-        if (isNotEmpty(sk.styrkKoder())) {
-            addStyrkKoderToQuery(sk.styrkKoder(), queryBuilder);
-        }
-
-        if (isNotEmpty(sk.nusKoder())) {
-            addNusKoderToQuery(sk.nusKoder(), queryBuilder);
-        }
-
         if (isNotEmpty(sk.forerkort())) {
             addForerkortToQuery(sk.forerkort(), queryBuilder);
         }
@@ -264,15 +277,7 @@ public class EsSokHttpService implements EsSokService {
         if (sk.isUtdanningSet()) {
             addUtdanningToQuery(sk.utdanninger(), sk.utdanningsniva(), queryBuilder);
         }
-
-        if (isNotEmpty(sk.styrkKoder())) {
-            addStyrkKoderToQuery(sk.styrkKoder(), queryBuilder);
-        }
-
-        if (isNotEmpty(sk.nusKoder())) {
-            addNusKoderToQuery(sk.nusKoder(), queryBuilder);
-        }
-
+        
         if (StringUtils.isNotBlank(sk.etternavn())) {
             addEtternavnToQuery(sk.etternavn(), queryBuilder);
         }
@@ -319,16 +324,6 @@ public class EsSokHttpService implements EsSokService {
 
     private void addEtternavnToQuery(String etternavn, BoolQueryBuilder boolQueryBuilder) {
         boolQueryBuilder.should(new MatchQueryBuilder("etternavn", etternavn));
-    }
-
-    private void addNusKoderToQuery(List<String> nusKoder, BoolQueryBuilder boolQueryBuilder) {
-        nusKoder.stream().filter(StringUtils::isNotBlank)
-                .forEach(k -> addNusKodeQuery(k, boolQueryBuilder));
-    }
-
-    private void addStyrkKoderToQuery(List<String> styrkKoder, BoolQueryBuilder boolQueryBuilder) {
-        styrkKoder.stream().filter(StringUtils::isNotBlank)
-                .forEach(k -> addStyrkKodeQuery(k, boolQueryBuilder));
     }
 
     private boolean isNotEmpty(List<?> list) {
@@ -653,52 +648,6 @@ public class EsSokHttpService implements EsSokService {
             boolQueryBuilder1.mustNot(utdanningsnivaQueryBuilder);
             boolQueryBuilder.should(boolQueryBuilder1);
         }
-        if (utdanningsniva.equals("Videregaende")) {
-            BoolQueryBuilder boolQueryBuilder1 = QueryBuilders.boolQuery();
-
-            NestedQueryBuilder includeKompetanseQueryBuilder = QueryBuilders.nestedQuery(
-                    "kompetanse", QueryBuilders.matchQuery("kompetanse.kompKode", "501"),
-                    ScoreMode.Total);
-
-            NestedQueryBuilder excludeUtdanningsnivaQueryBuilder = QueryBuilders.nestedQuery(
-                    "utdanning", QueryBuilders.regexpQuery("utdanning.nusKode", excludeRegex),
-                    ScoreMode.Total);
-
-            boolQueryBuilder1.must(includeKompetanseQueryBuilder);
-            boolQueryBuilder1.mustNot(excludeUtdanningsnivaQueryBuilder);
-
-            boolQueryBuilder.should(boolQueryBuilder1);
-        }
-        if (utdanningsniva.equals("Fagskole")) {
-            BoolQueryBuilder boolQueryBuilder1 = QueryBuilders.boolQuery();
-
-            NestedQueryBuilder includeKompetanseQueryBuilder = QueryBuilders.nestedQuery(
-                    "kompetanse", QueryBuilders.matchQuery("kompetanse.kompKode", "506"),
-                    ScoreMode.Total);
-
-            NestedQueryBuilder excludeUtdanningsnivaQueryBuilder = QueryBuilders.nestedQuery(
-                    "utdanning", QueryBuilders.regexpQuery("utdanning.nusKode", excludeRegex),
-                    ScoreMode.Total);
-
-            boolQueryBuilder1.must(includeKompetanseQueryBuilder);
-            boolQueryBuilder1.mustNot(excludeUtdanningsnivaQueryBuilder);
-
-            boolQueryBuilder.should(boolQueryBuilder1);
-        }
-    }
-
-    private void addNusKodeQuery(String nusKode, BoolQueryBuilder boolQueryBuilder) {
-        NestedQueryBuilder nusKodeQueryBuilder = QueryBuilders.nestedQuery("utdanning",
-                QueryBuilders.termQuery("utdanning.nusKode", nusKode), ScoreMode.Total);
-        boolQueryBuilder.must(nusKodeQueryBuilder);
-        LOGGER.debug("ADDING nuskode");
-    }
-
-    private void addStyrkKodeQuery(String styrkKode, BoolQueryBuilder boolQueryBuilder) {
-        NestedQueryBuilder styrkKodeQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
-                QueryBuilders.termQuery("yrkeserfaring.styrkKode", styrkKode), ScoreMode.Total);
-        boolQueryBuilder.must(styrkKodeQueryBuilder);
-        LOGGER.debug("ADDING styrkKode");
     }
 
     private Sokeresultat toSokeresultat(SearchResponse searchResponse) {

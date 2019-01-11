@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-
 public class SokekriterierVeiledere {
     private String fritekst;
     private List<String> yrkeJobbonsker;
@@ -15,8 +13,6 @@ public class SokekriterierVeiledere {
     private List<String> totalYrkeserfaring;
     private List<String> utdanningsniva;
     private List<String> geografiList;
-    private List<String> styrkKoder;
-    private List<String> nusKoder;
     private List<String> sprak;
     private List<String> kvalifiseringsgruppeKoder;
     private String etternavn;
@@ -69,14 +65,6 @@ public class SokekriterierVeiledere {
         return geografiList;
     }
 
-    public List<String> styrkKoder() {
-        return styrkKoder;
-    }
-
-    public List<String> nusKoder() {
-        return nusKoder;
-    }
-    
     public List<String> kvalifiseringsgruppeKoder() {
         return kvalifiseringsgruppeKoder;
     }
@@ -128,10 +116,6 @@ public class SokekriterierVeiledere {
         private List<String> sprak;
         private List<String> geografiList;
         private List<String> kvalifiseringsgruppeKoder;
-        private String styrkKode;
-        private String nusKode;
-        private List<String> styrkKoder;
-        private List<String> nusKoder;
         private String etternavn;
         private int fra = 0;
         private int antallResultater = 100;
@@ -163,21 +147,6 @@ public class SokekriterierVeiledere {
                     : Collections.unmodifiableList(new ArrayList<>(forerkort));
             s.kvalifiseringsgruppeKoder = kvalifiseringsgruppeKoder == null ? Collections.emptyList()
                     : Collections.unmodifiableList(new ArrayList<>(kvalifiseringsgruppeKoder));
-
-            List<String> tmpNuskoder =
-                    nusKoder == null ? new ArrayList<>() : new ArrayList<>(nusKoder);
-            if (StringUtils.isNotBlank(nusKode)) {
-                tmpNuskoder.add(nusKode);
-            }
-            s.nusKoder = tmpNuskoder.isEmpty() ? null : Collections.unmodifiableList(tmpNuskoder);
-
-            List<String> tmpStyrkkoder =
-                    styrkKoder == null ? new ArrayList<>() : new ArrayList<>(styrkKoder);
-            if (StringUtils.isNotBlank(styrkKode)) {
-                tmpStyrkkoder.add(styrkKode);
-            }
-            s.styrkKoder =
-                    tmpStyrkkoder.isEmpty() ? null : Collections.unmodifiableList(tmpStyrkkoder);
 
             s.maaBoInnenforGeografi = maaBoInnenforGeografi;
 
@@ -244,30 +213,6 @@ public class SokekriterierVeiledere {
 
         public Builder geografiList(List<String> geografiList) {
             this.geografiList = geografiList;
-            this.tomtSok = false;
-            return this;
-        }
-
-        public Builder styrkKode(String styrkKode) {
-            this.styrkKode = styrkKode;
-            this.tomtSok = false;
-            return this;
-        }
-
-        public Builder nusKode(String nusKode) {
-            this.nusKode = nusKode;
-            this.tomtSok = false;
-            return this;
-        }
-
-        public Builder styrkKoder(List<String> styrkKoder) {
-            this.styrkKoder = styrkKoder;
-            this.tomtSok = false;
-            return this;
-        }
-
-        public Builder nusKoder(List<String> nusKoder) {
-            this.nusKoder = nusKoder;
             this.tomtSok = false;
             return this;
         }
