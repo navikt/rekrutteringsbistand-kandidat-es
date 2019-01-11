@@ -30,18 +30,29 @@ public class EsSprak {
 
   @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
   private String beskrivelse;
+  
+  @ElasticKeywordField
+  private String ferdighetMuntlig;
+  
+  @ElasticKeywordField
+  private String ferdighetSkriftlig;
 
   public EsSprak() {}
 
   public EsSprak(String spraaknavn, String ferdighetMuntlig, String ferdighetSkriftlig) {
       this.sprakKodeTekst = spraaknavn;
       this.beskrivelse = "";
+      this.ferdighetMuntlig = ferdighetMuntlig;
+      this.ferdighetSkriftlig = ferdighetSkriftlig;
       if (StringUtils.isNotBlank(ferdighetMuntlig)) {
           beskrivelse += "Muntlig: " + ferdighetMuntlig;
       }
       if (StringUtils.isNotBlank(ferdighetSkriftlig)) {
-          beskrivelse += " Skriftlig: " + ferdighetSkriftlig;
-      }
+          if( StringUtils.isNotBlank(beskrivelse)) {
+              beskrivelse += " ";
+          }
+          beskrivelse += "Skriftlig: " + ferdighetSkriftlig;
+      }      
   }
 
   public EsSprak(Date fraDato, String sprakKode, String sprakKodeTekst, String alternativTekst,
@@ -72,6 +83,14 @@ public class EsSprak {
   public String getBeskrivelse() {
     return beskrivelse;
   }
+  
+  public String getFerdighetMuntlig() {
+    return ferdighetMuntlig;
+  }
+  
+  public String getFerdighetSkriftlig() {
+    return ferdighetSkriftlig;
+  }
 
   @Override
   public boolean equals(Object o) {
@@ -85,20 +104,23 @@ public class EsSprak {
     return Objects.equals(fraDato, esSprak.fraDato) && Objects.equals(sprakKode, esSprak.sprakKode)
         && Objects.equals(sprakKodeTekst, esSprak.sprakKodeTekst)
         && Objects.equals(alternativTekst, esSprak.alternativTekst)
-        && Objects.equals(beskrivelse, esSprak.beskrivelse);
+        && Objects.equals(beskrivelse, esSprak.beskrivelse)
+        && Objects.equals(ferdighetMuntlig, esSprak.ferdighetMuntlig)
+        && Objects.equals(ferdighetSkriftlig, esSprak.ferdighetSkriftlig);
   }
 
   @Override
   public int hashCode() {
 
-    return Objects.hash(fraDato, sprakKode, sprakKodeTekst, alternativTekst, beskrivelse);
+    return Objects.hash(fraDato, sprakKode, sprakKodeTekst, alternativTekst, beskrivelse, ferdighetMuntlig, ferdighetSkriftlig);
   }
 
   @Override
   public String toString() {
     return "EsSprak{" + "fraDato=" + fraDato + ", sprakKode='" + sprakKode + '\''
         + ", sprakKodeTekst='" + sprakKodeTekst + '\'' + ", alternativTekst='" + alternativTekst
-        + '\'' + ", beskrivelse='" + beskrivelse + '\'' + '}';
+        + '\'' + ", beskrivelse='" + beskrivelse + '\''
+        + ", ferdighetMuntlig='" + ferdighetMuntlig + '\'' + ", ferdighetSkriftlig='" + ferdighetSkriftlig + '\'' + '}';
   }
 
 }
