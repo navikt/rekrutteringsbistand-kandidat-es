@@ -37,7 +37,7 @@ public class EsSertifikat {
   public EsSertifikat() {}
 
   public EsSertifikat(Date fraDato, Date tilDato, String tittel, String utsteder) {
-    this(fraDato, tilDato, "", tittel, "", utsteder);
+    this(fraDato, tilDato, null, tittel, tittel, utsteder);
   }
 
   public EsSertifikat(Date fraDato, Date tilDato, String sertifikatKode, String sertifikatKodeNavn,

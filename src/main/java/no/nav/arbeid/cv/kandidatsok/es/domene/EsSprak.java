@@ -41,6 +41,7 @@ public class EsSprak {
 
   public EsSprak(String spraaknavn, String ferdighetMuntlig, String ferdighetSkriftlig) {
       this.sprakKodeTekst = spraaknavn;
+      this.alternativTekst = spraaknavn;
       this.beskrivelse = "";
       this.ferdighetMuntlig = ferdighetMuntlig;
       this.ferdighetSkriftlig = ferdighetSkriftlig;

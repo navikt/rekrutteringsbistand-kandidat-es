@@ -34,7 +34,7 @@ public class EsKompetanse {
     public EsKompetanse() {}
 
     public EsKompetanse(String kompetanse) {
-        this.kompKodeNavn = kompetanse;
+        this(null, null, kompetanse, kompetanse, "");
     }
 
   public EsKompetanse(Date fraDato, String kompKode, String kompKodeNavn, String alternativtNavn,
