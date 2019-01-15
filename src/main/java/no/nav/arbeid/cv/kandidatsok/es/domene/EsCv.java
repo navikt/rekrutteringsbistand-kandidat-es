@@ -186,12 +186,64 @@ public class EsCv {
 
     @ElasticIntegerField
     private int totalLengdeYrkeserfaring;
+    
+    @ElasticBooleanField
+    private Boolean synligForArbeidsgiverSok;
+    
+    @ElasticBooleanField
+    private Boolean synligForVeilederSok;
 
 
     public EsCv() {
 
     }
 
+    public EsCv(String fodselsnummer, String fornavn, String etternavn, Date fodselsdato,
+            Boolean fodselsdatoErDnr, String formidlingsgruppekode, String epostadresse,
+            String mobiltelefon, String telefon, String statsborgerskap, String kandidatnr, String beskrivelse,
+            String samtykkeStatus, Date samtykkeDato, String adresselinje1, String adresselinje2,
+            String adresselinje3, String postnummer, String poststed, String landkode,
+            Integer kommunenummer, Boolean disponererBil, Date tidsstempel, Integer kommunenummerkw,
+            Boolean doed, String frKode, String kvalifiseringsgruppekode, String hovedmaalkode, String orgenhet,
+            Boolean fritattKandidatsok, Boolean fritattAgKandidatsok, 
+            Boolean synligForArbeidsgiverSok, Boolean synligForVeilederSok) {
+        this.fodselsnummer = fodselsnummer;
+        this.fornavn = fornavn;
+        this.etternavn = etternavn;
+        this.fodselsdato = fodselsdato;
+        this.fodselsdatoErDnr = fodselsdatoErDnr;
+        this.formidlingsgruppekode = formidlingsgruppekode;
+        this.epostadresse = epostadresse;
+        this.mobiltelefon = mobiltelefon;
+        this.telefon = telefon;
+        this.harKontaktinformasjon = !StringUtils.isAllBlank(this.epostadresse, this.mobiltelefon, this.telefon);        
+        this.statsborgerskap = statsborgerskap;
+        this.kandidatnr = kandidatnr;
+        this.arenaKandidatnr = kandidatnr;
+        this.beskrivelse = beskrivelse;
+        this.samtykkeStatus = samtykkeStatus;
+        this.samtykkeDato = samtykkeDato;
+        this.adresselinje1 = adresselinje1;
+        this.adresselinje2 = adresselinje2;
+        this.adresselinje3 = adresselinje3;
+        this.postnummer = postnummer;
+        this.poststed = poststed;
+        this.landkode = landkode;
+        this.kommunenummer = kommunenummer;
+        this.disponererBil = disponererBil;
+        this.tidsstempel = tidsstempel;
+        this.kommunenummerkw = kommunenummerkw;
+        this.doed = doed;
+        this.frKode = frKode;
+        this.kvalifiseringsgruppekode = kvalifiseringsgruppekode;
+        this.hovedmaalkode = hovedmaalkode;
+        this.orgenhet = orgenhet;
+        this.fritattKandidatsok = fritattKandidatsok;
+        this.fritattAgKandidatsok = fritattAgKandidatsok;
+        this.synligForArbeidsgiverSok = synligForArbeidsgiverSok;
+        this.synligForVeilederSok = synligForVeilederSok;
+    }
+    
     public EsCv(String fodselsnummer, String fornavn, String etternavn, Date fodselsdato,
             Boolean fodselsdatoErDnr, String formidlingsgruppekode, String epostadresse,
             String mobiltelefon, String telefon, String statsborgerskap, String kandidatnr, String beskrivelse,
@@ -233,6 +285,57 @@ public class EsCv {
         this.orgenhet = orgenhet;
         this.fritattKandidatsok = fritattKandidatsok;
         this.fritattAgKandidatsok = fritattAgKandidatsok;
+        this.synligForArbeidsgiverSok = beregnSynlighetForArbeidsgiverSokBasertPaaGamleArenaData();
+        this.synligForVeilederSok = beregnSynlighetForVeilederSokBasertPaaGamleArenaData();
+    }
+
+    private Boolean beregnSynlighetForVeilederSokBasertPaaGamleArenaData() {
+        if( Boolean.TRUE.equals(this.doed)) {
+            return false;
+        }
+        if( "6".equals(this.frKode)) {
+            return false;
+        }
+        if( "7".equals(this.frKode)) {
+            return false;
+        }
+        if( !("ARBS".equals(this.formidlingsgruppekode)
+                || "PARBS".equals(this.formidlingsgruppekode)
+                || "RARBS".equals(this.formidlingsgruppekode))) {
+            return false;
+        }
+        if( Boolean.TRUE.equals(this.fritattKandidatsok)) {
+            return false;
+        }
+        return true;
+    }
+
+    private Boolean beregnSynlighetForArbeidsgiverSokBasertPaaGamleArenaData() {
+        if( Boolean.TRUE.equals(this.doed)) {
+            return false;
+        }
+        if( "6".equals(this.frKode)) {
+            return false;
+        }
+        if( "7".equals(this.frKode)) {
+            return false;
+        }
+        if( !("JOBBS".equals(this.formidlingsgruppekode)
+                || "ARBS".equals(this.formidlingsgruppekode)
+                || "PARBS".equals(this.formidlingsgruppekode)
+                || "RARBS".equals(this.formidlingsgruppekode))) {
+            return false;
+        }
+        if( Boolean.TRUE.equals(this.fritattAgKandidatsok)) {
+            return false;
+        }
+        if( Boolean.TRUE.equals(this.fritattKandidatsok)) {
+            return false;
+        }
+        if( Boolean.FALSE.equals(this.harKontaktinformasjon)) {
+            return false;
+        }
+        return true;
     }
 
     // Adderfunksjoner
@@ -518,7 +621,15 @@ public class EsCv {
     public Date getTidsstempel() {
         return tidsstempel;
     }
+    
+    public Boolean isSynligForArbeidsgiverSok() {
+        return synligForArbeidsgiverSok;
+    }
 
+    public Boolean isSynligForVeilederSok() {
+        return synligForVeilederSok;
+    }
+    
     public List<EsUtdanning> getUtdanning() {
         return utdanning;
     }
@@ -612,6 +723,8 @@ public class EsCv {
                 && Objects.equals(orgenhet, esCv.orgenhet)
                 && Objects.equals(fritattKandidatsok, esCv.fritattKandidatsok)
                 && Objects.equals(fritattAgKandidatsok, esCv.fritattAgKandidatsok)                
+                && Objects.equals(synligForArbeidsgiverSok, esCv.synligForArbeidsgiverSok)
+                && Objects.equals(synligForVeilederSok, esCv.synligForVeilederSok)
                 && Objects.equals(epostadresse, esCv.epostadresse)
                 && Objects.equals(mobiltelefon, esCv.mobiltelefon)
                 && Objects.equals(telefon, esCv.telefon)
@@ -657,7 +770,8 @@ public class EsCv {
                 disponererBil, tidsstempel, utdanning, yrkeserfaring, kompetanse, annenerfaring,
                 sertifikat, forerkort, sprak, kurs, verv, geografiJobbonsker, yrkeJobbonsker,
                 omfangJobbonsker, ansettelsesformJobbonsker, arbeidstidsordningJobbonsker,
-                arbeidstidJobbonsker, arbeidsdagerJobbonsker, samletKompetanse, totalLengdeYrkeserfaring);
+                arbeidstidJobbonsker, arbeidsdagerJobbonsker, samletKompetanse, totalLengdeYrkeserfaring, 
+                synligForArbeidsgiverSok, synligForVeilederSok);
     }
 
     @Override
@@ -677,7 +791,10 @@ public class EsCv {
                 + doed + ", frKode=" + frKode + ", kvalifiseringsgruppekode="
                 + kvalifiseringsgruppekode + ", hovedmaalkode=" + hovedmaalkode + ", orgenhet="
                 + orgenhet + ", fritattKandidatsok=" + fritattKandidatsok
-                + ", fritattAgKandidatsok=" + fritattAgKandidatsok + ", utdanning=" + utdanning
+                + ", fritattAgKandidatsok=" + fritattAgKandidatsok
+                + ", synligForArbeidsgiverSok=" + synligForArbeidsgiverSok
+                + ", synligForVeilederSok=" + synligForVeilederSok
+                + ", utdanning=" + utdanning
                 + ", yrkeserfaring=" + yrkeserfaring + ", kompetanse=" + kompetanse
                 + ", annenerfaring=" + annenerfaring + ", sertifikat=" + sertifikat + ", forerkort="
                 + forerkort + ", sprak=" + sprak + ", kurs=" + kurs + ", verv=" + verv
