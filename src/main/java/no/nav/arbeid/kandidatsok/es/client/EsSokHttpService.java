@@ -294,32 +294,24 @@ public class EsSokHttpService implements EsSokService {
                 sk.antallResultater(), sortQueryBuilder)));
     }
 
-    private void addFilterForArbeidsgivereSok(BoolQueryBuilder boolQueryBuilder) {
-        addFilterForArbeidsgivereHent(boolQueryBuilder);
-        boolQueryBuilder.mustNot(QueryBuilders.termQuery("fritattAgKandidatsok", Boolean.TRUE));
-        boolQueryBuilder.must(QueryBuilders.termQuery("harKontaktinformasjon", Boolean.TRUE));
+    private void addFilterForArbeidsgivereSok(BoolQueryBuilder boolQueryBuilder) {        
+        boolQueryBuilder.must(QueryBuilders.termQuery("synligForArbeidsgiverSok", Boolean.TRUE));        
     }
 
-    private void addFilterForArbeidsgivereHent(BoolQueryBuilder boolQueryBuilder) {
-        // Valgt mustNot for å håndtere null-verdier likt som FALSE
-        boolQueryBuilder.mustNot(QueryBuilders.termQuery("doed", Boolean.TRUE));
-        boolQueryBuilder.mustNot(QueryBuilders.termsQuery("frKode", "6", "7"));
-        boolQueryBuilder.must(QueryBuilders.termsQuery("formidlingsgruppekode", "ARBS", "RARBS",
-                "PARBS", "JOBBS"));
-        boolQueryBuilder.mustNot(QueryBuilders.termQuery("fritattKandidatsok", Boolean.TRUE));
+    private void addFilterForArbeidsgivereHent(BoolQueryBuilder boolQueryBuilder) { 
+        BoolQueryBuilder innerQuery = QueryBuilders.boolQuery();
+        innerQuery.should(QueryBuilders.termQuery("synligForArbeidsgiverSok", Boolean.TRUE));
+        innerQuery.should(QueryBuilders.termQuery("synligForVeilederSok", Boolean.TRUE));
+        innerQuery.minimumShouldMatch(1);     
+        boolQueryBuilder.must(innerQuery);
     }
 
     private void addFilterForVeiledereSok(BoolQueryBuilder boolQueryBuilder) {
-        addFilterForVeiledereHent(boolQueryBuilder);
+        boolQueryBuilder.must(QueryBuilders.termQuery("synligForVeilederSok",  Boolean.TRUE));
     }
 
     private void addFilterForVeiledereHent(BoolQueryBuilder boolQueryBuilder) {
-        // Valgt mustNot for å håndtere null-verdier likt som FALSE
-        boolQueryBuilder.mustNot(QueryBuilders.termQuery("doed", Boolean.TRUE));
-        boolQueryBuilder.mustNot(QueryBuilders.termsQuery("frKode", "6", "7"));
-        boolQueryBuilder
-                .must(QueryBuilders.termsQuery("formidlingsgruppekode", "ARBS", "RARBS", "PARBS"));
-        boolQueryBuilder.mustNot(QueryBuilders.termQuery("fritattKandidatsok", Boolean.TRUE));
+        boolQueryBuilder.must(QueryBuilders.termQuery("synligForVeilederSok",  Boolean.TRUE));        
     }
 
     private void addEtternavnToQuery(String etternavn, BoolQueryBuilder boolQueryBuilder) {
