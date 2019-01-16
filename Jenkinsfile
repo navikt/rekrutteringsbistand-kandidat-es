@@ -72,7 +72,7 @@ node {
             withEnv(['HTTPS_PROXY=http://webproxy-internett.nav.no:8088']) {
                 sh "${mvn} versions:set -B -DnewVersion=${releaseVersion} -DgenerateBackupPoms=false"
                 sh "git commit -am \"set version to ${releaseVersion} (from Jenkins pipeline)\""
-                sh ("git push")
+                sh ("git push -q origin")
                 sh ("git tag -a ${releaseVersion} -m ${releaseVersion}")
                 sh ("git push -q origin --tags")
             }
@@ -93,7 +93,7 @@ node {
                 nextVersion = (releaseVersion.toInteger() + 1) + "-SNAPSHOT"
                 sh "${mvn} versions:set -B -DnewVersion=${nextVersion} -DgenerateBackupPoms=false"
                 sh "git commit -am \"updated to new dev-version ${nextVersion} after release by ${committer}\""
-                sh "git push"
+                sh "git push -q origin"
             }
         }
 
