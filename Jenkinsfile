@@ -3,50 +3,59 @@ import deploy
 
 def deployLib = new deploy()
 
+// Obtain ephemeral "installation" API token which can be used for GitHub repository access.
+// A token is valid for one hour after creation.
+githubAppId = '23179'
+githubAppCredentialId = 'teampam-ci'
+def newApiToken() {
+    withEnv(['HTTPS_PROXY=webproxy-internett.nav.no:8088']) {
+        withCredentials([file(credentialsId: githubAppCredentialId, variable: 'KEYFILE')]) {
+            dir('token') {
+                def generatedToken = sh(script: "generate-jwt.sh \$KEYFILE ${githubAppId} | xargs generate-installation-token.sh", returnStdout: true)
+                return generatedToken.trim()
+            }
+        }
+    }
+}
+
 node {
     def application = "pam-kandidatsok-es"
-    def committer, committerEmail, changelog, pom, releaseVersion, prPomVersion, isSnapshot, isPullRequest, isMaster, isBranch, majorMinorVersion, patchVersion, nextVersion // metadata
+
+    def committer, committerEmail, changelog, releaseVersion // metadata
 
     def mvnHome = tool "maven-3.3.9"
     def mvn = "${mvnHome}/bin/mvn"
+    def deployEnv = "q6"
+    def namespace = "q6"
+    def policies = "app-policies.xml"
+    def notenforced = "not-enforced-urls.txt"
+    def appConfig = "nais.yaml"
+    def dockerRepo = "repo.adeo.no:5443"
+    def zone = 'fss'
+    def repo = "navikt"
+    def githubAppToken = newApiToken();
+
     def color
 
     try {
+
         stage("checkout") {
-            checkout scm
+            cleanWs()
+            withEnv(['HTTPS_PROXY=http://webproxy-internett.nav.no:8088']) {
+                // githubAppToken is not a magic secret variable, so mask it manually by disabling shell echo
+                // Would be great if withCredentials could be used to mask the value, mark it as secret, or similar
+                println("Repository URL is https://x-access-token:****@github.com/${repo}/${application}.git")
+                sh(script: "set +x; git clone https://x-access-token:${githubAppToken}@github.com/${repo}/${application}.git .")
+            }
         }
 
         stage("initialize") {
-            println ("Initialize $BRANCH_NAME")
-            if (BRANCH_NAME.contains("PR-")) {
-                println ("Branch is pull request")
-                isPullRequest = true
-                isMaster = false
-                isBranch = false
-                prPomVersion = "$BRANCH_NAME".replaceAll("-", "_") + "-SNAPSHOT"
-                sh "env"
-                println ("Setter ny pom versjon $prPomVersion")
-                sh "${mvn} versions:set -B -DnewVersion=${prPomVersion} -DgenerateBackupPoms=false"
-            } else if (BRANCH_NAME.contains("master")) {
-                isPullRequest = false
-                isMaster = true
-                isBranch = false
-            } else {
-                isPullRequest = false
-                isMaster = false
-                isBranch = true
-
-                branchPomVersion = "$BRANCH_NAME".replaceAll("-", "_") + "-SNAPSHOT"
-                sh "env"
-                println ("Setter ny pom versjon $branchPomVersion")
-                sh "${mvn} versions:set -B -DnewVersion=${branchPomVersion} -DgenerateBackupPoms=false"
-            }
-            pom = readMavenPom file: 'pom.xml'
-            releaseVersion = isPullRequest ? "$BRANCH_NAME".replaceAll("-", "_") + "_$BUILD_NUMBER" : pom.version.tokenize("-")[0]
-            isSnapshot = pom.version.contains("-SNAPSHOT")
+            commitHashShort = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+            releaseVersion = "1.3.${env.BUILD_NUMBER}-${commitHashShort}"
             committer = sh(script: 'git log -1 --pretty=format:"%an (%ae)"', returnStdout: true).trim()
             committerEmail = sh(script: 'git log -1 --pretty=format:"%ae"', returnStdout: true).trim()
             changelog = sh(script: 'git log `git describe --tags --abbrev=0`..HEAD --oneline', returnStdout: true)
+            currentBuild.displayName = releaseVersion
         }
 
         stage("verify maven versions") {
@@ -56,47 +65,36 @@ node {
             sh 'while read line;do if [ "$line" != "" ];then if [ `grep SNAPSHOT $line/pom.xml | wc -l` -gt 1 ];then echo "SNAPSHOT-dependencies found. See file $line/pom.xml.";exit 1;fi;fi;done < snapshots.txt'
         }
 
+        stage("build and test backend") {
+            sh "${mvn} clean install -Djava.io.tmpdir=/tmp/${application} -B -e -U"
+            sh "docker build --build-arg JAR_FILE=${application}-${releaseVersion}.jar -t ${dockerRepo}/${application}:${releaseVersion} ."
+        }
 
-        stage("build and test") {
-            if (isSnapshot) {
-                sh "${mvn} clean install -Dit.skip=true -Djava.io.tmpdir=/tmp/${application} -B -e"
-            } else {
-                println("POM version is not a SNAPSHOT, it is ${pom.version}. Skipping build and testing of backend")
+        stage("publish") {
+            withCredentials([usernamePassword(credentialsId: 'nexusUploader', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+                sh "docker login -u ${env.NEXUS_USERNAME} -p ${env.NEXUS_PASSWORD} ${dockerRepo} && docker push ${dockerRepo}/${application}:${releaseVersion}"
+                sh "curl --user ${env.NEXUS_USERNAME}:${env.NEXUS_PASSWORD} --upload-file ${appConfig} https://repo.adeo.no/repository/raw/nais/${application}/${releaseVersion}/nais.yaml"
             }
         }
 
-        stage("release version") {
-            if (isMaster) {
-                withEnv(['HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088']) {
-                    withCredentials([string(credentialsId: 'navikt-ci-oauthtoken', variable: 'token')]) {
-                        sh "${mvn} versions:set -B -DnewVersion=${releaseVersion} -DgenerateBackupPoms=false"
-                        sh "git commit -am \"set version to ${releaseVersion} (from Jenkins pipeline)\""
-                        sh ("git push -u https://${token}:x-oauth-basic@github.com/navikt/${application}.git $BRANCH_NAME")
-                        sh ("git tag -a ${releaseVersion} -m ${application}-${releaseVersion}")
-                        sh ("git push -u https://${token}:x-oauth-basic@github.com/navikt/${application}.git --tags $BRANCH_NAME")
-                    }
+        stage("deploy to preprod, q6") {
+            callback = "${env.BUILD_URL}input/Deploy/"
+
+            def deploy = deployLib.deployNaisApp(application, releaseVersion, deployEnv, zone, namespace, callback, committer, false).key
+
+            try {
+                timeout(time: 15, unit: 'MINUTES') {
+                    input id: 'deploy', message: "Check status here:  https://jira.adeo.no/browse/${deploy}"
                 }
+            } catch (Exception e) {
+                throw new Exception("Deploy feilet :( \n Se https://jira.adeo.no/browse/" + deploy + " for detaljer", e)
             }
         }
 
-        stage("publish artifact") {
-           withCredentials([usernamePassword(credentialsId: 'nexusUploader', usernameVariable: 'DEP_USERNAME', passwordVariable: 'DEP_PASSWORD')]) {
-               sh "${mvn} clean deploy -Dusername=${env.DEP_USERNAME} -Dpassword=${env.DEP_PASSWORD} -DskipTests -B -e"
-           }
-        }
-
-        stage("new dev version") {
-            if (isMaster) {
-                withEnv(['HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088']) {
-                    withCredentials([string(credentialsId: 'navikt-ci-oauthtoken', variable: 'token')]) {
-                        majorMinorVersion = sh(script: "echo ${releaseVersion} | perl -pe 's/\\.\\d+\\s*\$//g'", returnStdout: true).trim()
-                        patchVersion = releaseVersion.tokenize(".").last().toInteger() + 1
-                        nextVersion = "${majorMinorVersion}.${patchVersion}-SNAPSHOT"
-                        sh "${mvn} versions:set -B -DnewVersion=${nextVersion} -DgenerateBackupPoms=false"
-                        sh "git commit -am \"updated to new dev-version ${nextVersion} after release by ${committer} (from Jenkins pipeline)\""
-                        sh "git push -u https://${token}:x-oauth-basic@github.com/navikt/${application}.git $BRANCH_NAME"
-                    }
-                }
+        stage("tag") {
+            withEnv(['HTTPS_PROXY=http://webproxy-internett.nav.no:8088']) {
+                sh "git tag -a ${releaseVersion} -m ${releaseVersion}"
+                sh ("git push -q origin --tags")
             }
         }
 
@@ -107,8 +105,7 @@ node {
 
     } catch (e) {
         color = '#FF0004'
-        println "Exception: ${e.message}"
-        GString message = ":crying_cat_face: :crying_cat_face: :crying_cat_face: :crying_cat_face: :crying_cat_face: :crying_cat_face: Halp sad cat! \n Siste commit på ${application} gikk ikkje gjennom. Sjå logg for meir info ${env.BUILD_URL}\nLast commit ${changelog}"
+        GString message = ":crying_cat_face: :crying_cat_face: :crying_cat_face: :crying_cat_face: :crying_cat_face: :crying_cat_face: Help sad cat! \n Siste commit på ${application} gikk ikkje gjennom. Sjå logg for meir info ${env.BUILD_URL}\nLast commit ${changelog}"
         slackSend color: color, channel: '#pam_bygg', message: message, teamDomain: 'nav-it', tokenCredentialId: 'pam-slack'
     }
 
