@@ -90,7 +90,9 @@ node {
 
         stage("new dev version") {
             withEnv(['HTTPS_PROXY=http://webproxy-internett.nav.no:8088']) {
-                nextVersion = (releaseVersion.toInteger() + 1) + "-SNAPSHOT"
+                def v = releaseVersion.tokenize(".")
+                v[v.size()-1] = v[v.size()-1].toInteger()+1
+                nextVersion = v.join(".") + "-SNAPSHOT"
                 sh "${mvn} versions:set -B -DnewVersion=${nextVersion} -DgenerateBackupPoms=false"
                 sh "git commit -am \"updated to new dev-version ${nextVersion} after release by ${committer}\""
                 sh "git push -q origin"
