@@ -21,17 +21,10 @@ def newApiToken() {
 node {
     def application = "pam-kandidatsok-es"
 
-    def committer, committerEmail, changelog, releaseVersion // metadata
+    def committer, committerEmail, changelog, releaseVersion, nextVersion, isSnapshot // metadata
 
     def mvnHome = tool "maven-3.3.9"
     def mvn = "${mvnHome}/bin/mvn"
-    def deployEnv = "q6"
-    def namespace = "q6"
-    def policies = "app-policies.xml"
-    def notenforced = "not-enforced-urls.txt"
-    def appConfig = "nais.yaml"
-    def dockerRepo = "repo.adeo.no:5443"
-    def zone = 'fss'
     def repo = "navikt"
     def githubAppToken = newApiToken();
 
@@ -50,8 +43,9 @@ node {
         }
 
         stage("initialize") {
-            commitHashShort = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-            releaseVersion = "1.3.${env.BUILD_NUMBER}-${commitHashShort}"
+            pom = readMavenPom file: 'pom.xml'
+            releaseVersion = pom.version.tokenize("-")[0]
+            isSnapshot = pom.version.contains("-SNAPSHOT")
             committer = sh(script: 'git log -1 --pretty=format:"%an (%ae)"', returnStdout: true).trim()
             committerEmail = sh(script: 'git log -1 --pretty=format:"%ae"', returnStdout: true).trim()
             changelog = sh(script: 'git log `git describe --tags --abbrev=0`..HEAD --oneline', returnStdout: true)
@@ -66,40 +60,45 @@ node {
         }
 
         stage("build and test backend") {
-            sh "${mvn} clean install -Djava.io.tmpdir=/tmp/${application} -B -e -U"
-            sh "docker build --build-arg JAR_FILE=${application}-${releaseVersion}.jar -t ${dockerRepo}/${application}:${releaseVersion} ."
-        }
-
-        stage("publish") {
-            withCredentials([usernamePassword(credentialsId: 'nexusUploader', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-                sh "docker login -u ${env.NEXUS_USERNAME} -p ${env.NEXUS_PASSWORD} ${dockerRepo} && docker push ${dockerRepo}/${application}:${releaseVersion}"
-                sh "curl --user ${env.NEXUS_USERNAME}:${env.NEXUS_PASSWORD} --upload-file ${appConfig} https://repo.adeo.no/repository/raw/nais/${application}/${releaseVersion}/nais.yaml"
+            if (isSnapshot) {
+                sh "${mvn} clean install -Dit.skip=true -Djava.io.tmpdir=/tmp/${application} -B -e"
+            } else {
+                println("POM version is not a SNAPSHOT, it is ${pom.version}. Skipping build and testing of backend")
             }
+
         }
 
-        stage("deploy to preprod, q6") {
-            callback = "${env.BUILD_URL}input/Deploy/"
-
-            def deploy = deployLib.deployNaisApp(application, releaseVersion, deployEnv, zone, namespace, callback, committer, false).key
-
-            try {
-                timeout(time: 15, unit: 'MINUTES') {
-                    input id: 'deploy', message: "Check status here:  https://jira.adeo.no/browse/${deploy}"
-                }
-            } catch (Exception e) {
-                throw new Exception("Deploy feilet :( \n Se https://jira.adeo.no/browse/" + deploy + " for detaljer", e)
-            }
-        }
-
-        stage("tag") {
+        stage("release version") {
             withEnv(['HTTPS_PROXY=http://webproxy-internett.nav.no:8088']) {
-                sh "git tag -a ${releaseVersion} -m ${releaseVersion}"
+                sh "${mvn} versions:set -B -DnewVersion=${releaseVersion} -DgenerateBackupPoms=false"
+                sh "git commit -am \"set version to ${releaseVersion} (from Jenkins pipeline)\""
+                sh ("git push")
+                sh ("git tag -a ${releaseVersion} -m ${releaseVersion}")
                 sh ("git push -q origin --tags")
             }
         }
 
+        stage("publish artifact") {
+            withCredentials([usernamePassword(credentialsId: 'deployer', usernameVariable: 'DEP_USERNAME', passwordVariable: 'DEP_PASSWORD')]) {
+                if (isSnapshot) {
+                    sh "${mvn} clean deploy -Dusername=${env.DEP_USERNAME} -Dpassword=${env.DEP_PASSWORD} -DskipTests -B -e"
+                } else {
+                    println("POM version is not a SNAPSHOT, it is ${pom.version}. Skipping publishing!")
+                }
+            }
+        }
+
+        stage("new dev version") {
+            withEnv(['HTTPS_PROXY=http://webproxy-internett.nav.no:8088']) {
+                nextVersion = (releaseVersion.toInteger() + 1) + "-SNAPSHOT"
+                sh "${mvn} versions:set -B -DnewVersion=${nextVersion} -DgenerateBackupPoms=false"
+                sh "git commit -am \"updated to new dev-version ${nextVersion} after release by ${committer}\""
+                sh "git push"
+            }
+        }
+
         color = '#BDFFC3'
-        GString message = ":heart_eyes_cat: Siste commit på ${application} bygd og deploya OK.\nSiste commit ${changelog}"
+        GString message = ":heart_eyes_cat: Siste commit på ${application} bygd OK.\nSiste commit ${changelog}"
         slackSend color: color, channel: '#pam_bygg', message: message, teamDomain: 'nav-it', tokenCredentialId: 'pam-slack'
 
 
