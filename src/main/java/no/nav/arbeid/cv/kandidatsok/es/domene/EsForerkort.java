@@ -36,7 +36,7 @@ public class EsForerkort {
   public EsForerkort() {}
 
   public EsForerkort(Date fraDato, Date tilDato, String klasse, String klassebeskrivelse) {
-    this(fraDato, tilDato, null, klasse, klasse, klassebeskrivelse);
+    this(fraDato, tilDato, null, klasse + " - " + klassebeskrivelse, null, null);
   }
 
   public EsForerkort(Date fraDato, Date tilDato, String forerkortKode, String forerkortKodeKlasse,
