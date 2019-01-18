@@ -57,7 +57,7 @@ public class IndexCvTest {
 
     // Kjører "docker-compose up" manuelt istedenfor denne ClassRule:
 
-    //@ClassRule
+    @ClassRule
     public static DockerComposeRule docker =
             DockerComposeRule.builder().file("src/test/resources/docker-compose-kun-es.yml")
                     .machine(DockerMachine.localMachine()
