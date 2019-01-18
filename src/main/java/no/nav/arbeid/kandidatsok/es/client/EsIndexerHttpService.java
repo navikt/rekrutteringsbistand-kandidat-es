@@ -89,7 +89,7 @@ public class EsIndexerHttpService implements EsIndexerService {
 
         IndexRequest request =
                 new IndexRequest(CV_INDEX, CV_TYPE, esCv.getKandidatnr());
-        request.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
+        request.setRefreshPolicy(WriteRequest.RefreshPolicy.NONE);
         request.source(jsonString, XContentType.JSON);
         IndexResponse indexResponse = esExec(() -> client.index(request));
         LOGGER.debug("INDEXRESPONSE: " + indexResponse.toString());
@@ -119,7 +119,7 @@ public class EsIndexerHttpService implements EsIndexerService {
         }
 
         LOGGER.info("Sender bulk indexrequest med {} cv'er", esCver.size());
-        bulkRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
+        bulkRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.NONE);
         BulkResponse bulkResponse = esExec(() -> client.bulk(bulkRequest));
         int antallIndeksert = esCver.size();
 
@@ -166,7 +166,7 @@ public class EsIndexerHttpService implements EsIndexerService {
         }
 
         LOGGER.info("Sender bulksletting av {} cv'er", kandidatnr.size());
-        bulkRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
+        bulkRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.NONE);
         BulkResponse bulkResponse = esExec(() -> client.bulk(bulkRequest));
         if (bulkResponse.hasFailures()) {
             LOGGER.warn("Feilet under sletting av CVer: " + bulkResponse.buildFailureMessage());
@@ -189,7 +189,7 @@ public class EsIndexerHttpService implements EsIndexerService {
         }
 
         LOGGER.info("Sender bulksletting av {} cv'er", kandidatnr.size());
-        bulkRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
+        bulkRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.NONE);
         BulkResponse bulkResponse = esExec(() -> client.bulk(bulkRequest));
         if (bulkResponse.hasFailures()) {
             LOGGER.warn("Feilet under sletting av CVer: " + bulkResponse.buildFailureMessage());
