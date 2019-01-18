@@ -14,11 +14,13 @@ import no.nav.arbeid.cv.kandidatsok.es.domene.sok.EsCv;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokekriterier;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.SokekriterierVeiledere;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokeresultat;
+import no.nav.arbeid.kandidatsok.es.client.EsIndexerHttpService;
 import no.nav.arbeid.kandidatsok.es.client.EsIndexerService;
 import no.nav.arbeid.kandidatsok.es.client.EsSokService;
 import org.apache.http.HttpHost;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.extractor.Extractors;
+import org.elasticsearch.action.support.WriteRequest;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.*;
@@ -100,6 +102,14 @@ public class IndexCvTest {
             when(meterRegistry.counter(anyString(), any(Tags.class))).thenReturn(counter);
 
             return meterRegistry;
+        }
+        @Bean
+        public EsIndexerService indexerCvService(RestHighLevelClient restHighLevelClient,
+                                                 ObjectMapper objectMapper,
+                                                 MeterRegistry meterRegistry
+                                                 ) {
+            return new EsIndexerHttpService(restHighLevelClient, objectMapper, meterRegistry,
+                    WriteRequest.RefreshPolicy.IMMEDIATE);
         }
     }
 

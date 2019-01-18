@@ -1,5 +1,6 @@
 package no.nav.arbeid.cv.indexer.config;
 
+import org.elasticsearch.action.support.WriteRequest;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +34,7 @@ public class EsServiceConfig {
 
   @Bean
   public EsIndexerService indexerCvService() {
-    return new EsIndexerHttpService(restHighLevelClient, objectMapper, meterRegistry);
+    return new EsIndexerHttpService(restHighLevelClient, objectMapper, meterRegistry, WriteRequest.RefreshPolicy.NONE);
   }
 
 }
