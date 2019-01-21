@@ -513,6 +513,8 @@ public class EsSokHttpService implements EsSokService {
 
         if (geografiKoder.length == 1) {
             regex += "|" + geografiKoder[0] + ".*";
+        } else {
+            regex += "|" + geografiKoder[0];
         }
 
         NestedQueryBuilder geografiQueryBuilder = QueryBuilders.nestedQuery("geografiJobbonsker",
