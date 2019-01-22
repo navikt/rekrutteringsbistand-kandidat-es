@@ -199,16 +199,16 @@ public class EsSokHttpService implements EsSokService {
         return toSokeresultat(esExec(() -> search(UseCase.AG_SOK, queryBuilder, sk.fraIndex(),
                 sk.antallResultater(), sortQueryBuilder)));
     }
-    
+
     @Override
     public Optional<EsCv> veilederSokPaaFnr(String fnr) throws IOException {
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
         queryBuilder.must(QueryBuilders.termQuery("fodselsnummer", fnr));
         addFilterForVeiledereSok(queryBuilder);
-        
+
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(queryBuilder);
-        
+
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.indices(CV_INDEX);
         searchRequest.source(searchSourceBuilder);
@@ -221,7 +221,7 @@ public class EsSokHttpService implements EsSokService {
         LOGGER.debug("Totalt antall treff: " + searchResponse.getHits().getTotalHits());
         List<EsCv> cver = toCvList(searchResponse);
         if( cver.size() > 1 ) {
-            LOGGER.warn("Har fått treff på mer enn 1 kandidat ved søk med fødselsnummer");           
+            LOGGER.warn("Har fått treff på mer enn 1 kandidat ved søk med fødselsnummer");
         }
         if( cver.size() == 0 ) {
             return Optional.empty();
@@ -277,7 +277,7 @@ public class EsSokHttpService implements EsSokService {
         if (sk.isUtdanningSet()) {
             addUtdanningToQuery(sk.utdanninger(), sk.utdanningsniva(), queryBuilder);
         }
-        
+
         if (StringUtils.isNotBlank(sk.etternavn())) {
             addEtternavnToQuery(sk.etternavn(), queryBuilder);
         }
@@ -285,7 +285,7 @@ public class EsSokHttpService implements EsSokService {
         if (isNotEmpty(sk.forerkort())) {
             addForerkortToQuery(sk.forerkort(), queryBuilder);
         }
-        
+
         if (isNotEmpty(sk.kvalifiseringsgruppeKoder())) {
             addKvalifiseringsgruppeKoderToQuery(sk.kvalifiseringsgruppeKoder(), queryBuilder);
         }
@@ -294,15 +294,15 @@ public class EsSokHttpService implements EsSokService {
                 sk.antallResultater(), sortQueryBuilder)));
     }
 
-    private void addFilterForArbeidsgivereSok(BoolQueryBuilder boolQueryBuilder) {        
-        boolQueryBuilder.must(QueryBuilders.termQuery("synligForArbeidsgiverSok", Boolean.TRUE));        
+    private void addFilterForArbeidsgivereSok(BoolQueryBuilder boolQueryBuilder) {
+        boolQueryBuilder.must(QueryBuilders.termQuery("synligForArbeidsgiverSok", Boolean.TRUE));
     }
 
-    private void addFilterForArbeidsgivereHent(BoolQueryBuilder boolQueryBuilder) { 
+    private void addFilterForArbeidsgivereHent(BoolQueryBuilder boolQueryBuilder) {
         BoolQueryBuilder innerQuery = QueryBuilders.boolQuery();
         innerQuery.should(QueryBuilders.termQuery("synligForArbeidsgiverSok", Boolean.TRUE));
         innerQuery.should(QueryBuilders.termQuery("synligForVeilederSok", Boolean.TRUE));
-        innerQuery.minimumShouldMatch(1);     
+        innerQuery.minimumShouldMatch(1);
         boolQueryBuilder.must(innerQuery);
     }
 
@@ -311,7 +311,7 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addFilterForVeiledereHent(BoolQueryBuilder boolQueryBuilder) {
-        boolQueryBuilder.must(QueryBuilders.termQuery("synligForVeilederSok",  Boolean.TRUE));        
+        boolQueryBuilder.must(QueryBuilders.termQuery("synligForVeilederSok",  Boolean.TRUE));
     }
 
     private void addEtternavnToQuery(String etternavn, BoolQueryBuilder boolQueryBuilder) {
@@ -448,7 +448,7 @@ public class EsSokHttpService implements EsSokService {
         forerkort.stream().filter(StringUtils::isNotBlank)
                 .forEach(s -> addForerkortQuery(s, boolQueryBuilder));
     }
-    
+
     private void addKvalifiseringsgruppeKoderToQuery(List<String> kvalifiseringsgruppeKoder, BoolQueryBuilder boolQueryBuilder) {
         BoolQueryBuilder innerBoolQueryBuilder = QueryBuilders.boolQuery();
         boolQueryBuilder.must(innerBoolQueryBuilder);
@@ -511,11 +511,10 @@ public class EsSokHttpService implements EsSokService {
         String[] geografiKoder = geografi.split("\\.");
         String regex = geografi + "|NO";
 
-        if (geografiKoder.length > 1) {
+        if (geografiKoder.length == 1) {
+            regex += "|" + geografiKoder[0] + ".*";
+        } else {
             regex += "|" + geografiKoder[0];
-            if (geografiKoder[1].length() > 4) {
-                regex += "|" + geografiKoder[0] + "." + geografiKoder[1].substring(0, 4);
-            }
         }
 
         NestedQueryBuilder geografiQueryBuilder = QueryBuilders.nestedQuery("geografiJobbonsker",
@@ -532,9 +531,9 @@ public class EsSokHttpService implements EsSokService {
         boolQueryBuilder.must(forerkortQueryBuilder);
         LOGGER.debug("ADDING førerkort");
     }
-    
+
     private void addKvalifiseringsgruppekodeQuery(String kvalifiseringsgruppekode, BoolQueryBuilder boolQueryBuilder) {
-        boolQueryBuilder.should(QueryBuilders.termQuery("kvalifiseringsgruppekode", kvalifiseringsgruppekode));        
+        boolQueryBuilder.should(QueryBuilders.termQuery("kvalifiseringsgruppekode", kvalifiseringsgruppekode));
         LOGGER.debug("ADDING kvalifiseringsgruppekode");
     }
 

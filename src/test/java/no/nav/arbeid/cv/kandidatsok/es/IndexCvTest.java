@@ -140,7 +140,7 @@ public class IndexCvTest {
     public void after() throws IOException {
         indexerClient.deleteIndex();
     }
-    
+
     @Test
     public void skalIkkeFeileMedIllegalArgumentFraES() throws Exception {
         no.nav.arbeid.cv.kandidatsok.es.domene.EsCv cv1 = objectMapper.readValue(
@@ -169,7 +169,7 @@ public class IndexCvTest {
         indexerClient.bulkIndex(bulkEventer);
 
     }
-    
+
     @Test
     public void testUtenSokekriterierReturnererAlleTestPersonerForArbeidsgivere()
             throws IOException {
@@ -313,7 +313,7 @@ public class IndexCvTest {
         assertThat(cver.size()).isEqualTo(cverStemOrd.size());
         assertThat(cver.get(0)).isEqualTo(cverStemOrd.get(0));
     }
-    
+
     @Test
     public void testSamletKompetanseSkalIkkeGiResultatVedSokPaSprak() throws IOException {
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
@@ -452,6 +452,66 @@ public class IndexCvTest {
         // assertThat(cverIngen).contains(kandidatsokTransformer
         // .transformer(transformer.transform(TempCvEventObjectMother.giveMeEsCv2())));
         assertThat(cverIngen.size()).isLessThan(cverIngenOgGrunnskole.size());
+    }
+
+    @Test
+    public void sokPaKommuneSkalGiTreffPaKommune() throws IOException {
+        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
+                Sokekriterier.med().geografiList(Collections.singletonList("NO19.1903")).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        EsCv cv = cver.get(0);
+
+        assertThat(cv).isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv5()));
+    }
+
+    @Test
+    public void sokPaFylkeSkalGiTreffPaFylke() throws IOException {
+        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
+                Sokekriterier.med().geografiList(Collections.singletonList("NO03")).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        List<String> fnrList = cver.stream().map(EsCv::getKandidatnr).collect(Collectors.toList());
+
+        assertThat(fnrList).contains(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv()).getKandidatnr());
+    }
+
+    @Test
+    public void sokPaFylkeSkalGiTreffPaKommune() throws IOException {
+        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
+                Sokekriterier.med().geografiList(Collections.singletonList("NO12")).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        List<String> fnrList = cver.stream().map(EsCv::getKandidatnr).collect(Collectors.toList());
+
+        assertThat(cver.size()).isGreaterThanOrEqualTo(3);
+        assertThat(fnrList).contains(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv3()).getKandidatnr());
+        assertThat(fnrList).contains(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv5()).getKandidatnr());
+        assertThat(fnrList).contains(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv6()).getKandidatnr());
+    }
+
+    @Test
+    public void sokPaKommuneSkalGiTreffPaFylke() throws IOException {
+        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
+                Sokekriterier.med().geografiList(Collections.singletonList("NO04.0403")).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        List<String> fnrList = cver.stream().map(EsCv::getKandidatnr).collect(Collectors.toList());
+
+        assertThat(fnrList).contains(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv()).getKandidatnr());
+    }
+
+    @Test
+    public void sokPaKommuneSkalIkkeInkludereAndreKommuner() throws IOException {
+        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
+                Sokekriterier.med().geografiList(Collections.singletonList("NO12.1201")).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        List<String> fnrList = cver.stream().map(EsCv::getKandidatnr).collect(Collectors.toList());
+
+        assertThat(fnrList).doesNotContain(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv5()).getKandidatnr());
+        assertThat(fnrList).doesNotContain(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv6()).getKandidatnr());
+        assertThat(fnrList).contains(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv3()).getKandidatnr());
     }
 
     @Test
@@ -655,68 +715,68 @@ public class IndexCvTest {
         assertThat(cv1Bank)
                 .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv5()));
     }
-    
+
     @Test
     public void sokPaKvalifiseringsgruppekodeSkalGiKorrektResultat() throws IOException {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .kvalifiseringsgruppeKoder(Collections.singletonList("IKVAL")).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
-        assertThat(cver).hasSize(1);        
-        assertThat(cver).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));                
+        assertThat(cver).hasSize(1);
+        assertThat(cver).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
     }
-    
+
     @Test
     public void sokPaToKvalifiseringsgruppekodeSkalIkkeInnsnevre() throws IOException {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .kvalifiseringsgruppeKoder(Arrays.asList("IKVAL", "IBATT")).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
-        assertThat(cver).hasSize(1);        
-        assertThat(cver).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));                
+        assertThat(cver).hasSize(1);
+        assertThat(cver).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
     }
-    
+
     @Test
     public void sokPaFnrSkalGiKorrektResultat() throws IOException {
         Optional<EsCv> optional = sokClient.veilederSokPaaFnr("04265983651");
         assertThat(optional).isPresent();
         assertThat(optional.get()).isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv3()));
     }
-    
+
     @Test
     public void sokPaIkkeEksisterendeFnrSkalGiEmpty() throws IOException {
         Optional<EsCv> optional = sokClient.veilederSokPaaFnr("04265983622");
-        assertThat(optional).isNotPresent();        
+        assertThat(optional).isNotPresent();
     }
-    
+
     @Test
     public void sokMedFritekstSkalGiTreffPaaBeskrivelse() throws IOException {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("yrkeskarriere").bygg());
         assertThat(sokeresultat.getCver()).hasSize(1);
         assertThat(sokeresultat.getCver()).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
     }
-    
+
     @Test
     public void sokMedFritekstSkalGiTreffPaaBeskrivelseUavhengigAvCasing() throws IOException {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("YRKESkarriere").bygg());
         assertThat(sokeresultat.getCver()).hasSize(1);
         assertThat(sokeresultat.getCver()).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
     }
-    
+
     @Test
     public void sokMedFritekstSkalGiTreffPaaArbeidsgiver() throws IOException {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("Awesome").bygg());
         assertThat(sokeresultat.getCver()).hasSize(1);
         assertThat(sokeresultat.getCver()).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
     }
-    
+
     @Test
     public void sokMedFritekstSkalGiTreffVedBrukAvFlereOrd() throws IOException {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("Awesome yrkeskarriere selvstendig").bygg());
         assertThat(sokeresultat.getCver()).hasSize(2);
         assertThat(sokeresultat.getCver()).containsExactlyInAnyOrder(
                 kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()),
-                kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv3()));       
+                kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv3()));
     }
- 
+
 }
