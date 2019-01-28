@@ -251,7 +251,7 @@ public class EsIndexerHttpService implements EsIndexerService {
     private long indexQuery(String query) {
         Map<String, String> params = new HashMap<>();
         if (query != null) {
-            params.put(query, "true");
+            params.put(query, "");
         }
 
         long antallIndeksert = 0;
@@ -278,11 +278,11 @@ public class EsIndexerHttpService implements EsIndexerService {
 
     @Override
     public long antallIndeksertSynligForVeileder() {
-        return indexQuery("synligForVeilederSok");
+        return indexQuery("synligForVeilederSok:true");
     }
 
     @Override
     public long antallIndeksertSynligForArbeidsgiver() {
-        return indexQuery("synligForArbeidsgiverSok");
+        return indexQuery("synligForArbeidsgiverSok:true");
     }
 }
