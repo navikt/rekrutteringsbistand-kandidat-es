@@ -275,11 +275,11 @@ public class EsIndexerHttpService implements EsIndexerService {
 
     @Override
     public long antallIndeksertSynligForVeileder() {
-        return indexQuery("?synligForVeileder:true");
+        return indexQuery("?synligForVeilederSok:true");
     }
 
     @Override
     public long antallIndeksertSynligForArbeidsgiver() {
-        return indexQuery("?synligForArbeidsgiver:true");
+        return indexQuery("?synligForArbeidsgiverSok:true");
     }
 }
