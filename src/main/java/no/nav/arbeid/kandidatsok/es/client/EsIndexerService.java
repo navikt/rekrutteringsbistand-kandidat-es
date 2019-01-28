@@ -22,4 +22,6 @@ public interface EsIndexerService {
   boolean doesIndexExist() throws IOException;
 
   long antallIndeksert();
+  long antallIndeksertSynligForVeileder();
+  long antallIndeksertSynligForArbeidsgiver();
 }
