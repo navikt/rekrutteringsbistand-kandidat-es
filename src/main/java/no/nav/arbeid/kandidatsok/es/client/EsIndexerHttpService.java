@@ -1,9 +1,7 @@
 package no.nav.arbeid.kandidatsok.es.client;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.http.util.EntityUtils;
@@ -247,14 +245,19 @@ public class EsIndexerHttpService implements EsIndexerService {
 
     @Override
     public long antallIndeksert() {
-        return indexQuery("");
+        return indexQuery(null);
     }
 
     private long indexQuery(String query) {
+        Map<String, String> params = new HashMap<>();
+        if (query != null) {
+            params.put(query, "true");
+        }
+
         long antallIndeksert = 0;
         try {
             Response response = client.getLowLevelClient().performRequest("GET",
-                    String.format("/%s/%s/_count%s", CV_INDEX, CV_TYPE, query));
+                    String.format("/%s/%s/_count", CV_INDEX, CV_TYPE), params);
             if (response != null && response.getStatusLine().getStatusCode() >= 200
                     && response.getStatusLine().getStatusCode() < 300) {
                 String json = EntityUtils.toString(response.getEntity());
@@ -275,11 +278,11 @@ public class EsIndexerHttpService implements EsIndexerService {
 
     @Override
     public long antallIndeksertSynligForVeileder() {
-        return indexQuery("?synligForVeilederSok:true");
+        return indexQuery("synligForVeilederSok");
     }
 
     @Override
     public long antallIndeksertSynligForArbeidsgiver() {
-        return indexQuery("?synligForArbeidsgiverSok:true");
+        return indexQuery("synligForArbeidsgiverSok");
     }
 }
