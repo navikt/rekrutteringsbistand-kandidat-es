@@ -247,24 +247,39 @@ public class EsIndexerHttpService implements EsIndexerService {
 
     @Override
     public long antallIndeksert() {
+        return indexQuery("");
+    }
+
+    private long indexQuery(String query) {
         long antallIndeksert = 0;
         try {
             Response response = client.getLowLevelClient().performRequest("GET",
-                    String.format("/%s/%s/_count", CV_INDEX, CV_TYPE));
+                    String.format("/%s/%s/_count%s", CV_INDEX, CV_TYPE, query));
             if (response != null && response.getStatusLine().getStatusCode() >= 200
                     && response.getStatusLine().getStatusCode() < 300) {
                 String json = EntityUtils.toString(response.getEntity());
                 JsonNode countNode = mapper.readTree(json).path(("count"));
                 antallIndeksert = countNode != null ? countNode.asLong() : 0;
             } else {
-                LOGGER.warn("Greide ikke å hente ut antall dokumenter det i ES indeksen: {} : {}",
+                LOGGER.warn("Greide ikke å hente ut antall dokumenter i ES indeksen {}: {} : {}",
+                        query,
                         response.getStatusLine().getStatusCode(),
                         response.getStatusLine().getReasonPhrase());
             }
         } catch (Exception e) {
-            LOGGER.warn("Greide ikke å hente ut antall dokumenter i ES indeksen: {}",
-                    e.getMessage(), e);
+            LOGGER.warn("Greide ikke å hente ut antall dokumenter i ES indeksen {}: {}",
+                    query, e.getMessage(), e);
         }
         return antallIndeksert;
+    }
+
+    @Override
+    public long antallIndeksertSynligForVeileder() {
+        return indexQuery("?synligForVeileder:true");
+    }
+
+    @Override
+    public long antallIndeksertSynligForArbeidsgiver() {
+        return indexQuery("?synligForArbeidsgiver:true");
     }
 }
