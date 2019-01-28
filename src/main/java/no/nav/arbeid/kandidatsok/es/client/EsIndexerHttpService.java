@@ -251,7 +251,7 @@ public class EsIndexerHttpService implements EsIndexerService {
     private long indexQuery(String query) {
         Map<String, String> params = new HashMap<>();
         if (query != null) {
-            params.put(query, "");
+            params.put("q", query);
         }
 
         long antallIndeksert = 0;
