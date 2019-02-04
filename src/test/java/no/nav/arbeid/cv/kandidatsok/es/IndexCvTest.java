@@ -34,11 +34,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
@@ -777,6 +773,14 @@ public class IndexCvTest {
         assertThat(sokeresultat.getCver()).containsExactlyInAnyOrder(
                 kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()),
                 kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv3()));
+    }
+
+    @Test
+    public void sokPaaKandidaterSkalInneholdeMinimumEnMedSattOppstart() throws IOException {
+        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med().bygg());
+        List<EsCv> collect = sokeresultat.getCver().stream().filter(esCv -> Objects.nonNull(esCv.getOppstartKode())).collect(Collectors.toList());
+        assertThat(collect).size().isGreaterThan(0);
+
     }
 
 }

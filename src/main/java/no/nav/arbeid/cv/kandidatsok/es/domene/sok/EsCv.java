@@ -41,6 +41,8 @@ public class EsCv {
 
     private List<EsYrkeserfaring> yrkeserfaring = new ArrayList<>();
 
+    private String oppstartKode;
+
     private float score = Float.NEGATIVE_INFINITY; // Default fra Elasticsearch..
 
     public EsCv() {}
@@ -49,7 +51,7 @@ public class EsCv {
                 String poststed, String epostadresse, String telefon, String mobiltelefon, 
                 String formidlingsgruppekode, String kandidatnr,
                 int totalLengdeYrkeserfaring, String kvalifiseringsgruppekode, List<EsUtdanning> utdanning,
-                List<EsYrkeserfaring> yrkeserfaring) {
+                List<EsYrkeserfaring> yrkeserfaring, String oppstart) {
         this.fodselsnummer = fodselsnummer;
         this.fornavn = fornavn;
         this.etternavn = etternavn;
@@ -65,6 +67,7 @@ public class EsCv {
         this.kvalifiseringsgruppekode = kvalifiseringsgruppekode;
         this.utdanning = utdanning;
         this.yrkeserfaring = yrkeserfaring;
+        this.oppstartKode = oppstart;
     }
 
     public float getScore() {
@@ -154,6 +157,10 @@ public class EsCv {
         return poststed;
     }
 
+    public String getOppstartKode() {
+        return this.oppstartKode;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -173,7 +180,8 @@ public class EsCv {
                 Objects.equals(kandidatnr, esCv.kandidatnr) &&
                 Objects.equals(kvalifiseringsgruppekode, esCv.kvalifiseringsgruppekode) &&
                 Objects.equals(utdanning, esCv.utdanning) &&
-                Objects.equals(yrkeserfaring, esCv.yrkeserfaring);
+                Objects.equals(yrkeserfaring, esCv.yrkeserfaring) &&
+                Objects.equals(oppstartKode, esCv.oppstartKode);
 
     }
 
@@ -183,7 +191,7 @@ public class EsCv {
                 fodselsnummer, fornavn, etternavn, fodselsdato, fodselsdatoErDnr, poststed,
                 epostadresse, telefon, mobiltelefon,
                 formidlingsgruppekode, kandidatnr, totalLengdeYrkeserfaring,
-                kvalifiseringsgruppekode, utdanning, yrkeserfaring
+                kvalifiseringsgruppekode, utdanning, yrkeserfaring, oppstartKode
         );
     }
 
@@ -206,7 +214,7 @@ public class EsCv {
                 ", utdanning=" + utdanning +
                 ", yrkeserfaring=" + yrkeserfaring +
                 ", score=" + score +
+                ", oppstartKode=" + oppstartKode +
                 '}';
     }
-
 }
