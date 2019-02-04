@@ -838,12 +838,7 @@ public class EsSokHttpService implements EsSokService {
         }
 
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.query(queryBuilder);
-        searchSourceBuilder.from(0);
-        searchSourceBuilder.size(10);
-        // Dette er defaulten, så egentlig unødvendig å sette:
-        searchSourceBuilder.sort(new ScoreSortBuilder().order(SortOrder.DESC));
-        searchSourceBuilder.sort(new FieldSortBuilder("_uid").order(SortOrder.ASC));
+        searchSourceBuilder.query(queryBuilder).from(0).size(10).sort(new FieldSortBuilder("tidsstempel").order(SortOrder.DESC));
 
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.indices(CV_INDEX);
