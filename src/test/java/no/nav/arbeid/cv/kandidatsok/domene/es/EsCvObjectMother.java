@@ -409,7 +409,8 @@ public class EsCvObjectMother {
         EsCv esCv = new EsCv("04016012345", "OLA", "NORDMANN", d("1960-01-01"), false, "JOBBS",
                 "unnasluntrer@mailinator.com", "(+47) 22334455", "12345678", "NO", "1L",
                 "hererjeg", "N", d("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 5001, false,
-                new Date(), 301, FALSE, null, "IKVAL", null, null, FALSE, FALSE, true, true, "LEDIG_NAA");
+                new Date(), 301, FALSE, null, "IKVAL", null, null, FALSE, FALSE, true, false, "LEDIG_NAA");
+
         esCv.addUtdanning(utdanningsListe);
         esCv.addYrkeserfaring(yrkeserfaringsListe);
         esCv.addKompetanse(kompetanseList);
