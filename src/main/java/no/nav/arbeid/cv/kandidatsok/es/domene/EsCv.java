@@ -209,7 +209,7 @@ public class EsCv {
             Integer kommunenummer, Boolean disponererBil, Date tidsstempel, Integer kommunenummerkw,
             Boolean doed, String frKode, String kvalifiseringsgruppekode, String hovedmaalkode, String orgenhet,
             Boolean fritattKandidatsok, Boolean fritattAgKandidatsok, 
-            Boolean synligForArbeidsgiverSok, Boolean synligForVeilederSok) {
+            Boolean synligForArbeidsgiverSok, Boolean synligForVeilederSok, String oppstartKode) {
         this.fodselsnummer = fodselsnummer;
         this.fornavn = fornavn;
         this.etternavn = etternavn;
@@ -245,6 +245,7 @@ public class EsCv {
         this.fritattAgKandidatsok = fritattAgKandidatsok;
         this.synligForArbeidsgiverSok = synligForArbeidsgiverSok;
         this.synligForVeilederSok = synligForVeilederSok;
+        this.oppstartKode = oppstartKode;
     }
     
     public EsCv(String fodselsnummer, String fornavn, String etternavn, Date fodselsdato,
@@ -254,7 +255,7 @@ public class EsCv {
             String adresselinje3, String postnummer, String poststed, String landkode,
             Integer kommunenummer, Boolean disponererBil, Date tidsstempel, Integer kommunenummerkw,
             Boolean doed, String frKode, String kvalifiseringsgruppekode, String hovedmaalkode, String orgenhet,
-            Boolean fritattKandidatsok, Boolean fritattAgKandidatsok, String oppstartKode) {
+            Boolean fritattKandidatsok, Boolean fritattAgKandidatsok) {
         this.fodselsnummer = fodselsnummer;
         this.fornavn = fornavn;
         this.etternavn = etternavn;
@@ -290,7 +291,6 @@ public class EsCv {
         this.fritattAgKandidatsok = fritattAgKandidatsok;
         this.synligForArbeidsgiverSok = beregnSynlighetForArbeidsgiverSokBasertPaaGamleArenaData();
         this.synligForVeilederSok = beregnSynlighetForVeilederSokBasertPaaGamleArenaData();
-        this.oppstartKode = oppstartKode;
     }
 
     private Boolean beregnSynlighetForVeilederSokBasertPaaGamleArenaData() {
