@@ -231,9 +231,10 @@ public class EsCv {
     @ElasticBooleanField
     private Boolean synligForVeilederSok;
 
+    @ElasticKeywordField
+    private String oppstartKode;
 
     public EsCv() {
-
     }
 
     public EsCv(String fodselsnummer, String fornavn, String etternavn, Date fodselsdato,
@@ -244,7 +245,7 @@ public class EsCv {
             Integer kommunenummer, Boolean disponererBil, Date tidsstempel, Integer kommunenummerkw,
             Boolean doed, String frKode, String kvalifiseringsgruppekode, String hovedmaalkode, String orgenhet,
             Boolean fritattKandidatsok, Boolean fritattAgKandidatsok, 
-            Boolean synligForArbeidsgiverSok, Boolean synligForVeilederSok) {
+            Boolean synligForArbeidsgiverSok, Boolean synligForVeilederSok, String oppstartKode) {
         this.fodselsnummer = fodselsnummer;
         this.fornavn = fornavn;
         this.etternavn = etternavn;
@@ -280,6 +281,7 @@ public class EsCv {
         this.fritattAgKandidatsok = fritattAgKandidatsok;
         this.synligForArbeidsgiverSok = synligForArbeidsgiverSok;
         this.synligForVeilederSok = synligForVeilederSok;
+        this.oppstartKode = oppstartKode;
     }
     
     public EsCv(String fodselsnummer, String fornavn, String etternavn, Date fodselsdato,
@@ -806,6 +808,10 @@ public class EsCv {
         return totalLengdeYrkeserfaring;
     }
 
+    public String getOppstartKode() {
+        return this.oppstartKode;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -862,7 +868,8 @@ public class EsCv {
                 && Objects.equals(arbeidstidJobbonsker, esCv.arbeidstidJobbonsker)
                 && Objects.equals(arbeidsdagerJobbonsker, esCv.arbeidsdagerJobbonsker)
                 && Objects.equals(samletKompetanse, esCv.samletKompetanse)
-                && Objects.equals(totalLengdeYrkeserfaring, esCv.totalLengdeYrkeserfaring);
+                && Objects.equals(totalLengdeYrkeserfaring, esCv.totalLengdeYrkeserfaring)
+                && Objects.equals(oppstartKode, esCv.oppstartKode);
     }
 
     @Override
@@ -875,7 +882,7 @@ public class EsCv {
                 sertifikat, forerkort, sprak, kurs, verv, geografiJobbonsker, yrkeJobbonsker,
                 omfangJobbonsker, ansettelsesformJobbonsker, arbeidstidsordningJobbonsker,
                 arbeidstidJobbonsker, arbeidsdagerJobbonsker, samletKompetanse, totalLengdeYrkeserfaring, 
-                synligForArbeidsgiverSok, synligForVeilederSok);
+                synligForArbeidsgiverSok, synligForVeilederSok, oppstartKode);
     }
 
     @Override
@@ -908,13 +915,12 @@ public class EsCv {
                 + ", arbeidstidsordningJobbonsker=" + arbeidstidsordningJobbonsker
                 + ", arbeidsdagerJobbonsker=" + arbeidsdagerJobbonsker + ", arbeidstidJobbonsker="
                 + arbeidstidJobbonsker + ", samletKompetanse=" + samletKompetanse
-                + ", totalLengdeYrkeserfaring=" + totalLengdeYrkeserfaring + "]";
+                + ", totalLengdeYrkeserfaring=" + totalLengdeYrkeserfaring
+                + ", oppstartKode=" + oppstartKode + "]";
     }
 
     public void setKandidatnr(String nyArenaKandidatnr) {
         this.kandidatnr = nyArenaKandidatnr;
     }
-    
-    
 
 }
