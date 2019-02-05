@@ -31,14 +31,12 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.nested.Nested;
-import org.elasticsearch.search.aggregations.bucket.nested.NestedAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms.Bucket;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.NestedSortBuilder;
-import org.elasticsearch.search.sort.ScoreSortBuilder;
 import org.elasticsearch.search.sort.SortMode;
 import org.elasticsearch.search.sort.SortOrder;
 import org.elasticsearch.search.suggest.SuggestBuilder;
@@ -714,37 +712,7 @@ public class EsSokHttpService implements EsSokService {
 
             searchSourceBuilder.sort(fieldSortBuilder);
         }
-        searchSourceBuilder.sort(new FieldSortBuilder("tidsstempel").order(SortOrder.DESC));
-
-//        TermsAggregationBuilder yrkesAggregation3Siffer =
-//                AggregationBuilders.terms("nested").field("yrkeserfaring.styrkKode3Siffer");
-//        NestedAggregationBuilder nestedYrkesAggregation3Siffer =
-//                AggregationBuilders.nested("yrkeserfaring", "yrkeserfaring");
-//        nestedYrkesAggregation3Siffer.subAggregation(yrkesAggregation3Siffer);
-//
-//        TermsAggregationBuilder yrkesAggregation4Siffer =
-//                AggregationBuilders.terms("4siffer").field("yrkeserfaring.styrkKode4Siffer");
-//        yrkesAggregation3Siffer.subAggregation(yrkesAggregation4Siffer);
-//
-//        TermsAggregationBuilder yrkesAggregation6Siffer = AggregationBuilders.terms("6siffer")
-//                .field("yrkeserfaring.styrkKodeStillingstittel.keyword");
-//        yrkesAggregation4Siffer.subAggregation(yrkesAggregation6Siffer);
-//
-//        searchSourceBuilder.aggregation(nestedYrkesAggregation3Siffer);
-//
-//        TermsAggregationBuilder utdanningAggregation =
-//                AggregationBuilders.terms("nested").field("utdanning.nusKode");
-//        NestedAggregationBuilder nestedUtdanningAggregation =
-//                AggregationBuilders.nested("utdanning", "utdanning");
-//        nestedUtdanningAggregation.subAggregation(utdanningAggregation);
-//        searchSourceBuilder.aggregation(nestedUtdanningAggregation);
-//        
-//        TermsAggregationBuilder kompetanseAggregation =
-//                AggregationBuilders.terms("nested").field("kompetanse.kompKodeNavn.keyword");
-//        NestedAggregationBuilder nestedKompetanseAggregation =
-//                AggregationBuilders.nested("kompetanse", "kompetanse");
-//        nestedKompetanseAggregation.subAggregation(kompetanseAggregation);
-//        searchSourceBuilder.aggregation(nestedKompetanseAggregation);
+        searchSourceBuilder.sort(new FieldSortBuilder("tidsstempel").order(SortOrder.DESC));    
         
         TermsAggregationBuilder kompetanseObjAggregation =
                 AggregationBuilders.terms("kompetanse").field("kompetanseObj.kompKodeNavn.keyword");
