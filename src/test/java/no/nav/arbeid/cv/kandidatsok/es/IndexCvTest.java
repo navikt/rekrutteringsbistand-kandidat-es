@@ -10,6 +10,7 @@ import io.micrometer.core.instrument.Tags;
 import no.nav.arbeid.cv.indexer.config.EsServiceConfig;
 import no.nav.arbeid.cv.kandidatsok.domene.es.EsCvObjectMother;
 import no.nav.arbeid.cv.kandidatsok.domene.es.KandidatsokTransformer;
+import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Aggregering;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.EsCv;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokekriterier;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.SokekriterierVeiledere;
@@ -337,9 +338,9 @@ public class IndexCvTest {
     }
 
     @Test
-    public void testSamletKompetanseSkalGiResultatVedSokPaSertifikater() throws IOException {       
+    public void testSamletKompetanseSkalGiResultatVedSokPaSertifikater() throws IOException {
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
-                .kompetanser(Collections.singletonList("Truckførerbevis")).bygg()); 
+                .kompetanser(Collections.singletonList("Truckførerbevis")).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         EsCv cv = cver.get(0);
@@ -577,6 +578,18 @@ public class IndexCvTest {
         List<EsCv> cver = sokeresultat.getCver();
         List<EsCv> cver1 = sokeresultat1.getCver();
         assertThat(cver.size()).isLessThan(cver1.size());
+    }
+    
+    @Test
+    public void skalAggregerePaaKompetanse() throws IOException {
+        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
+                .yrkeJobbonsker(Arrays.asList("Butikkmedarbeider", "Industrimekaniker", "Ordfører"))
+                .bygg());
+
+        List<Aggregering> aggregeringer = sokeresultat.getAggregeringer();
+        assertThat(aggregeringer.size()).isEqualTo(1);
+        assertThat(aggregeringer.get(0).getNavn()).isEqualTo("kompetanse");
+        assertThat(aggregeringer.get(0).getFelt().size()).isEqualTo(10);
     }
 
     @Test

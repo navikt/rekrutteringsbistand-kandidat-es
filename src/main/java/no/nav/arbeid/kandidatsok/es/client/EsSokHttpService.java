@@ -487,7 +487,7 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addKompetanseQuery(String kompetanse, BoolQueryBuilder boolQueryBuilder) {
-        boolQueryBuilder.must(QueryBuilders.matchQuery("samletKompetanseObj.samletKompetanseTekst", kompetanse));
+        boolQueryBuilder.must(QueryBuilders.matchQuery("samletKompetanseObj.samletKompetanseTekst", kompetanse).operator(Operator.AND));
         LOGGER.debug("ADDING kompetanse");
     }
 
@@ -702,7 +702,7 @@ public class EsSokHttpService implements EsSokService {
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(queryBuilder);
         searchSourceBuilder.from(from);
-        searchSourceBuilder.size(size);        
+        searchSourceBuilder.size(size);
 
         // Sortering på nyeste relevante arbeidserfaring
         if (sortQueryBuilder != null && sortQueryBuilder.hasClauses()) {
@@ -738,18 +738,18 @@ public class EsSokHttpService implements EsSokService {
 //                AggregationBuilders.nested("utdanning", "utdanning");
 //        nestedUtdanningAggregation.subAggregation(utdanningAggregation);
 //        searchSourceBuilder.aggregation(nestedUtdanningAggregation);
-
+//        
+//        TermsAggregationBuilder kompetanseAggregation =
+//                AggregationBuilders.terms("nested").field("kompetanse.kompKodeNavn.keyword");
+//        NestedAggregationBuilder nestedKompetanseAggregation =
+//                AggregationBuilders.nested("kompetanse", "kompetanse");
+//        nestedKompetanseAggregation.subAggregation(kompetanseAggregation);
+//        searchSourceBuilder.aggregation(nestedKompetanseAggregation);
+        
         TermsAggregationBuilder kompetanseObjAggregation =
-                AggregationBuilders.terms("kompetanseObj").field("kompetanseObj.kompKodeNavn.keyword");
+                AggregationBuilders.terms("kompetanse").field("kompetanseObj.kompKodeNavn.keyword");
         searchSourceBuilder.aggregation(kompetanseObjAggregation);
         
-        TermsAggregationBuilder kompetanseAggregation =
-                AggregationBuilders.terms("nested").field("kompetanse.kompKodeNavn.keyword");
-        NestedAggregationBuilder nestedKompetanseAggregation =
-                AggregationBuilders.nested("kompetanse", "kompetanse");
-        nestedKompetanseAggregation.subAggregation(kompetanseAggregation);
-        searchSourceBuilder.aggregation(nestedKompetanseAggregation);
-                        
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.indices(CV_INDEX);
         searchRequest.source(searchSourceBuilder);
@@ -757,7 +757,7 @@ public class EsSokHttpService implements EsSokService {
         LOGGER.debug("SEARCHREQUEST: " + searchRequest.toString());
 
         SearchResponse searchResponse = client.search(searchRequest);
-        LOGGER.info("SEARCHRESPONSE: " + searchResponse);
+        LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
         LOGGER.info("Søketid: {}", searchResponse.getTook());
         return searchResponse;
     }
