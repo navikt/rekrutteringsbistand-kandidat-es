@@ -11,7 +11,6 @@ import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsYrkeJobbonsker {
 
-  @ElasticKeywordField
   private String styrkKode;
 
   @ElasticTextField(analyzer = "norwegian")

@@ -11,10 +11,8 @@ import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsVerv {
 
-  @ElasticDateField
   private Date fraDato;
 
-  @ElasticDateField
   private Date tilDato;
 
   @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")

@@ -31,14 +31,12 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.nested.Nested;
-import org.elasticsearch.search.aggregations.bucket.nested.NestedAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms.Bucket;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.NestedSortBuilder;
-import org.elasticsearch.search.sort.ScoreSortBuilder;
 import org.elasticsearch.search.sort.SortMode;
 import org.elasticsearch.search.sort.SortOrder;
 import org.elasticsearch.search.suggest.SuggestBuilder;
@@ -78,12 +76,12 @@ public class EsSokHttpService implements EsSokService {
 
     @Override
     public List<String> typeAheadSprak(String prefix) throws IOException {
-        return typeAhead(prefix, "sprak.sprakKodeTekst.completion");
+        return typeAhead(prefix, "sprakObj.sprakKodeTekst.completion");
     }
 
     @Override
     public List<String> typeAheadKompetanse(String prefix) throws IOException {
-        return typeAhead(prefix, "samletKompetanse.samletKompetanseTekst.completion");
+        return typeAhead(prefix, "samletKompetanseObj.samletKompetanseTekst.completion");
     }
 
     @Override
@@ -102,7 +100,7 @@ public class EsSokHttpService implements EsSokService {
         searchRequest.types(CV_TYPE);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         CompletionSuggestionBuilder suggestionBuilder = SuggestBuilders
-                .completionSuggestion("geografiJobbonsker.geografiKodeTekst.completion")
+                .completionSuggestion("geografiJobbonskerObj.geografiKodeTekst.completion")
                 .text(prefix).skipDuplicates(true);
 
         SuggestBuilder suggestBuilder = new SuggestBuilder();
@@ -120,7 +118,7 @@ public class EsSokHttpService implements EsSokService {
     }
 
     public List<String> typeAheadYrkeJobbonsker(String prefix) throws IOException {
-        return typeAhead(prefix, "yrkeJobbonsker.styrkBeskrivelse.completion");
+        return typeAhead(prefix, "yrkeJobbonskerObj.styrkBeskrivelse.completion");
     }
 
     private List<String> typeAhead(String prefix, String suggestionField) throws IOException {
@@ -457,11 +455,7 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addYrkeJobbonskerQuery(String yrkeJobbonske, BoolQueryBuilder boolQueryBuilder) {
-        NestedQueryBuilder yrkeJobbonskeQueryBuilder = QueryBuilders.nestedQuery("yrkeJobbonsker",
-                QueryBuilders.matchQuery("yrkeJobbonsker.styrkBeskrivelse", yrkeJobbonske)
-                        .operator(Operator.AND),
-                ScoreMode.Total);
-        boolQueryBuilder.should(yrkeJobbonskeQueryBuilder);
+        boolQueryBuilder.should(QueryBuilders.matchQuery("yrkeJobbonskerObj.styrkBeskrivelse", yrkeJobbonske).operator(Operator.AND));
     }
 
     private void addStillingsTitlerQuery(String stillingstittel, BoolQueryBuilder boolQueryBuilder,
@@ -491,11 +485,7 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addKompetanseQuery(String kompetanse, BoolQueryBuilder boolQueryBuilder) {
-        NestedQueryBuilder kompetanseQueryBuilder = QueryBuilders.nestedQuery("samletKompetanse",
-                QueryBuilders.matchQuery("samletKompetanse.samletKompetanseTekst", kompetanse)
-                        .operator(Operator.AND),
-                ScoreMode.Total);
-        boolQueryBuilder.must(kompetanseQueryBuilder);
+        boolQueryBuilder.must(QueryBuilders.matchQuery("samletKompetanseObj.samletKompetanseTekst", kompetanse).operator(Operator.AND));
         LOGGER.debug("ADDING kompetanse");
     }
 
@@ -517,10 +507,7 @@ public class EsSokHttpService implements EsSokService {
             regex += "|" + geografiKoder[0];
         }
 
-        NestedQueryBuilder geografiQueryBuilder = QueryBuilders.nestedQuery("geografiJobbonsker",
-                QueryBuilders.regexpQuery("geografiJobbonsker.geografiKode", regex),
-                ScoreMode.Total);
-        boolQueryBuilder.should(geografiQueryBuilder);
+        boolQueryBuilder.should(QueryBuilders.regexpQuery("geografiJobbonskerObj.geografiKode", regex));
         LOGGER.debug("ADDING geografiJobbonske");
     }
 
@@ -683,6 +670,9 @@ public class EsSokHttpService implements EsSokService {
 
     private List<? extends Bucket> getBucketsForInnerAggregation(Aggregations aggregations,
             String aggregationName) {
+        if( aggregations.get(aggregationName) instanceof org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms) {
+            return ((org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms) aggregations.get(aggregationName)).getBuckets();
+        }
         return ((Terms) ((Nested) aggregations.get(aggregationName)).getAggregations()
                 .get("nested")).getBuckets();
     }
@@ -722,38 +712,12 @@ public class EsSokHttpService implements EsSokService {
 
             searchSourceBuilder.sort(fieldSortBuilder);
         }
-        searchSourceBuilder.sort(new FieldSortBuilder("tidsstempel").order(SortOrder.DESC));
-
-        TermsAggregationBuilder yrkesAggregation3Siffer =
-                AggregationBuilders.terms("nested").field("yrkeserfaring.styrkKode3Siffer");
-        NestedAggregationBuilder nestedYrkesAggregation3Siffer =
-                AggregationBuilders.nested("yrkeserfaring", "yrkeserfaring");
-        nestedYrkesAggregation3Siffer.subAggregation(yrkesAggregation3Siffer);
-
-        TermsAggregationBuilder yrkesAggregation4Siffer =
-                AggregationBuilders.terms("4siffer").field("yrkeserfaring.styrkKode4Siffer");
-        yrkesAggregation3Siffer.subAggregation(yrkesAggregation4Siffer);
-
-        TermsAggregationBuilder yrkesAggregation6Siffer = AggregationBuilders.terms("6siffer")
-                .field("yrkeserfaring.styrkKodeStillingstittel.keyword");
-        yrkesAggregation4Siffer.subAggregation(yrkesAggregation6Siffer);
-
-        searchSourceBuilder.aggregation(nestedYrkesAggregation3Siffer);
-
-        TermsAggregationBuilder utdanningAggregation =
-                AggregationBuilders.terms("nested").field("utdanning.nusKode");
-        NestedAggregationBuilder nestedUtdanningAggregation =
-                AggregationBuilders.nested("utdanning", "utdanning");
-        nestedUtdanningAggregation.subAggregation(utdanningAggregation);
-        searchSourceBuilder.aggregation(nestedUtdanningAggregation);
-
-        TermsAggregationBuilder kompetanseAggregation =
-                AggregationBuilders.terms("nested").field("kompetanse.kompKodeNavn.keyword");
-        NestedAggregationBuilder nestedKompetanseAggregation =
-                AggregationBuilders.nested("kompetanse", "kompetanse");
-        nestedKompetanseAggregation.subAggregation(kompetanseAggregation);
-        searchSourceBuilder.aggregation(nestedKompetanseAggregation);
-
+        searchSourceBuilder.sort(new FieldSortBuilder("tidsstempel").order(SortOrder.DESC));    
+        
+        TermsAggregationBuilder kompetanseObjAggregation =
+                AggregationBuilders.terms("kompetanse").field("kompetanseObj.kompKodeNavn.keyword");
+        searchSourceBuilder.aggregation(kompetanseObjAggregation);
+        
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.indices(CV_INDEX);
         searchRequest.source(searchSourceBuilder);

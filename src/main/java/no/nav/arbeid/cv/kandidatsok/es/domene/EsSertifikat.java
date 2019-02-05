@@ -13,13 +13,10 @@ import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsSertifikat {
 
-  @ElasticDateField
   private Date fraDato;
 
-  @ElasticDateField
   private Date tilDato;
 
-  @ElasticKeywordField
   private String sertifikatKode;
 
   @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")

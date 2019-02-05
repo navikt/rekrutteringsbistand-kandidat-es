@@ -10,7 +10,6 @@ import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsOmfangJobbonsker {
 
-  @ElasticKeywordField
   private String omfangKode;
 
   @ElasticTextField

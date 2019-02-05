@@ -14,10 +14,8 @@ import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsSprak {
 
-  @ElasticDateField
   private Date fraDato;
 
-  @ElasticKeywordField
   private String sprakKode;
 
   @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
