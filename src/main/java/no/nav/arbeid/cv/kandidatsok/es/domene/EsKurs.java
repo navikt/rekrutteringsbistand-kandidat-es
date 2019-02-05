@@ -13,10 +13,8 @@ import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsKurs {
 
-  @ElasticDateField
   private Date fraDato;
 
-  @ElasticDateField
   private Date tilDato;
 
   @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
@@ -25,10 +23,8 @@ public class EsKurs {
   @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
   private String arrangor;
 
-  @ElasticKeywordField
   private String omfangEnhet;
 
-  @ElasticIntegerField
   private Integer omfangVerdi;
 
   @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")

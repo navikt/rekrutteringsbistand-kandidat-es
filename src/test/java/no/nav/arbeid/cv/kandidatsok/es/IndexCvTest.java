@@ -337,9 +337,9 @@ public class IndexCvTest {
     }
 
     @Test
-    public void testSamletKompetanseSkalGiResultatVedSokPaSertifikater() throws IOException {
+    public void testSamletKompetanseSkalGiResultatVedSokPaSertifikater() throws IOException {       
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
-                .kompetanser(Collections.singletonList("Truckførerbevis")).bygg());
+                .kompetanser(Collections.singletonList("Truckførerbevis")).bygg()); 
 
         List<EsCv> cver = sokeresultat.getCver();
         EsCv cv = cver.get(0);
@@ -754,6 +754,11 @@ public class IndexCvTest {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("yrkeskarriere").bygg());
         assertThat(sokeresultat.getCver()).hasSize(1);
         assertThat(sokeresultat.getCver()).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
+    }
+    
+    @Test
+    public void sokeResultaterSkalInkludereFelterSomIkkeHarAnnotasjon() throws IOException {
+        assertThat(sokClient.veilederHent("2L").get().getKompetanse().get(0).getKompKode()).isEqualTo("265478");
     }
 
     @Test

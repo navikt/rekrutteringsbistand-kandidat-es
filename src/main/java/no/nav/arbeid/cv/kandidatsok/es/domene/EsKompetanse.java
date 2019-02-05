@@ -13,10 +13,8 @@ import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsKompetanse {
 
-  @ElasticDateField
   private Date fraDato;
 
-  @ElasticKeywordField
   private String kompKode;
 
   @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
