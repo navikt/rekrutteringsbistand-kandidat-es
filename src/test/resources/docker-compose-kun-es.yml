@@ -2,7 +2,7 @@
 version: '3'
 services:
   elastic_search:
-    image: ssense/elasticsearch:latest
+    image: elasticsearch:6.5.4
     volumes:
       - $PWD/target/data:/data
     privileged: true
