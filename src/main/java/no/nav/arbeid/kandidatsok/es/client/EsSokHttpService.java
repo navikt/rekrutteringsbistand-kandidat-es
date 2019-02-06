@@ -293,7 +293,7 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addFilterForArbeidsgivereSok(BoolQueryBuilder boolQueryBuilder) {
-        boolQueryBuilder.must(QueryBuilders.termQuery("synligForArbeidsgiverSok", Boolean.TRUE));
+        boolQueryBuilder.filter(QueryBuilders.termQuery("synligForArbeidsgiverSok", Boolean.TRUE));
     }
 
     private void addFilterForArbeidsgivereHent(BoolQueryBuilder boolQueryBuilder) {
@@ -301,15 +301,15 @@ public class EsSokHttpService implements EsSokService {
         innerQuery.should(QueryBuilders.termQuery("synligForArbeidsgiverSok", Boolean.TRUE));
         innerQuery.should(QueryBuilders.termQuery("synligForVeilederSok", Boolean.TRUE));
         innerQuery.minimumShouldMatch(1);
-        boolQueryBuilder.must(innerQuery);
+        boolQueryBuilder.filter(innerQuery);
     }
 
     private void addFilterForVeiledereSok(BoolQueryBuilder boolQueryBuilder) {
-        boolQueryBuilder.must(QueryBuilders.termQuery("synligForVeilederSok",  Boolean.TRUE));
+        boolQueryBuilder.filter(QueryBuilders.termQuery("synligForVeilederSok",  Boolean.TRUE));
     }
 
     private void addFilterForVeiledereHent(BoolQueryBuilder boolQueryBuilder) {
-        boolQueryBuilder.must(QueryBuilders.termQuery("synligForVeilederSok",  Boolean.TRUE));
+        boolQueryBuilder.filter(QueryBuilders.termQuery("synligForVeilederSok",  Boolean.TRUE));
     }
 
     private void addEtternavnToQuery(String etternavn, BoolQueryBuilder boolQueryBuilder) {
