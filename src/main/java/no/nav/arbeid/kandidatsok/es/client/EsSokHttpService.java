@@ -76,7 +76,7 @@ public class EsSokHttpService implements EsSokService {
 
     @Override
     public List<String> typeAheadSprak(String prefix) throws IOException {
-        return typeAhead(prefix, "sprakObj.sprakKodeTekst.completion");
+        return typeAhead(prefix, "sprak.sprakKodeTekst.completion");
     }
 
     @Override
