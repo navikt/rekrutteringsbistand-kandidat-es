@@ -100,7 +100,7 @@ public class EsSokHttpService implements EsSokService {
         searchRequest.types(CV_TYPE);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         CompletionSuggestionBuilder suggestionBuilder = SuggestBuilders
-                .completionSuggestion("geografiJobbonskerObj.geografiKodeTekst.completion")
+                .completionSuggestion("geografiJobbonsker.geografiKodeTekst.completion")
                 .text(prefix).skipDuplicates(true);
 
         SuggestBuilder suggestBuilder = new SuggestBuilder();
@@ -125,10 +125,13 @@ public class EsSokHttpService implements EsSokService {
         SearchRequest searchRequest = new SearchRequest(CV_INDEX);
         searchRequest.types(CV_TYPE);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.fetchSource(false);
         CompletionSuggestionBuilder suggestionBuilder = SuggestBuilders
-                .completionSuggestion(suggestionField).text(prefix).skipDuplicates(true).size(100);
+                .completionSuggestion(suggestionField)
+                .text(prefix).skipDuplicates(true).size(100);
 
         SuggestBuilder suggestBuilder = new SuggestBuilder();
+        
         suggestBuilder.addSuggestion("typeahead", suggestionBuilder);
         searchSourceBuilder.suggest(suggestBuilder);
 
