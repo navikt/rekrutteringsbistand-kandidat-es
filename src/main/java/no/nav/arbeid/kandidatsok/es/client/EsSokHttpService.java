@@ -510,7 +510,10 @@ public class EsSokHttpService implements EsSokService {
             regex += "|" + geografiKoder[0];
         }
 
-        boolQueryBuilder.should(QueryBuilders.regexpQuery("geografiJobbonsker.geografiKode", regex));
+        NestedQueryBuilder geografiQueryBuilder = QueryBuilders.nestedQuery("geografiJobbonsker",
+                QueryBuilders.regexpQuery("geografiJobbonsker.geografiKode", regex),
+                ScoreMode.Total);
+        boolQueryBuilder.should(geografiQueryBuilder);
         LOGGER.debug("ADDING geografiJobbonske");
     }
 
