@@ -67,11 +67,7 @@ public class EsCv {
     
     @ElasticKeywordField
     private String arenaKandidatnr;
-    
-    //Skal fases ut, men må gjøres på en bakoverkompatibel måte..
-    @ElasticLongField
-    private Long arenaPersonId = 0L;
-
+        
     @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
     private String beskrivelse;
 
@@ -138,21 +134,12 @@ public class EsCv {
     @ElasticNestedField
     private List<EsYrkeserfaring> yrkeserfaring = new ArrayList<>();
 
-    @ElasticNestedField
-    private List<EsKompetanse> kompetanse = new ArrayList<>();
-    
     @ElasticObjectField
     private List<EsKompetanse> kompetanseObj = new ArrayList<>();
 
-    @ElasticNestedField
-    private List<EsAnnenErfaring> annenerfaring = new ArrayList<>();
-    
     @ElasticObjectField
     private List<EsAnnenErfaring> annenerfaringObj = new ArrayList<>();
 
-    @ElasticNestedField
-    private List<EsSertifikat> sertifikat = new ArrayList<>();
-    
     @ElasticObjectField
     private List<EsSertifikat> sertifikatObj = new ArrayList<>();
 
@@ -162,9 +149,6 @@ public class EsCv {
     @ElasticNestedField
     private List<EsSprak> sprak = new ArrayList<>();
 
-    @ElasticNestedField
-    private List<EsKurs> kurs = new ArrayList<>();
-    
     @ElasticObjectField
     private List<EsKurs> kursObj = new ArrayList<>();
 
@@ -178,47 +162,23 @@ public class EsCv {
     private List<EsGeografiJobbonsker> geografiJobbonsker = new ArrayList<>();
 
     @ElasticObjectField
-    private List<EsGeografiJobbonsker> geografiJobbonskerObj = new ArrayList<>();
-
-    @ElasticNestedField
-    private List<EsYrkeJobbonsker> yrkeJobbonsker = new ArrayList<>();
-
-    @ElasticObjectField
     private List<EsYrkeJobbonsker> yrkeJobbonskerObj = new ArrayList<>();
-
-    @ElasticNestedField
-    private List<EsOmfangJobbonsker> omfangJobbonsker = new ArrayList<>();
 
     @ElasticObjectField
     private List<EsOmfangJobbonsker> omfangJobbonskerObj = new ArrayList<>();
 
-    @ElasticNestedField
-    private List<EsAnsettelsesformJobbonsker> ansettelsesformJobbonsker = new ArrayList<>();
-    
     @ElasticObjectField
     private List<EsAnsettelsesformJobbonsker> ansettelsesformJobbonskerObj = new ArrayList<>();
     
-    @ElasticNestedField
-    private List<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonsker = new ArrayList<>();
-
     @ElasticObjectField
     private List<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonskerObj = new ArrayList<>();
-
-    @ElasticNestedField
-    private List<EsArbeidsdagerJobbonsker> arbeidsdagerJobbonsker = new ArrayList<>();
 
     @ElasticObjectField
     private List<EsArbeidsdagerJobbonsker> arbeidsdagerJobbonskerObj = new ArrayList<>();
 
-    @ElasticNestedField
-    private List<EsArbeidstidJobbonsker> arbeidstidJobbonsker = new ArrayList<>();
-
     @ElasticObjectField
     private List<EsArbeidstidJobbonsker> arbeidstidJobbonskerObj = new ArrayList<>();
 
-    @ElasticNestedField
-    private List<EsSamletKompetanse> samletKompetanse = new ArrayList<>();
-    
     @ElasticObjectField
     private List<EsSamletKompetanse> samletKompetanseObj = new ArrayList<>();
     
@@ -399,7 +359,6 @@ public class EsCv {
 
     public void addKompetanse(EsKompetanse kompetanse) {
         if (kompetanse != null) {
-            this.kompetanse.add(kompetanse);
             this.kompetanseObj.add(kompetanse);
             this.addSamletKompetanse(Collections
                     .singletonList(new EsSamletKompetanse(kompetanse.getKompKodeNavn())));            
@@ -408,7 +367,6 @@ public class EsCv {
 
     public void addKompetanse(Collection<EsKompetanse> kompetanseListe) {
         if (kompetanseListe != null) {
-            this.kompetanse.addAll(kompetanseListe);
             this.kompetanseObj.addAll(kompetanseListe);
             this.addSamletKompetanse(
                     kompetanseListe.stream().map(k -> new EsSamletKompetanse(k.getKompKodeNavn()))
@@ -417,18 +375,15 @@ public class EsCv {
     }
 
     public void addAnnenErfaring(EsAnnenErfaring annenErfaring) {
-        this.annenerfaring.add(annenErfaring);
         this.annenerfaringObj.add(annenErfaring);
     }
 
     public void addAnnenErfaring(Collection<EsAnnenErfaring> annenErfaringListe) {
-        this.annenerfaring.addAll(annenErfaringListe);
-        this.annenerfaring.addAll(annenErfaringListe);
+        this.annenerfaringObj.addAll(annenErfaringListe);
     }
 
     public void addSertifikat(EsSertifikat sertifikat) {
         if (sertifikat != null) {
-            this.sertifikat.add(sertifikat);
             this.sertifikatObj.add(sertifikat);
             this.addSamletKompetanse(Collections
                     .singletonList(new EsSamletKompetanse(sertifikat.getSertifikatKodeNavn())));
@@ -437,7 +392,6 @@ public class EsCv {
 
     public void addSertifikat(Collection<EsSertifikat> sertifikatListe) {
         if (sertifikatListe != null) {
-            this.sertifikat.addAll(sertifikatListe);
             this.sertifikatObj.addAll(sertifikatListe);
             this.addSamletKompetanse(sertifikatListe.stream()
                     .map(k -> new EsSamletKompetanse(k.getSertifikatKodeNavn()))
@@ -473,7 +427,6 @@ public class EsCv {
 
     public void addKurs(EsKurs kurs) {
         if (kurs != null) {
-            this.kurs.add(kurs);
             this.kursObj.add(kurs);
 //            if (StringUtils.isNotBlank(kurs.getTittel())) {
 //                this.addSamletKompetanse(
@@ -484,7 +437,6 @@ public class EsCv {
 
     public void addKurs(Collection<EsKurs> kursListe) {
         if (kursListe != null) {
-            this.kurs.addAll(kursListe);
             this.kursObj.addAll(kursListe);
             // this.addSamletKompetanse(kursListe.stream().map(s -> s.getTittel())
             // .filter(t -> StringUtils.isNotBlank(t)).map(t -> new EsSamletKompetanse(t))
@@ -504,41 +456,33 @@ public class EsCv {
 
     public void addGeografiJobbonske(Collection<EsGeografiJobbonsker> geografiJobbonskerListe) {
         this.geografiJobbonsker.addAll(geografiJobbonskerListe);
-        this.geografiJobbonskerObj.addAll(geografiJobbonskerListe);
     }
 
     public void addYrkeJobbonske(Collection<EsYrkeJobbonsker> yrkeJobbonskerListe) {
-        this.yrkeJobbonsker.addAll(yrkeJobbonskerListe);
         this.yrkeJobbonskerObj.addAll(yrkeJobbonskerListe);
     }
 
     public void addOmfangJobbonske(Collection<EsOmfangJobbonsker> omfangJobbonsker){
-        this.omfangJobbonsker.addAll(omfangJobbonsker);
         this.omfangJobbonskerObj.addAll(omfangJobbonsker);
     }
 
     public void addAnsettelsesformJobbonske(Collection<EsAnsettelsesformJobbonsker> ansettelsesformJobbonsker){
-        this.ansettelsesformJobbonsker.addAll(ansettelsesformJobbonsker);
         this.ansettelsesformJobbonskerObj.addAll(ansettelsesformJobbonsker);
     }
 
     public void addArbeidstidsordningJobbonsker(Collection<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonsker){
-        this.arbeidstidsordningJobbonsker.addAll(arbeidstidsordningJobbonsker);
         this.arbeidstidsordningJobbonskerObj.addAll(arbeidstidsordningJobbonsker);
     }
 
     public void addArbeidstidJobbonsker(Collection<EsArbeidstidJobbonsker> arbeidstidJobbonsker){
-        this.arbeidstidJobbonsker.addAll(arbeidstidJobbonsker);
         this.arbeidstidJobbonskerObj.addAll(arbeidstidJobbonsker);
     }
 
     public void addArbeidsdagerJobbonsker(Collection<EsArbeidsdagerJobbonsker> arbeidsdagerJobbonsker){
-        this.arbeidsdagerJobbonsker.addAll(arbeidsdagerJobbonsker);
         this.arbeidsdagerJobbonskerObj.addAll(arbeidsdagerJobbonsker);
     }
 
     private void addSamletKompetanse(Collection<EsSamletKompetanse> samletKompetanseListe) {
-        this.samletKompetanse.addAll(samletKompetanseListe);
         this.samletKompetanseObj.addAll(samletKompetanseListe);
     }
 
@@ -624,10 +568,6 @@ public class EsCv {
         return arenaKandidatnr;
     }
     
-    public Long getArenaPersonId() {
-        return arenaPersonId;
-    }
-
     public String getBeskrivelse() {
         return beskrivelse;
     }
@@ -696,26 +636,14 @@ public class EsCv {
         return yrkeserfaring;
     }
 
-    public List<EsKompetanse> getKompetanse() {
-        return kompetanse;
-    }
-
     public List<EsKompetanse> getKompetanseObj() {
         return kompetanseObj;
-    }
-    
-    public List<EsAnnenErfaring> getAnnenerfaring() {
-        return annenerfaring;
     }
     
     public List<EsAnnenErfaring> getAnnenerfaringObj() {
         return annenerfaringObj;
     }
 
-    public List<EsSertifikat> getSertifikat() {
-        return sertifikat;
-    }
-    
     public List<EsSertifikat> getSertifikatObj() {
         return sertifikatObj;
     }
@@ -726,10 +654,6 @@ public class EsCv {
 
     public List<EsSprak> getSprak() {
         return sprak;
-    }
-
-    public List<EsKurs> getKurs() {
-        return kurs;
     }
 
     public List<EsVerv> getVerv() {
@@ -744,62 +668,30 @@ public class EsCv {
         return geografiJobbonsker;
     }
     
-    public List<EsGeografiJobbonsker> getGeografiJobbonskerObj() {
-        return geografiJobbonskerObj;
-    }
-
-    public List<EsYrkeJobbonsker> getYrkeJobbonsker() {
-        return yrkeJobbonsker;
-    }
-    
     public List<EsYrkeJobbonsker> getYrkeJobbonskerObj() {
         return yrkeJobbonskerObj;
     }
 
-    public List<EsOmfangJobbonsker> getOmfangJobbonsker() {
-        return omfangJobbonsker;
-    }
-    
     public List<EsOmfangJobbonsker> getOmfangJobbonskerObj() {
         return omfangJobbonskerObj;
     }
 
-    public List<EsAnsettelsesformJobbonsker> getAnsettelsesformJobbonsker() {
-        return ansettelsesformJobbonsker;
-    }
-    
     public List<EsAnsettelsesformJobbonsker> getAnsettelsesformJobbonskerObj() {
         return ansettelsesformJobbonskerObj;
     }
 
-    public List<EsArbeidstidsordningJobbonsker> getArbeidstidsordningJobbonsker() {
-        return arbeidstidsordningJobbonsker;
-    }
-    
     public List<EsArbeidstidsordningJobbonsker> getArbeidstidsordningJobbonskerObj() {
         return arbeidstidsordningJobbonskerObj;
     }
 
-    public List<EsArbeidstidJobbonsker> getArbeidstidJobbonsker() {
-        return arbeidstidJobbonsker;
-    }
-    
     public List<EsArbeidstidJobbonsker> getArbeidstidJobbonskerObj() {
         return arbeidstidJobbonskerObj;
     }
 
-    public List<EsArbeidsdagerJobbonsker> getArbeidsdagerJobbonsker() {
-        return arbeidsdagerJobbonsker;
-    }
-    
     public List<EsArbeidsdagerJobbonsker> getArbeidsdagerJobbonskerObj() {
         return arbeidsdagerJobbonskerObj;
     }
 
-    public List<EsSamletKompetanse> getSamletKompetanse() {
-        return samletKompetanse;
-    }
-        
     public List<EsSamletKompetanse> getSamletKompetanseObj() {
         return samletKompetanseObj;
     }
@@ -855,19 +747,19 @@ public class EsCv {
                 && Objects.equals(tidsstempel, esCv.tidsstempel)
                 && Objects.equals(utdanning, esCv.utdanning)
                 && Objects.equals(yrkeserfaring, esCv.yrkeserfaring)
-                && Objects.equals(kompetanse, esCv.kompetanse)
-                && Objects.equals(annenerfaring, esCv.annenerfaring)
-                && Objects.equals(sertifikat, esCv.sertifikat)
+                && Objects.equals(kompetanseObj, esCv.kompetanseObj)
+                && Objects.equals(annenerfaringObj, esCv.annenerfaringObj)
+                && Objects.equals(sertifikatObj, esCv.sertifikatObj)
                 && Objects.equals(forerkort, esCv.forerkort) && Objects.equals(sprak, esCv.sprak)
-                && Objects.equals(kurs, esCv.kurs) && Objects.equals(verv, esCv.verv)
+                && Objects.equals(kursObj, esCv.kursObj) && Objects.equals(verv, esCv.verv)
                 && Objects.equals(geografiJobbonsker, esCv.geografiJobbonsker)
-                && Objects.equals(yrkeJobbonsker, esCv.yrkeJobbonsker)
-                && Objects.equals(omfangJobbonsker, esCv.omfangJobbonsker)
-                && Objects.equals(ansettelsesformJobbonsker, esCv.ansettelsesformJobbonsker)
-                && Objects.equals(arbeidstidsordningJobbonsker, esCv.arbeidstidsordningJobbonsker)
-                && Objects.equals(arbeidstidJobbonsker, esCv.arbeidstidJobbonsker)
-                && Objects.equals(arbeidsdagerJobbonsker, esCv.arbeidsdagerJobbonsker)
-                && Objects.equals(samletKompetanse, esCv.samletKompetanse)
+                && Objects.equals(yrkeJobbonskerObj, esCv.yrkeJobbonskerObj)
+                && Objects.equals(omfangJobbonskerObj, esCv.omfangJobbonskerObj)
+                && Objects.equals(ansettelsesformJobbonskerObj, esCv.ansettelsesformJobbonskerObj)
+                && Objects.equals(arbeidstidsordningJobbonskerObj, esCv.arbeidstidsordningJobbonskerObj)
+                && Objects.equals(arbeidstidJobbonskerObj, esCv.arbeidstidJobbonskerObj)
+                && Objects.equals(arbeidsdagerJobbonskerObj, esCv.arbeidsdagerJobbonskerObj)
+                && Objects.equals(samletKompetanseObj, esCv.samletKompetanseObj)
                 && Objects.equals(totalLengdeYrkeserfaring, esCv.totalLengdeYrkeserfaring)
                 && Objects.equals(oppstartKode, esCv.oppstartKode);
     }
@@ -878,10 +770,10 @@ public class EsCv {
                 formidlingsgruppekode, doed, frKode, kvalifiseringsgruppekode, hovedmaalkode, orgenhet, fritattKandidatsok, fritattAgKandidatsok, epostadresse, mobiltelefon, telefon, statsborgerskap,
                 kandidatnr, beskrivelse, samtykkeStatus, samtykkeDato, adresselinje1,
                 adresselinje2, adresselinje3, postnummer, poststed, landkode, kommunenummer, kommunenummerkw,
-                disponererBil, tidsstempel, utdanning, yrkeserfaring, kompetanse, annenerfaring,
-                sertifikat, forerkort, sprak, kurs, verv, geografiJobbonsker, yrkeJobbonsker,
-                omfangJobbonsker, ansettelsesformJobbonsker, arbeidstidsordningJobbonsker,
-                arbeidstidJobbonsker, arbeidsdagerJobbonsker, samletKompetanse, totalLengdeYrkeserfaring, 
+                disponererBil, tidsstempel, utdanning, yrkeserfaring, kompetanseObj, annenerfaringObj,
+                sertifikatObj, forerkort, sprak, kursObj, verv, geografiJobbonsker, yrkeJobbonskerObj,
+                omfangJobbonskerObj, ansettelsesformJobbonskerObj, arbeidstidsordningJobbonskerObj,
+                arbeidstidJobbonskerObj, arbeidsdagerJobbonskerObj, samletKompetanseObj, totalLengdeYrkeserfaring, 
                 synligForArbeidsgiverSok, synligForVeilederSok, oppstartKode);
     }
 
@@ -906,15 +798,15 @@ public class EsCv {
                 + ", synligForArbeidsgiverSok=" + synligForArbeidsgiverSok
                 + ", synligForVeilederSok=" + synligForVeilederSok
                 + ", utdanning=" + utdanning
-                + ", yrkeserfaring=" + yrkeserfaring + ", kompetanse=" + kompetanse
-                + ", annenerfaring=" + annenerfaring + ", sertifikat=" + sertifikat + ", forerkort="
-                + forerkort + ", sprak=" + sprak + ", kurs=" + kurs + ", verv=" + verv
+                + ", yrkeserfaring=" + yrkeserfaring + ", kompetanse=" + kompetanseObj
+                + ", annenerfaring=" + annenerfaringObj + ", sertifikat=" + sertifikatObj + ", forerkort="
+                + forerkort + ", sprak=" + sprak + ", kurs=" + kursObj + ", verv=" + verv
                 + ", geografiJobbonsker=" + geografiJobbonsker + ", yrkeJobbonsker="
-                + yrkeJobbonsker + ", omfangJobbonsker=" + omfangJobbonsker
-                + ", ansettelsesformJobbonsker=" + ansettelsesformJobbonsker
-                + ", arbeidstidsordningJobbonsker=" + arbeidstidsordningJobbonsker
-                + ", arbeidsdagerJobbonsker=" + arbeidsdagerJobbonsker + ", arbeidstidJobbonsker="
-                + arbeidstidJobbonsker + ", samletKompetanse=" + samletKompetanse
+                + yrkeJobbonskerObj + ", omfangJobbonsker=" + omfangJobbonskerObj
+                + ", ansettelsesformJobbonsker=" + ansettelsesformJobbonskerObj
+                + ", arbeidstidsordningJobbonsker=" + arbeidstidsordningJobbonskerObj
+                + ", arbeidsdagerJobbonsker=" + arbeidsdagerJobbonskerObj + ", arbeidstidJobbonsker="
+                + arbeidstidJobbonskerObj + ", samletKompetanse=" + samletKompetanseObj
                 + ", totalLengdeYrkeserfaring=" + totalLengdeYrkeserfaring
                 + ", oppstartKode=" + oppstartKode + "]";
     }
