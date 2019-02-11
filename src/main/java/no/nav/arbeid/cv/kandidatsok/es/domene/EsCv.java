@@ -152,9 +152,6 @@ public class EsCv {
     @ElasticObjectField
     private List<EsKurs> kursObj = new ArrayList<>();
 
-    @ElasticNestedField
-    private List<EsVerv> verv = new ArrayList<>();
-    
     @ElasticObjectField
     private List<EsVerv> vervObj = new ArrayList<>();
 
@@ -445,12 +442,10 @@ public class EsCv {
     }
 
     public void addVerv(EsVerv verv) {
-        this.verv.add(verv);
         this.vervObj.add(verv);
     }
 
     public void addVerv(Collection<EsVerv> vervListe) {
-        this.verv.addAll(vervListe);
         this.vervObj.addAll(vervListe);
     }
 
@@ -655,11 +650,11 @@ public class EsCv {
     public List<EsSprak> getSprak() {
         return sprak;
     }
-
-    public List<EsVerv> getVerv() {
-        return verv;
-    }
     
+    public List<EsKurs> getKursObj() {
+        return kursObj;
+    }
+
     public List<EsVerv> getVervObj() {
         return vervObj;
     }
@@ -751,7 +746,7 @@ public class EsCv {
                 && Objects.equals(annenerfaringObj, esCv.annenerfaringObj)
                 && Objects.equals(sertifikatObj, esCv.sertifikatObj)
                 && Objects.equals(forerkort, esCv.forerkort) && Objects.equals(sprak, esCv.sprak)
-                && Objects.equals(kursObj, esCv.kursObj) && Objects.equals(verv, esCv.verv)
+                && Objects.equals(kursObj, esCv.kursObj) && Objects.equals(vervObj, esCv.vervObj)
                 && Objects.equals(geografiJobbonsker, esCv.geografiJobbonsker)
                 && Objects.equals(yrkeJobbonskerObj, esCv.yrkeJobbonskerObj)
                 && Objects.equals(omfangJobbonskerObj, esCv.omfangJobbonskerObj)
@@ -771,7 +766,7 @@ public class EsCv {
                 kandidatnr, beskrivelse, samtykkeStatus, samtykkeDato, adresselinje1,
                 adresselinje2, adresselinje3, postnummer, poststed, landkode, kommunenummer, kommunenummerkw,
                 disponererBil, tidsstempel, utdanning, yrkeserfaring, kompetanseObj, annenerfaringObj,
-                sertifikatObj, forerkort, sprak, kursObj, verv, geografiJobbonsker, yrkeJobbonskerObj,
+                sertifikatObj, forerkort, sprak, kursObj, vervObj, geografiJobbonsker, yrkeJobbonskerObj,
                 omfangJobbonskerObj, ansettelsesformJobbonskerObj, arbeidstidsordningJobbonskerObj,
                 arbeidstidJobbonskerObj, arbeidsdagerJobbonskerObj, samletKompetanseObj, totalLengdeYrkeserfaring, 
                 synligForArbeidsgiverSok, synligForVeilederSok, oppstartKode);
@@ -800,7 +795,7 @@ public class EsCv {
                 + ", utdanning=" + utdanning
                 + ", yrkeserfaring=" + yrkeserfaring + ", kompetanse=" + kompetanseObj
                 + ", annenerfaring=" + annenerfaringObj + ", sertifikat=" + sertifikatObj + ", forerkort="
-                + forerkort + ", sprak=" + sprak + ", kurs=" + kursObj + ", verv=" + verv
+                + forerkort + ", sprak=" + sprak + ", kurs=" + kursObj + ", verv=" + vervObj
                 + ", geografiJobbonsker=" + geografiJobbonsker + ", yrkeJobbonsker="
                 + yrkeJobbonskerObj + ", omfangJobbonsker=" + omfangJobbonskerObj
                 + ", ansettelsesformJobbonsker=" + ansettelsesformJobbonskerObj
