@@ -420,6 +420,21 @@ public class IndexCvTest {
     }
 
     @Test
+    public void testSokPaBostedOgFylkeMed0SomPrefixSkalGiBegrensendeResultat() throws IOException {
+        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
+                Sokekriterier.med().geografiList(Collections.singletonList("NO02")).bygg());
+        Sokeresultat sokeresultat2 = sokClient.arbeidsgiverSok(Sokekriterier.med()
+                .geografiList(Collections.singletonList("NO02")).maaBoInnenforGeografi(true).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver2 = sokeresultat2.getCver();
+
+        assertThat(cver.size()).isGreaterThan(cver2.size());
+        assertThat(cver2.size()).isEqualTo(1);
+        assertThat(cver2.get(0).getFodselsnummer()).isEqualTo(EsCvObjectMother.giveMeEsCv5().getFodselsnummer());
+    }
+
+    @Test
     public void testPaTotalYrkeserfaringSkalGiKorrektResultat() throws IOException {
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
                 Sokekriterier.med().totalYrkeserfaring(Collections.singletonList("37-72")).bygg());
@@ -585,7 +600,7 @@ public class IndexCvTest {
         List<EsCv> cver1 = sokeresultat1.getCver();
         assertThat(cver.size()).isLessThan(cver1.size());
     }
-    
+
     @Test
     public void skalAggregerePaaKompetanse() throws IOException {
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
@@ -774,7 +789,7 @@ public class IndexCvTest {
         assertThat(sokeresultat.getCver()).hasSize(1);
         assertThat(sokeresultat.getCver()).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
     }
-    
+
     @Test
     public void sokeResultaterSkalInkludereFelterSomIkkeHarAnnotasjon() throws IOException {
         assertThat(sokClient.veilederHent("2L").get().getKompetanseObj().get(0).getKompKode()).isEqualTo("265478");
