@@ -420,6 +420,24 @@ public class IndexCvTest {
     }
 
     @Test
+    public void testSokPaBostedOgFylkeMed0SomPrefixSkalGiBegrensendeResultat() throws IOException {
+        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
+                Sokekriterier.med().geografiList(Collections.singletonList("NO02")).bygg());
+        Sokeresultat sokeresultat2 = sokClient.arbeidsgiverSok(Sokekriterier.med()
+                .geografiList(Collections.singletonList("NO02")).maaBoInnenforGeografi(true).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver2 = sokeresultat2.getCver();
+
+        System.out.println(cver);
+        System.out.println(cver2);
+
+        assertThat(cver.size()).isGreaterThan(cver2.size());
+        assertThat(cver2.size()).isEqualTo(1);
+        assertThat(cver2.get(0).getFodselsnummer()).isEqualTo(EsCvObjectMother.giveMeEsCv5().getFodselsnummer());
+    }
+
+    @Test
     public void testPaTotalYrkeserfaringSkalGiKorrektResultat() throws IOException {
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
                 Sokekriterier.med().totalYrkeserfaring(Collections.singletonList("37-72")).bygg());

@@ -538,26 +538,16 @@ public class EsSokHttpService implements EsSokService {
 
             if (geografiKoder[0].length() < 4) {
                 return;
-            }
-
-            if (geografiKoder[0].startsWith("NO0")) {
-                String fylkeskode = geografiKoder[0].substring(3, 4);
-                regex += fylkeskode + ".*";
             } else {
                 String fylkeskode = geografiKoder[0].substring(2, 4);
                 regex += fylkeskode + ".*";
             }
         } else {
-
-            if (geografiKoder[1].startsWith("0")) {
-                regex += geografiKoder[1].substring(1, 4);
-            } else {
-                regex += geografiKoder[1].substring(0, 4);
-            }
+            regex += geografiKoder[1].substring(0, 4);
         }
 
         RegexpQueryBuilder kommunenummerQueryBuilder =
-                QueryBuilders.regexpQuery("kommunenummerkw", regex);
+                QueryBuilders.regexpQuery("kommunenummerstring", regex);
         boolQueryBuilder.should(kommunenummerQueryBuilder);
 
         LOGGER.debug("ADDING kommunenummer");

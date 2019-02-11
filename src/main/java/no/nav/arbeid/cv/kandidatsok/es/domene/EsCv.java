@@ -55,7 +55,7 @@ public class EsCv {
 
     @ElasticBooleanField
     private boolean harKontaktinformasjon;
-    
+
     @ElasticKeywordField
     private String telefon;
 
@@ -64,10 +64,10 @@ public class EsCv {
 
     @ElasticKeywordField
     private String kandidatnr;
-    
+
     @ElasticKeywordField
     private String arenaKandidatnr;
-        
+
     @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
     private String beskrivelse;
 
@@ -101,33 +101,36 @@ public class EsCv {
     @ElasticKeywordField
     private Integer kommunenummerkw;
 
+    @ElasticKeywordField
+    private String kommunenummerstring;
+
     @ElasticBooleanField
     private Boolean disponererBil;
 
     @ElasticDateField
     private Date tidsstempel;
-    
+
     @ElasticBooleanField
     private Boolean doed;
-    
+
     @ElasticKeywordField
     private String frKode;
-    
+
     @ElasticKeywordField
     private String kvalifiseringsgruppekode;
- 
+
     @ElasticKeywordField
     private String hovedmaalkode;
-    
+
     @ElasticTextField
     private String orgenhet;
-    
+
     @ElasticBooleanField
     private Boolean fritattKandidatsok;
-    
+
     @ElasticBooleanField
     private Boolean fritattAgKandidatsok;
-    
+
     @ElasticNestedField
     private List<EsUtdanning> utdanning = new ArrayList<>();
 
@@ -166,7 +169,7 @@ public class EsCv {
 
     @ElasticObjectField
     private List<EsAnsettelsesformJobbonsker> ansettelsesformJobbonskerObj = new ArrayList<>();
-    
+
     @ElasticObjectField
     private List<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonskerObj = new ArrayList<>();
 
@@ -178,13 +181,13 @@ public class EsCv {
 
     @ElasticObjectField
     private List<EsSamletKompetanse> samletKompetanseObj = new ArrayList<>();
-    
+
     @ElasticIntegerField
     private int totalLengdeYrkeserfaring;
-    
+
     @ElasticBooleanField
     private Boolean synligForArbeidsgiverSok;
-    
+
     @ElasticBooleanField
     private Boolean synligForVeilederSok;
 
@@ -201,8 +204,8 @@ public class EsCv {
             String adresselinje3, String postnummer, String poststed, String landkode,
             Integer kommunenummer, Boolean disponererBil, Date tidsstempel, Integer kommunenummerkw,
             Boolean doed, String frKode, String kvalifiseringsgruppekode, String hovedmaalkode, String orgenhet,
-            Boolean fritattKandidatsok, Boolean fritattAgKandidatsok, 
-            Boolean synligForArbeidsgiverSok, Boolean synligForVeilederSok, String oppstartKode) {
+            Boolean fritattKandidatsok, Boolean fritattAgKandidatsok,
+            Boolean synligForArbeidsgiverSok, Boolean synligForVeilederSok, String oppstartKode, String kommunenummerstring) {
         this.fodselsnummer = fodselsnummer;
         this.fornavn = fornavn;
         this.etternavn = etternavn;
@@ -212,7 +215,7 @@ public class EsCv {
         this.epostadresse = epostadresse;
         this.mobiltelefon = mobiltelefon;
         this.telefon = telefon;
-        this.harKontaktinformasjon = !StringUtils.isAllBlank(this.epostadresse, this.mobiltelefon, this.telefon);        
+        this.harKontaktinformasjon = !StringUtils.isAllBlank(this.epostadresse, this.mobiltelefon, this.telefon);
         this.statsborgerskap = statsborgerskap;
         this.kandidatnr = kandidatnr;
         this.arenaKandidatnr = kandidatnr;
@@ -239,8 +242,9 @@ public class EsCv {
         this.synligForArbeidsgiverSok = synligForArbeidsgiverSok;
         this.synligForVeilederSok = synligForVeilederSok;
         this.oppstartKode = oppstartKode;
+        this.kommunenummerstring = kommunenummerstring;
     }
-    
+
     public EsCv(String fodselsnummer, String fornavn, String etternavn, Date fodselsdato,
             Boolean fodselsdatoErDnr, String formidlingsgruppekode, String epostadresse,
             String mobiltelefon, String telefon, String statsborgerskap, String kandidatnr, String beskrivelse,
@@ -248,7 +252,7 @@ public class EsCv {
             String adresselinje3, String postnummer, String poststed, String landkode,
             Integer kommunenummer, Boolean disponererBil, Date tidsstempel, Integer kommunenummerkw,
             Boolean doed, String frKode, String kvalifiseringsgruppekode, String hovedmaalkode, String orgenhet,
-            Boolean fritattKandidatsok, Boolean fritattAgKandidatsok) {
+            Boolean fritattKandidatsok, Boolean fritattAgKandidatsok, String kommunenummerstring) {
         this.fodselsnummer = fodselsnummer;
         this.fornavn = fornavn;
         this.etternavn = etternavn;
@@ -258,7 +262,7 @@ public class EsCv {
         this.epostadresse = epostadresse;
         this.mobiltelefon = mobiltelefon;
         this.telefon = telefon;
-        this.harKontaktinformasjon = !StringUtils.isAllBlank(this.epostadresse, this.mobiltelefon, this.telefon);        
+        this.harKontaktinformasjon = !StringUtils.isAllBlank(this.epostadresse, this.mobiltelefon, this.telefon);
         this.statsborgerskap = statsborgerskap;
         this.kandidatnr = kandidatnr;
         this.arenaKandidatnr = kandidatnr;
@@ -284,6 +288,7 @@ public class EsCv {
         this.fritattAgKandidatsok = fritattAgKandidatsok;
         this.synligForArbeidsgiverSok = beregnSynlighetForArbeidsgiverSokBasertPaaGamleArenaData();
         this.synligForVeilederSok = beregnSynlighetForVeilederSokBasertPaaGamleArenaData();
+        this.kommunenummerstring = kommunenummerstring;
     }
 
     private Boolean beregnSynlighetForVeilederSokBasertPaaGamleArenaData() {
@@ -358,7 +363,7 @@ public class EsCv {
         if (kompetanse != null) {
             this.kompetanseObj.add(kompetanse);
             this.addSamletKompetanse(Collections
-                    .singletonList(new EsSamletKompetanse(kompetanse.getKompKodeNavn())));            
+                    .singletonList(new EsSamletKompetanse(kompetanse.getKompKodeNavn())));
         }
     }
 
@@ -506,31 +511,31 @@ public class EsCv {
     public String getFormidlingsgruppekode() {
         return formidlingsgruppekode;
     }
-    
+
     public Boolean isDoed() {
         return doed;
     }
-    
+
     public Boolean isFritattKandidatsok() {
         return fritattKandidatsok;
     }
-    
+
     public Boolean isFritattAgKandidatsok() {
         return fritattAgKandidatsok;
     }
-    
+
     public String getFrKode() {
         return frKode;
     }
-    
+
     public String getKvalifiseringsgruppekode() {
         return kvalifiseringsgruppekode;
     }
-    
+
     public String getHovedmaalkode() {
         return hovedmaalkode;
     }
-    
+
     public String getOrgenhet() {
         return orgenhet;
     }
@@ -546,7 +551,7 @@ public class EsCv {
     public String getTelefon() {
         return telefon;
     }
-    
+
     public boolean isHarKontaktinformasjon() {
         return harKontaktinformasjon;
     }
@@ -558,11 +563,11 @@ public class EsCv {
     public String getKandidatnr() {
         return kandidatnr;
     }
-    
+
     public String getArenaKandidatnr() {
         return arenaKandidatnr;
     }
-    
+
     public String getBeskrivelse() {
         return beskrivelse;
     }
@@ -607,6 +612,10 @@ public class EsCv {
         return kommunenummerkw;
     }
 
+    public String getKommunenummerstring() {
+        return kommunenummerstring;
+    }
+
     public Boolean getDisponererBil() {
         return disponererBil;
     }
@@ -614,7 +623,7 @@ public class EsCv {
     public Date getTidsstempel() {
         return tidsstempel;
     }
-    
+
     public Boolean isSynligForArbeidsgiverSok() {
         return synligForArbeidsgiverSok;
     }
@@ -622,7 +631,7 @@ public class EsCv {
     public Boolean isSynligForVeilederSok() {
         return synligForVeilederSok;
     }
-    
+
     public List<EsUtdanning> getUtdanning() {
         return utdanning;
     }
@@ -634,7 +643,7 @@ public class EsCv {
     public List<EsKompetanse> getKompetanseObj() {
         return kompetanseObj;
     }
-    
+
     public List<EsAnnenErfaring> getAnnenerfaringObj() {
         return annenerfaringObj;
     }
@@ -650,7 +659,7 @@ public class EsCv {
     public List<EsSprak> getSprak() {
         return sprak;
     }
-    
+
     public List<EsKurs> getKursObj() {
         return kursObj;
     }
@@ -662,7 +671,7 @@ public class EsCv {
     public List<EsGeografiJobbonsker> getGeografiJobbonsker() {
         return geografiJobbonsker;
     }
-    
+
     public List<EsYrkeJobbonsker> getYrkeJobbonskerObj() {
         return yrkeJobbonskerObj;
     }
@@ -719,7 +728,7 @@ public class EsCv {
                 && Objects.equals(hovedmaalkode, esCv.hovedmaalkode)
                 && Objects.equals(orgenhet, esCv.orgenhet)
                 && Objects.equals(fritattKandidatsok, esCv.fritattKandidatsok)
-                && Objects.equals(fritattAgKandidatsok, esCv.fritattAgKandidatsok)                
+                && Objects.equals(fritattAgKandidatsok, esCv.fritattAgKandidatsok)
                 && Objects.equals(synligForArbeidsgiverSok, esCv.synligForArbeidsgiverSok)
                 && Objects.equals(synligForVeilederSok, esCv.synligForVeilederSok)
                 && Objects.equals(epostadresse, esCv.epostadresse)
@@ -738,6 +747,7 @@ public class EsCv {
                 && Objects.equals(landkode, esCv.landkode)
                 && Objects.equals(kommunenummer, esCv.kommunenummer)
                 && Objects.equals(kommunenummerkw, esCv.kommunenummerkw)
+                && Objects.equals(kommunenummerstring, esCv.kommunenummerstring)
                 && Objects.equals(disponererBil, esCv.disponererBil)
                 && Objects.equals(tidsstempel, esCv.tidsstempel)
                 && Objects.equals(utdanning, esCv.utdanning)
@@ -764,11 +774,11 @@ public class EsCv {
         return Objects.hash(fodselsnummer, fornavn, etternavn, fodselsdato, fodselsdatoErDnr,
                 formidlingsgruppekode, doed, frKode, kvalifiseringsgruppekode, hovedmaalkode, orgenhet, fritattKandidatsok, fritattAgKandidatsok, epostadresse, mobiltelefon, telefon, statsborgerskap,
                 kandidatnr, beskrivelse, samtykkeStatus, samtykkeDato, adresselinje1,
-                adresselinje2, adresselinje3, postnummer, poststed, landkode, kommunenummer, kommunenummerkw,
+                adresselinje2, adresselinje3, postnummer, poststed, landkode, kommunenummer, kommunenummerkw, kommunenummerstring,
                 disponererBil, tidsstempel, utdanning, yrkeserfaring, kompetanseObj, annenerfaringObj,
                 sertifikatObj, forerkort, sprak, kursObj, vervObj, geografiJobbonsker, yrkeJobbonskerObj,
                 omfangJobbonskerObj, ansettelsesformJobbonskerObj, arbeidstidsordningJobbonskerObj,
-                arbeidstidJobbonskerObj, arbeidsdagerJobbonskerObj, samletKompetanseObj, totalLengdeYrkeserfaring, 
+                arbeidstidJobbonskerObj, arbeidsdagerJobbonskerObj, samletKompetanseObj, totalLengdeYrkeserfaring,
                 synligForArbeidsgiverSok, synligForVeilederSok, oppstartKode);
     }
 
@@ -784,7 +794,7 @@ public class EsCv {
                 + ", samtykkeDato=" + samtykkeDato + ", adresselinje1=" + adresselinje1
                 + ", adresselinje2=" + adresselinje2 + ", adresselinje3=" + adresselinje3
                 + ", postnummer=" + postnummer + ", poststed=" + poststed + ", landkode=" + landkode
-                + ", kommunenummer=" + kommunenummer + ", kommunenummerkw=" + kommunenummerkw
+                + ", kommunenummer=" + kommunenummer + ", kommunenummerkw=" + kommunenummerkw + ", kommunenummerstring=" + kommunenummerstring
                 + ", disponererBil=" + disponererBil + ", tidsstempel=" + tidsstempel + ", doed="
                 + doed + ", frKode=" + frKode + ", kvalifiseringsgruppekode="
                 + kvalifiseringsgruppekode + ", hovedmaalkode=" + hovedmaalkode + ", orgenhet="
