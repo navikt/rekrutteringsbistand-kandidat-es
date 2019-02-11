@@ -777,7 +777,7 @@ public class IndexCvTest {
     
     @Test
     public void sokeResultaterSkalInkludereFelterSomIkkeHarAnnotasjon() throws IOException {
-        assertThat(sokClient.veilederHent("2L").get().getKompetanse().get(0).getKompKode()).isEqualTo("265478");
+        assertThat(sokClient.veilederHent("2L").get().getKompetanseObj().get(0).getKompKode()).isEqualTo("265478");
     }
 
     @Test
