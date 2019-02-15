@@ -32,7 +32,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,7 +42,6 @@ import com.palantir.docker.compose.connection.DockerMachine;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tags;
-import no.nav.arbeid.cv.indexer.config.EsServiceConfig;
 import no.nav.arbeid.cv.kandidatsok.domene.es.EsCvObjectMother;
 import no.nav.arbeid.cv.kandidatsok.domene.es.KandidatsokTransformer;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Aggregering;
@@ -53,6 +51,7 @@ import no.nav.arbeid.cv.kandidatsok.es.domene.sok.SokekriterierVeiledere;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokeresultat;
 import no.nav.arbeid.kandidatsok.es.client.EsIndexerHttpService;
 import no.nav.arbeid.kandidatsok.es.client.EsIndexerService;
+import no.nav.arbeid.kandidatsok.es.client.EsSokHttpService;
 import no.nav.arbeid.kandidatsok.es.client.EsSokService;
 
 @RunWith(SpringRunner.class)
@@ -87,7 +86,6 @@ public class IndexCvTest {
     private KandidatsokTransformer kandidatsokTransformer = new KandidatsokTransformer();
 
     @Configuration
-    @Import({EsServiceConfig.class})
     static class TestConfig {
 
         @Bean
@@ -110,42 +108,48 @@ public class IndexCvTest {
 
             return meterRegistry;
         }
+        
         @Bean
         public EsIndexerService indexerCvService(RestHighLevelClient restHighLevelClient,
                                                  ObjectMapper objectMapper,
                                                  MeterRegistry meterRegistry
                                                  ) {
             return new EsIndexerHttpService(restHighLevelClient, objectMapper, meterRegistry,
-                    WriteRequest.RefreshPolicy.IMMEDIATE);
+                    WriteRequest.RefreshPolicy.IMMEDIATE, 3, 2);
+        }
+        
+        @Bean
+        public EsSokService esSokService(RestHighLevelClient restHighLevelClient, ObjectMapper objectMapper) {
+            return new EsSokHttpService(restHighLevelClient, objectMapper, "cvindex");
         }
     }
 
     @Before
     public void before() throws IOException {
         try {
-            indexerClient.deleteIndex();
+            indexerClient.deleteIndex("cvindex");
         } catch (Exception e) {
             // Ignore
         }
 
-        indexerClient.createIndex();
+        indexerClient.createIndex("cvindex");
 
-        indexerClient.index(EsCvObjectMother.giveMeEsCv());
-        indexerClient.index(EsCvObjectMother.giveMeEsCv2());
-        indexerClient.index(EsCvObjectMother.giveMeEsCv3());
-        indexerClient.index(EsCvObjectMother.giveMeEsCv4());
-        indexerClient.index(EsCvObjectMother.giveMeEsCv5());
-        indexerClient.index(EsCvObjectMother.giveMeEsCv6());
-        indexerClient.index(EsCvObjectMother.giveMeCvForDoedPerson());
-        indexerClient.index(EsCvObjectMother.giveMeCvForKode6());
-        indexerClient.index(EsCvObjectMother.giveMeCvForKode7());
-        indexerClient.index(EsCvObjectMother.giveMeCvFritattForAgKandidatsok());
-        indexerClient.index(EsCvObjectMother.giveMeCvFritattForKandidatsok());
+        indexerClient.index(EsCvObjectMother.giveMeEsCv(), "cvindex");
+        indexerClient.index(EsCvObjectMother.giveMeEsCv2(), "cvindex");
+        indexerClient.index(EsCvObjectMother.giveMeEsCv3(), "cvindex");
+        indexerClient.index(EsCvObjectMother.giveMeEsCv4(), "cvindex");
+        indexerClient.index(EsCvObjectMother.giveMeEsCv5(), "cvindex");
+        indexerClient.index(EsCvObjectMother.giveMeEsCv6(), "cvindex");
+        indexerClient.index(EsCvObjectMother.giveMeCvForDoedPerson(), "cvindex");
+        indexerClient.index(EsCvObjectMother.giveMeCvForKode6(), "cvindex");
+        indexerClient.index(EsCvObjectMother.giveMeCvForKode7(), "cvindex");
+        indexerClient.index(EsCvObjectMother.giveMeCvFritattForAgKandidatsok(), "cvindex");
+        indexerClient.index(EsCvObjectMother.giveMeCvFritattForKandidatsok(), "cvindex");
     }
 
     @After
     public void after() throws IOException {
-        indexerClient.deleteIndex();
+        indexerClient.deleteIndex("cvindex");
     }
 
     @Test
@@ -161,7 +165,7 @@ public class IndexCvTest {
 
         List<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> bulkEventer = asList(cv1, cv2);
 
-        int antallIndeksert = indexerClient.bulkIndex(bulkEventer);
+        int antallIndeksert = indexerClient.bulkIndex(bulkEventer, "cvindex");
         assertThat(antallIndeksert).isEqualTo(bulkEventer.size());
     }
 
@@ -173,7 +177,7 @@ public class IndexCvTest {
                         EsCvObjectMother.giveMeEsCv2());
 
         bulkEventer.forEach(e -> e.setKandidatnr(e.getKandidatnr() + 9998));
-        indexerClient.bulkIndex(bulkEventer);
+        indexerClient.bulkIndex(bulkEventer, "cvindex");
 
     }
 
@@ -547,7 +551,7 @@ public class IndexCvTest {
 
         int antallForBulkIndeksering =
                 sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
-        indexerClient.bulkIndex(bulkEventer);
+        indexerClient.bulkIndex(bulkEventer, "cvindex");
         int antallEtterIndeksering =
                 sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
 
@@ -555,7 +559,7 @@ public class IndexCvTest {
                 .isEqualTo(bulkEventer.size());
 
         // Reindekser
-        indexerClient.bulkIndex(bulkEventer);
+        indexerClient.bulkIndex(bulkEventer, "cvindex");
         antallEtterIndeksering =
                 sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
 
@@ -570,7 +574,7 @@ public class IndexCvTest {
 
         int antallForBulkSletting =
                 sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
-        indexerClient.bulkSlettKandidatnr(sletteIder);
+        indexerClient.bulkSlettKandidatnr(sletteIder, "cvindex");
         int antallEtterSletting =
                 sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
 
@@ -655,7 +659,7 @@ public class IndexCvTest {
 
     @Test
     public void skalKunneIndeksereOppCvUtenKompetanser() throws IOException {
-        indexerClient.index(EsCvObjectMother.giveMeCvUtenKompetanse());
+        indexerClient.index(EsCvObjectMother.giveMeCvUtenKompetanse(), "cvindex");
     }
 
     @Test

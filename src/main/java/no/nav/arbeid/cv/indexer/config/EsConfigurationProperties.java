@@ -1,7 +1,5 @@
 package no.nav.arbeid.cv.indexer.config;
 
-// @Configuration
-// @ConfigurationProperties(prefix = "es")
 public class EsConfigurationProperties implements EsProperties {
 
   private String user;
@@ -17,73 +15,46 @@ public class EsConfigurationProperties implements EsProperties {
   private int port = 443;
   private String scheme = "https";
 
-  /* (non-Javadoc)
-   * @see no.nav.arbeid.cv.indexer.config.EsProperties#getUser()
-   */
   @Override
   public String getUser() {
     return user;
   }
 
-  /* (non-Javadoc)
-   * @see no.nav.arbeid.cv.indexer.config.EsProperties#getPassword()
-   */
   @Override
   public String getPassword() {
     return password;
   }
 
-  /* (non-Javadoc)
-   * @see no.nav.arbeid.cv.indexer.config.EsProperties#getTrustStoreFilename()
-   */
   @Override
   public String getTrustStoreFilename() {
     return trustStoreFilename;
   }
 
-  /* (non-Javadoc)
-   * @see no.nav.arbeid.cv.indexer.config.EsProperties#getTrustStorePass()
-   */
   @Override
   public String getTrustStorePass() {
     return trustStorePass;
   }
 
-  /* (non-Javadoc)
-   * @see no.nav.arbeid.cv.indexer.config.EsProperties#getKeyStoreFilename()
-   */
   @Override
   public String getKeyStoreFilename() {
     return keyStoreFilename;
   }
 
-  /* (non-Javadoc)
-   * @see no.nav.arbeid.cv.indexer.config.EsProperties#getKeyStorePass()
-   */
   @Override
   public String getKeyStorePass() {
     return keyStorePass;
   }
 
-  /* (non-Javadoc)
-   * @see no.nav.arbeid.cv.indexer.config.EsProperties#getHostname()
-   */
   @Override
   public String getHostname() {
     return hostname;
   }
 
-  /* (non-Javadoc)
-   * @see no.nav.arbeid.cv.indexer.config.EsProperties#getPort()
-   */
   @Override
   public int getPort() {
     return port;
   }
 
-  /* (non-Javadoc)
-   * @see no.nav.arbeid.cv.indexer.config.EsProperties#getScheme()
-   */
   @Override
   public String getScheme() {
     return scheme;

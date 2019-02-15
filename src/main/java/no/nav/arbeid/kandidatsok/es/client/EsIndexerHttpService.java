@@ -1,9 +1,14 @@
 package no.nav.arbeid.kandidatsok.es.client;
 
+import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import javax.annotation.PreDestroy;
+
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
@@ -21,7 +26,10 @@ import org.elasticsearch.client.Requests;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.ResponseException;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.common.xcontent.NamedXContentRegistry;
 import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.common.xcontent.XContentParser;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,14 +41,12 @@ import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tags;
 import no.nav.arbeid.cv.kandidatsok.es.domene.EsCv;
 import no.nav.arbeid.cv.kandidatsok.es.exception.ApplicationException;
-import no.nav.arbeid.kandidatsok.es.helper.KandidatnrHelper;
 import no.nav.elasticsearch.mapping.MappingBuilder;
 import no.nav.elasticsearch.mapping.MappingBuilderImpl;
 import no.nav.elasticsearch.mapping.ObjectMapping;
 
 public class EsIndexerHttpService implements EsIndexerService {
 
-    private static final String CV_INDEX = "cvindex";
     private static final String CV_TYPE = "cvtype";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EsIndexerHttpService.class);
@@ -48,56 +54,81 @@ public class EsIndexerHttpService implements EsIndexerService {
     private final RestHighLevelClient client;
     private final ObjectMapper mapper;
     private final MeterRegistry meterRegistry;
-
+    private final int numberOfShards;
+    private final int numberOfReplicas;
+    
     private WriteRequest.RefreshPolicy refreshPolicy = WriteRequest.RefreshPolicy.NONE;
 
     public EsIndexerHttpService(RestHighLevelClient client, ObjectMapper objectMapper,
-            MeterRegistry meterRegistry, WriteRequest.RefreshPolicy refreshPolicy) {
+            MeterRegistry meterRegistry, WriteRequest.RefreshPolicy refreshPolicy, 
+            int numberOfShards, int numberOfReplicas) {
         this.client = client;
         this.mapper = objectMapper;
         this.meterRegistry = meterRegistry;
         this.refreshPolicy = refreshPolicy;
+        this.numberOfShards = numberOfShards;
+        this.numberOfReplicas = numberOfReplicas;
+    }
+    
+    @PreDestroy
+    public void shutdown() throws IOException {
+        client.close();
     }
 
     @Override
-    public void createIndex() throws IOException {
-        CreateIndexRequest createIndexRequest = new CreateIndexRequest(CV_INDEX);
+    public void createIndex(String indexName) {
+        try {
+            CreateIndexRequest createIndexRequest = new CreateIndexRequest(indexName);
+            createIndexRequest.settings(
+                    Settings.builder()
+                    .put("number_of_shards", numberOfShards)
+                    .put("number_of_replicas", numberOfReplicas));
 
-        MappingBuilder mappingBuilder = new MappingBuilderImpl();
-        ObjectMapping mapping = mappingBuilder.build(EsCv.class);
+            MappingBuilder mappingBuilder = new MappingBuilderImpl();
+            ObjectMapping mapping = mappingBuilder.build(EsCv.class);
 
-        // String jsonMapping = mapping.getContentAsString();
-        XContentBuilder contentBuilder = mapping.getContent();
-        String jsonMapping = contentBuilder.string();
-        LOGGER.debug("MAPPING: " + jsonMapping);
-        createIndexRequest.mapping(CV_TYPE, jsonMapping, XContentType.JSON);
+            // String jsonMapping = mapping.getContentAsString();
+            XContentBuilder contentBuilder = mapping.getContent();
+            String jsonMapping = contentBuilder.string();
+            LOGGER.debug("MAPPING: " + jsonMapping);
+            createIndexRequest.mapping(CV_TYPE, jsonMapping, XContentType.JSON);
 
-        CreateIndexResponse createIndexResponse = client.indices().create(createIndexRequest);
-        LOGGER.debug("CREATEINDEXRESPONSE: " + createIndexResponse);
+            CreateIndexResponse createIndexResponse = client.indices().create(createIndexRequest);
+            LOGGER.debug("CREATEINDEXRESPONSE: " + createIndexResponse);
+        } catch (IOException ioe) {
+            throw new ElasticException(ioe);
+        }
     }
 
     @Override
-    public void deleteIndex() throws IOException {
-        DeleteIndexRequest deleteRequest = new DeleteIndexRequest(CV_INDEX);
-        DeleteIndexResponse deleteIndexResponse = client.indices().delete(deleteRequest);
-        LOGGER.debug("DELETERESPONSE: " + deleteIndexResponse.toString());
+    public void deleteIndex(String indexName) {
+        try {
+            DeleteIndexRequest deleteRequest = new DeleteIndexRequest(indexName);
+            DeleteIndexResponse deleteIndexResponse = client.indices().delete(deleteRequest);
+            LOGGER.debug("DELETERESPONSE: " + deleteIndexResponse.toString());
+        } catch (IOException ioe) {
+            throw new ElasticException(ioe);
+        }
     }
 
     @Override
-    public void index(EsCv esCv) throws IOException {
-        String jsonString = mapper.writeValueAsString(esCv);
-        LOGGER.debug("DOKUMENTET: " + jsonString);
+    public void index(EsCv esCv, String indexName) {
+        try {
+            String jsonString = mapper.writeValueAsString(esCv);
+            LOGGER.debug("DOKUMENTET: " + jsonString);
 
-        IndexRequest request =
-                new IndexRequest(CV_INDEX, CV_TYPE, esCv.getKandidatnr());
-        request.setRefreshPolicy(refreshPolicy);
-        request.source(jsonString, XContentType.JSON);
-        IndexResponse indexResponse = esExec(() -> client.index(request));
-        LOGGER.debug("INDEXRESPONSE: " + indexResponse.toString());
+            IndexRequest request = new IndexRequest(indexName, CV_TYPE, esCv.getKandidatnr());
+            request.setRefreshPolicy(refreshPolicy);
+            request.source(jsonString, XContentType.JSON);
+            IndexResponse indexResponse = esExec(() -> client.index(request), indexName);
+            LOGGER.debug("INDEXRESPONSE: " + indexResponse.toString());
+        } catch (IOException ioe) {
+            throw new ElasticException(ioe);
+        }
     }
 
     @Override
-    public int bulkIndex(List<EsCv> esCver) throws IOException {
+    public int bulkIndex(List<EsCv> esCver, String indexName) {
         BulkRequest bulkRequest = Requests.bulkRequest();
         String currentKandidatnr = "";
         try {
@@ -105,7 +136,7 @@ public class EsIndexerHttpService implements EsIndexerService {
                 currentKandidatnr = esCv.getKandidatnr();
                 String jsonString = mapper.writeValueAsString(esCv);
                 IndexRequest ir = Requests.indexRequest().source(jsonString, XContentType.JSON)
-                        .index(CV_INDEX).type(CV_TYPE).id(currentKandidatnr);
+                        .index(indexName).type(CV_TYPE).id(currentKandidatnr);
 
                 bulkRequest.add(ir);
             }
@@ -121,7 +152,7 @@ public class EsIndexerHttpService implements EsIndexerService {
 
         LOGGER.info("Sender bulk indexrequest med {} cv'er", esCver.size());
         bulkRequest.setRefreshPolicy(refreshPolicy);
-        BulkResponse bulkResponse = esExec(() -> client.bulk(bulkRequest));
+        BulkResponse bulkResponse = esExec(() -> client.bulk(bulkRequest), indexName);
         int antallIndeksert = esCver.size();
 
         if (bulkResponse.hasFailures()) {
@@ -153,22 +184,20 @@ public class EsIndexerHttpService implements EsIndexerService {
         LOGGER.debug("BULKINDEX tidsbruk: " + bulkResponse.getTook());
         return antallIndeksert;
     }
-    
+
     @Override
-    public void bulkSlett(List<Long> arenaPersonIder) throws IOException {
-        List<String> kandidatnr = arenaPersonIder.stream().map(KandidatnrHelper::toKandidatnr).collect(Collectors.toList());
-        
+    public void bulkSlettKandidatnr(List<String> kandidatnr, String indexName) {
         BulkRequest bulkRequest = Requests.bulkRequest();
 
         for (String id : kandidatnr) {
-            DeleteRequest dr = Requests.deleteRequest(CV_INDEX).id(id).type(CV_TYPE);
+            DeleteRequest dr = Requests.deleteRequest(indexName).id(id).type(CV_TYPE);
 
             bulkRequest.add(dr);
         }
 
         LOGGER.info("Sender bulksletting av {} cv'er", kandidatnr.size());
         bulkRequest.setRefreshPolicy(refreshPolicy);
-        BulkResponse bulkResponse = esExec(() -> client.bulk(bulkRequest));
+        BulkResponse bulkResponse = esExec(() -> client.bulk(bulkRequest), indexName);
         if (bulkResponse.hasFailures()) {
             LOGGER.warn("Feilet under sletting av CVer: " + bulkResponse.buildFailureMessage());
             long antallFeil =
@@ -180,36 +209,15 @@ public class EsIndexerHttpService implements EsIndexerService {
     }
 
     @Override
-    public void bulkSlettKandidatnr(List<String> kandidatnr) throws IOException {
-        BulkRequest bulkRequest = Requests.bulkRequest();
-
-        for (String id : kandidatnr) {
-            DeleteRequest dr = Requests.deleteRequest(CV_INDEX).id(id).type(CV_TYPE);
-
-            bulkRequest.add(dr);
-        }
-
-        LOGGER.info("Sender bulksletting av {} cv'er", kandidatnr.size());
-        bulkRequest.setRefreshPolicy(refreshPolicy);
-        BulkResponse bulkResponse = esExec(() -> client.bulk(bulkRequest));
-        if (bulkResponse.hasFailures()) {
-            LOGGER.warn("Feilet under sletting av CVer: " + bulkResponse.buildFailureMessage());
-            long antallFeil =
-                    Arrays.stream(bulkResponse.getItems()).filter(i -> i.isFailed()).count();
-            meterRegistry.counter("cv.es.slett.feil", Tags.of("type", "infrastruktur"))
-                    .increment(antallFeil);
-        }
-        LOGGER.debug("BULKDELETERESPONSE: " + bulkResponse.toString());
-    }
-
-    @Override
-    public boolean doesIndexExist() throws IOException {
+    public boolean doesIndexExist(String indexName) {
         try {
             Response restResponse =
-                    client.getLowLevelClient().performRequest("HEAD", "/" + CV_INDEX);
+                    client.getLowLevelClient().performRequest("HEAD", "/" + indexName);
             return restResponse.getStatusLine().getStatusCode() == 200;
         } catch (ResponseException e) {
             LOGGER.info("Exception while calling isExistingIndex", e);
+        } catch(IOException ioe) {
+            throw new ElasticException(ioe);
         }
         return false;
     }
@@ -223,18 +231,22 @@ public class EsIndexerHttpService implements EsIndexerService {
      * @return
      * @throws IOException
      */
-    private <T> T esExec(IOSupplier<T> fun) throws IOException {
+    private <T> T esExec(IOSupplier<T> fun, String indexName) {
         try {
-            return fun.get();
-        } catch (ElasticsearchStatusException e) {
-            if (e.status().getStatus() == 404
-                    && e.getMessage().contains("index_not_found_exception")) {
-                LOGGER.info(
-                        "Greide ikke å utfore operasjon mot elastic search. Prøver å opprette index og forsøke på nytt.");
-                createIndex();
+            try {
                 return fun.get();
+            } catch (ElasticsearchStatusException ese) {
+                if (ese.status().getStatus() == 404
+                        && ese.getMessage().contains("index_not_found_exception")) {
+                    LOGGER.info(
+                            "Greide ikke å utfore operasjon mot elastic search. Prøver å opprette index og forsøke på nytt.");
+                    createIndex(indexName);
+                    return fun.get();
+                }
+                throw (ese);
             }
-            throw (e);
+        } catch(IOException ioe) {
+            throw new ElasticException(ioe);
         }
     }
 
@@ -244,11 +256,11 @@ public class EsIndexerHttpService implements EsIndexerService {
     }
 
     @Override
-    public long antallIndeksert() {
-        return indexQuery(null);
+    public long antallIndeksert(String indexName) {
+        return indexQuery(null, indexName);
     }
 
-    private long indexQuery(String query) {
+    private long indexQuery(String query, String indexName) {
         Map<String, String> params = new HashMap<>();
         if (query != null) {
             params.put("q", query);
@@ -257,7 +269,7 @@ public class EsIndexerHttpService implements EsIndexerService {
         long antallIndeksert = 0;
         try {
             Response response = client.getLowLevelClient().performRequest("GET",
-                    String.format("/%s/%s/_count", CV_INDEX, CV_TYPE), params);
+                    String.format("/%s/%s/_count", indexName, CV_TYPE), params);
             if (response != null && response.getStatusLine().getStatusCode() >= 200
                     && response.getStatusLine().getStatusCode() < 300) {
                 String json = EntityUtils.toString(response.getEntity());
@@ -277,12 +289,58 @@ public class EsIndexerHttpService implements EsIndexerService {
     }
 
     @Override
-    public long antallIndeksertSynligForVeileder() {
-        return indexQuery("synligForVeilederSok:true");
+    public long antallIndeksertSynligForVeileder(String indexName) {
+        return indexQuery("synligForVeilederSok:true", indexName);
     }
 
     @Override
-    public long antallIndeksertSynligForArbeidsgiver() {
-        return indexQuery("synligForArbeidsgiverSok:true");
+    public long antallIndeksertSynligForArbeidsgiver(String indexName) {
+        return indexQuery("synligForArbeidsgiverSok:true", indexName);
+    }
+    
+    @Override
+    public Collection<String> getTargetsForAlias(String alias) {
+        try {
+            Response response;
+            try {
+                response = client.getLowLevelClient().performRequest("GET", "/*/_alias/" + alias);
+            } catch (ResponseException e) {
+                if (e.getResponse().getStatusLine().getStatusCode() == 404) {
+                    return Collections.emptySet();
+                }
+                throw e;
+            }
+            String jsonString = EntityUtils.toString(response.getEntity());
+            XContentParser parser =
+                    XContentType.JSON.xContent().createParser(NamedXContentRegistry.EMPTY, jsonString);
+            return parser.map().keySet();
+        } catch(IOException ioe) {
+            throw new ElasticException(ioe);
+        }
+    }
+    
+    @Override
+    public Response updateIndexAlias(String alias, String indexName) {
+        try {
+            XContentBuilder builder = jsonBuilder()
+                    .startObject()
+                    .startArray("actions")
+                    .startObject()
+                        .startObject("remove").field("index", "*").field("alias", alias).endObject()
+                    .endObject()
+                    .startObject()
+                        .startObject("add").field("index", indexName).field("alias", alias).endObject()
+                    .endObject()
+                    .endArray()
+                    .endObject();
+    
+            StringEntity entity = new StringEntity(builder.string(), ContentType.APPLICATION_JSON);
+            Response response = client.getLowLevelClient().performRequest("POST", "/_aliases",
+                    Collections.emptyMap(), entity);
+            LOGGER.info("Setter alias {} til å peke mot {}", alias, indexName);
+            return response;
+        } catch(IOException ioe) {
+            throw new ElasticException(ioe);
+        }
     }
 }
