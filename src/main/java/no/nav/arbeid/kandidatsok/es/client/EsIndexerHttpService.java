@@ -70,11 +70,6 @@ public class EsIndexerHttpService implements EsIndexerService {
         this.numberOfReplicas = numberOfReplicas;
     }
     
-    @PreDestroy
-    public void shutdown() throws IOException {
-        client.close();
-    }
-
     @Override
     public void createIndex(String indexName) {
         try {
