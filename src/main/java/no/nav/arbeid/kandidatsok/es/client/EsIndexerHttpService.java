@@ -85,12 +85,13 @@ public class EsIndexerHttpService implements EsIndexerService {
             // String jsonMapping = mapping.getContentAsString();
             XContentBuilder contentBuilder = mapping.getContent();
             String jsonMapping = contentBuilder.string();
-            LOGGER.debug("MAPPING: " + jsonMapping);
+            LOGGER.info("MAPPING: " + jsonMapping);
             createIndexRequest.mapping(CV_TYPE, jsonMapping, XContentType.JSON);
 
             CreateIndexResponse createIndexResponse = client.indices().create(createIndexRequest);
-            LOGGER.debug("CREATEINDEXRESPONSE: " + createIndexResponse);
+            LOGGER.info("CREATEINDEXRESPONSE: " + createIndexResponse);
         } catch (IOException ioe) {
+            LOGGER.error("Feilet å lage index", ioe);
             throw new ElasticException(ioe);
         }
     }
@@ -100,8 +101,9 @@ public class EsIndexerHttpService implements EsIndexerService {
         try {
             DeleteIndexRequest deleteRequest = new DeleteIndexRequest(indexName);
             DeleteIndexResponse deleteIndexResponse = client.indices().delete(deleteRequest);
-            LOGGER.debug("DELETERESPONSE: " + deleteIndexResponse.toString());
+            LOGGER.info("DELETERESPONSE: " + deleteIndexResponse.toString());
         } catch (IOException ioe) {
+            LOGGER.error("Feilet å slette index", ioe);
             throw new ElasticException(ioe);
         }
     }
