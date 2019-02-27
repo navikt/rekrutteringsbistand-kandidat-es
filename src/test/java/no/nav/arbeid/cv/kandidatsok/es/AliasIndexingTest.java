@@ -1,5 +1,6 @@
 package no.nav.arbeid.cv.kandidatsok.es;
 
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -7,22 +8,31 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.http.HttpHost;
+import org.assertj.core.api.Assertions;
+import org.assertj.core.extractor.Extractors;
 import org.elasticsearch.action.support.WriteRequest;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,16 +43,20 @@ import com.palantir.docker.compose.connection.DockerMachine;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tags;
-import no.nav.arbeid.cv.indexer.config.EsServiceConfig;
 import no.nav.arbeid.cv.kandidatsok.domene.es.EsCvObjectMother;
 import no.nav.arbeid.cv.kandidatsok.domene.es.KandidatsokTransformer;
+import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Aggregering;
+import no.nav.arbeid.cv.kandidatsok.es.domene.sok.EsCv;
+import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokekriterier;
+import no.nav.arbeid.cv.kandidatsok.es.domene.sok.SokekriterierVeiledere;
+import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokeresultat;
 import no.nav.arbeid.kandidatsok.es.client.EsIndexerHttpService;
 import no.nav.arbeid.kandidatsok.es.client.EsIndexerService;
 import no.nav.arbeid.kandidatsok.es.client.EsSokHttpService;
 import no.nav.arbeid.kandidatsok.es.client.EsSokService;
 
 @RunWith(SpringRunner.class)
-public class TypeaheadTest {
+public class AliasIndexingTest {
 
     /*
      * For å kunne kjøre denne testen må Linux rekonfigureres litt.. Lag en fil i
@@ -66,7 +80,7 @@ public class TypeaheadTest {
 
     @Autowired
     private EsIndexerService indexerClient;
-
+    
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -107,61 +121,77 @@ public class TypeaheadTest {
         
         @Bean
         public EsSokService esSokService(RestHighLevelClient restHighLevelClient, ObjectMapper objectMapper) {
-            return new EsSokHttpService(restHighLevelClient, objectMapper, "cvindex");
+            return new EsSokHttpService(restHighLevelClient, objectMapper, "current_cv");
         }
     }
 
     @Before
     public void before() throws IOException {
         try {
-            indexerClient.deleteIndex("cvindex");
+            indexerClient.deleteIndex("cv_4.1.21");
+            indexerClient.deleteIndex("cv_4.1.21");
         } catch (Exception e) {
             // Ignore
         }
 
-        indexerClient.createIndex("cvindex");
+        indexerClient.createIndex("cv_4.1.21");
+        indexerClient.updateIndexAlias("current_cv", "cv_4.1.21");
 
-        indexerClient.index(EsCvObjectMother.giveMeEsCv(), "cvindex");
-        indexerClient.index(EsCvObjectMother.giveMeEsCv2(), "cvindex");
-        indexerClient.index(EsCvObjectMother.giveMeEsCv3(), "cvindex");
-        indexerClient.index(EsCvObjectMother.giveMeEsCv4(), "cvindex");
-        indexerClient.index(EsCvObjectMother.giveMeEsCv5(), "cvindex");
-        indexerClient.index(EsCvObjectMother.giveMeEsCv6(), "cvindex");
-        indexerClient.index(EsCvObjectMother.giveMeCvForDoedPerson(), "cvindex");
-        indexerClient.index(EsCvObjectMother.giveMeCvForKode6(), "cvindex");
-        indexerClient.index(EsCvObjectMother.giveMeCvForKode7(), "cvindex");
-        indexerClient.index(EsCvObjectMother.giveMeCvFritattForAgKandidatsok(), "cvindex");
-        indexerClient.index(EsCvObjectMother.giveMeCvFritattForKandidatsok(), "cvindex");
+        indexerAlleCVene("cv_4.1.21");
+    }
+
+    private void indexerAlleCVene(String indexName) {
+        indexerClient.index(EsCvObjectMother.giveMeEsCv(), indexName);
+        indexerClient.index(EsCvObjectMother.giveMeEsCv2(), indexName);
+        indexerClient.index(EsCvObjectMother.giveMeEsCv3(), indexName);
+        indexerClient.index(EsCvObjectMother.giveMeEsCv4(), indexName);
+        indexerClient.index(EsCvObjectMother.giveMeEsCv5(), indexName);
+        indexerClient.index(EsCvObjectMother.giveMeEsCv6(), indexName);
+        indexerClient.index(EsCvObjectMother.giveMeCvForDoedPerson(), indexName);
+        indexerClient.index(EsCvObjectMother.giveMeCvForKode6(), indexName);
+        indexerClient.index(EsCvObjectMother.giveMeCvForKode7(), indexName);
+        indexerClient.index(EsCvObjectMother.giveMeCvFritattForAgKandidatsok(), indexName);
+        indexerClient.index(EsCvObjectMother.giveMeCvFritattForKandidatsok(), indexName);
+    }
+    
+    
+    
+    @Test
+    public void storStyggTest() {
+        
+        //sokMotAliasFungerer() {
+        assertThat(indexerClient.getTargetsForAlias("current_cv")).containsExactly("cv_4.1.21");
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("Awesome").bygg());
+        assertThat(sokeresultat.getCver()).hasSize(1);
+        assertThat(sokeresultat.getCver()).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
+    
+        //indexeringMotAliasFungerer() {
+        indexerAlleCVene("current_cv");
+        Sokeresultat sokeresultat2 = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("Awesome").bygg());
+        assertThat(sokeresultat2.getCver()).hasSize(1);
+        assertThat(sokeresultat2.getCver()).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
+    
+        //indexSwitchingFungerer() {
+        indexerClient.createIndex("cv_4.1.22");
+        indexerClient.updateIndexAlias("current_cv", "cv_4.1.22");
+        Sokeresultat sokeresultat3 = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("Awesome").bygg());
+        assertThat(sokeresultat3.getCver()).hasSize(0);
+        
+        indexerAlleCVene("cv_4.1.22");
+        Sokeresultat sokeresultat4 = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("Awesome").bygg());
+        assertThat(sokeresultat4.getCver()).hasSize(1);
+        assertThat(sokeresultat4.getCver()).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
     }
 
     @After
     public void after() throws IOException {
-        indexerClient.deleteIndex("cvindex");
-    }
-    
-    @Test
-    public void typeAheadArbeidserfaring() throws IOException {
-        List<String> liste = sokClient.typeAheadYrkeserfaring("Butikk");
-        assertThat(liste.size()).isEqualTo(5);
-        assertThat(liste).containsExactly("Butikkmedarbeider", 
-                "Butikkmedarbeider(dagligvarer)", 
-                "Butikkmedarbeider(elektronikk)",
-                "Butikkmedarbeider(klesbutikk)",
-                "Butikkmedarbeider(trevare)");
-    }
-    
-    @Test
-    public void typeAheadKompetanse() throws IOException {
-        List<String> liste = sokClient.typeAheadKompetanse("Nyhet");
-        assertThat(liste.size()).isEqualTo(1);
-        assertThat(liste).contains("Nyhetsanker");
-    }
-    
-    @Test
-    public void typeAheadGeografi() throws IOException {
-        List<String> liste = sokClient.typeAheadGeografi("Bær");
-        assertThat(liste.size()).isEqualTo(1);
-        assertThat(liste).contains("{\"geografiKodeTekst\":\"Bærum\",\"geografiKode\":\"NO02.1219\"}");
+        try {
+            indexerClient.deleteIndex("cv_4.1.21");
+            indexerClient.deleteIndex("cv_4.1.22");
+        } catch (Exception e) {
+            // Ignore
+        }
     }
 
+    
 }

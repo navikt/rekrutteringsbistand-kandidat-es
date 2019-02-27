@@ -61,87 +61,96 @@ public class EsSokHttpService implements EsSokService {
         AG_SOK, AG_HENT, VEIL_SOK, VEIL_HENT;
     }
 
-    private static final String CV_INDEX = "cvindex";
     private static final String CV_TYPE = "cvtype";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EsSokHttpService.class);
 
     private final RestHighLevelClient client;
     private final ObjectMapper mapper;
+    private final String indexName;
 
-    public EsSokHttpService(RestHighLevelClient client, ObjectMapper objectMapper) {
+    public EsSokHttpService(RestHighLevelClient client, ObjectMapper objectMapper, String indexName) {
         this.client = client;
         this.mapper = objectMapper;
+        this.indexName = indexName;
     }
 
     @Override
-    public List<String> typeAheadSprak(String prefix) throws IOException {
+    public List<String> typeAheadSprak(String prefix) {
         return typeAhead(prefix, "sprak.sprakKodeTekst.completion");
     }
 
     @Override
-    public List<String> typeAheadKompetanse(String prefix) throws IOException {
+    public List<String> typeAheadKompetanse(String prefix) {
         return typeAhead(prefix, "samletKompetanseObj.samletKompetanseTekst.completion");
     }
 
     @Override
-    public List<String> typeAheadUtdanning(String prefix) throws IOException {
+    public List<String> typeAheadUtdanning(String prefix) {
         return typeAhead(prefix, "utdanning.nusKodeGrad.completion");
     }
 
     @Override
-    public List<String> typeAheadYrkeserfaring(String prefix) throws IOException {
+    public List<String> typeAheadYrkeserfaring(String prefix) {
         return typeAhead(prefix, "yrkeserfaring.styrkKodeStillingstittel.completion");
     }
 
     @Override
-    public List<String> typeAheadGeografi(String prefix) throws IOException {
-        SearchRequest searchRequest = new SearchRequest(CV_INDEX);
-        searchRequest.types(CV_TYPE);
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        CompletionSuggestionBuilder suggestionBuilder = SuggestBuilders
-                .completionSuggestion("geografiJobbonsker.geografiKodeTekst.completion")
-                .text(prefix).skipDuplicates(true);
+    public List<String> typeAheadGeografi(String prefix) {
+        try {
+            SearchRequest searchRequest = new SearchRequest(indexName);
+            searchRequest.types(CV_TYPE);
+            SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+            CompletionSuggestionBuilder suggestionBuilder = SuggestBuilders
+                    .completionSuggestion("geografiJobbonsker.geografiKodeTekst.completion")
+                    .text(prefix).skipDuplicates(true);
 
-        SuggestBuilder suggestBuilder = new SuggestBuilder();
-        suggestBuilder.addSuggestion("typeahead", suggestionBuilder);
-        searchSourceBuilder.suggest(suggestBuilder);
+            SuggestBuilder suggestBuilder = new SuggestBuilder();
+            suggestBuilder.addSuggestion("typeahead", suggestionBuilder);
+            searchSourceBuilder.suggest(suggestBuilder);
 
-        searchRequest.source(searchSourceBuilder);
-        SearchResponse searchResponse = esExec(() -> client.search(searchRequest));
-        LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
-        CompletionSuggestion compSuggestion =
-                searchResponse.getSuggest().getSuggestion("typeahead");
+            searchRequest.source(searchSourceBuilder);
+            SearchResponse searchResponse = esExec(() -> client.search(searchRequest));
+            LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
+            CompletionSuggestion compSuggestion =
+                    searchResponse.getSuggest().getSuggestion("typeahead");
 
-        return compSuggestion.getOptions().stream()
-                .map(option -> option.getHit().getSourceAsString()).collect(toList());
+            return compSuggestion.getOptions().stream()
+                    .map(option -> option.getHit().getSourceAsString()).collect(toList());
+        } catch(IOException ioe) {
+            throw new ElasticException(ioe);
+        }
     }
 
-    public List<String> typeAheadYrkeJobbonsker(String prefix) throws IOException {
+    public List<String> typeAheadYrkeJobbonsker(String prefix) {
         return typeAhead(prefix, "yrkeJobbonskerObj.styrkBeskrivelse.completion");
     }
 
-    private List<String> typeAhead(String prefix, String suggestionField) throws IOException {
-        SearchRequest searchRequest = new SearchRequest(CV_INDEX);
-        searchRequest.types(CV_TYPE);
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.fetchSource(false);
-        CompletionSuggestionBuilder suggestionBuilder = SuggestBuilders
-                .completionSuggestion(suggestionField)
-                .text(prefix).skipDuplicates(true).size(100);
+    private List<String> typeAhead(String prefix, String suggestionField) {
+        try {
+            SearchRequest searchRequest = new SearchRequest(indexName);
+            searchRequest.types(CV_TYPE);
+            SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+            searchSourceBuilder.fetchSource(false);
+            CompletionSuggestionBuilder suggestionBuilder =
+                    SuggestBuilders.completionSuggestion(suggestionField).text(prefix)
+                            .skipDuplicates(true).size(100);
 
-        SuggestBuilder suggestBuilder = new SuggestBuilder();
-        
-        suggestBuilder.addSuggestion("typeahead", suggestionBuilder);
-        searchSourceBuilder.suggest(suggestBuilder);
+            SuggestBuilder suggestBuilder = new SuggestBuilder();
 
-        searchRequest.source(searchSourceBuilder);
-        SearchResponse searchResponse = esExec(() -> client.search(searchRequest));
-        LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
-        CompletionSuggestion compSuggestion =
-                searchResponse.getSuggest().getSuggestion("typeahead");
-        return compSuggestion.getOptions().stream().map(option -> option.getText().string())
-                .collect(toList());
+            suggestBuilder.addSuggestion("typeahead", suggestionBuilder);
+            searchSourceBuilder.suggest(suggestBuilder);
+
+            searchRequest.source(searchSourceBuilder);
+            SearchResponse searchResponse = esExec(() -> client.search(searchRequest));
+            LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
+            CompletionSuggestion compSuggestion =
+                    searchResponse.getSuggest().getSuggestion("typeahead");
+            return compSuggestion.getOptions().stream().map(option -> option.getText().string())
+                    .collect(toList());
+        } catch(IOException ioe) {
+            throw new ElasticException(ioe);
+        }
     }
 
     private void matchAllQuery(BoolQueryBuilder boolQueryBuilder) {
@@ -149,150 +158,162 @@ public class EsSokHttpService implements EsSokService {
     }
 
     @Override
-    public Sokeresultat arbeidsgiverSok(Sokekriterier sk) throws IOException {
+    public Sokeresultat arbeidsgiverSok(Sokekriterier sk) {
+        try {
 
-        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
-        BoolQueryBuilder sortQueryBuilder = QueryBuilders.boolQuery();
+            BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+            BoolQueryBuilder sortQueryBuilder = QueryBuilders.boolQuery();
 
-        if (sk.isTomtSok()) {
-            LOGGER.debug("MATCH ALL!");
-            matchAllQuery(queryBuilder);
+            if (sk.isTomtSok()) {
+                LOGGER.debug("MATCH ALL!");
+                matchAllQuery(queryBuilder);
+                return toSokeresultat(esExec(() -> search(UseCase.AG_SOK, queryBuilder,
+                        sk.fraIndex(), sk.antallResultater(), null)));
+            }
+
+            if (isNotEmpty(sk.yrkeJobbonsker())) {
+                addJobbonskerToQuery(sk.yrkeJobbonsker(), queryBuilder, sortQueryBuilder);
+            }
+
+            if (isNotEmpty(sk.stillingstitler())) {
+                addStillingstitlerToQuery(sk.stillingstitler(), queryBuilder, sortQueryBuilder);
+            }
+
+            if (isNotEmpty(sk.kompetanser())) {
+                addKompetanserToQuery(sk.kompetanser(), queryBuilder);
+            }
+
+            if (isNotEmpty(sk.sprak())) {
+                addSprakToQuery(sk.sprak(), queryBuilder);
+            }
+
+            if (isNotEmpty(sk.geografiList())) {
+                addGeografiToQuery(sk.geografiList(), queryBuilder);
+            }
+
+            if (sk.maaBoInnenforGeografi()) {
+                addKommunenummerToQuery(sk.geografiList(), queryBuilder);
+            }
+
+            if (isNotEmpty(sk.totalYrkeserfaring())) {
+                addYrkeserfaringToQuery(sk.totalYrkeserfaring(), queryBuilder);
+            }
+
+            if (sk.isUtdanningSet()) {
+                addUtdanningToQuery(sk.utdanninger(), sk.utdanningsniva(), queryBuilder);
+            }
+
+            if (isNotEmpty(sk.forerkort())) {
+                addForerkortToQuery(sk.forerkort(), queryBuilder);
+            }
+
             return toSokeresultat(esExec(() -> search(UseCase.AG_SOK, queryBuilder, sk.fraIndex(),
-                    sk.antallResultater(), null)));
+                    sk.antallResultater(), sortQueryBuilder)));
+        } catch(IOException ioe) {
+            throw new ElasticException(ioe);
         }
-
-        if (isNotEmpty(sk.yrkeJobbonsker())) {
-            addJobbonskerToQuery(sk.yrkeJobbonsker(), queryBuilder, sortQueryBuilder);
-        }
-
-        if (isNotEmpty(sk.stillingstitler())) {
-            addStillingstitlerToQuery(sk.stillingstitler(), queryBuilder, sortQueryBuilder);
-        }
-
-        if (isNotEmpty(sk.kompetanser())) {
-            addKompetanserToQuery(sk.kompetanser(), queryBuilder);
-        }
-
-        if (isNotEmpty(sk.sprak())) {
-            addSprakToQuery(sk.sprak(), queryBuilder);
-        }
-
-        if (isNotEmpty(sk.geografiList())) {
-            addGeografiToQuery(sk.geografiList(), queryBuilder);
-        }
-
-        if (sk.maaBoInnenforGeografi()) {
-            addKommunenummerToQuery(sk.geografiList(), queryBuilder);
-        }
-
-        if (isNotEmpty(sk.totalYrkeserfaring())) {
-            addYrkeserfaringToQuery(sk.totalYrkeserfaring(), queryBuilder);
-        }
-
-        if (sk.isUtdanningSet()) {
-            addUtdanningToQuery(sk.utdanninger(), sk.utdanningsniva(), queryBuilder);
-        }
-
-        if (isNotEmpty(sk.forerkort())) {
-            addForerkortToQuery(sk.forerkort(), queryBuilder);
-        }
-
-        return toSokeresultat(esExec(() -> search(UseCase.AG_SOK, queryBuilder, sk.fraIndex(),
-                sk.antallResultater(), sortQueryBuilder)));
     }
 
     @Override
-    public Optional<EsCv> veilederSokPaaFnr(String fnr) throws IOException {
-        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
-        queryBuilder.must(QueryBuilders.termQuery("fodselsnummer", fnr));
-        addFilterForVeiledereSok(queryBuilder);
+    public Optional<EsCv> veilederSokPaaFnr(String fnr) {
+        try {
+            BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+            queryBuilder.must(QueryBuilders.termQuery("fodselsnummer", fnr));
+            addFilterForVeiledereSok(queryBuilder);
 
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.query(queryBuilder);
+            SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+            searchSourceBuilder.query(queryBuilder);
 
-        SearchRequest searchRequest = new SearchRequest();
-        searchRequest.indices(CV_INDEX);
-        searchRequest.source(searchSourceBuilder);
+            SearchRequest searchRequest = new SearchRequest();
+            searchRequest.indices(indexName);
+            searchRequest.source(searchSourceBuilder);
 
-        LOGGER.debug("SEARCHREQUEST: " + searchRequest.toString());
+            LOGGER.debug("SEARCHREQUEST: " + searchRequest.toString());
 
-        SearchResponse searchResponse = client.search(searchRequest);
-        LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
-        LOGGER.info("Søketid: {}", searchResponse.getTook());
-        LOGGER.debug("Totalt antall treff: " + searchResponse.getHits().getTotalHits());
-        List<EsCv> cver = toCvList(searchResponse);
-        if( cver.size() > 1 ) {
-            LOGGER.warn("Har fått treff på mer enn 1 kandidat ved søk med fødselsnummer");
+            SearchResponse searchResponse = client.search(searchRequest);
+            LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
+            LOGGER.info("Søketid: {}", searchResponse.getTook());
+            LOGGER.debug("Totalt antall treff: " + searchResponse.getHits().getTotalHits());
+            List<EsCv> cver = toCvList(searchResponse);
+            if (cver.size() > 1) {
+                LOGGER.warn("Har fått treff på mer enn 1 kandidat ved søk med fødselsnummer");
+            }
+            if (cver.size() == 0) {
+                return Optional.empty();
+            }
+            return Optional.of(cver.iterator().next());
+        } catch(IOException ioe) {
+            throw new ElasticException(ioe);
         }
-        if( cver.size() == 0 ) {
-            return Optional.empty();
-        }
-        return Optional.of(cver.iterator().next());
     }
 
     @Override
-    public Sokeresultat veilederSok(SokekriterierVeiledere sk) throws IOException {
+    public Sokeresultat veilederSok(SokekriterierVeiledere sk) {
 
-        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
-        BoolQueryBuilder sortQueryBuilder = QueryBuilders.boolQuery();
+        try {
+            BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+            BoolQueryBuilder sortQueryBuilder = QueryBuilders.boolQuery();
 
-        if (sk.isTomtSok()) {
-            LOGGER.debug("MATCH ALL!");
-            matchAllQuery(queryBuilder);
+            if (sk.isTomtSok()) {
+                LOGGER.debug("MATCH ALL!");
+                matchAllQuery(queryBuilder);
+                return toSokeresultat(esExec(() -> search(UseCase.VEIL_SOK, queryBuilder,
+                        sk.fraIndex(), sk.antallResultater(), null)));
+            }
+
+            if (StringUtils.isNotBlank(sk.fritekst())) {
+                addFritekstToQuery(sk.fritekst(), queryBuilder);
+            }
+
+            if (isNotEmpty(sk.yrkeJobbonsker())) {
+                addJobbonskerToQuery(sk.yrkeJobbonsker(), queryBuilder, sortQueryBuilder);
+            }
+
+            if (isNotEmpty(sk.stillingstitler())) {
+                addStillingstitlerToQuery(sk.stillingstitler(), queryBuilder, sortQueryBuilder);
+            }
+
+            if (isNotEmpty(sk.kompetanser())) {
+                addKompetanserToQuery(sk.kompetanser(), queryBuilder);
+            }
+
+            if (isNotEmpty(sk.sprak())) {
+                addSprakToQuery(sk.sprak(), queryBuilder);
+            }
+
+            if (isNotEmpty(sk.geografiList())) {
+                addGeografiToQuery(sk.geografiList(), queryBuilder);
+            }
+
+            if (sk.maaBoInnenforGeografi()) {
+                addKommunenummerToQuery(sk.geografiList(), queryBuilder);
+            }
+
+            if (isNotEmpty(sk.totalYrkeserfaring())) {
+                addYrkeserfaringToQuery(sk.totalYrkeserfaring(), queryBuilder);
+            }
+
+            if (sk.isUtdanningSet()) {
+                addUtdanningToQuery(sk.utdanninger(), sk.utdanningsniva(), queryBuilder);
+            }
+
+            if (StringUtils.isNotBlank(sk.etternavn())) {
+                addEtternavnToQuery(sk.etternavn(), queryBuilder);
+            }
+
+            if (isNotEmpty(sk.forerkort())) {
+                addForerkortToQuery(sk.forerkort(), queryBuilder);
+            }
+
+            if (isNotEmpty(sk.kvalifiseringsgruppeKoder())) {
+                addKvalifiseringsgruppeKoderToQuery(sk.kvalifiseringsgruppeKoder(), queryBuilder);
+            }
+
             return toSokeresultat(esExec(() -> search(UseCase.VEIL_SOK, queryBuilder, sk.fraIndex(),
-                    sk.antallResultater(), null)));
+                    sk.antallResultater(), sortQueryBuilder)));
+        } catch(IOException ioe) {
+            throw new ElasticException(ioe);
         }
-
-        if (StringUtils.isNotBlank(sk.fritekst())) {
-            addFritekstToQuery(sk.fritekst(), queryBuilder);
-        }
-
-        if (isNotEmpty(sk.yrkeJobbonsker())) {
-            addJobbonskerToQuery(sk.yrkeJobbonsker(), queryBuilder, sortQueryBuilder);
-        }
-
-        if (isNotEmpty(sk.stillingstitler())) {
-            addStillingstitlerToQuery(sk.stillingstitler(), queryBuilder, sortQueryBuilder);
-        }
-
-        if (isNotEmpty(sk.kompetanser())) {
-            addKompetanserToQuery(sk.kompetanser(), queryBuilder);
-        }
-
-        if (isNotEmpty(sk.sprak())) {
-            addSprakToQuery(sk.sprak(), queryBuilder);
-        }
-
-        if (isNotEmpty(sk.geografiList())) {
-            addGeografiToQuery(sk.geografiList(), queryBuilder);
-        }
-
-        if (sk.maaBoInnenforGeografi()) {
-            addKommunenummerToQuery(sk.geografiList(), queryBuilder);
-        }
-
-        if (isNotEmpty(sk.totalYrkeserfaring())) {
-            addYrkeserfaringToQuery(sk.totalYrkeserfaring(), queryBuilder);
-        }
-
-        if (sk.isUtdanningSet()) {
-            addUtdanningToQuery(sk.utdanninger(), sk.utdanningsniva(), queryBuilder);
-        }
-
-        if (StringUtils.isNotBlank(sk.etternavn())) {
-            addEtternavnToQuery(sk.etternavn(), queryBuilder);
-        }
-
-        if (isNotEmpty(sk.forerkort())) {
-            addForerkortToQuery(sk.forerkort(), queryBuilder);
-        }
-
-        if (isNotEmpty(sk.kvalifiseringsgruppeKoder())) {
-            addKvalifiseringsgruppeKoderToQuery(sk.kvalifiseringsgruppeKoder(), queryBuilder);
-        }
-
-        return toSokeresultat(esExec(() -> search(UseCase.VEIL_SOK, queryBuilder, sk.fraIndex(),
-                sk.antallResultater(), sortQueryBuilder)));
     }
 
     private void addFilterForArbeidsgivereSok(BoolQueryBuilder boolQueryBuilder) {
@@ -715,7 +736,7 @@ public class EsSokHttpService implements EsSokService {
         searchSourceBuilder.aggregation(kompetanseObjAggregation);
         
         SearchRequest searchRequest = new SearchRequest();
-        searchRequest.indices(CV_INDEX);
+        searchRequest.indices(indexName);
         searchRequest.source(searchSourceBuilder);
 
         LOGGER.debug("SEARCHREQUEST: " + searchRequest.toString());
@@ -775,55 +796,56 @@ public class EsSokHttpService implements EsSokService {
     }
 
     @Override
-    public Optional<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> arbeidsgiverHent(String kandidatnr)
-            throws IOException {
+    public Optional<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> arbeidsgiverHent(String kandidatnr) {
         return hentFelles(true, kandidatnr);
     }
 
     @Override
-    public Optional<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> veilederHent(String kandidatnr)
-            throws IOException {
+    public Optional<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> veilederHent(String kandidatnr) {
         return hentFelles(false, kandidatnr);
     }
 
-    private Optional<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> hentFelles(boolean isAg,
-            String kandidatnr) throws IOException {
+    private Optional<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> hentFelles(boolean isAg, String kandidatnr) {
 
-        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery()
-                .must(QueryBuilders.termQuery("kandidatnr", kandidatnr));
-        if (isAg) {
-            addFilterForArbeidsgivereHent(queryBuilder);
-        } else {
-            addFilterForVeiledereHent(queryBuilder);
+        try {
+            BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery()
+                    .must(QueryBuilders.termQuery("kandidatnr", kandidatnr));
+            if (isAg) {
+                addFilterForArbeidsgivereHent(queryBuilder);
+            } else {
+                addFilterForVeiledereHent(queryBuilder);
+            }
+
+            SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+            searchSourceBuilder.query(queryBuilder).from(0).size(10)
+                    .sort(new FieldSortBuilder("tidsstempel").order(SortOrder.DESC));
+
+            SearchRequest searchRequest = new SearchRequest();
+            searchRequest.indices(indexName);
+            searchRequest.source(searchSourceBuilder);
+
+            LOGGER.debug("HENTREQUEST: " + searchRequest.toString());
+
+            SearchResponse searchResponse = client.search(searchRequest);
+            LOGGER.debug("HENTRESPONSE: " + searchResponse);
+
+            List<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> liste = StreamSupport
+                    .stream(searchResponse.getHits().spliterator(), false)
+                    .map(hit -> mapEsCvHent(hit)).filter(Objects::nonNull).collect(toList());
+            if (liste.size() == 0) {
+                LOGGER.warn("Finner ikke CV for kandidat {}", kandidatnr);
+                return Optional.empty();
+            } else if (liste.size() > 1) {
+                LOGGER.error("Fant mer enn én CV for kandidat {}. Fant {} CVer: {}", kandidatnr,
+                        liste.size(),
+                        liste.stream()
+                                .map(cv -> String.format("(kandidatnr: %s)", cv.getKandidatnr()))
+                                .collect(Collectors.joining(", ")));
+            }
+            return liste.stream().findFirst();
+        } catch(IOException ioe) {
+            throw new ElasticException(ioe);
         }
-
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.query(queryBuilder).from(0).size(10).sort(new FieldSortBuilder("tidsstempel").order(SortOrder.DESC));
-
-        SearchRequest searchRequest = new SearchRequest();
-        searchRequest.indices(CV_INDEX);
-        searchRequest.source(searchSourceBuilder);
-
-        LOGGER.debug("HENTREQUEST: " + searchRequest.toString());
-
-        SearchResponse searchResponse = client.search(searchRequest);
-        LOGGER.debug("HENTRESPONSE: " + searchResponse);
-
-        List<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> liste =
-                StreamSupport.stream(searchResponse.getHits().spliterator(), false)
-                        .map(hit -> mapEsCvHent(hit)).filter(Objects::nonNull).collect(toList());
-        if (liste.size() == 0) {
-            LOGGER.warn("Finner ikke CV for kandidat {}", kandidatnr);
-            return Optional.empty();
-        } else if (liste.size() > 1) {
-            LOGGER.error("Fant mer enn én CV for kandidat {}. Fant {} CVer: {}", kandidatnr,
-                    liste.size(),
-                    liste.stream()
-                            .map(cv -> String.format("(kandidatnr: %s)",
-                                    cv.getKandidatnr()))
-                            .collect(Collectors.joining(", ")));
-        }
-        return liste.stream().findFirst();
     }
 
     private BoolQueryBuilder kandidatnrQuery(List<String> kandidatnummer) {
@@ -832,25 +854,33 @@ public class EsSokHttpService implements EsSokService {
     }
 
     @Override
-    public Sokeresultat arbeidsgiverHentKandidater(List<String> kandidatnummer) throws IOException {
-        SearchResponse searchResponse =
-                esExec(() -> search(UseCase.AG_SOK, kandidatnrQuery(kandidatnummer), 0, 100, null));
-        Sokeresultat usortertSokeresultat = toSokeresultat(searchResponse);
-        List<EsCv> sorterteCver = sorterSokeresultaterBasertPaaRequestRekkefolge(
-                usortertSokeresultat.getCver(), kandidatnummer);
-        return new Sokeresultat(usortertSokeresultat.getTotaltAntallTreff(), sorterteCver,
-                usortertSokeresultat.getAggregeringer());
+    public Sokeresultat arbeidsgiverHentKandidater(List<String> kandidatnummer) {
+        try {
+            SearchResponse searchResponse = esExec(
+                    () -> search(UseCase.AG_SOK, kandidatnrQuery(kandidatnummer), 0, 100, null));
+            Sokeresultat usortertSokeresultat = toSokeresultat(searchResponse);
+            List<EsCv> sorterteCver = sorterSokeresultaterBasertPaaRequestRekkefolge(
+                    usortertSokeresultat.getCver(), kandidatnummer);
+            return new Sokeresultat(usortertSokeresultat.getTotaltAntallTreff(), sorterteCver,
+                    usortertSokeresultat.getAggregeringer());
+        } catch(IOException ioe) {
+            throw new ElasticException(ioe);
+        }
     }
 
     @Override
-    public Sokeresultat veilederHentKandidater(List<String> kandidatnummer) throws IOException {
-        SearchResponse searchResponse = esExec(
-                () -> search(UseCase.VEIL_SOK, kandidatnrQuery(kandidatnummer), 0, 100, null));
-        Sokeresultat usortertSokeresultat = toSokeresultat(searchResponse);
-        List<EsCv> sorterteCver = sorterSokeresultaterBasertPaaRequestRekkefolge(
-                usortertSokeresultat.getCver(), kandidatnummer);
-        return new Sokeresultat(usortertSokeresultat.getTotaltAntallTreff(), sorterteCver,
-                usortertSokeresultat.getAggregeringer());
+    public Sokeresultat veilederHentKandidater(List<String> kandidatnummer) {
+        try {
+            SearchResponse searchResponse = esExec(
+                    () -> search(UseCase.VEIL_SOK, kandidatnrQuery(kandidatnummer), 0, 100, null));
+            Sokeresultat usortertSokeresultat = toSokeresultat(searchResponse);
+            List<EsCv> sorterteCver = sorterSokeresultaterBasertPaaRequestRekkefolge(
+                    usortertSokeresultat.getCver(), kandidatnummer);
+            return new Sokeresultat(usortertSokeresultat.getTotaltAntallTreff(), sorterteCver,
+                    usortertSokeresultat.getAggregeringer());
+        } catch(IOException ioe) {
+            throw new ElasticException(ioe);
+        }
     }
 
     private List<EsCv> sorterSokeresultaterBasertPaaRequestRekkefolge(List<EsCv> cver,

@@ -2,8 +2,6 @@ package no.nav.arbeid.cv.indexer.config;
 
 import org.elasticsearch.action.support.WriteRequest;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -13,28 +11,29 @@ import no.nav.arbeid.kandidatsok.es.client.EsIndexerService;
 import no.nav.arbeid.kandidatsok.es.client.EsSokHttpService;
 import no.nav.arbeid.kandidatsok.es.client.EsSokService;
 
-@Configuration
 public class EsServiceConfig {
 
   private ObjectMapper objectMapper;
   private MeterRegistry meterRegistry;
   private RestHighLevelClient restHighLevelClient;
+  private final int numberOfShards;
+  private final int numberOfReplicas;
 
   public EsServiceConfig(RestHighLevelClient restHighLevelClient, ObjectMapper objectMapper,
-      MeterRegistry meterRegistry) {
+      MeterRegistry meterRegistry, int numberOfShards, int numberOfReplicas) {
     this.restHighLevelClient = restHighLevelClient;
     this.objectMapper = objectMapper;
     this.meterRegistry = meterRegistry;
+    this.numberOfShards = numberOfShards;
+    this.numberOfReplicas = numberOfReplicas;
   }
 
-  @Bean
-  public EsSokService sokCvClient() {
-    return new EsSokHttpService(restHighLevelClient, objectMapper);
+  public EsSokService sokCvClient(String indexName) {
+    return new EsSokHttpService(restHighLevelClient, objectMapper, indexName);
   }
 
-  @Bean
   public EsIndexerService indexerCvService() {
-    return new EsIndexerHttpService(restHighLevelClient, objectMapper, meterRegistry, WriteRequest.RefreshPolicy.NONE);
+    return new EsIndexerHttpService(restHighLevelClient, objectMapper, meterRegistry, WriteRequest.RefreshPolicy.NONE, numberOfShards, numberOfReplicas);
   }
 
 }
