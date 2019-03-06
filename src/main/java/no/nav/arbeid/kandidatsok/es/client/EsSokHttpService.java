@@ -729,12 +729,12 @@ public class EsSokHttpService implements EsSokService {
 
             searchSourceBuilder.sort(fieldSortBuilder);
         }
-        searchSourceBuilder.sort(new FieldSortBuilder("tidsstempel").order(SortOrder.DESC));    
-        
+        searchSourceBuilder.sort(new FieldSortBuilder("tidsstempel").order(SortOrder.DESC));
+
         TermsAggregationBuilder kompetanseObjAggregation =
                 AggregationBuilders.terms("kompetanse").field("kompetanseObj.kompKodeNavn.keyword");
         searchSourceBuilder.aggregation(kompetanseObjAggregation);
-        
+
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.indices(indexName);
         searchRequest.source(searchSourceBuilder);
@@ -857,7 +857,7 @@ public class EsSokHttpService implements EsSokService {
     public Sokeresultat arbeidsgiverHentKandidater(List<String> kandidatnummer) {
         try {
             SearchResponse searchResponse = esExec(
-                    () -> search(UseCase.AG_SOK, kandidatnrQuery(kandidatnummer), 0, 100, null));
+                    () -> search(UseCase.AG_SOK, kandidatnrQuery(kandidatnummer), 0, kandidatnummer.size(), null));
             Sokeresultat usortertSokeresultat = toSokeresultat(searchResponse);
             List<EsCv> sorterteCver = sorterSokeresultaterBasertPaaRequestRekkefolge(
                     usortertSokeresultat.getCver(), kandidatnummer);
@@ -872,7 +872,7 @@ public class EsSokHttpService implements EsSokService {
     public Sokeresultat veilederHentKandidater(List<String> kandidatnummer) {
         try {
             SearchResponse searchResponse = esExec(
-                    () -> search(UseCase.VEIL_SOK, kandidatnrQuery(kandidatnummer), 0, 100, null));
+                    () -> search(UseCase.VEIL_SOK, kandidatnrQuery(kandidatnummer), 0, kandidatnummer.size(), null));
             Sokeresultat usortertSokeresultat = toSokeresultat(searchResponse);
             List<EsCv> sorterteCver = sorterSokeresultaterBasertPaaRequestRekkefolge(
                     usortertSokeresultat.getCver(), kandidatnummer);
