@@ -135,6 +135,9 @@ public class EsCv {
     private List<EsUtdanning> utdanning = new ArrayList<>();
 
     @ElasticNestedField
+    private List<EsFagdokumentasjon> fagdokumentasjon = new ArrayList<>();
+
+    @ElasticNestedField
     private List<EsYrkeserfaring> yrkeserfaring = new ArrayList<>();
 
     @ElasticObjectField
@@ -349,9 +352,21 @@ public class EsCv {
         this.utdanning.addAll(utdanningListe);
     }
 
-    public void addYrkeserfaring(EsYrkeserfaring yrkeserfaring) {
-        this.yrkeserfaring.add(yrkeserfaring);
-    }
+  public void addFagdokumentasjon(Collection<EsFagdokumentasjon> fagdokumentasjonListe) {
+    this.fagdokumentasjon.addAll(fagdokumentasjonListe);
+    List<EsSamletKompetanse> liste = new ArrayList<>();
+    fagdokumentasjonListe.forEach(f -> {
+      liste.add(new EsSamletKompetanse(f.getFagdokumentTypeLabel(f.getType())));
+      if (f.getTittel() != null) {
+        liste.add(new EsSamletKompetanse(f.getTittel()));
+      }
+    });
+    this.addSamletKompetanse(liste);
+  }
+
+  public void addYrkeserfaring(EsYrkeserfaring yrkeserfaring) {
+    this.yrkeserfaring.add(yrkeserfaring);
+  }
 
     public void addYrkeserfaring(Collection<EsYrkeserfaring> yrkeserfaringListe) {
         yrkeserfaringListe
@@ -751,6 +766,7 @@ public class EsCv {
                 && Objects.equals(disponererBil, esCv.disponererBil)
                 && Objects.equals(tidsstempel, esCv.tidsstempel)
                 && Objects.equals(utdanning, esCv.utdanning)
+                && Objects.equals(fagdokumentasjon, esCv.fagdokumentasjon)
                 && Objects.equals(yrkeserfaring, esCv.yrkeserfaring)
                 && Objects.equals(kompetanseObj, esCv.kompetanseObj)
                 && Objects.equals(annenerfaringObj, esCv.annenerfaringObj)
@@ -775,7 +791,7 @@ public class EsCv {
                 formidlingsgruppekode, doed, frKode, kvalifiseringsgruppekode, hovedmaalkode, orgenhet, fritattKandidatsok, fritattAgKandidatsok, epostadresse, mobiltelefon, telefon, statsborgerskap,
                 kandidatnr, beskrivelse, samtykkeStatus, samtykkeDato, adresselinje1,
                 adresselinje2, adresselinje3, postnummer, poststed, landkode, kommunenummer, kommunenummerkw, kommunenummerstring,
-                disponererBil, tidsstempel, utdanning, yrkeserfaring, kompetanseObj, annenerfaringObj,
+                disponererBil, tidsstempel, utdanning, fagdokumentasjon, yrkeserfaring, kompetanseObj, annenerfaringObj,
                 sertifikatObj, forerkort, sprak, kursObj, vervObj, geografiJobbonsker, yrkeJobbonskerObj,
                 omfangJobbonskerObj, ansettelsesformJobbonskerObj, arbeidstidsordningJobbonskerObj,
                 arbeidstidJobbonskerObj, arbeidsdagerJobbonskerObj, samletKompetanseObj, totalLengdeYrkeserfaring,
@@ -802,7 +818,7 @@ public class EsCv {
                 + ", fritattAgKandidatsok=" + fritattAgKandidatsok
                 + ", synligForArbeidsgiverSok=" + synligForArbeidsgiverSok
                 + ", synligForVeilederSok=" + synligForVeilederSok
-                + ", utdanning=" + utdanning
+                + ", utdanning=" + utdanning + ", fagdokumentasjon=" + fagdokumentasjon
                 + ", yrkeserfaring=" + yrkeserfaring + ", kompetanse=" + kompetanseObj
                 + ", annenerfaring=" + annenerfaringObj + ", sertifikat=" + sertifikatObj + ", forerkort="
                 + forerkort + ", sprak=" + sprak + ", kurs=" + kursObj + ", verv=" + vervObj
