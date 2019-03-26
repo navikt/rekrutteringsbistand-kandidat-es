@@ -134,7 +134,7 @@ public class EsCv {
     @ElasticNestedField
     private List<EsUtdanning> utdanning = new ArrayList<>();
 
-    @ElasticNestedField
+    @ElasticObjectField
     private List<EsFagdokumentasjon> fagdokumentasjon = new ArrayList<>();
 
     @ElasticNestedField
