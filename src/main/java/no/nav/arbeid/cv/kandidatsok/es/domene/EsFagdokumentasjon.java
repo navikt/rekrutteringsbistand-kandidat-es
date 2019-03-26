@@ -13,6 +13,9 @@ import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 public class EsFagdokumentasjon {
 
   @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
+  @ElasticKeywordField
+  @ElasticCompletionField
+  @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private String type;
 
   @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
