@@ -651,6 +651,10 @@ public class EsCv {
         return utdanning;
     }
 
+    public List<EsFagdokumentasjon> getFagdokumentasjon() {
+        return fagdokumentasjon;
+    }
+
     public List<EsYrkeserfaring> getYrkeserfaring() {
         return yrkeserfaring;
     }
