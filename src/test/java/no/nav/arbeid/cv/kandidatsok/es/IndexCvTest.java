@@ -828,5 +828,44 @@ public class IndexCvTest {
         List<EsCv> collect = sokeresultat.getCver().stream().filter(esCv -> Objects.nonNull(esCv.getOppstartKode())).collect(Collectors.toList());
         assertThat(collect).size().isGreaterThan(0);
     }
+    
+    @Test 
+    public void sokMedSynonymerIJobbonskerSkalGiTreff() throws IOException {
+        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
+                .yrkeJobbonsker(Collections.singletonList("Trailersjåffis")).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        assertThat(cver.size()).isEqualTo(1);
+        EsCv cv = cver.get(0);
+        assertThat(cv)
+                .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv5()));
+        
+    }
+    
+    @Test 
+    public void sokMedSynonymerIYrkeserfaringSkalGiTreff() throws IOException {
+        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
+                .stillingstitler(Collections.singletonList("Javaguru")).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        assertThat(cver.size()).isEqualTo(1);
+        EsCv cv = cver.get(0);
+        assertThat(cv)
+                .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
+        
+    }
+    
+    @Test
+    public void sokMedSynonymerIKompetanseSkalGiTreff() throws IOException {
+        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
+                Sokekriterier.med().kompetanser(Collections.singletonList("Java (8)")).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        assertThat(cver.size()).isEqualTo(1);
+        
+        EsCv cv = cver.get(0);     
+        assertThat(cv)
+                .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
+    }
 
 }

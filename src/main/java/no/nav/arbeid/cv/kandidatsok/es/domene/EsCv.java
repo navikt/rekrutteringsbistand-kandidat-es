@@ -356,7 +356,7 @@ public class EsCv {
     this.fagdokumentasjon.addAll(fagdokumentasjonListe);
     List<EsSamletKompetanse> liste = new ArrayList<>();
     fagdokumentasjonListe.forEach(f -> {
-      liste.add(new EsSamletKompetanse(f.getFagdokumentTypeLabel(f.getType())));
+      liste.add(new EsSamletKompetanse(EsFagdokumentasjon.getFagdokumentTypeLabel(f.getType())));
       if (f.getTittel() != null) {
         liste.add(new EsSamletKompetanse(f.getTittel()));
       }
@@ -377,8 +377,7 @@ public class EsCv {
     public void addKompetanse(EsKompetanse kompetanse) {
         if (kompetanse != null) {
             this.kompetanseObj.add(kompetanse);
-            this.addSamletKompetanse(Collections
-                    .singletonList(new EsSamletKompetanse(kompetanse.getKompKodeNavn())));
+            this.addSamletKompetanse(kompetanse.getSokeNavn().stream().map(str->new EsSamletKompetanse(str)).collect(Collectors.toList()));            
         }
     }
 
@@ -386,7 +385,7 @@ public class EsCv {
         if (kompetanseListe != null) {
             this.kompetanseObj.addAll(kompetanseListe);
             this.addSamletKompetanse(
-                    kompetanseListe.stream().map(k -> new EsSamletKompetanse(k.getKompKodeNavn()))
+                    kompetanseListe.stream().flatMap(k -> k.getSokeNavn().stream()).map(str-> new EsSamletKompetanse(str))
                             .collect(Collectors.toList()));
         }
     }

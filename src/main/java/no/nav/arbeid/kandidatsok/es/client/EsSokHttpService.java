@@ -479,13 +479,13 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addYrkeJobbonskerQuery(String yrkeJobbonske, BoolQueryBuilder boolQueryBuilder) {
-        boolQueryBuilder.should(QueryBuilders.matchQuery("yrkeJobbonskerObj.styrkBeskrivelse", yrkeJobbonske).operator(Operator.AND));
+        boolQueryBuilder.should(QueryBuilders.matchQuery("yrkeJobbonskerObj.sokeTitler", yrkeJobbonske).operator(Operator.AND));
     }
 
     private void addStillingsTitlerQuery(String stillingstittel, BoolQueryBuilder boolQueryBuilder,
             boolean must, BoolQueryBuilder sortBoolQueryBuilder) {
         NestedQueryBuilder yrkeserfaringQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
-                QueryBuilders.matchQuery("yrkeserfaring.styrkKodeStillingstittel", stillingstittel)
+                QueryBuilders.matchQuery("yrkeserfaring.sokeTitler", stillingstittel)
                         .operator(Operator.AND),
                 ScoreMode.Total);
         if (must) {
@@ -496,7 +496,7 @@ public class EsSokHttpService implements EsSokService {
         LOGGER.debug("ADDING yrkeserfaring");
 
         MatchQueryBuilder matchQueryBuilder =
-                QueryBuilders.matchQuery("yrkeserfaring.styrkKodeStillingstittel", stillingstittel);
+                QueryBuilders.matchQuery("yrkeserfaring.sokeTitler", stillingstittel);
         sortBoolQueryBuilder.should(matchQueryBuilder);
     }
 

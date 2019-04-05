@@ -1,66 +1,83 @@
 package no.nav.arbeid.cv.kandidatsok.es.domene.sok;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsYrkeserfaring {
 
-  private String styrkKodeStillingstittel;
+    private String styrkKodeStillingstittel;
 
-  private int yrkeserfaringManeder;
-  
-  private Date fraDato;
+    private String alternativStillingstittel;
 
-  public EsYrkeserfaring() {}
+    private List<String> sokeTitler;
 
-  public EsYrkeserfaring(String styrkKodeStillingstittel, int yrkeserfaringManeder, Date fraDato) {
-    this.styrkKodeStillingstittel = styrkKodeStillingstittel;
-    this.yrkeserfaringManeder = yrkeserfaringManeder;
-    this.fraDato = fraDato;
-  }
+    private int yrkeserfaringManeder;
 
-  public String getStyrkKodeStillingstittel() {
-    return styrkKodeStillingstittel;
-  }
+    private Date fraDato;
 
-  public int getYrkeserfaringManeder() {
-    return yrkeserfaringManeder;
-  }
-  
-  public Date getFraDato() {
-    return fraDato;
-  }
+    public EsYrkeserfaring() {}
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
+    public EsYrkeserfaring(String styrkKodeStillingstittel, String alternativStillingstittel,
+            int yrkeserfaringManeder, Date fraDato, List<String> sokeTitler) {
+        this.styrkKodeStillingstittel = styrkKodeStillingstittel;
+        this.alternativStillingstittel = alternativStillingstittel;
+        this.yrkeserfaringManeder = yrkeserfaringManeder;
+        this.fraDato = fraDato;
+        this.sokeTitler = sokeTitler;
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+
+    public String getStyrkKodeStillingstittel() {
+        return styrkKodeStillingstittel;
     }
-    EsYrkeserfaring that = (EsYrkeserfaring) o;
-    return Objects.equals(styrkKodeStillingstittel, that.styrkKodeStillingstittel)
-        && Objects.equals(yrkeserfaringManeder, that.yrkeserfaringManeder)
-        && Objects.equals(fraDato, that.fraDato);
-  }
 
-  @Override
-  public int hashCode() {
+    public String getAlternativStillingstittel() {
+        return alternativStillingstittel;
+    }
 
-    return Objects.hash(styrkKodeStillingstittel, yrkeserfaringManeder, fraDato);
-  }
+    public int getYrkeserfaringManeder() {
+        return yrkeserfaringManeder;
+    }
 
-  @Override
-  public String toString() {
-    return "EsYrkeserfaring{" + " styrkKodeStillingstittel='" + styrkKodeStillingstittel + '\''
-        + ", yrkeserfaringManeder='" + yrkeserfaringManeder + '\''
-        + ", fraDato='" + fraDato + '\'' + '}';
-  }
+    public Date getFraDato() {
+        return fraDato;
+    }
+
+    public List<String> getSokeTitler() {
+        return sokeTitler;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        EsYrkeserfaring that = (EsYrkeserfaring) o;
+        return Objects.equals(styrkKodeStillingstittel, that.styrkKodeStillingstittel)
+                && Objects.equals(alternativStillingstittel, that.alternativStillingstittel)
+                && Objects.equals(yrkeserfaringManeder, that.yrkeserfaringManeder)
+                && Objects.equals(fraDato, that.fraDato);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(styrkKodeStillingstittel, alternativStillingstittel,
+                yrkeserfaringManeder, fraDato);
+    }
+
+    @Override
+    public String toString() {
+        return "EsYrkeserfaring{" + " styrkKodeStillingstittel='" + styrkKodeStillingstittel + '\''
+                + " alternativStillingstittel='" + alternativStillingstittel + '\''
+                + ", yrkeserfaringManeder='" + yrkeserfaringManeder + '\'' + ", fraDato='" + fraDato
+                + '\'' + '}';
+    }
 
 }
