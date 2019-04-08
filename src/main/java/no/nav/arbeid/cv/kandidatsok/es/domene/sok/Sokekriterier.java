@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import no.nav.arbeid.cv.kandidatsok.es.domene.sok.SokekriterierVeiledere.Builder;
+
 public class Sokekriterier {
+    private String fritekst;
     private List<String> yrkeJobbonsker;
     private List<String> stillingstitler;
     private List<String> kompetanser;
@@ -26,6 +29,10 @@ public class Sokekriterier {
         return new Builder();
     }
    
+    public String fritekst() {
+        return fritekst;
+    }
+
     public List<String> sprak() {
         return sprak;
     }
@@ -91,6 +98,7 @@ public class Sokekriterier {
     }
 
     public static class Builder {
+        private String fritekst;
         private List<String> yrkeJobbonsker;
         private List<String> stillingstitler;
         private List<String> kompetanser;
@@ -107,6 +115,7 @@ public class Sokekriterier {
 
         public Sokekriterier bygg() {
             Sokekriterier s = new Sokekriterier();
+            s.fritekst = fritekst;
             s.geografiList = geografiList == null ? Collections.emptyList()
                     : Collections.unmodifiableList(new ArrayList<>(geografiList));
             s.kompetanser = kompetanser == null ? Collections.emptyList()
@@ -133,6 +142,12 @@ public class Sokekriterier {
             s.tomtSok = tomtSok;
 
             return s;
+        }
+        
+        public Builder fritekst(String fritekst) {
+            this.fritekst = fritekst;
+            this.tomtSok = false;
+            return this;
         }
 
         public Builder yrkeJobbonsker(List<String> yrkeJobbonsker) {
