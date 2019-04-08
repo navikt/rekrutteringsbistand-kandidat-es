@@ -867,5 +867,12 @@ public class IndexCvTest {
         assertThat(cv)
                 .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
     }
+    
+    @Test
+    public void sokMedFritekstSkalFungereForArbeidsgivere() throws IOException {
+        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med().fritekst("yrkeskarriere").bygg());
+        assertThat(sokeresultat.getCver()).hasSize(1);
+        assertThat(sokeresultat.getCver()).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
+    }
 
 }
