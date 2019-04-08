@@ -1,228 +1,241 @@
 package no.nav.arbeid.cv.kandidatsok.es.domene;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import no.nav.elasticsearch.mapping.annotations.*;
-
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import no.nav.elasticsearch.mapping.annotations.ElasticBooleanField;
+import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
+import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
+import no.nav.elasticsearch.mapping.annotations.ElasticIntegerField;
+import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
+import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsYrkeserfaring {
 
-  @ElasticDateField
-  private Date fraDato;
+    @ElasticDateField
+    private Date fraDato;
 
-  @ElasticDateField(nullValue = "2099-12-31")
-  private Date tilDato;
+    @ElasticDateField(nullValue = "2099-12-31")
+    private Date tilDato;
 
-  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
-  private String arbeidsgiver;
+    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
+    private String arbeidsgiver;
 
-  @ElasticKeywordField
-  private String styrkKode;
+    @ElasticKeywordField
+    private String styrkKode;
 
-  @ElasticKeywordField
-  private String styrkKode4Siffer;
+    @ElasticKeywordField
+    private String styrkKode4Siffer;
 
-  @ElasticKeywordField
-  private String styrkKode3Siffer;
+    @ElasticKeywordField
+    private String styrkKode3Siffer;
 
-  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
-  @ElasticKeywordField
-  @JsonInclude(JsonInclude.Include.NON_EMPTY)
-  @ElasticCompletionField
-  private String styrkKodeStillingstittel;
+    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
+    @ElasticKeywordField
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @ElasticCompletionField
+    private String styrkKodeStillingstittel;
 
-  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
-  private String alternativStillingstittel;
+    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
+    private String alternativStillingstittel;
 
-  @ElasticKeywordField
-  private String organisasjonsnummer;
+    @ElasticTextField(analyzer = "norwegian")
+    @ElasticKeywordField
+    private List<String> sokeTitler = new ArrayList<>();
 
-  @ElasticKeywordField
-  private String naceKode;
+    @ElasticKeywordField
+    private String organisasjonsnummer;
 
-  @ElasticIntegerField
-  private int yrkeserfaringManeder;
+    @ElasticKeywordField
+    private String naceKode;
 
-  @ElasticBooleanField
-  private Boolean utelukketForFremtiden;
-  
-  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
-  private String beskrivelse;
+    @ElasticIntegerField
+    private int yrkeserfaringManeder;
 
-  public EsYrkeserfaring() {}
+    @ElasticBooleanField
+    private Boolean utelukketForFremtiden;
 
-  /**
-   *
-   * @param fraDato
-   * @param tilDato
-   * @param arbeidsgiver
-   * @param styrkKode
-   * @param kodeverkStillingstittel stillingstittel som benyttes av kodeverket - enten janzz preferred term eller styrkstillingstittel
-   * @param alternativStillingstittel
-   * @param yrkeserfaringManeder
-   */
-  public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
-                         String kodeverkStillingstittel, String alternativStillingstittel, String beskrivelse,
-                         int yrkeserfaringManeder) {
-    this(fraDato, tilDato, arbeidsgiver, styrkKode, kodeverkStillingstittel, alternativStillingstittel, null,
-            null, yrkeserfaringManeder, false);
-    this.beskrivelse = beskrivelse;
-  }
+    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
+    private String beskrivelse;
 
-  public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
-      String styrkKodeStillingstittel, String alternativStillingstittel, String organisasjonsnummer,
-      String naceKode, int yrkeserfaringManeder, Boolean utelukketForFremtiden) {
-    this.fraDato = fraDato;
-    this.tilDato = tilDato;
-    this.arbeidsgiver = arbeidsgiver;
-    this.styrkKode = styrkKode;
-    this.styrkKode4Siffer =
-        (styrkKode == null ? null : (styrkKode.length() <= 3 ? null : styrkKode.substring(0, 4)));
-    this.styrkKode3Siffer =
-        (styrkKode == null ? null : (styrkKode.length() <= 2 ? null : styrkKode.substring(0, 3)));
-    this.styrkKodeStillingstittel = styrkKodeStillingstittel;
-    this.alternativStillingstittel = alternativStillingstittel;
-    this.organisasjonsnummer = organisasjonsnummer;
-    this.naceKode = naceKode;
-    this.yrkeserfaringManeder = yrkeserfaringManeder;
-    this.utelukketForFremtiden = utelukketForFremtiden;
-  }
-
-  public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
-      String styrkKodeStillingstittel, String alternativStillingstittel, String organisasjonsnummer,
-      String naceKode, Boolean utelukketForFremtiden) {
-    this.fraDato = fraDato;
-    this.tilDato = tilDato;
-    this.arbeidsgiver = arbeidsgiver;
-    this.styrkKode = styrkKode;
-    this.styrkKode4Siffer =
-        (styrkKode == null ? null : (styrkKode.length() <= 3 ? null : styrkKode.substring(0, 4)));
-    this.styrkKode3Siffer =
-        (styrkKode == null ? null : (styrkKode.length() <= 2 ? null : styrkKode.substring(0, 3)));
-    this.styrkKodeStillingstittel = styrkKodeStillingstittel;
-    this.alternativStillingstittel = alternativStillingstittel;
-    this.organisasjonsnummer = organisasjonsnummer;
-    this.naceKode = naceKode;
-    this.yrkeserfaringManeder = toYrkeserfaringManeder(fraDato, tilDato);
-    this.utelukketForFremtiden = utelukketForFremtiden;
-  }
-
-  private static int toYrkeserfaringManeder(Date fraDato, Date tilDato) {
-    // Should not be possible, but will keep the check just in case
-    if (fraDato == null) {
-      return 0;
+    public EsYrkeserfaring() {}
+    
+    public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
+            String kodeverkStillingstittel, String alternativStillingstittel, String beskrivelse,
+            int yrkeserfaringManeder, List<String> sokeTitler) {
+        this(fraDato, tilDato, arbeidsgiver, styrkKode, kodeverkStillingstittel,
+                alternativStillingstittel, null, null, yrkeserfaringManeder, false, sokeTitler);
+        this.beskrivelse = beskrivelse;
     }
 
-    Calendar fraCalendar = new GregorianCalendar();
-    fraCalendar.setTime(fraDato);
-
-    // If tilDato is null, it is set to the current date
-    Calendar tilCalendar = new GregorianCalendar();
-    if (tilDato == null) {
-      tilCalendar.setTime(new Date());
-    } else {
-      tilCalendar.setTime(tilDato);
+    public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
+            String styrkKodeStillingstittel, String alternativStillingstittel,
+            String organisasjonsnummer, String naceKode, int yrkeserfaringManeder,
+            Boolean utelukketForFremtiden, List<String> sokeTitler) {
+        this.fraDato = fraDato;
+        this.tilDato = tilDato;
+        this.arbeidsgiver = arbeidsgiver;
+        this.styrkKode = styrkKode;
+        this.styrkKode4Siffer = (styrkKode == null ? null
+                : (styrkKode.length() <= 3 ? null : styrkKode.substring(0, 4)));
+        this.styrkKode3Siffer = (styrkKode == null ? null
+                : (styrkKode.length() <= 2 ? null : styrkKode.substring(0, 3)));
+        this.styrkKodeStillingstittel = styrkKodeStillingstittel;
+        this.alternativStillingstittel = alternativStillingstittel;
+        this.organisasjonsnummer = organisasjonsnummer;
+        this.naceKode = naceKode;
+        this.yrkeserfaringManeder = yrkeserfaringManeder;
+        this.utelukketForFremtiden = utelukketForFremtiden;
+        this.sokeTitler.add(styrkKodeStillingstittel);
+        this.sokeTitler.addAll(sokeTitler);
     }
 
-    int diffYear = tilCalendar.get(Calendar.YEAR) - fraCalendar.get(Calendar.YEAR);
-    return diffYear * 12 + tilCalendar.get(Calendar.MONTH) - fraCalendar.get(Calendar.MONTH);
-  }
-
-  public Date getFraDato() {
-    return fraDato;
-  }
-
-  public Date getTilDato() {
-    return tilDato;
-  }
-
-  public String getArbeidsgiver() {
-    return arbeidsgiver;
-  }
-
-  public String getStyrkKode() {
-    return styrkKode;
-  }
-
-  public String getStyrkKode3Siffer() {
-    return styrkKode3Siffer;
-  }
-
-  public String getStyrkKode4Siffer() {
-    return styrkKode4Siffer;
-  }
-
-  public String getStyrkKodeStillingstittel() {
-    return styrkKodeStillingstittel;
-  }
-
-  public String getAlternativStillingstittel() {
-    return alternativStillingstittel;
-  }
-
-  public String getOrganisasjonsnummer() {
-    return organisasjonsnummer;
-  }
-
-  public String getNaceKode() {
-    return naceKode;
-  }
-
-  public int getYrkeserfaringManeder() {
-    return yrkeserfaringManeder;
-  }
-  
-  public String getBeskrivelse() {
-    return beskrivelse;
-  }
-
-  public Boolean getUtelukketForFremtiden() {
-    return utelukketForFremtiden;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
+    public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
+            String styrkKodeStillingstittel, String alternativStillingstittel,
+            String organisasjonsnummer, String naceKode, Boolean utelukketForFremtiden,
+            List<String> sokeTitler) {
+        this.fraDato = fraDato;
+        this.tilDato = tilDato;
+        this.arbeidsgiver = arbeidsgiver;
+        this.styrkKode = styrkKode;
+        this.styrkKode4Siffer = (styrkKode == null ? null
+                : (styrkKode.length() <= 3 ? null : styrkKode.substring(0, 4)));
+        this.styrkKode3Siffer = (styrkKode == null ? null
+                : (styrkKode.length() <= 2 ? null : styrkKode.substring(0, 3)));
+        this.styrkKodeStillingstittel = styrkKodeStillingstittel;
+        this.alternativStillingstittel = alternativStillingstittel;
+        this.organisasjonsnummer = organisasjonsnummer;
+        this.naceKode = naceKode;
+        this.yrkeserfaringManeder = toYrkeserfaringManeder(fraDato, tilDato);
+        this.utelukketForFremtiden = utelukketForFremtiden;
+        this.sokeTitler.add(styrkKodeStillingstittel);
+        this.sokeTitler.addAll(sokeTitler);
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+
+    private static int toYrkeserfaringManeder(Date fraDato, Date tilDato) {
+        // Should not be possible, but will keep the check just in case
+        if (fraDato == null) {
+            return 0;
+        }
+
+        Calendar fraCalendar = new GregorianCalendar();
+        fraCalendar.setTime(fraDato);
+
+        // If tilDato is null, it is set to the current date
+        Calendar tilCalendar = new GregorianCalendar();
+        if (tilDato == null) {
+            tilCalendar.setTime(new Date());
+        } else {
+            tilCalendar.setTime(tilDato);
+        }
+
+        int diffYear = tilCalendar.get(Calendar.YEAR) - fraCalendar.get(Calendar.YEAR);
+        return diffYear * 12 + tilCalendar.get(Calendar.MONTH) - fraCalendar.get(Calendar.MONTH);
     }
-    EsYrkeserfaring that = (EsYrkeserfaring) o;
-    return Objects.equals(fraDato, that.fraDato) && Objects.equals(tilDato, that.tilDato)
-        && Objects.equals(arbeidsgiver, that.arbeidsgiver)
-        && Objects.equals(styrkKode, that.styrkKode)
-        && Objects.equals(styrkKodeStillingstittel, that.styrkKodeStillingstittel)
-        && Objects.equals(alternativStillingstittel, that.alternativStillingstittel)
-        && Objects.equals(beskrivelse, that.beskrivelse)
-        && Objects.equals(organisasjonsnummer, that.organisasjonsnummer)
-        && Objects.equals(naceKode, that.naceKode)
-        && Objects.equals(yrkeserfaringManeder, that.yrkeserfaringManeder)
-        && Objects.equals(utelukketForFremtiden, that.utelukketForFremtiden);
-  }
 
-  @Override
-  public int hashCode() {
+    public Date getFraDato() {
+        return fraDato;
+    }
 
-    return Objects.hash(fraDato, tilDato, arbeidsgiver, styrkKode, styrkKodeStillingstittel,
-        alternativStillingstittel, beskrivelse, organisasjonsnummer, naceKode, yrkeserfaringManeder, utelukketForFremtiden);
-  }
+    public Date getTilDato() {
+        return tilDato;
+    }
 
-  @Override
-  public String toString() {
-    return "EsYrkeserfaring{" + "fraDato=" + fraDato + ", tilDato=" + tilDato + ", arbeidsgiver='"
-        + arbeidsgiver + '\'' + ", styrkKode='" + styrkKode + '\'' + ", styrkKodeStillingstittel='"
-        + styrkKodeStillingstittel + '\'' + ", alternativStillingstittel='"
-        + alternativStillingstittel + '\'' + ", beskrivelse='"
-        + beskrivelse + '\'' + ", organisasjonsnummer='" + organisasjonsnummer + '\''
-        + ", naceKode='" + naceKode + '\'' + ", yrkeserfaringManeder='" + yrkeserfaringManeder
-        + '\'' + ", utelukketForFremtiden='" + utelukketForFremtiden
-        + '\'' + '}';
-  }
+    public String getArbeidsgiver() {
+        return arbeidsgiver;
+    }
+
+    public String getStyrkKode() {
+        return styrkKode;
+    }
+
+    public String getStyrkKode3Siffer() {
+        return styrkKode3Siffer;
+    }
+
+    public String getStyrkKode4Siffer() {
+        return styrkKode4Siffer;
+    }
+
+    public String getStyrkKodeStillingstittel() {
+        return styrkKodeStillingstittel;
+    }
+
+    public String getAlternativStillingstittel() {
+        return alternativStillingstittel;
+    }
+
+    public String getOrganisasjonsnummer() {
+        return organisasjonsnummer;
+    }
+
+    public String getNaceKode() {
+        return naceKode;
+    }
+
+    public int getYrkeserfaringManeder() {
+        return yrkeserfaringManeder;
+    }
+
+    public String getBeskrivelse() {
+        return beskrivelse;
+    }
+
+    public Boolean getUtelukketForFremtiden() {
+        return utelukketForFremtiden;
+    }
+
+    public List<String> getSokeTitler() {
+        return sokeTitler;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        EsYrkeserfaring that = (EsYrkeserfaring) o;
+        return Objects.equals(fraDato, that.fraDato) && Objects.equals(tilDato, that.tilDato)
+                && Objects.equals(arbeidsgiver, that.arbeidsgiver)
+                && Objects.equals(styrkKode, that.styrkKode)
+                && Objects.equals(styrkKodeStillingstittel, that.styrkKodeStillingstittel)
+                && Objects.equals(alternativStillingstittel, that.alternativStillingstittel)
+                && Objects.equals(beskrivelse, that.beskrivelse)
+                && Objects.equals(organisasjonsnummer, that.organisasjonsnummer)
+                && Objects.equals(naceKode, that.naceKode)
+                && Objects.equals(yrkeserfaringManeder, that.yrkeserfaringManeder)
+                && Objects.equals(utelukketForFremtiden, that.utelukketForFremtiden);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(fraDato, tilDato, arbeidsgiver, styrkKode, styrkKodeStillingstittel,
+                alternativStillingstittel, beskrivelse, organisasjonsnummer, naceKode,
+                yrkeserfaringManeder, utelukketForFremtiden);
+    }
+
+    @Override
+    public String toString() {
+        return "EsYrkeserfaring{" + "fraDato=" + fraDato + ", tilDato=" + tilDato
+                + ", arbeidsgiver='" + arbeidsgiver + '\'' + ", styrkKode='" + styrkKode + '\''
+                + ", styrkKodeStillingstittel='" + styrkKodeStillingstittel + '\''
+                + ", alternativStillingstittel='" + alternativStillingstittel + '\''
+                + ", beskrivelse='" + beskrivelse + '\'' + ", organisasjonsnummer='"
+                + organisasjonsnummer + '\'' + ", naceKode='" + naceKode + '\''
+                + ", yrkeserfaringManeder='" + yrkeserfaringManeder + '\''
+                + ", utelukketForFremtiden='" + utelukketForFremtiden + '\'' + '}';
+    }
 
 }

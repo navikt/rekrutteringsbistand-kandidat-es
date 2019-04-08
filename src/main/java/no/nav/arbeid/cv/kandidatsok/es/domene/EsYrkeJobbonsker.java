@@ -1,68 +1,83 @@
 package no.nav.arbeid.cv.kandidatsok.es.domene;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+
 import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
 import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
 import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 
-import java.util.Objects;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsYrkeJobbonsker {
 
-  private String styrkKode;
+    private String styrkKode;
 
-  @ElasticTextField(analyzer = "norwegian")
-  @ElasticKeywordField
-  @ElasticCompletionField
-  @JsonInclude(JsonInclude.Include.NON_EMPTY)
-  private String styrkBeskrivelse;
+    @ElasticTextField(analyzer = "norwegian")
+    @ElasticKeywordField
+    @ElasticCompletionField
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private String styrkBeskrivelse;
 
-  private boolean primaertJobbonske;
+    @ElasticTextField(analyzer = "norwegian")
+    @ElasticKeywordField
+    private List<String> sokeTitler = new ArrayList<>();
 
-  public EsYrkeJobbonsker() {}
+    private boolean primaertJobbonske;
 
-  public EsYrkeJobbonsker(String styrkKode, String styrkBeskrivelse, boolean primaertJobbonske) {
-    this.styrkKode = styrkKode;
-    this.styrkBeskrivelse = styrkBeskrivelse;
-    this.primaertJobbonske = primaertJobbonske;
-  }
+    public EsYrkeJobbonsker() {}
 
-  public String getStyrkKode() {
-    return styrkKode;
-  }
-
-  public String getStyrkBeskrivelse() {
-    return styrkBeskrivelse;
-  }
-
-  public boolean isPrimaertJobbonske() {
-    return primaertJobbonske;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
+    public EsYrkeJobbonsker(String styrkKode, String styrkBeskrivelse, boolean primaertJobbonske,
+            List<String> sokeTitler) {
+        this.styrkKode = styrkKode;
+        this.styrkBeskrivelse = styrkBeskrivelse;
+        this.primaertJobbonske = primaertJobbonske;
+        this.sokeTitler.add(styrkBeskrivelse);
+        this.sokeTitler.addAll(sokeTitler);
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+
+    public String getStyrkKode() {
+        return styrkKode;
     }
-    EsYrkeJobbonsker that = (EsYrkeJobbonsker) o;
-    return primaertJobbonske == that.primaertJobbonske && Objects.equals(styrkKode, that.styrkKode)
-        && Objects.equals(styrkBeskrivelse, that.styrkBeskrivelse);
-  }
 
-  @Override
-  public int hashCode() {
+    public String getStyrkBeskrivelse() {
+        return styrkBeskrivelse;
+    }
 
-    return Objects.hash(styrkKode, styrkBeskrivelse, primaertJobbonske);
-  }
+    public List<String> getSokeTitler() {
+        return sokeTitler;
+    }
 
-  @Override
-  public String toString() {
-    return "EsYrkeJobbonsker{" + "styrkKode='" + styrkKode + '\'' + ", styrkBeskrivelse='"
-        + styrkBeskrivelse + '\'' + ", primaertJobbonske=" + primaertJobbonske + '}';
-  }
+    public boolean isPrimaertJobbonske() {
+        return primaertJobbonske;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        EsYrkeJobbonsker that = (EsYrkeJobbonsker) o;
+        return primaertJobbonske == that.primaertJobbonske
+                && Objects.equals(styrkKode, that.styrkKode)
+                && Objects.equals(styrkBeskrivelse, that.styrkBeskrivelse);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(styrkKode, styrkBeskrivelse, primaertJobbonske);
+    }
+
+    @Override
+    public String toString() {
+        return "EsYrkeJobbonsker{" + "styrkKode='" + styrkKode + '\'' + ", styrkBeskrivelse='"
+                + styrkBeskrivelse + '\'' + ", primaertJobbonske=" + primaertJobbonske + '}';
+    }
 }
