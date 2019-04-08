@@ -170,6 +170,10 @@ public class EsSokHttpService implements EsSokService {
                 return toSokeresultat(esExec(() -> search(UseCase.AG_SOK, queryBuilder,
                         sk.fraIndex(), sk.antallResultater(), null)));
             }
+            
+            if (StringUtils.isNotBlank(sk.fritekst())) {
+                addFritekstToQuery(sk.fritekst(), queryBuilder);
+            }
 
             if (isNotEmpty(sk.yrkeJobbonsker())) {
                 addJobbonskerToQuery(sk.yrkeJobbonsker(), queryBuilder, sortQueryBuilder);
