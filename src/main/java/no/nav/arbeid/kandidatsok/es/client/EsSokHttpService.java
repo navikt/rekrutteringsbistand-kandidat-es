@@ -837,7 +837,7 @@ public class EsSokHttpService implements EsSokService {
                     .stream(searchResponse.getHits().spliterator(), false)
                     .map(hit -> mapEsCvHent(hit)).filter(Objects::nonNull).collect(toList());
             if (liste.size() == 0) {
-                LOGGER.warn("Finner ikke CV for kandidat {}", kandidatnr);
+                LOGGER.info("Finner ikke CV for kandidat {}", kandidatnr);
                 return Optional.empty();
             } else if (liste.size() > 1) {
                 LOGGER.error("Fant mer enn én CV for kandidat {}. Fant {} CVer: {}", kandidatnr,
