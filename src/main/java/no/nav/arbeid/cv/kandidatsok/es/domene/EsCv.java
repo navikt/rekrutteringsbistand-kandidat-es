@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.elasticsearch.mapping.annotations.ElasticBooleanField;
+import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
 import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
 import no.nav.elasticsearch.mapping.annotations.ElasticDocument;
 import no.nav.elasticsearch.mapping.annotations.ElasticIntegerField;
@@ -125,6 +126,10 @@ public class EsCv {
     @ElasticTextField
     private String orgenhet;
 
+    @ElasticKeywordField    
+    @ElasticCompletionField
+    private String navkontor;
+    
     @ElasticBooleanField
     private Boolean fritattKandidatsok;
 
@@ -240,6 +245,7 @@ public class EsCv {
         this.kvalifiseringsgruppekode = kvalifiseringsgruppekode;
         this.hovedmaalkode = hovedmaalkode;
         this.orgenhet = orgenhet;
+        this.navkontor = orgenhet;
         this.fritattKandidatsok = fritattKandidatsok;
         this.fritattAgKandidatsok = fritattAgKandidatsok;
         this.synligForArbeidsgiverSok = synligForArbeidsgiverSok;
@@ -287,6 +293,7 @@ public class EsCv {
         this.kvalifiseringsgruppekode = kvalifiseringsgruppekode;
         this.hovedmaalkode = hovedmaalkode;
         this.orgenhet = orgenhet;
+        this.navkontor = orgenhet;
         this.fritattKandidatsok = fritattKandidatsok;
         this.fritattAgKandidatsok = fritattAgKandidatsok;
         this.synligForArbeidsgiverSok = beregnSynlighetForArbeidsgiverSokBasertPaaGamleArenaData();
@@ -552,6 +559,10 @@ public class EsCv {
 
     public String getOrgenhet() {
         return orgenhet;
+    }
+    
+    public String getNavkontor() {
+        return navkontor;
     }
 
     public String getEpostadresse() {

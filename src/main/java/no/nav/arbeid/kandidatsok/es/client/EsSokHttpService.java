@@ -84,6 +84,11 @@ public class EsSokHttpService implements EsSokService {
     public List<String> typeAheadKompetanse(String prefix) {
         return typeAhead(prefix, "samletKompetanseObj.samletKompetanseTekst.completion");
     }
+    
+    @Override
+    public List<String> typeAheadNavkontor(String prefix) {
+        return typeAhead(prefix, "navkontor.completion");
+    }
 
     @Override
     public List<String> typeAheadUtdanning(String prefix) {
@@ -312,6 +317,10 @@ public class EsSokHttpService implements EsSokService {
             if (isNotEmpty(sk.kvalifiseringsgruppeKoder())) {
                 addKvalifiseringsgruppeKoderToQuery(sk.kvalifiseringsgruppeKoder(), queryBuilder);
             }
+            
+            if (isNotEmpty(sk.navkontor())) {
+                addNavkontorToQuery(sk.navkontor(), queryBuilder);
+            }
 
             return toSokeresultat(esExec(() -> search(UseCase.VEIL_SOK, queryBuilder, sk.fraIndex(),
                     sk.antallResultater(), sortQueryBuilder)));
@@ -481,6 +490,13 @@ public class EsSokHttpService implements EsSokService {
         kvalifiseringsgruppeKoder.stream().filter(StringUtils::isNotBlank)
         .forEach(s -> addKvalifiseringsgruppekodeQuery(s, innerBoolQueryBuilder));
     }
+    
+    private void addNavkontorToQuery(List<String> navkontor, BoolQueryBuilder boolQueryBuilder) {
+        BoolQueryBuilder innerBoolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(innerBoolQueryBuilder);
+        navkontor.stream().filter(StringUtils::isNotBlank)
+        .forEach(s -> addNavkontorQuery(s, innerBoolQueryBuilder));
+    }
 
     private void addYrkeJobbonskerQuery(String yrkeJobbonske, BoolQueryBuilder boolQueryBuilder) {
         boolQueryBuilder.should(QueryBuilders.matchQuery("yrkeJobbonskerObj.sokeTitler", yrkeJobbonske).operator(Operator.AND));
@@ -555,6 +571,11 @@ public class EsSokHttpService implements EsSokService {
         LOGGER.debug("ADDING kvalifiseringsgruppekode");
     }
 
+    private void addNavkontorQuery(String navkontor, BoolQueryBuilder boolQueryBuilder) {
+        boolQueryBuilder.should(QueryBuilders.termQuery("navkontor", navkontor));
+        LOGGER.debug("ADDING navkontor");
+    }
+    
     private void addKommunenummerQuery(String geografi, BoolQueryBuilder boolQueryBuilder) {
         String[] geografiKoder = geografi.split("\\.");
         String regex = "";
