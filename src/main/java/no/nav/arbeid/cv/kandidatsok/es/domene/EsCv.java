@@ -127,6 +127,7 @@ public class EsCv {
     private String orgenhet;
 
     @ElasticKeywordField    
+    @ElasticTextField
     @ElasticCompletionField
     private String navkontor;
     
