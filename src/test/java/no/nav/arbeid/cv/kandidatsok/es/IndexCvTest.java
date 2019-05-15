@@ -901,5 +901,47 @@ public class IndexCvTest {
         assertThat(cver).hasSize(1);
         assertThat(cver).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
     }
+    
+    @Test
+    public void sokPaaFodselsdatoMedFraTilSkalGiTreff() throws Exception {
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
+                .antallAarFra(39).antallAarTil(40).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        assertThat(cver.size()).isGreaterThanOrEqualTo(1);
+        assertThat(cver).contains(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
+        assertThat(cver).doesNotContain(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv()));
+    }
+    
+    @Test
+    public void sokPaaFodselsdatoMedKunFraSkalGiTreff() throws Exception {
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
+                .antallAarFra(39).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        assertThat(cver.size()).isGreaterThanOrEqualTo(1);
+        assertThat(cver).contains(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
+        assertThat(cver).doesNotContain(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv()));
+    }
+    
+    @Test
+    public void sokPaaFodselsdatoMedKunTilSkalGiTreff() throws Exception {
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
+                .antallAarTil(40).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        assertThat(cver.size()).isGreaterThanOrEqualTo(1);
+        assertThat(cver).contains(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
+        assertThat(cver).doesNotContain(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv()));
+    }
+    
+    @Test
+    public void sokPaaFodselsdatoUtenforRangeSkalIkkeGiTreff() throws Exception {
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
+                .antallAarFra(10).antallAarTil(38).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();        
+        assertThat(cver).doesNotContain(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
+    }
 
 }
