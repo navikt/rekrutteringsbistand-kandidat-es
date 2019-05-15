@@ -874,5 +874,32 @@ public class IndexCvTest {
         assertThat(sokeresultat.getCver()).hasSize(1);
         assertThat(sokeresultat.getCver()).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
     }
+    
+    @Test
+    public void typeaheadPaaNavkontorFungerer() throws Exception {
+        List<String> typeAheadNavkontor = sokClient.typeAheadNavkontor("NAV Gam");
+        assertThat(typeAheadNavkontor).hasSize(1);
+        assertThat(typeAheadNavkontor).containsExactly("NAV Gamle Oslo");
+    }
+    
+    @Test
+    public void sokPaNavkontorSkalGiKorrektResultat() throws IOException {
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
+                .navkontor(Collections.singletonList("NAV Gamle Oslo")).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        assertThat(cver).hasSize(1);
+        assertThat(cver).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
+    }
+
+    @Test
+    public void sokPaToNavkontorSkalIkkeInnsnevre() throws IOException {
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
+                .navkontor(Arrays.asList("NAV Gamle Oslo", "NAV Noe annet")).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        assertThat(cver).hasSize(1);
+        assertThat(cver).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
+    }
 
 }

@@ -25,6 +25,8 @@ public interface EsSokService {
     List<String> typeAheadYrkeJobbonsker(String prefix);
 
     List<String> typeAheadSprak(String prefix);
+    
+    List<String> typeAheadNavkontor(String prefix);
 
     Optional<EsCv> arbeidsgiverHent(String kandidatnr);
 

@@ -15,6 +15,7 @@ public class SokekriterierVeiledere {
     private List<String> geografiList;
     private List<String> sprak;
     private List<String> kvalifiseringsgruppeKoder;
+    private List<String> navkontor;
     private String etternavn;
     private Boolean maaBoInnenforGeografi;
     private List<String> forerkort;
@@ -68,6 +69,10 @@ public class SokekriterierVeiledere {
     public List<String> kvalifiseringsgruppeKoder() {
         return kvalifiseringsgruppeKoder;
     }
+    
+    public List<String> navkontor() {
+        return navkontor;
+    }
 
     public String etternavn() {
         return etternavn;
@@ -116,6 +121,7 @@ public class SokekriterierVeiledere {
         private List<String> sprak;
         private List<String> geografiList;
         private List<String> kvalifiseringsgruppeKoder;
+        private List<String> navkontor;
         private String etternavn;
         private int fra = 0;
         private int antallResultater = 100;
@@ -147,6 +153,8 @@ public class SokekriterierVeiledere {
                     : Collections.unmodifiableList(new ArrayList<>(forerkort));
             s.kvalifiseringsgruppeKoder = kvalifiseringsgruppeKoder == null ? Collections.emptyList()
                     : Collections.unmodifiableList(new ArrayList<>(kvalifiseringsgruppeKoder));
+            s.navkontor = navkontor == null ? Collections.emptyList()
+                    : Collections.unmodifiableList(new ArrayList<>(navkontor));
 
             s.maaBoInnenforGeografi = maaBoInnenforGeografi;
 
@@ -195,6 +203,12 @@ public class SokekriterierVeiledere {
         
         public Builder kvalifiseringsgruppeKoder(List<String> kvalifiseringsgruppeKoder) {
             this.kvalifiseringsgruppeKoder = kvalifiseringsgruppeKoder;
+            this.tomtSok = false;
+            return this;
+        }
+        
+        public Builder navkontor(List<String> navkontor) {
+            this.navkontor = navkontor;
             this.tomtSok = false;
             return this;
         }
