@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -321,6 +322,14 @@ public class EsSokHttpService implements EsSokService {
             if (isNotEmpty(sk.navkontor())) {
                 addNavkontorToQuery(sk.navkontor(), queryBuilder);
             }
+            
+            if (sk.isAntallAarFraSet() && sk.isAntallAarTilSet()) {
+                addFodselsdatoToQuery(sk.antallAarFra(), sk.antallAarTil(), queryBuilder);
+            } else if (sk.isAntallAarFraSet()) {
+                addFodselsdatoToQuery(sk.antallAarFra(), null, queryBuilder);
+            } else if (sk.isAntallAarTilSet()) {
+                addFodselsdatoToQuery(null, sk.antallAarTil(), queryBuilder);
+            }
 
             return toSokeresultat(esExec(() -> search(UseCase.VEIL_SOK, queryBuilder, sk.fraIndex(),
                     sk.antallResultater(), sortQueryBuilder)));
@@ -450,6 +459,18 @@ public class EsSokHttpService implements EsSokService {
             BoolQueryBuilder boolQueryBuilder) {
         kompetanser.stream().filter(StringUtils::isNotBlank)
                 .forEach(k -> addKompetanseQuery(k, boolQueryBuilder));
+    }
+    
+    private void addFodselsdatoToQuery(Integer antallAarFra, Integer antallAarTil, BoolQueryBuilder boolQueryBuilder) {
+        if( antallAarFra != null && antallAarTil != null ) {
+            boolQueryBuilder.must(QueryBuilders.rangeQuery("fodselsdato").gte("now-" + antallAarTil + "y/d").lte("now-" + antallAarFra + "y/d"));
+        } else if( antallAarFra != null ) {
+            boolQueryBuilder.must(QueryBuilders.rangeQuery("fodselsdato").gte("now-200y/d").lte("now-" + antallAarFra + "y/d"));
+        } else if( antallAarTil != null ) {
+            boolQueryBuilder.must(QueryBuilders.rangeQuery("fodselsdato").gte("now-" + antallAarTil + "y/d").lte("now"));
+        } else {
+            //noop
+        }
     }
 
     private void addStillingstitlerToQuery(List<String> stillingstitler,

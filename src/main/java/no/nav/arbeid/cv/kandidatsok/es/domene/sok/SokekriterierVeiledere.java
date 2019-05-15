@@ -21,6 +21,8 @@ public class SokekriterierVeiledere {
     private List<String> forerkort;
     private int antallResultater;
     private int fraIndex;
+    private Integer antallAarFra;
+    private Integer antallAarTil;
 
     private boolean tomtSok = true;
 
@@ -109,6 +111,22 @@ public class SokekriterierVeiledere {
     public boolean isUtdanningSet() {
         return (isUtdanningsNivaPresent()) || (isUtdanningerPresent());
     }
+    
+    public Integer antallAarFra() {
+        return antallAarFra;
+    }
+
+    public Integer antallAarTil() {
+        return antallAarTil;
+    }
+    
+    public boolean isAntallAarFraSet() {
+        return antallAarFra != null;
+    }
+
+    public boolean isAntallAarTilSet() {
+        return antallAarTil != null;
+    }
 
     public static class Builder {
         private String fritekst;
@@ -127,6 +145,8 @@ public class SokekriterierVeiledere {
         private int antallResultater = 100;
         private boolean maaBoInnenforGeografi;
         private List<String> forerkort;
+        private Integer antallAarFra;
+        private Integer antallAarTil;
         private boolean tomtSok = true;
 
         public SokekriterierVeiledere bygg() {
@@ -157,6 +177,9 @@ public class SokekriterierVeiledere {
                     : Collections.unmodifiableList(new ArrayList<>(navkontor));
 
             s.maaBoInnenforGeografi = maaBoInnenforGeografi;
+            
+            s.antallAarFra = antallAarFra;
+            s.antallAarTil = antallAarTil;
 
             s.fraIndex = fra;
             s.antallResultater = antallResultater;
@@ -257,5 +280,18 @@ public class SokekriterierVeiledere {
             this.tomtSok = false;
             return this;
         }
+        
+        public Builder antallAarFra(int antallAarFra) {
+            this.antallAarFra = antallAarFra;
+            this.tomtSok = false;
+            return this;
+        }
+        
+        public Builder antallAarTil(int antallAarTil) {
+            this.antallAarTil = antallAarTil;
+            this.tomtSok = false;
+            return this;
+        }
     }
+    
 }
