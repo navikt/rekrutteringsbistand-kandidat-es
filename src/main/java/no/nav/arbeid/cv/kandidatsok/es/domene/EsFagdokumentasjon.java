@@ -24,12 +24,17 @@ public class EsFagdokumentasjon {
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private String tittel;
 
+  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
+  @JsonInclude(JsonInclude.Include.NON_EMPTY)
+  private String beskrivelse;
+
   public EsFagdokumentasjon() {
   }
 
-  public EsFagdokumentasjon(String type, String tittel) {
+  public EsFagdokumentasjon(String type, String tittel, String beskrivelse) {
     this.type = type;
     this.tittel = tittel;
+    this.beskrivelse = beskrivelse;
   }
 
   public String getType() {
@@ -38,6 +43,10 @@ public class EsFagdokumentasjon {
 
   public String getTittel() {
     return tittel;
+  }
+
+  public String getBeskrivelse() {
+    return beskrivelse;
   }
 
   @Override
@@ -61,7 +70,7 @@ public class EsFagdokumentasjon {
 
   @Override
   public String toString() {
-    return "EsFagdokumentasjon{" + "type='" + type + '\'' + ", tittel='" + tittel + '\'' + '}';
+    return "EsFagdokumentasjon{" + "type='" + type + '\'' + ", tittel='" + tittel + '\'' + ", beskrivelse='" + beskrivelse + '\'' + '}';
   }
 
   public static String getFagdokumentTypeLabel(String fagdokumentType) {
