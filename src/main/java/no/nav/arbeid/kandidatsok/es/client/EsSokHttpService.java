@@ -476,7 +476,7 @@ public class EsSokHttpService implements EsSokService {
     private void addStillingstitlerToQuery(List<String> stillingstitler,
             BoolQueryBuilder boolQueryBuilder, BoolQueryBuilder sortQueryBuilder) {
         stillingstitler.stream().filter(StringUtils::isNotBlank)
-                .forEach(s -> addStillingsTitlerQuery(s, boolQueryBuilder, true, sortQueryBuilder));
+                .forEach(s -> addStillingsTitlerQuery(s, boolQueryBuilder, sortQueryBuilder));
     }
 
     private void addJobbonskerToQuery(List<String> jobbonsker, BoolQueryBuilder boolQueryBuilder,
@@ -489,7 +489,7 @@ public class EsSokHttpService implements EsSokService {
         boolQueryBuilder.must(yrkeJobbonskerBoolQueryBuilder);
 
         jobbonsker.stream().filter(StringUtils::isNotBlank).forEach(
-                y -> addStillingsTitlerQuery(y, boolQueryBuilder, false, sortQueryBuilder));
+                y -> addStillingsTitlerQuery(y, boolQueryBuilder, sortQueryBuilder));
         LOGGER.debug("ADDING onsket stilling");
     }
 
@@ -524,16 +524,13 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addStillingsTitlerQuery(String stillingstittel, BoolQueryBuilder boolQueryBuilder,
-            boolean must, BoolQueryBuilder sortBoolQueryBuilder) {
+            BoolQueryBuilder sortBoolQueryBuilder) {
         NestedQueryBuilder yrkeserfaringQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
                 QueryBuilders.matchQuery("yrkeserfaring.sokeTitler", stillingstittel)
                         .operator(Operator.AND),
                 ScoreMode.Total);
-        if (must) {
-            boolQueryBuilder.must(yrkeserfaringQueryBuilder);
-        } else {
-            boolQueryBuilder.should(yrkeserfaringQueryBuilder);
-        }
+
+        boolQueryBuilder.should(yrkeserfaringQueryBuilder);
         LOGGER.debug("ADDING yrkeserfaring");
 
         MatchQueryBuilder matchQueryBuilder =
@@ -550,7 +547,7 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addKompetanseQuery(String kompetanse, BoolQueryBuilder boolQueryBuilder) {
-        boolQueryBuilder.must(QueryBuilders.matchQuery("samletKompetanseObj.samletKompetanseTekst", kompetanse).operator(Operator.AND));
+        boolQueryBuilder.should(QueryBuilders.matchQuery("samletKompetanseObj.samletKompetanseTekst", kompetanse).operator(Operator.AND));
         LOGGER.debug("ADDING kompetanse");
     }
 
