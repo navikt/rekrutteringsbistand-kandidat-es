@@ -457,8 +457,10 @@ public class EsSokHttpService implements EsSokService {
 
     private void addKompetanserToQuery(List<String> kompetanser,
             BoolQueryBuilder boolQueryBuilder) {
+        BoolQueryBuilder innerBoolQuery = QueryBuilders.boolQuery();
         kompetanser.stream().filter(StringUtils::isNotBlank)
-                .forEach(k -> addKompetanseQuery(k, boolQueryBuilder));
+                .forEach(k -> addKompetanseQuery(k, innerBoolQuery));
+        boolQueryBuilder.must(innerBoolQuery);
     }
     
     private void addFodselsdatoToQuery(Integer antallAarFra, Integer antallAarTil, BoolQueryBuilder boolQueryBuilder) {
@@ -475,8 +477,10 @@ public class EsSokHttpService implements EsSokService {
 
     private void addStillingstitlerToQuery(List<String> stillingstitler,
             BoolQueryBuilder boolQueryBuilder, BoolQueryBuilder sortQueryBuilder) {
+        BoolQueryBuilder innerBoolQuery = QueryBuilders.boolQuery();
         stillingstitler.stream().filter(StringUtils::isNotBlank)
-                .forEach(s -> addStillingsTitlerQuery(s, boolQueryBuilder, sortQueryBuilder));
+                .forEach(s -> addStillingsTittelQuery(s, innerBoolQuery, sortQueryBuilder));        
+        boolQueryBuilder.must(innerBoolQuery);
     }
 
     private void addJobbonskerToQuery(List<String> jobbonsker, BoolQueryBuilder boolQueryBuilder,
@@ -489,7 +493,7 @@ public class EsSokHttpService implements EsSokService {
         boolQueryBuilder.must(yrkeJobbonskerBoolQueryBuilder);
 
         jobbonsker.stream().filter(StringUtils::isNotBlank).forEach(
-                y -> addStillingsTitlerQuery(y, boolQueryBuilder, sortQueryBuilder));
+                y -> addStillingsTittelQuery(y, boolQueryBuilder, sortQueryBuilder));
         LOGGER.debug("ADDING onsket stilling");
     }
 
@@ -523,7 +527,7 @@ public class EsSokHttpService implements EsSokService {
         boolQueryBuilder.should(QueryBuilders.matchQuery("yrkeJobbonskerObj.sokeTitler", yrkeJobbonske).operator(Operator.AND));
     }
 
-    private void addStillingsTitlerQuery(String stillingstittel, BoolQueryBuilder boolQueryBuilder,
+    private void addStillingsTittelQuery(String stillingstittel, BoolQueryBuilder boolQueryBuilder,
             BoolQueryBuilder sortBoolQueryBuilder) {
         NestedQueryBuilder yrkeserfaringQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
                 QueryBuilders.matchQuery("yrkeserfaring.sokeTitler", stillingstittel)

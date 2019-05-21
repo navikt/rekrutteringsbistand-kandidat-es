@@ -257,20 +257,20 @@ public class IndexCvTest {
     }
 
     @Test
-    public void testFlereInputYrkeGirMindreTreff() throws IOException {
+    public void testFlereInputYrkeGirFlereTreff() throws IOException {
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
                 .stillingstitler(Collections.singletonList("Industrimekaniker")).bygg());
         Sokeresultat sokeresultat2 = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().stillingstitler(asList("Progger", "Industrimekaniker")).bygg());
+                Sokekriterier.med().stillingstitler(asList("Butikkmedarbeider", "Industrimekaniker")).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         List<EsCv> cver2 = sokeresultat2.getCver();
 
-        assertThat(cver.size()).isGreaterThan(cver2.size());
+        assertThat(cver2.size()).isGreaterThan(cver.size());
     }
 
     @Test
-    public void testFlereInputKompetanseGirMindreTreff() throws IOException {
+    public void testFlereInputKompetanseGirFlereTreff() throws IOException {
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
                 .kompetanser(Collections.singletonList("Programvareutvikler")).bygg());
         Sokeresultat sokeresultat2 = sokClient.arbeidsgiverSok(Sokekriterier.med()
@@ -279,7 +279,7 @@ public class IndexCvTest {
         List<EsCv> cver = sokeresultat.getCver();
         List<EsCv> cver2 = sokeresultat2.getCver();
 
-        assertThat(cver.size()).isGreaterThan(cver2.size());
+        assertThat(cver2.size()).isGreaterThan(cver.size());
     }
 
     @Test
@@ -942,6 +942,19 @@ public class IndexCvTest {
 
         List<EsCv> cver = sokeresultat.getCver();        
         assertThat(cver).doesNotContain(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
+    }
+    
+    @Test
+    public void sokPaaArbeidserfaringUtenMatchOgNoeAnnetSkalIkkeGiTreff() throws Exception {
+        String komp = 
+                "Truckførerbevis T1 Lavtløftende plukktruck, palletruck m/perm. førerplass";
+
+        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
+                .kompetanser(Collections.singletonList(komp)).stillingstitler(Collections.singletonList("DENNEFINNESIKKE")).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        assertThat(cver.size()).isEqualTo(0);
+        
     }
 
 }
