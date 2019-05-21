@@ -457,8 +457,10 @@ public class EsSokHttpService implements EsSokService {
 
     private void addKompetanserToQuery(List<String> kompetanser,
             BoolQueryBuilder boolQueryBuilder) {
+        BoolQueryBuilder innerBoolQuery = QueryBuilders.boolQuery();
         kompetanser.stream().filter(StringUtils::isNotBlank)
-                .forEach(k -> addKompetanseQuery(k, boolQueryBuilder));
+                .forEach(k -> addKompetanseQuery(k, innerBoolQuery));
+        boolQueryBuilder.must(innerBoolQuery);
     }
     
     private void addFodselsdatoToQuery(Integer antallAarFra, Integer antallAarTil, BoolQueryBuilder boolQueryBuilder) {
@@ -475,8 +477,10 @@ public class EsSokHttpService implements EsSokService {
 
     private void addStillingstitlerToQuery(List<String> stillingstitler,
             BoolQueryBuilder boolQueryBuilder, BoolQueryBuilder sortQueryBuilder) {
+        BoolQueryBuilder innerBoolQuery = QueryBuilders.boolQuery();
         stillingstitler.stream().filter(StringUtils::isNotBlank)
-                .forEach(s -> addStillingsTitlerQuery(s, boolQueryBuilder, true, sortQueryBuilder));
+                .forEach(s -> addStillingsTittelQuery(s, innerBoolQuery, sortQueryBuilder));        
+        boolQueryBuilder.must(innerBoolQuery);
     }
 
     private void addJobbonskerToQuery(List<String> jobbonsker, BoolQueryBuilder boolQueryBuilder,
@@ -489,7 +493,7 @@ public class EsSokHttpService implements EsSokService {
         boolQueryBuilder.must(yrkeJobbonskerBoolQueryBuilder);
 
         jobbonsker.stream().filter(StringUtils::isNotBlank).forEach(
-                y -> addStillingsTitlerQuery(y, boolQueryBuilder, false, sortQueryBuilder));
+                y -> addStillingsTittelQuery(y, boolQueryBuilder, sortQueryBuilder));
         LOGGER.debug("ADDING onsket stilling");
     }
 
@@ -523,17 +527,14 @@ public class EsSokHttpService implements EsSokService {
         boolQueryBuilder.should(QueryBuilders.matchQuery("yrkeJobbonskerObj.sokeTitler", yrkeJobbonske).operator(Operator.AND));
     }
 
-    private void addStillingsTitlerQuery(String stillingstittel, BoolQueryBuilder boolQueryBuilder,
-            boolean must, BoolQueryBuilder sortBoolQueryBuilder) {
+    private void addStillingsTittelQuery(String stillingstittel, BoolQueryBuilder boolQueryBuilder,
+            BoolQueryBuilder sortBoolQueryBuilder) {
         NestedQueryBuilder yrkeserfaringQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
                 QueryBuilders.matchQuery("yrkeserfaring.sokeTitler", stillingstittel)
                         .operator(Operator.AND),
                 ScoreMode.Total);
-        if (must) {
-            boolQueryBuilder.must(yrkeserfaringQueryBuilder);
-        } else {
-            boolQueryBuilder.should(yrkeserfaringQueryBuilder);
-        }
+
+        boolQueryBuilder.should(yrkeserfaringQueryBuilder);
         LOGGER.debug("ADDING yrkeserfaring");
 
         MatchQueryBuilder matchQueryBuilder =
@@ -550,7 +551,7 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addKompetanseQuery(String kompetanse, BoolQueryBuilder boolQueryBuilder) {
-        boolQueryBuilder.must(QueryBuilders.matchQuery("samletKompetanseObj.samletKompetanseTekst", kompetanse).operator(Operator.AND));
+        boolQueryBuilder.should(QueryBuilders.matchQuery("samletKompetanseObj.samletKompetanseTekst", kompetanse).operator(Operator.AND));
         LOGGER.debug("ADDING kompetanse");
     }
 
