@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import no.nav.elasticsearch.mapping.annotations.ElasticBooleanField;
 import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
@@ -129,6 +130,7 @@ public class EsCv {
     @ElasticKeywordField    
     @ElasticTextField
     @ElasticCompletionField
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String navkontor;
     
     @ElasticBooleanField
