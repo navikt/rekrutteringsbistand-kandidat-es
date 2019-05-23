@@ -76,7 +76,7 @@ public class EsFagdokumentasjon {
   public static String getFagdokumentTypeLabel(String fagdokumentType) {
     switch (fagdokumentType) {
       case "SVENNEBREV_FAGBREV":
-        return "Fagbrev/Svennebrev";
+        return "Fagbrev/svennebrev";
       case "MESTERBREV":
         return "Mesterbrev";
       case "AUTORISASJON":

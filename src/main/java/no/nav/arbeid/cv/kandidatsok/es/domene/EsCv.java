@@ -366,9 +366,10 @@ public class EsCv {
     this.fagdokumentasjon.addAll(fagdokumentasjonListe);
     List<EsSamletKompetanse> liste = new ArrayList<>();
     fagdokumentasjonListe.forEach(f -> {
-      liste.add(new EsSamletKompetanse(EsFagdokumentasjon.getFagdokumentTypeLabel(f.getType())));
       if (f.getTittel() != null) {
         liste.add(new EsSamletKompetanse(f.getTittel()));
+      } else {
+        liste.add(new EsSamletKompetanse(EsFagdokumentasjon.getFagdokumentTypeLabel(f.getType())));
       }
     });
     this.addSamletKompetanse(liste);
