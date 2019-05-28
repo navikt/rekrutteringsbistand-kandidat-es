@@ -34,10 +34,10 @@ public interface EsSokService {
     
     Sokeresultat arbeidsgiverHentKandidater(List<String> kandidatnummer);
     
+    Sokeresultat arbeidsgiverHentKandidaterForVisning(List<String> kandidatnummer);
+    
     Sokeresultat veilederHentKandidater(List<String> kandidatnummer);
 
-    Optional<no.nav.arbeid.cv.kandidatsok.es.domene.sok.EsCv> veilederSokPaaFnr(String fnr);
-
-    
+    Optional<no.nav.arbeid.cv.kandidatsok.es.domene.sok.EsCv> veilederSokPaaFnr(String fnr);    
 
 }
