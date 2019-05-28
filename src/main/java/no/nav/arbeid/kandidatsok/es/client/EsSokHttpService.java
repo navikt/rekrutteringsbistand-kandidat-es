@@ -914,6 +914,21 @@ public class EsSokHttpService implements EsSokService {
             throw new ElasticException(ioe);
         }
     }
+    
+    @Override
+    public Sokeresultat arbeidsgiverHentKandidaterForVisning(List<String> kandidatnummer) {
+        try {
+            SearchResponse searchResponse = esExec(
+                    () -> search(UseCase.AG_HENT, kandidatnrQuery(kandidatnummer), 0, kandidatnummer.size(), null));
+            Sokeresultat usortertSokeresultat = toSokeresultat(searchResponse);
+            List<EsCv> sorterteCver = sorterSokeresultaterBasertPaaRequestRekkefolge(
+                    usortertSokeresultat.getCver(), kandidatnummer);
+            return new Sokeresultat(usortertSokeresultat.getTotaltAntallTreff(), sorterteCver,
+                    usortertSokeresultat.getAggregeringer());
+        } catch(IOException ioe) {
+            throw new ElasticException(ioe);
+        }
+    }
 
     @Override
     public Sokeresultat veilederHentKandidater(List<String> kandidatnummer) {
@@ -929,7 +944,7 @@ public class EsSokHttpService implements EsSokService {
             throw new ElasticException(ioe);
         }
     }
-
+        
     private List<EsCv> sorterSokeresultaterBasertPaaRequestRekkefolge(List<EsCv> cver,
             List<String> kandidatrekkefolge) {
         Map<String, EsCv> kandidater =
