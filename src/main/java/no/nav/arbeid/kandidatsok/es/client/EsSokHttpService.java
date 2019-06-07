@@ -505,8 +505,10 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addForerkortToQuery(List<String> forerkort, BoolQueryBuilder boolQueryBuilder) {
+        BoolQueryBuilder innerBoolQueryBuilder = QueryBuilders.boolQuery();       
         forerkort.stream().filter(StringUtils::isNotBlank)
-                .forEach(s -> addForerkortQuery(s, boolQueryBuilder));
+                .forEach(s -> addForerkortQuery(s, innerBoolQueryBuilder));
+        boolQueryBuilder.must(innerBoolQueryBuilder);
     }
 
     private void addKvalifiseringsgruppeKoderToQuery(List<String> kvalifiseringsgruppeKoder, BoolQueryBuilder boolQueryBuilder) {
@@ -584,7 +586,7 @@ public class EsSokHttpService implements EsSokService {
         NestedQueryBuilder forerkortQueryBuilder = QueryBuilders.nestedQuery("forerkort",
                 QueryBuilders.termQuery("forerkort.forerkortKodeKlasse", forerkort),
                 ScoreMode.Total);
-        boolQueryBuilder.must(forerkortQueryBuilder);
+        boolQueryBuilder.should(forerkortQueryBuilder);
         LOGGER.debug("ADDING førerkort");
     }
 

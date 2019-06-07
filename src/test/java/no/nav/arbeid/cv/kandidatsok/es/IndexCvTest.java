@@ -296,19 +296,19 @@ public class IndexCvTest {
     }
 
     @Test
-    public void testForerkortGirMindreTreff() throws IOException {
+    public void testFlereForerkortKriterierGirFlereTreff() throws IOException {
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
                 .forerkort(Collections.singletonList("Førerkort: Kl. A (tung motorsykkel)"))
                 .bygg());
         Sokeresultat sokeresultat2 = sokClient.arbeidsgiverSok(Sokekriterier.med()
                 .forerkort(
-                        asList("Førerkort: Kl. A (tung motorsykkel)", "Førerkort: Kl. A (Moped)"))
+                        asList("Førerkort: Kl. A (tung motorsykkel)", "Førerkort: Kl. CE (lastebil og tilhenger)"))
                 .bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         List<EsCv> cver2 = sokeresultat2.getCver();
 
-        assertThat(cver.size()).isGreaterThan(cver2.size());
+        assertThat(cver2.size()).isGreaterThan(cver.size());
     }
 
     @Test
