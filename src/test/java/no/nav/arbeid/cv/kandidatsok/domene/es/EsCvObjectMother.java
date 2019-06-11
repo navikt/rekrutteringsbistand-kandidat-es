@@ -131,9 +131,6 @@ public class EsCvObjectMother {
         EsSertifikatListe.add(EsSertifikat4);
         EsSertifikatListe.add(EsSertifikat5);
 
-        EsForerkort forerkort1 = new EsForerkort(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
-
         EsForerkort forerkort2 = new EsForerkort(d("1991-01-01"), null, "V1.6070",
                 "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
 
@@ -144,7 +141,6 @@ public class EsCvObjectMother {
                 "Førerkort: Kl. DE (buss og tilhenger)", null, "");
 
         ArrayList<EsForerkort> forerkortListe = new ArrayList<>();
-        forerkortListe.add(forerkort1);
         forerkortListe.add(forerkort2);
         forerkortListe.add(forerkort3);
         forerkortListe.add(forerkort4);
@@ -882,9 +878,6 @@ public class EsCvObjectMother {
         EsSertifikatListe.add(EsSertifikat2);
         EsSertifikatListe.add(EsSertifikat3);
 
-        EsForerkort forerkort1 = new EsForerkort(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
-
         EsForerkort forerkort2 = new EsForerkort(d("1991-01-01"), null, "V1.6070",
                 "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
 
@@ -895,7 +888,6 @@ public class EsCvObjectMother {
                 "Førerkort: Kl. DE (buss og tilhenger)", null, "");
 
         ArrayList<EsForerkort> forerkortListe = new ArrayList<>();
-        forerkortListe.add(forerkort1);
         forerkortListe.add(forerkort2);
         forerkortListe.add(forerkort3);
         forerkortListe.add(forerkort4);
