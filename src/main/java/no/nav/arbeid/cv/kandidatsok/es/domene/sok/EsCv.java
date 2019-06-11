@@ -11,6 +11,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsCv {
 
+    private String aktorId;
+    
     private String fodselsnummer;
 
     private String fornavn;
@@ -47,11 +49,12 @@ public class EsCv {
 
     public EsCv() {}
 
-    public EsCv(String fodselsnummer, String fornavn, String etternavn, Date fodselsdato, Boolean fodselsdatoErDnr,
+    public EsCv(String aktorId, String fodselsnummer, String fornavn, String etternavn, Date fodselsdato, Boolean fodselsdatoErDnr,
                 String poststed, String epostadresse, String telefon, String mobiltelefon, 
                 String formidlingsgruppekode, String kandidatnr,
                 int totalLengdeYrkeserfaring, String kvalifiseringsgruppekode, List<EsUtdanning> utdanning,
                 List<EsYrkeserfaring> yrkeserfaring, String oppstart) {
+        this.aktorId = aktorId;
         this.fodselsnummer = fodselsnummer;
         this.fornavn = fornavn;
         this.etternavn = etternavn;
@@ -95,6 +98,10 @@ public class EsCv {
         yrkeserfaringListe
                 .forEach(y -> this.totalLengdeYrkeserfaring += y.getYrkeserfaringManeder());
         this.yrkeserfaring.addAll(yrkeserfaringListe);
+    }
+    
+    public String getAktorId() {
+        return aktorId;
     }
 
     public String getFodselsnummer() {
@@ -167,6 +174,7 @@ public class EsCv {
         if (o == null || getClass() != o.getClass()) return false;
         EsCv esCv = (EsCv) o;
         return totalLengdeYrkeserfaring == esCv.totalLengdeYrkeserfaring &&
+                Objects.equals(aktorId, esCv.aktorId) &&
                 Objects.equals(fodselsnummer, esCv.fodselsnummer) &&
                 Objects.equals(fornavn, esCv.fornavn) &&
                 Objects.equals(etternavn, esCv.etternavn) &&
@@ -188,7 +196,7 @@ public class EsCv {
     @Override
     public int hashCode() {
         return Objects.hash(
-                fodselsnummer, fornavn, etternavn, fodselsdato, fodselsdatoErDnr, poststed,
+                aktorId, fodselsnummer, fornavn, etternavn, fodselsdato, fodselsdatoErDnr, poststed,
                 epostadresse, telefon, mobiltelefon,
                 formidlingsgruppekode, kandidatnr, totalLengdeYrkeserfaring,
                 kvalifiseringsgruppekode, utdanning, yrkeserfaring, oppstartKode
@@ -199,6 +207,7 @@ public class EsCv {
     public String toString() {
         return "EsCv{" +
                 "fodselsnummer='" + fodselsnummer + '\'' +
+                ", aktorId='" + aktorId + '\'' +
                 ", fornavn='" + fornavn + '\'' +
                 ", etternavn='" + etternavn + '\'' +
                 ", fodselsdato=" + fodselsdato +
