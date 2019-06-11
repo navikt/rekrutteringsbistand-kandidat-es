@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,22 @@ public class EsCvObjectMother {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EsCvObjectMother.class);
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    
+    private static final String AKTORID1 = UUID.randomUUID().toString();
+    private static final String AKTORID2 = UUID.randomUUID().toString();
+    private static final String AKTORID3 = UUID.randomUUID().toString();
+    private static final String AKTORID4 = UUID.randomUUID().toString();
+    private static final String AKTORID5 = UUID.randomUUID().toString();
+    private static final String AKTORID6 = UUID.randomUUID().toString();
+    private static final String AKTORID7 = UUID.randomUUID().toString();
+    private static final String AKTORID8 = UUID.randomUUID().toString();
+    private static final String AKTORID9 = UUID.randomUUID().toString();
+    private static final String AKTORID10 = UUID.randomUUID().toString();
+    private static final String AKTORID11 = UUID.randomUUID().toString();
+    private static final String AKTORID12 = UUID.randomUUID().toString();
+    private static final String AKTORID13 = UUID.randomUUID().toString();
+    private static final String AKTORID14 = UUID.randomUUID().toString();
+    
 
     private static Date d(String string) {
         try {
@@ -203,7 +220,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         EsArbeidstidsordningJobbonskerListe.add(EsArbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv("03016012345", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
+        EsCv esCv = new EsCv(AKTORID1, "03016012345", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
                 "unnasluntrer@mailinator.com", "(+47) 22334455", "12345678", "NO", "1L",
                 "", "J", d("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, FALSE, null, null, null, null, FALSE, FALSE, "0301");
@@ -404,7 +421,7 @@ public class EsCvObjectMother {
         arbeidsdagerJobbonskerList.add(arbeidsdagerJobbonskerLoerdag);
         arbeidsdagerJobbonskerList.add(arbeidsdagerJobbonskerSoendag);
 
-        EsCv esCv = new EsCv("04016012345", "OLA", "NORDMANN", d("1960-01-01"), false, "JOBBS",
+        EsCv esCv = new EsCv(AKTORID2, "04016012345", "OLA", "NORDMANN", d("1960-01-01"), false, "JOBBS",
                 "unnasluntrer@mailinator.com", "(+47) 22334455", "12345678", "NO", "1L",
                 "hererjeg", "N", d("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 5001, false,
                 new Date(), 301, FALSE, null, "IKVAL", null, "NAV Asker", FALSE, FALSE, true, false, "LEDIG_NAA", "5001");
@@ -597,7 +614,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         EsArbeidstidsordningJobbonskerListe.add(EsArbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv("05236984567", "KARI", "NORDMANN", d("1980-02-10"), false, "PARBS",
+        EsCv esCv = new EsCv(AKTORID3, "05236984567", "KARI", "NORDMANN", d("1980-02-10"), false, "PARBS",
                 "unnasluntrer2@mailinator.com", "(+47) 22334455", "12345678", "NO", "2L",
                 "Dette er beskrivelsen av hva jeg har gjort i min yrkeskarriere",
                 "J", d("2016-05-30"), "Dinvei 2", "", "", "1337", "HUSKER IKKE", "NO", 301,
@@ -786,7 +803,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         EsArbeidstidsordningJobbonskerListe.add(EsArbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv("04265983651", "HANS", "NORDMANN", d("1955-11-04"), false, "RARBS",
+        EsCv esCv = new EsCv(AKTORID4, "04265983651", "HANS", "NORDMANN", d("1955-11-04"), false, "RARBS",
                 "alltidmed@mailinator.com", "(+47) 22334455", "12345678", "NO", "3L",
                 "Jeg jobber like godt selvstendig som i team",
                 "J", d("2016-05-30"), "Minvei 1", "", "", "2323", "INGEBERG", "NO", 301, false,
@@ -969,7 +986,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         EsArbeidstidsordningJobbonskerListe.add(EsArbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv("09568410230", "HANNE", "NORDMANN", d("2002-06-04"), false, "ARBS",
+        EsCv esCv = new EsCv(AKTORID5, "09568410230", "HANNE", "NORDMANN", d("2002-06-04"), false, "ARBS",
                 "erjegmed@mailinator.com", "(+47) 22334455", "12345678", "NO", "4L", "",
                 "J", d("2016-05-30"), "Noensvei 1", "", "", "9730", "KARASJOK", "NO", 2021, false,
                 new Date(), 2021, FALSE, null, "VURDI", null, null, FALSE, FALSE, "2021");
@@ -1155,7 +1172,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         EsArbeidstidsordningJobbonskerListe.add(EsArbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv("03050316895", "BOB", "NORDMANN", d("1964-09-01"), false, "ARBS",
+        EsCv esCv = new EsCv(AKTORID6, "03050316895", "BOB", "NORDMANN", d("1964-09-01"), false, "ARBS",
                 "bobob@mailinator.com", "(+47) 22334455", "12345678", "NO", "5L", "", "J",
                 d("2016-05-30"), "Minvei 90", "", "", "0219", "Bærum", "NO", 219, false, new Date(),
                 219, FALSE, null, null, null, null, FALSE, FALSE, "0219");
@@ -1318,7 +1335,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         EsArbeidstidsordningJobbonskerListe.add(EsArbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv("03050316895", "BOB", "NORDMANN", d("1964-09-01"), false, "ARBS",
+        EsCv esCv = new EsCv(AKTORID7, "03050316895", "BOB", "NORDMANN", d("1964-09-01"), false, "ARBS",
                 "bobob@mailinator.com", "(+47) 22334455", "12345678", "NO", "5L", "", "J",
                 d("2016-05-30"), "Minvei 90", "", "", "0565", "OSLO", "NO", 301, false, new Date(),
                 301, FALSE, null, null, null, null, FALSE, FALSE, "0301");
@@ -1503,7 +1520,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv("02016012345", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
+        EsCv esCv = new EsCv(AKTORID8, "02016012345", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
                 "unnasluntrer@mailinator.com", "(+47) 22334455", "12345678", "NO", "1L",
                 "", "N", d("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, FALSE, null, null, null, null, FALSE, FALSE, "0301");
@@ -1692,7 +1709,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv("01016034215", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
+        EsCv esCv = new EsCv(AKTORID9, "01016034215", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "6L",
                 "", "N", d("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, FALSE, "5", null, null, null, FALSE, FALSE, "0301");
@@ -1880,7 +1897,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv("01016034215", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
+        EsCv esCv = new EsCv(AKTORID10, "01016034215", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "7L",
                 "", "N", d("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, TRUE, null, null, null, null, FALSE, FALSE, "0301");
@@ -2068,7 +2085,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv("01016034215", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
+        EsCv esCv = new EsCv(AKTORID11, "01016034215", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "8L",
                 "", "N", d("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, FALSE, "6", null, null, null, FALSE, FALSE, "0301");
@@ -2256,7 +2273,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv("01016034215", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
+        EsCv esCv = new EsCv(AKTORID12, "01016034215", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "9L",
                 "", "N", d("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, FALSE, "7", null, null, null, FALSE, FALSE, "0301");
@@ -2444,7 +2461,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv("01016034215", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
+        EsCv esCv = new EsCv(AKTORID13, "01016034215", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "10L",
                 "", "N", d("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, FALSE, null, "IKVAL", null, null, TRUE, FALSE, "0301");
@@ -2632,7 +2649,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv("01016034215", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
+        EsCv esCv = new EsCv(AKTORID14, "01016034215", "OLA", "NORDMANN", d("1960-01-01"), false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "11L",
                 "", "N", d("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, FALSE, null, null, null, null, FALSE, TRUE, "0301");

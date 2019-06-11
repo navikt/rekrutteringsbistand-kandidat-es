@@ -30,6 +30,9 @@ public class EsCv {
 
     @ElasticTextField(analyzer = "norwegian")
     private String fritekst;
+    
+    @ElasticKeywordField
+    private String aktorId;
 
     @ElasticTextField
     private String fodselsnummer;
@@ -208,7 +211,7 @@ public class EsCv {
     public EsCv() {
     }
 
-    public EsCv(String fodselsnummer, String fornavn, String etternavn, Date fodselsdato,
+    public EsCv(String aktorId, String fodselsnummer, String fornavn, String etternavn, Date fodselsdato,
             Boolean fodselsdatoErDnr, String formidlingsgruppekode, String epostadresse,
             String mobiltelefon, String telefon, String statsborgerskap, String kandidatnr, String beskrivelse,
             String samtykkeStatus, Date samtykkeDato, String adresselinje1, String adresselinje2,
@@ -217,6 +220,7 @@ public class EsCv {
             Boolean doed, String frKode, String kvalifiseringsgruppekode, String hovedmaalkode, String orgenhet,
             Boolean fritattKandidatsok, Boolean fritattAgKandidatsok,
             Boolean synligForArbeidsgiverSok, Boolean synligForVeilederSok, String oppstartKode, String kommunenummerstring) {
+        this.aktorId = aktorId;
         this.fodselsnummer = fodselsnummer;
         this.fornavn = fornavn;
         this.etternavn = etternavn;
@@ -257,7 +261,7 @@ public class EsCv {
         this.kommunenummerstring = kommunenummerstring;
     }
 
-    public EsCv(String fodselsnummer, String fornavn, String etternavn, Date fodselsdato,
+    public EsCv(String aktorId, String fodselsnummer, String fornavn, String etternavn, Date fodselsdato,
             Boolean fodselsdatoErDnr, String formidlingsgruppekode, String epostadresse,
             String mobiltelefon, String telefon, String statsborgerskap, String kandidatnr, String beskrivelse,
             String samtykkeStatus, Date samtykkeDato, String adresselinje1, String adresselinje2,
@@ -265,6 +269,7 @@ public class EsCv {
             Integer kommunenummer, Boolean disponererBil, Date tidsstempel, Integer kommunenummerkw,
             Boolean doed, String frKode, String kvalifiseringsgruppekode, String hovedmaalkode, String orgenhet,
             Boolean fritattKandidatsok, Boolean fritattAgKandidatsok, String kommunenummerstring) {
+        this.aktorId = aktorId;
         this.fodselsnummer = fodselsnummer;
         this.fornavn = fornavn;
         this.etternavn = etternavn;
@@ -512,6 +517,10 @@ public class EsCv {
     }
 
     // gettere
+    
+    public String getAktorId() {
+        return aktorId;
+    }
 
     public String getFodselsnummer() {
         return fodselsnummer;
@@ -751,6 +760,7 @@ public class EsCv {
         }
         EsCv esCv = (EsCv) o;
         return Objects.equals(fodselsnummer, esCv.fodselsnummer)
+                && Objects.equals(aktorId, esCv.aktorId)
                 && Objects.equals(fornavn, esCv.fornavn)
                 && Objects.equals(etternavn, esCv.etternavn)
                 && Objects.equals(fodselsdato, esCv.fodselsdato)
@@ -805,7 +815,7 @@ public class EsCv {
 
     @Override
     public int hashCode() {
-        return Objects.hash(fodselsnummer, fornavn, etternavn, fodselsdato, fodselsdatoErDnr,
+        return Objects.hash(aktorId, fodselsnummer, fornavn, etternavn, fodselsdato, fodselsdatoErDnr,
                 formidlingsgruppekode, doed, frKode, kvalifiseringsgruppekode, hovedmaalkode, orgenhet, fritattKandidatsok, fritattAgKandidatsok, epostadresse, mobiltelefon, telefon, statsborgerskap,
                 kandidatnr, beskrivelse, samtykkeStatus, samtykkeDato, adresselinje1,
                 adresselinje2, adresselinje3, postnummer, poststed, landkode, kommunenummer, kommunenummerkw, kommunenummerstring,
@@ -818,7 +828,7 @@ public class EsCv {
 
     @Override
     public String toString() {
-        return "EsCv [fritekst=" + fritekst + ", fodselsnummer=" + fodselsnummer + ", fornavn="
+        return "EsCv [fritekst=" + fritekst + ", aktorId=" + aktorId + ", fodselsnummer=" + fodselsnummer + ", fornavn="
                 + fornavn + ", etternavn=" + etternavn + ", fodselsdato=" + fodselsdato
                 + ", fodselsdatoErDnr=" + fodselsdatoErDnr + ", formidlingsgruppekode="
                 + formidlingsgruppekode + ", epostadresse=" + epostadresse + ", mobiltelefon="

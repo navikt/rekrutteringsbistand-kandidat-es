@@ -10,7 +10,7 @@ import no.nav.arbeid.cv.kandidatsok.es.domene.sok.EsYrkeserfaring;
 public class KandidatsokTransformer {
 
   public EsCv transformer(no.nav.arbeid.cv.kandidatsok.es.domene.EsCv cv) {
-    return new EsCv(cv.getFodselsnummer(), cv.getFornavn(), cv.getEtternavn(), cv.getFodselsdato(),
+    return new EsCv(cv.getAktorId(), cv.getFodselsnummer(), cv.getFornavn(), cv.getEtternavn(), cv.getFodselsdato(),
             cv.getFodselsdatoErDnr(), cv.getPoststed(), cv.getEpostadresse(), cv.getTelefon(), cv.getMobiltelefon(), 
             cv.getFormidlingsgruppekode(),
             cv.getKandidatnr(), cv.getTotalLengdeYrkeserfaring(), cv.getKvalifiseringsgruppekode(),
