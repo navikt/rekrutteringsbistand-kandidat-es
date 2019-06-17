@@ -612,7 +612,7 @@ public class EsSokHttpService implements EsSokService {
     }
     
     private void addVeilederToQuery(String veileder, BoolQueryBuilder boolQueryBuilder) {
-        boolQueryBuilder.should(QueryBuilders.termQuery("veileder", veileder));
+        boolQueryBuilder.should(QueryBuilders.termQuery("veileder", veileder.toLowerCase()));
         LOGGER.debug("ADDING veileder");
     }
     
