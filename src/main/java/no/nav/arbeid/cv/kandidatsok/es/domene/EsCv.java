@@ -207,6 +207,9 @@ public class EsCv {
 
     @ElasticKeywordField
     private String oppstartKode;
+    
+    @ElasticKeywordField
+    private String veileder;
 
     public EsCv() {
     }
@@ -219,7 +222,8 @@ public class EsCv {
             Integer kommunenummer, Boolean disponererBil, Date tidsstempel, Integer kommunenummerkw,
             Boolean doed, String frKode, String kvalifiseringsgruppekode, String hovedmaalkode, String orgenhet,
             Boolean fritattKandidatsok, Boolean fritattAgKandidatsok,
-            Boolean synligForArbeidsgiverSok, Boolean synligForVeilederSok, String oppstartKode, String kommunenummerstring) {
+            Boolean synligForArbeidsgiverSok, Boolean synligForVeilederSok, String oppstartKode, String kommunenummerstring,
+            String veileder) {
         this.aktorId = aktorId;
         this.fodselsnummer = fodselsnummer;
         this.fornavn = fornavn;
@@ -259,6 +263,7 @@ public class EsCv {
         this.synligForVeilederSok = synligForVeilederSok;
         this.oppstartKode = oppstartKode;
         this.kommunenummerstring = kommunenummerstring;
+        this.veileder = veileder;
     }
 
     public EsCv(String aktorId, String fodselsnummer, String fornavn, String etternavn, Date fodselsdato,
@@ -268,7 +273,7 @@ public class EsCv {
             String adresselinje3, String postnummer, String poststed, String landkode,
             Integer kommunenummer, Boolean disponererBil, Date tidsstempel, Integer kommunenummerkw,
             Boolean doed, String frKode, String kvalifiseringsgruppekode, String hovedmaalkode, String orgenhet,
-            Boolean fritattKandidatsok, Boolean fritattAgKandidatsok, String kommunenummerstring) {
+            Boolean fritattKandidatsok, Boolean fritattAgKandidatsok, String kommunenummerstring, String veileder) {
         this.aktorId = aktorId;
         this.fodselsnummer = fodselsnummer;
         this.fornavn = fornavn;
@@ -307,6 +312,7 @@ public class EsCv {
         this.synligForArbeidsgiverSok = beregnSynlighetForArbeidsgiverSokBasertPaaGamleArenaData();
         this.synligForVeilederSok = beregnSynlighetForVeilederSokBasertPaaGamleArenaData();
         this.kommunenummerstring = kommunenummerstring;
+        this.veileder = veileder;
     }
 
     private Boolean beregnSynlighetForVeilederSokBasertPaaGamleArenaData() {
@@ -574,6 +580,10 @@ public class EsCv {
         return orgenhet;
     }
     
+    public String getVeileder() {
+        return veileder;
+    }
+    
     public String getNavkontor() {
         return navkontor;
     }
@@ -760,6 +770,7 @@ public class EsCv {
         }
         EsCv esCv = (EsCv) o;
         return Objects.equals(fodselsnummer, esCv.fodselsnummer)
+                && Objects.equals(veileder, esCv.veileder)
                 && Objects.equals(aktorId, esCv.aktorId)
                 && Objects.equals(fornavn, esCv.fornavn)
                 && Objects.equals(etternavn, esCv.etternavn)
@@ -815,7 +826,7 @@ public class EsCv {
 
     @Override
     public int hashCode() {
-        return Objects.hash(aktorId, fodselsnummer, fornavn, etternavn, fodselsdato, fodselsdatoErDnr,
+        return Objects.hash(aktorId, veileder, fodselsnummer, fornavn, etternavn, fodselsdato, fodselsdatoErDnr,
                 formidlingsgruppekode, doed, frKode, kvalifiseringsgruppekode, hovedmaalkode, orgenhet, fritattKandidatsok, fritattAgKandidatsok, epostadresse, mobiltelefon, telefon, statsborgerskap,
                 kandidatnr, beskrivelse, samtykkeStatus, samtykkeDato, adresselinje1,
                 adresselinje2, adresselinje3, postnummer, poststed, landkode, kommunenummer, kommunenummerkw, kommunenummerstring,
@@ -844,6 +855,7 @@ public class EsCv {
                 + kvalifiseringsgruppekode + ", hovedmaalkode=" + hovedmaalkode + ", orgenhet="
                 + orgenhet + ", fritattKandidatsok=" + fritattKandidatsok
                 + ", fritattAgKandidatsok=" + fritattAgKandidatsok
+                + ", veileder=" + veileder
                 + ", synligForArbeidsgiverSok=" + synligForArbeidsgiverSok
                 + ", synligForVeilederSok=" + synligForVeilederSok
                 + ", utdanning=" + utdanning + ", fagdokumentasjon=" + fagdokumentasjon

@@ -323,6 +323,10 @@ public class EsSokHttpService implements EsSokService {
                 addNavkontorToQuery(sk.navkontor(), queryBuilder);
             }
             
+            if (isNotEmpty(sk.veiledere())) {
+                addVeiledereToQuery(sk.veiledere(), queryBuilder);
+            }
+            
             if (sk.isAntallAarFraSet() && sk.isAntallAarTilSet()) {
                 addFodselsdatoToQuery(sk.antallAarFra(), sk.antallAarTil(), queryBuilder);
             } else if (sk.isAntallAarFraSet()) {
@@ -524,6 +528,13 @@ public class EsSokHttpService implements EsSokService {
         navkontor.stream().filter(StringUtils::isNotBlank)
         .forEach(s -> addNavkontorQuery(s, innerBoolQueryBuilder));
     }
+    
+    private void addVeiledereToQuery(List<String> veiledere, BoolQueryBuilder boolQueryBuilder) {
+        BoolQueryBuilder innerBoolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(innerBoolQueryBuilder);
+        veiledere.stream().filter(StringUtils::isNotBlank)
+        .forEach(s -> addVeilederToQuery(s, innerBoolQueryBuilder));
+    }
 
     private void addYrkeJobbonskerQuery(String yrkeJobbonske, BoolQueryBuilder boolQueryBuilder) {
         boolQueryBuilder.should(QueryBuilders.matchQuery("yrkeJobbonskerObj.sokeTitler", yrkeJobbonske).operator(Operator.AND));
@@ -598,6 +609,11 @@ public class EsSokHttpService implements EsSokService {
     private void addNavkontorQuery(String navkontor, BoolQueryBuilder boolQueryBuilder) {
         boolQueryBuilder.should(QueryBuilders.termQuery("navkontor", navkontor));
         LOGGER.debug("ADDING navkontor");
+    }
+    
+    private void addVeilederToQuery(String veileder, BoolQueryBuilder boolQueryBuilder) {
+        boolQueryBuilder.should(QueryBuilders.termQuery("veileder", veileder));
+        LOGGER.debug("ADDING veileder");
     }
     
     private void addKommunenummerQuery(String geografi, BoolQueryBuilder boolQueryBuilder) {
