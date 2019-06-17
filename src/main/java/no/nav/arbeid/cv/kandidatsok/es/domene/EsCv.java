@@ -263,7 +263,7 @@ public class EsCv {
         this.synligForVeilederSok = synligForVeilederSok;
         this.oppstartKode = oppstartKode;
         this.kommunenummerstring = kommunenummerstring;
-        this.veileder = veileder;
+        this.veileder = veileder == null ? null : veileder.toLowerCase();
     }
 
     public EsCv(String aktorId, String fodselsnummer, String fornavn, String etternavn, Date fodselsdato,
@@ -312,7 +312,7 @@ public class EsCv {
         this.synligForArbeidsgiverSok = beregnSynlighetForArbeidsgiverSokBasertPaaGamleArenaData();
         this.synligForVeilederSok = beregnSynlighetForVeilederSokBasertPaaGamleArenaData();
         this.kommunenummerstring = kommunenummerstring;
-        this.veileder = veileder;
+        this.veileder = veileder == null ? null : veileder.toLowerCase();
     }
 
     private Boolean beregnSynlighetForVeilederSokBasertPaaGamleArenaData() {
