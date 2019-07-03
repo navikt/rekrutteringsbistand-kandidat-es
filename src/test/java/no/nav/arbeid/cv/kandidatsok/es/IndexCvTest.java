@@ -441,11 +441,12 @@ public class IndexCvTest {
     @Test
     public void testPaTotalYrkeserfaringSkalGiKorrektResultat() throws IOException {
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().totalYrkeserfaring(Collections.singletonList("37-72")).bygg());
+                Sokekriterier.med().totalYrkeserfaring(Collections.singletonList("37-75")).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
+        assertThat(cver.size()).isGreaterThan(0);
+        
         EsCv cv = cver.get(0);
-
         assertThat(cv)
                 .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
     }
