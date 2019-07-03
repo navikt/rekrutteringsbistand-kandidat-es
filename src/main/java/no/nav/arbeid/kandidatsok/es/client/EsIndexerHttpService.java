@@ -10,6 +10,7 @@ import javax.annotation.PreDestroy;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
+import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
@@ -41,6 +42,7 @@ import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tags;
 import no.nav.arbeid.cv.kandidatsok.es.domene.EsCv;
 import no.nav.arbeid.cv.kandidatsok.es.exception.ApplicationException;
+import no.nav.arbeid.cv.kandidatsok.es.exception.OperationalException;
 import no.nav.elasticsearch.mapping.MappingBuilder;
 import no.nav.elasticsearch.mapping.MappingBuilderImpl;
 import no.nav.elasticsearch.mapping.ObjectMapping;
@@ -155,6 +157,10 @@ public class EsIndexerHttpService implements EsIndexerService {
         if (bulkResponse.hasFailures()) {
             long antallFeil = 0;
             for (BulkItemResponse bir : bulkResponse.getItems()) {
+                if (bir.getFailure() != null && bir.getFailure().getType().equals("unavailable_shards_exception")) {
+                    LOGGER.warn("Kaster OperationalException for å trigge retry grunnet feil mot ES: {}", bulkResponse.buildFailureMessage());
+                    throw new OperationalException("Unavailable shards i kandidatsok ES", bir.getFailure().getCause());
+                }
                 antallFeil += bir.isFailed() ? 1 : 0;
                 try {
                     if (bir.getFailure() != null) {
@@ -173,7 +179,7 @@ public class EsIndexerHttpService implements EsIndexerService {
                 }
                 meterRegistry.counter("cv.es.index.feil", Tags.of("type", "applikasjon"))
                         .increment(antallFeil);
-            }
+            }            
             antallIndeksert -= antallFeil;
             LOGGER.warn(
                     "Feilet under indeksering av CVer: " + bulkResponse.buildFailureMessage());
