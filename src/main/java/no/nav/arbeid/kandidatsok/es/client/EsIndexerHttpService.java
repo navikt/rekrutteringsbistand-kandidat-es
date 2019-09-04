@@ -1,6 +1,7 @@
 package no.nav.arbeid.kandidatsok.es.client;
 
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
+
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,10 +29,7 @@ import org.elasticsearch.client.Response;
 import org.elasticsearch.client.ResponseException;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.xcontent.NamedXContentRegistry;
-import org.elasticsearch.common.xcontent.XContentBuilder;
-import org.elasticsearch.common.xcontent.XContentParser;
-import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.common.xcontent.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,12 +56,12 @@ public class EsIndexerHttpService implements EsIndexerService {
     private final MeterRegistry meterRegistry;
     private final int numberOfShards;
     private final int numberOfReplicas;
-    
+
     private WriteRequest.RefreshPolicy refreshPolicy = WriteRequest.RefreshPolicy.NONE;
 
     public EsIndexerHttpService(RestHighLevelClient client, ObjectMapper objectMapper,
-            MeterRegistry meterRegistry, WriteRequest.RefreshPolicy refreshPolicy, 
-            int numberOfShards, int numberOfReplicas) {
+                                MeterRegistry meterRegistry, WriteRequest.RefreshPolicy refreshPolicy,
+                                int numberOfShards, int numberOfReplicas) {
         this.client = client;
         this.mapper = objectMapper;
         this.meterRegistry = meterRegistry;
@@ -71,16 +69,59 @@ public class EsIndexerHttpService implements EsIndexerService {
         this.numberOfShards = numberOfShards;
         this.numberOfReplicas = numberOfReplicas;
     }
-    
+
     @Override
     public void createIndex(String indexName) {
         try {
             CreateIndexRequest createIndexRequest = new CreateIndexRequest(indexName);
-            createIndexRequest.settings(
-                    Settings.builder()
-                    .put("number_of_shards", numberOfShards)
-                    .put("number_of_replicas", numberOfReplicas));
 
+            XContentBuilder settingsContentBuilder = XContentFactory.jsonBuilder();
+            settingsContentBuilder.startObject();
+            {
+                settingsContentBuilder.startObject("analysis");
+                {
+                    settingsContentBuilder.startObject("analyzer");
+                    {
+                        settingsContentBuilder.startObject("norwegian_ngram_text_analyzer");
+                        {
+                            settingsContentBuilder.field("type", "custom");
+                            settingsContentBuilder.field("tokenizer", "standard");
+                            settingsContentBuilder.array("filter", "lowercase", "norwegian_edge_ngrams");
+                        }
+                        settingsContentBuilder.endObject();
+                        settingsContentBuilder.startObject("norwegian_ngram_text_search_analyzer");
+                        {
+                            settingsContentBuilder.field("type", "custom");
+                            settingsContentBuilder.field("tokenizer", "standard");
+                            settingsContentBuilder.array("filter", "lowercase");
+                        }
+                        settingsContentBuilder.endObject();
+                    }
+                    settingsContentBuilder.endObject();
+                    settingsContentBuilder.startObject("filter");
+                    {
+                        settingsContentBuilder.startObject("norwegian_edge_ngrams");
+                        {
+                            settingsContentBuilder.field("type", "edge_ngram");
+                            settingsContentBuilder.field("min_gram", 1);
+                            settingsContentBuilder.field("max_gram", 15);
+                        }
+                        settingsContentBuilder.endObject();
+                    }
+                    settingsContentBuilder.endObject();
+                }
+                settingsContentBuilder.endObject();
+                settingsContentBuilder.startObject("index");
+                {
+                    settingsContentBuilder.field("number_of_shards", numberOfShards);
+                    settingsContentBuilder.field("number_of_replicas", numberOfReplicas);
+                }
+                settingsContentBuilder.endObject();
+            }
+            settingsContentBuilder.endObject();
+
+
+            createIndexRequest.settings(settingsContentBuilder);
             MappingBuilder mappingBuilder = new MappingBuilderImpl();
             ObjectMapping mapping = mappingBuilder.build(EsCv.class);
 
@@ -179,7 +220,7 @@ public class EsIndexerHttpService implements EsIndexerService {
                 }
                 meterRegistry.counter("cv.es.index.feil", Tags.of("type", "applikasjon"))
                         .increment(antallFeil);
-            }            
+            }
             antallIndeksert -= antallFeil;
             LOGGER.warn(
                     "Feilet under indeksering av CVer: " + bulkResponse.buildFailureMessage());
@@ -219,7 +260,7 @@ public class EsIndexerHttpService implements EsIndexerService {
             return restResponse.getStatusLine().getStatusCode() == 200;
         } catch (ResponseException e) {
             LOGGER.info("Exception while calling isExistingIndex", e);
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             throw new ElasticException(ioe);
         }
         return false;
@@ -248,12 +289,14 @@ public class EsIndexerHttpService implements EsIndexerService {
                 }
                 throw (ese);
             }
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             throw new ElasticException(ioe);
         }
     }
 
-    /** Tilsvarer java.functions.Supplier bare at get metoden kan kaste IOException */
+    /**
+     * Tilsvarer java.functions.Supplier bare at get metoden kan kaste IOException
+     */
     private interface IOSupplier<T> {
         T get() throws IOException;
     }
@@ -300,7 +343,7 @@ public class EsIndexerHttpService implements EsIndexerService {
     public long antallIndeksertSynligForArbeidsgiver(String indexName) {
         return indexQuery("synligForArbeidsgiverSok:true", indexName);
     }
-    
+
     @Override
     public Collection<String> getTargetsForAlias(String alias) {
         try {
@@ -317,11 +360,11 @@ public class EsIndexerHttpService implements EsIndexerService {
             XContentParser parser =
                     XContentType.JSON.xContent().createParser(NamedXContentRegistry.EMPTY, jsonString);
             return parser.map().keySet();
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             throw new ElasticException(ioe);
         }
     }
-    
+
     @Override
     public Response updateIndexAlias(String alias, String indexName) {
         try {
@@ -329,20 +372,20 @@ public class EsIndexerHttpService implements EsIndexerService {
                     .startObject()
                     .startArray("actions")
                     .startObject()
-                        .startObject("remove").field("index", "*").field("alias", alias).endObject()
+                    .startObject("remove").field("index", "*").field("alias", alias).endObject()
                     .endObject()
                     .startObject()
-                        .startObject("add").field("index", indexName).field("alias", alias).endObject()
+                    .startObject("add").field("index", indexName).field("alias", alias).endObject()
                     .endObject()
                     .endArray()
                     .endObject();
-    
+
             StringEntity entity = new StringEntity(builder.string(), ContentType.APPLICATION_JSON);
             Response response = client.getLowLevelClient().performRequest("POST", "/_aliases",
                     Collections.emptyMap(), entity);
             LOGGER.info("Setter alias {} til å peke mot {}", alias, indexName);
             return response;
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             throw new ElasticException(ioe);
         }
     }

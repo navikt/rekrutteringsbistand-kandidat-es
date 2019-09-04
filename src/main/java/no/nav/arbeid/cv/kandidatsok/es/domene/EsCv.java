@@ -30,7 +30,7 @@ public class EsCv {
 
     @ElasticTextField(analyzer = "norwegian")
     private String fritekst;
-    
+
     @ElasticKeywordField
     private String aktorId;
 
@@ -130,12 +130,12 @@ public class EsCv {
     @ElasticTextField
     private String orgenhet;
 
-    @ElasticKeywordField    
-    @ElasticTextField
+    @ElasticKeywordField
+    @ElasticTextField(analyzer = "norwegian_ngram_text_analyzer", searchAnalyzer = "norwegian_ngram_text_search_analyzer")
     @ElasticCompletionField
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String navkontor;
-    
+
     @ElasticBooleanField
     private Boolean fritattKandidatsok;
 
@@ -207,7 +207,7 @@ public class EsCv {
 
     @ElasticKeywordField
     private String oppstartKode;
-    
+
     @ElasticKeywordField
     private String veileder;
 
@@ -399,7 +399,7 @@ public class EsCv {
     public void addKompetanse(EsKompetanse kompetanse) {
         if (kompetanse != null) {
             this.kompetanseObj.add(kompetanse);
-            this.addSamletKompetanse(kompetanse.getSokeNavn().stream().map(str->new EsSamletKompetanse(str)).collect(Collectors.toList()));            
+            this.addSamletKompetanse(kompetanse.getSokeNavn().stream().map(str->new EsSamletKompetanse(str)).collect(Collectors.toList()));
         }
     }
 
@@ -523,7 +523,7 @@ public class EsCv {
     }
 
     // gettere
-    
+
     public String getAktorId() {
         return aktorId;
     }
@@ -579,11 +579,11 @@ public class EsCv {
     public String getOrgenhet() {
         return orgenhet;
     }
-    
+
     public String getVeileder() {
         return veileder;
     }
-    
+
     public String getNavkontor() {
         return navkontor;
     }

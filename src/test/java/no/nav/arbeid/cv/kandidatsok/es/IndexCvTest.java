@@ -108,7 +108,7 @@ public class IndexCvTest {
 
             return meterRegistry;
         }
-        
+
         @Bean
         public EsIndexerService indexerCvService(RestHighLevelClient restHighLevelClient,
                                                  ObjectMapper objectMapper,
@@ -117,7 +117,7 @@ public class IndexCvTest {
             return new EsIndexerHttpService(restHighLevelClient, objectMapper, meterRegistry,
                     WriteRequest.RefreshPolicy.IMMEDIATE, 3, 2);
         }
-        
+
         @Bean
         public EsSokService esSokService(RestHighLevelClient restHighLevelClient, ObjectMapper objectMapper) {
             return new EsSokHttpService(restHighLevelClient, objectMapper, "cvindex");
@@ -445,7 +445,7 @@ public class IndexCvTest {
 
         List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver.size()).isGreaterThan(0);
-        
+
         EsCv cv = cver.get(0);
         assertThat(cv)
                 .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
@@ -829,8 +829,8 @@ public class IndexCvTest {
         List<EsCv> collect = sokeresultat.getCver().stream().filter(esCv -> Objects.nonNull(esCv.getOppstartKode())).collect(Collectors.toList());
         assertThat(collect).size().isGreaterThan(0);
     }
-    
-    @Test 
+
+    @Test
     public void sokMedSynonymerIJobbonskerSkalGiTreff() throws IOException {
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
                 .yrkeJobbonsker(Collections.singletonList("Trailersjåffis")).bygg());
@@ -840,10 +840,10 @@ public class IndexCvTest {
         EsCv cv = cver.get(0);
         assertThat(cv)
                 .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv5()));
-        
+
     }
-    
-    @Test 
+
+    @Test
     public void sokMedSynonymerIYrkeserfaringSkalGiTreff() throws IOException {
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
                 .stillingstitler(Collections.singletonList("Javaguru")).bygg());
@@ -853,9 +853,9 @@ public class IndexCvTest {
         EsCv cv = cver.get(0);
         assertThat(cv)
                 .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
-        
+
     }
-    
+
     @Test
     public void sokMedSynonymerIKompetanseSkalGiTreff() throws IOException {
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
@@ -863,26 +863,48 @@ public class IndexCvTest {
 
         List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver.size()).isEqualTo(1);
-        
-        EsCv cv = cver.get(0);     
+
+        EsCv cv = cver.get(0);
         assertThat(cv)
                 .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
     }
-    
+
     @Test
     public void sokMedFritekstSkalFungereForArbeidsgivere() throws IOException {
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med().fritekst("yrkeskarriere").bygg());
         assertThat(sokeresultat.getCver()).hasSize(1);
         assertThat(sokeresultat.getCver()).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
     }
-    
+
     @Test
     public void typeaheadPaaNavkontorFungerer() throws Exception {
-        List<String> typeAheadNavkontor = sokClient.typeAheadNavkontor("NAV Gam");
+        List<String> typeAheadNavkontor = sokClient.typeAheadNavkontor("Gamle O");
         assertThat(typeAheadNavkontor).hasSize(1);
         assertThat(typeAheadNavkontor).containsExactly("NAV Gamle Oslo");
     }
-    
+
+    @Test
+    public void typeaheadPaaNavkontorHaandtererFlereValg() throws Exception {
+        List<String> typeAheadNavkontor = sokClient.typeAheadNavkontor("NAV");
+        assertThat(typeAheadNavkontor).hasSize(4);
+        assertThat(typeAheadNavkontor).containsExactlyInAnyOrder("NAV Gamle Oslo", "NAV Asker", "NAV Drammen", "NAV Drøbak");
+    }
+
+    @Test
+    public void typeaheadPaaNavkontorErCaseInsensitive() throws Exception {
+        List<String> typeAheadNavkontor = sokClient.typeAheadNavkontor("asker");
+        assertThat(typeAheadNavkontor).hasSize(1);
+        assertThat(typeAheadNavkontor).containsExactly("NAV Asker");
+    }
+
+    @Test
+    public void typeaheadPaaNavkontorGirFlereValg() throws Exception {
+        List<String> typeAheadNavkontor = sokClient.typeAheadNavkontor("dr");
+        assertThat(typeAheadNavkontor).hasSize(2);
+        assertThat(typeAheadNavkontor).containsExactlyInAnyOrder("NAV Drammen", "NAV Drøbak");
+    }
+
+
     @Test
     public void sokPaNavkontorSkalGiKorrektResultat() throws IOException {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
@@ -902,7 +924,7 @@ public class IndexCvTest {
         assertThat(cver).hasSize(1);
         assertThat(cver).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
     }
-    
+
     @Test
     public void sokPaaFodselsdatoMedFraTilSkalGiTreff() throws Exception {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
@@ -913,7 +935,7 @@ public class IndexCvTest {
         assertThat(cver).contains(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
         assertThat(cver).doesNotContain(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv()));
     }
-    
+
     @Test
     public void sokPaaFodselsdatoMedKunFraSkalGiTreff() throws Exception {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
@@ -924,7 +946,7 @@ public class IndexCvTest {
         assertThat(cver).contains(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
         assertThat(cver).doesNotContain(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv()));
     }
-    
+
     @Test
     public void sokPaaFodselsdatoMedKunTilSkalGiTreff() throws Exception {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
@@ -935,19 +957,19 @@ public class IndexCvTest {
         assertThat(cver).contains(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
         assertThat(cver).doesNotContain(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv()));
     }
-    
+
     @Test
     public void sokPaaFodselsdatoUtenforRangeSkalIkkeGiTreff() throws Exception {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .antallAarFra(10).antallAarTil(38).bygg());
 
-        List<EsCv> cver = sokeresultat.getCver();        
+        List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver).doesNotContain(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
     }
-    
+
     @Test
     public void sokPaaArbeidserfaringUtenMatchOgNoeAnnetSkalIkkeGiTreff() throws Exception {
-        String komp = 
+        String komp =
                 "Truckførerbevis T1 Lavtløftende plukktruck, palletruck m/perm. førerplass";
 
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
@@ -955,7 +977,7 @@ public class IndexCvTest {
 
         List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver.size()).isEqualTo(0);
-        
+
     }
 
 }
