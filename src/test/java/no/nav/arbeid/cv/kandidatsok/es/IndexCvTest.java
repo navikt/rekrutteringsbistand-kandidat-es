@@ -884,21 +884,21 @@ public class IndexCvTest {
     }
 
     @Test
-    public void typeaheadPaaNavkontorHaandtererFlereValg() throws Exception {
+    public void typeaheadPaaNavkontorSkalHaandtereFlereValg() throws Exception {
         List<String> typeAheadNavkontor = sokClient.typeAheadNavkontor("NAV");
         assertThat(typeAheadNavkontor).hasSize(4);
         assertThat(typeAheadNavkontor).containsExactlyInAnyOrder("NAV Gamle Oslo", "NAV Asker", "NAV Drammen", "NAV Drøbak");
     }
 
     @Test
-    public void typeaheadPaaNavkontorErCaseInsensitive() throws Exception {
+    public void typeaheadPaaNavkontorSkalVaereCaseInsensitive() throws Exception {
         List<String> typeAheadNavkontor = sokClient.typeAheadNavkontor("asker");
         assertThat(typeAheadNavkontor).hasSize(1);
         assertThat(typeAheadNavkontor).containsExactly("NAV Asker");
     }
 
     @Test
-    public void typeaheadPaaNavkontorGirFlereValg() throws Exception {
+    public void typeaheadPaaNavkontorSKalGiFlereValg() throws Exception {
         List<String> typeAheadNavkontor = sokClient.typeAheadNavkontor("dr");
         assertThat(typeAheadNavkontor).hasSize(2);
         assertThat(typeAheadNavkontor).containsExactlyInAnyOrder("NAV Drammen", "NAV Drøbak");
