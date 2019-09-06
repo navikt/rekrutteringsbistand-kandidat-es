@@ -898,7 +898,7 @@ public class IndexCvTest {
     }
 
     @Test
-    public void typeaheadPaaNavkontorSKalGiFlereValg() throws Exception {
+    public void typeaheadPaaNavkontorSkalGiFlereValg() throws Exception {
         List<String> typeAheadNavkontor = sokClient.typeAheadNavkontor("dr");
         assertThat(typeAheadNavkontor).hasSize(2);
         assertThat(typeAheadNavkontor).containsExactlyInAnyOrder("NAV Drammen", "NAV Drøbak");

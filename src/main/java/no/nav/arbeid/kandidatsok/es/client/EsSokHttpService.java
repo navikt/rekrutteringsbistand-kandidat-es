@@ -166,9 +166,9 @@ public class EsSokHttpService implements EsSokService {
 
 
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-            searchSourceBuilder.fetchSource(sourceField, null)
+            searchSourceBuilder.query(boolQueryBuilder)
                     .aggregation(AggregationBuilders.terms(sourceField).field(sourceField))
-                    .query(boolQueryBuilder);
+                    .size(0);
 
             SearchRequest searchRequest = new SearchRequest();
             searchRequest.indices(indexName);
