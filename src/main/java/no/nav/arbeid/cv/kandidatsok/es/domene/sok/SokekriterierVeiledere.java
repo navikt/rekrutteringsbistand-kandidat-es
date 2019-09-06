@@ -17,7 +17,7 @@ public class SokekriterierVeiledere {
     private List<String> kvalifiseringsgruppeKoder;
     private List<String> navkontor;
     private List<String> veiledere;
-    private String hovedmaalKode;
+    private List<String> hovedmaalKode;
     private String etternavn;
     private Boolean maaBoInnenforGeografi;
     private List<String> forerkort;
@@ -82,7 +82,7 @@ public class SokekriterierVeiledere {
         return veiledere;
     }
 
-    public String hovedmaalKode() { return hovedmaalKode; }
+    public List<String> hovedmaalKode() { return hovedmaalKode; }
 
     public String etternavn() {
         return etternavn;
@@ -149,7 +149,7 @@ public class SokekriterierVeiledere {
         private List<String> kvalifiseringsgruppeKoder;
         private List<String> navkontor;
         private List<String> veiledere;
-        private String hovedmaalKode;
+        private List<String> hovedmaalKode;
         private String etternavn;
         private int fra = 0;
         private int antallResultater = 100;
@@ -187,8 +187,8 @@ public class SokekriterierVeiledere {
                     : Collections.unmodifiableList(new ArrayList<>(navkontor));
             s.veiledere = veiledere == null ? Collections.emptyList()
                     : Collections.unmodifiableList(new ArrayList<>(veiledere));
-
-            s.hovedmaalKode = hovedmaalKode;
+            s.hovedmaalKode = hovedmaalKode == null ? Collections.emptyList()
+                    : Collections.unmodifiableList(new ArrayList<>(hovedmaalKode));
 
             s.maaBoInnenforGeografi = maaBoInnenforGeografi;
 
@@ -256,7 +256,7 @@ public class SokekriterierVeiledere {
             return this;
         }
 
-        public Builder hovedmaalKode(String hovedmaalKode) {
+        public Builder hovedmaalKode(List<String> hovedmaalKode) {
             this.hovedmaalKode = hovedmaalKode;
             this.tomtSok = false;
             return this;
