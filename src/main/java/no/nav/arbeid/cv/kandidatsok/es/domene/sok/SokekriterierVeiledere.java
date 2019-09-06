@@ -17,6 +17,7 @@ public class SokekriterierVeiledere {
     private List<String> kvalifiseringsgruppeKoder;
     private List<String> navkontor;
     private List<String> veiledere;
+    private String hovedmaalKode;
     private String etternavn;
     private Boolean maaBoInnenforGeografi;
     private List<String> forerkort;
@@ -72,14 +73,16 @@ public class SokekriterierVeiledere {
     public List<String> kvalifiseringsgruppeKoder() {
         return kvalifiseringsgruppeKoder;
     }
-    
+
     public List<String> navkontor() {
         return navkontor;
     }
-    
+
     public List<String> veiledere() {
         return veiledere;
     }
+
+    public String hovedmaalKode() { return hovedmaalKode; }
 
     public String etternavn() {
         return etternavn;
@@ -116,7 +119,7 @@ public class SokekriterierVeiledere {
     public boolean isUtdanningSet() {
         return (isUtdanningsNivaPresent()) || (isUtdanningerPresent());
     }
-    
+
     public Integer antallAarFra() {
         return antallAarFra;
     }
@@ -124,7 +127,7 @@ public class SokekriterierVeiledere {
     public Integer antallAarTil() {
         return antallAarTil;
     }
-    
+
     public boolean isAntallAarFraSet() {
         return antallAarFra != null;
     }
@@ -146,6 +149,7 @@ public class SokekriterierVeiledere {
         private List<String> kvalifiseringsgruppeKoder;
         private List<String> navkontor;
         private List<String> veiledere;
+        private String hovedmaalKode;
         private String etternavn;
         private int fra = 0;
         private int antallResultater = 100;
@@ -184,8 +188,10 @@ public class SokekriterierVeiledere {
             s.veiledere = veiledere == null ? Collections.emptyList()
                     : Collections.unmodifiableList(new ArrayList<>(veiledere));
 
+            s.hovedmaalKode = hovedmaalKode;
+
             s.maaBoInnenforGeografi = maaBoInnenforGeografi;
-            
+
             s.antallAarFra = antallAarFra;
             s.antallAarTil = antallAarTil;
 
@@ -231,21 +237,27 @@ public class SokekriterierVeiledere {
             this.tomtSok = false;
             return this;
         }
-        
+
         public Builder kvalifiseringsgruppeKoder(List<String> kvalifiseringsgruppeKoder) {
             this.kvalifiseringsgruppeKoder = kvalifiseringsgruppeKoder;
             this.tomtSok = false;
             return this;
         }
-        
+
         public Builder navkontor(List<String> navkontor) {
             this.navkontor = navkontor;
             this.tomtSok = false;
             return this;
         }
-        
+
         public Builder veiledere(List<String> veiledere) {
             this.veiledere = veiledere;
+            this.tomtSok = false;
+            return this;
+        }
+
+        public Builder hovedmaalKode(String hovedmaalKode) {
+            this.hovedmaalKode = hovedmaalKode;
             this.tomtSok = false;
             return this;
         }
@@ -294,18 +306,18 @@ public class SokekriterierVeiledere {
             this.tomtSok = false;
             return this;
         }
-        
+
         public Builder antallAarFra(int antallAarFra) {
             this.antallAarFra = antallAarFra;
             this.tomtSok = false;
             return this;
         }
-        
+
         public Builder antallAarTil(int antallAarTil) {
             this.antallAarTil = antallAarTil;
             this.tomtSok = false;
             return this;
         }
     }
-    
+
 }

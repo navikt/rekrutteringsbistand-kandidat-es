@@ -85,10 +85,10 @@ public class EsSokHttpService implements EsSokService {
     public List<String> typeAheadKompetanse(String prefix) {
         return typeAhead(prefix, "samletKompetanseObj.samletKompetanseTekst.completion");
     }
-    
+
     @Override
-    public List<String> typeAheadNavkontor(String prefix) {
-        return typeAhead(prefix, "navkontor.completion");
+    public List<String> typeAheadNavkontor(String searchTerm) {
+        return ngramTypeAhead(searchTerm, "navkontor.text", "navkontor");
     }
 
     @Override
@@ -123,7 +123,7 @@ public class EsSokHttpService implements EsSokService {
 
             return compSuggestion.getOptions().stream()
                     .map(option -> option.getHit().getSourceAsString()).collect(toList());
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             throw new ElasticException(ioe);
         }
     }
@@ -154,9 +154,38 @@ public class EsSokHttpService implements EsSokService {
                     searchResponse.getSuggest().getSuggestion("typeahead");
             return compSuggestion.getOptions().stream().map(option -> option.getText().string())
                     .collect(toList());
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             throw new ElasticException(ioe);
         }
+    }
+
+    private List<String> ngramTypeAhead(String searchTerm, String searchField, String sourceField) {
+        try {
+            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+            boolQueryBuilder.must(QueryBuilders.matchPhraseQuery(searchField, searchTerm).slop(5));
+
+
+            SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+            searchSourceBuilder.query(boolQueryBuilder)
+                    .aggregation(AggregationBuilders.terms(sourceField).field(sourceField))
+                    .size(0);
+
+            SearchRequest searchRequest = new SearchRequest();
+            searchRequest.indices(indexName);
+            searchRequest.source(searchSourceBuilder);
+            SearchResponse searchResponse = esExec(() -> client.search(searchRequest));
+            LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
+
+            List<Aggregering> aggs = toAggregeringList(searchResponse);
+            List<String> aggregateList = new ArrayList<>();
+            aggs.forEach(a -> a.getFelt().forEach(f -> aggregateList.add(f.getFeltnavn())));
+            LOGGER.debug("AGGREGATELIST: " + aggregateList);
+
+            return aggregateList;
+        } catch (IOException ioe) {
+            throw new ElasticException(ioe);
+        }
+
     }
 
     private void matchAllQuery(BoolQueryBuilder boolQueryBuilder) {
@@ -176,7 +205,7 @@ public class EsSokHttpService implements EsSokService {
                 return toSokeresultat(esExec(() -> search(UseCase.AG_SOK, queryBuilder,
                         sk.fraIndex(), sk.antallResultater(), null)));
             }
-            
+
             if (StringUtils.isNotBlank(sk.fritekst())) {
                 addFritekstToQuery(sk.fritekst(), queryBuilder);
             }
@@ -219,7 +248,7 @@ public class EsSokHttpService implements EsSokService {
 
             return toSokeresultat(esExec(() -> search(UseCase.AG_SOK, queryBuilder, sk.fraIndex(),
                     sk.antallResultater(), sortQueryBuilder)));
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             throw new ElasticException(ioe);
         }
     }
@@ -252,7 +281,7 @@ public class EsSokHttpService implements EsSokService {
                 return Optional.empty();
             }
             return Optional.of(cver.iterator().next());
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             throw new ElasticException(ioe);
         }
     }
@@ -318,15 +347,19 @@ public class EsSokHttpService implements EsSokService {
             if (isNotEmpty(sk.kvalifiseringsgruppeKoder())) {
                 addKvalifiseringsgruppeKoderToQuery(sk.kvalifiseringsgruppeKoder(), queryBuilder);
             }
-            
+
             if (isNotEmpty(sk.navkontor())) {
                 addNavkontorToQuery(sk.navkontor(), queryBuilder);
             }
-            
+
             if (isNotEmpty(sk.veiledere())) {
                 addVeiledereToQuery(sk.veiledere(), queryBuilder);
             }
-            
+
+            if (sk.hovedmaalKode() != null && !sk.hovedmaalKode().equals("")) {
+                addHovedmalToQuery(sk.hovedmaalKode(), queryBuilder);
+            }
+
             if (sk.isAntallAarFraSet() && sk.isAntallAarTilSet()) {
                 addFodselsdatoToQuery(sk.antallAarFra(), sk.antallAarTil(), queryBuilder);
             } else if (sk.isAntallAarFraSet()) {
@@ -337,7 +370,7 @@ public class EsSokHttpService implements EsSokService {
 
             return toSokeresultat(esExec(() -> search(UseCase.VEIL_SOK, queryBuilder, sk.fraIndex(),
                     sk.antallResultater(), sortQueryBuilder)));
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             throw new ElasticException(ioe);
         }
     }
@@ -355,11 +388,11 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addFilterForVeiledereSok(BoolQueryBuilder boolQueryBuilder) {
-        boolQueryBuilder.filter(QueryBuilders.termQuery("synligForVeilederSok",  Boolean.TRUE));
+        boolQueryBuilder.filter(QueryBuilders.termQuery("synligForVeilederSok", Boolean.TRUE));
     }
 
     private void addFilterForVeiledereHent(BoolQueryBuilder boolQueryBuilder) {
-        boolQueryBuilder.filter(QueryBuilders.termQuery("synligForVeilederSok",  Boolean.TRUE));
+        boolQueryBuilder.filter(QueryBuilders.termQuery("synligForVeilederSok", Boolean.TRUE));
     }
 
     private void addEtternavnToQuery(String etternavn, BoolQueryBuilder boolQueryBuilder) {
@@ -378,7 +411,7 @@ public class EsSokHttpService implements EsSokService {
 
 
     private BoolQueryBuilder makeUtdanningQuery(List<String> utdanninger,
-            List<String> utdanningsniva) {
+                                                List<String> utdanningsniva) {
 
         BoolQueryBuilder utdanningerBuilder = QueryBuilders.boolQuery();
         BoolQueryBuilder utdanningsnivaBuilder = QueryBuilders.boolQuery();
@@ -403,7 +436,7 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addUtdanningToQuery(List<String> utdanninger, List<String> utdanningsniva,
-            BoolQueryBuilder boolQueryBuilder) {
+                                     BoolQueryBuilder boolQueryBuilder) {
         if (utdanningsniva.contains("Ingen")) {
             if (utdanningsniva.size() == 1 && utdanninger.isEmpty()) {
                 boolQueryBuilder.must(makeIngenUtdanningQuery());
@@ -425,7 +458,7 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addYrkeserfaringToQuery(List<String> yrkeserfaring,
-            BoolQueryBuilder boolQueryBuilder) {
+                                         BoolQueryBuilder boolQueryBuilder) {
         BoolQueryBuilder yrkeserfaringQueryBuilder = QueryBuilders.boolQuery();
 
         yrkeserfaring.stream().filter(StringUtils::isNotBlank)
@@ -460,19 +493,19 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addKompetanserToQuery(List<String> kompetanser,
-            BoolQueryBuilder boolQueryBuilder) {
+                                       BoolQueryBuilder boolQueryBuilder) {
         BoolQueryBuilder innerBoolQuery = QueryBuilders.boolQuery();
         kompetanser.stream().filter(StringUtils::isNotBlank)
                 .forEach(k -> addKompetanseQuery(k, innerBoolQuery));
         boolQueryBuilder.must(innerBoolQuery);
     }
-    
+
     private void addFodselsdatoToQuery(Integer antallAarFra, Integer antallAarTil, BoolQueryBuilder boolQueryBuilder) {
-        if( antallAarFra != null && antallAarTil != null ) {
+        if (antallAarFra != null && antallAarTil != null) {
             boolQueryBuilder.must(QueryBuilders.rangeQuery("fodselsdato").gte("now-" + antallAarTil + "y/d").lte("now-" + antallAarFra + "y/d"));
-        } else if( antallAarFra != null ) {
+        } else if (antallAarFra != null) {
             boolQueryBuilder.must(QueryBuilders.rangeQuery("fodselsdato").gte("now-200y/d").lte("now-" + antallAarFra + "y/d"));
-        } else if( antallAarTil != null ) {
+        } else if (antallAarTil != null) {
             boolQueryBuilder.must(QueryBuilders.rangeQuery("fodselsdato").gte("now-" + antallAarTil + "y/d").lte("now"));
         } else {
             //noop
@@ -480,15 +513,15 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addStillingstitlerToQuery(List<String> stillingstitler,
-            BoolQueryBuilder boolQueryBuilder, BoolQueryBuilder sortQueryBuilder) {
+                                           BoolQueryBuilder boolQueryBuilder, BoolQueryBuilder sortQueryBuilder) {
         BoolQueryBuilder innerBoolQuery = QueryBuilders.boolQuery();
         stillingstitler.stream().filter(StringUtils::isNotBlank)
-                .forEach(s -> addStillingsTittelQuery(s, innerBoolQuery, sortQueryBuilder));        
+                .forEach(s -> addStillingsTittelQuery(s, innerBoolQuery, sortQueryBuilder));
         boolQueryBuilder.must(innerBoolQuery);
     }
 
     private void addJobbonskerToQuery(List<String> jobbonsker, BoolQueryBuilder boolQueryBuilder,
-            BoolQueryBuilder sortQueryBuilder) {
+                                      BoolQueryBuilder sortQueryBuilder) {
         BoolQueryBuilder yrkeJobbonskerBoolQueryBuilder = QueryBuilders.boolQuery();
 
         jobbonsker.stream().filter(StringUtils::isNotBlank)
@@ -509,7 +542,7 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addForerkortToQuery(List<String> forerkort, BoolQueryBuilder boolQueryBuilder) {
-        BoolQueryBuilder innerBoolQueryBuilder = QueryBuilders.boolQuery();       
+        BoolQueryBuilder innerBoolQueryBuilder = QueryBuilders.boolQuery();
         forerkort.stream().filter(StringUtils::isNotBlank)
                 .forEach(s -> addForerkortQuery(s, innerBoolQueryBuilder));
         boolQueryBuilder.must(innerBoolQueryBuilder);
@@ -519,21 +552,21 @@ public class EsSokHttpService implements EsSokService {
         BoolQueryBuilder innerBoolQueryBuilder = QueryBuilders.boolQuery();
         boolQueryBuilder.must(innerBoolQueryBuilder);
         kvalifiseringsgruppeKoder.stream().filter(StringUtils::isNotBlank)
-        .forEach(s -> addKvalifiseringsgruppekodeQuery(s, innerBoolQueryBuilder));
+                .forEach(s -> addKvalifiseringsgruppekodeQuery(s, innerBoolQueryBuilder));
     }
-    
+
     private void addNavkontorToQuery(List<String> navkontor, BoolQueryBuilder boolQueryBuilder) {
         BoolQueryBuilder innerBoolQueryBuilder = QueryBuilders.boolQuery();
         boolQueryBuilder.must(innerBoolQueryBuilder);
         navkontor.stream().filter(StringUtils::isNotBlank)
-        .forEach(s -> addNavkontorQuery(s, innerBoolQueryBuilder));
+                .forEach(s -> addNavkontorQuery(s, innerBoolQueryBuilder));
     }
-    
+
     private void addVeiledereToQuery(List<String> veiledere, BoolQueryBuilder boolQueryBuilder) {
         BoolQueryBuilder innerBoolQueryBuilder = QueryBuilders.boolQuery();
         boolQueryBuilder.must(innerBoolQueryBuilder);
         veiledere.stream().filter(StringUtils::isNotBlank)
-        .forEach(s -> addVeilederToQuery(s, innerBoolQueryBuilder));
+                .forEach(s -> addVeilederToQuery(s, innerBoolQueryBuilder));
     }
 
     private void addYrkeJobbonskerQuery(String yrkeJobbonske, BoolQueryBuilder boolQueryBuilder) {
@@ -541,7 +574,7 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addStillingsTittelQuery(String stillingstittel, BoolQueryBuilder boolQueryBuilder,
-            BoolQueryBuilder sortBoolQueryBuilder) {
+                                         BoolQueryBuilder sortBoolQueryBuilder) {
         NestedQueryBuilder yrkeserfaringQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
                 QueryBuilders.matchQuery("yrkeserfaring.sokeTitler", stillingstittel)
                         .operator(Operator.AND),
@@ -610,12 +643,17 @@ public class EsSokHttpService implements EsSokService {
         boolQueryBuilder.should(QueryBuilders.termQuery("navkontor", navkontor));
         LOGGER.debug("ADDING navkontor");
     }
-    
+
     private void addVeilederToQuery(String veileder, BoolQueryBuilder boolQueryBuilder) {
         boolQueryBuilder.should(QueryBuilders.termQuery("veileder", veileder.toLowerCase()));
         LOGGER.debug("ADDING veileder");
     }
-    
+
+    private void addHovedmalToQuery(String hovedmalKode, BoolQueryBuilder boolQueryBuilder) {
+        boolQueryBuilder.should(QueryBuilders.termQuery("hovedmalkode", hovedmalKode));
+        LOGGER.debug("ADDING hovedmal");
+    }
+
     private void addKommunenummerQuery(String geografi, BoolQueryBuilder boolQueryBuilder) {
         String[] geografiKoder = geografi.split("\\.");
         String regex = "";
@@ -640,7 +678,7 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addTotalYrkeserfaringQuery(String totalYrkeserfaring,
-            BoolQueryBuilder boolQueryBuilder) {
+                                            BoolQueryBuilder boolQueryBuilder) {
         String[] interval = totalYrkeserfaring.split("-");
         RangeQueryBuilder totalErfaringQueryBuilder;
         if (interval.length == 2) {
@@ -751,8 +789,8 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private List<? extends Bucket> getBucketsForInnerAggregation(Aggregations aggregations,
-            String aggregationName) {
-        if( aggregations.get(aggregationName) instanceof org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms) {
+                                                                 String aggregationName) {
+        if (aggregations.get(aggregationName) instanceof org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms) {
             return ((org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms) aggregations.get(aggregationName)).getBuckets();
         }
         return ((Terms) ((Nested) aggregations.get(aggregationName)).getAggregations()
@@ -760,7 +798,7 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private SearchResponse search(UseCase useCase, BoolQueryBuilder queryBuilder, int from,
-            int size, BoolQueryBuilder sortQueryBuilder) throws IOException {
+                                  int size, BoolQueryBuilder sortQueryBuilder) throws IOException {
 
         switch (useCase) {
             case AG_SOK:
@@ -908,7 +946,7 @@ public class EsSokHttpService implements EsSokService {
                                 .collect(Collectors.joining(", ")));
             }
             return liste.stream().findFirst();
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             throw new ElasticException(ioe);
         }
     }
@@ -928,11 +966,11 @@ public class EsSokHttpService implements EsSokService {
                     usortertSokeresultat.getCver(), kandidatnummer);
             return new Sokeresultat(usortertSokeresultat.getTotaltAntallTreff(), sorterteCver,
                     usortertSokeresultat.getAggregeringer());
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             throw new ElasticException(ioe);
         }
     }
-    
+
     @Override
     public Sokeresultat arbeidsgiverHentKandidaterForVisning(List<String> kandidatnummer) {
         try {
@@ -943,7 +981,7 @@ public class EsSokHttpService implements EsSokService {
                     usortertSokeresultat.getCver(), kandidatnummer);
             return new Sokeresultat(usortertSokeresultat.getTotaltAntallTreff(), sorterteCver,
                     usortertSokeresultat.getAggregeringer());
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             throw new ElasticException(ioe);
         }
     }
@@ -958,13 +996,13 @@ public class EsSokHttpService implements EsSokService {
                     usortertSokeresultat.getCver(), kandidatnummer);
             return new Sokeresultat(usortertSokeresultat.getTotaltAntallTreff(), sorterteCver,
                     usortertSokeresultat.getAggregeringer());
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             throw new ElasticException(ioe);
         }
     }
-        
+
     private List<EsCv> sorterSokeresultaterBasertPaaRequestRekkefolge(List<EsCv> cver,
-            List<String> kandidatrekkefolge) {
+                                                                      List<String> kandidatrekkefolge) {
         Map<String, EsCv> kandidater =
                 cver.stream().collect(toMap(EsCv::getKandidatnr, Function.identity()));
 
