@@ -628,7 +628,7 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addHovedmalToQuery(String hovedmalKode, BoolQueryBuilder boolQueryBuilder) {
-        boolQueryBuilder.should(QueryBuilders.termQuery("hovedmalkode", hovedmalKode));
+        boolQueryBuilder.should(QueryBuilders.termQuery("hovedmaalkode", hovedmalKode));
         LOGGER.debug("ADDING hovedmal");
     }
 
