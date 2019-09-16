@@ -11,7 +11,7 @@ import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokeresultat;
 public interface EsSokService {
 
     Sokeresultat arbeidsgiverSok(Sokekriterier sokekriterier);
-    
+
     Sokeresultat veilederSok(SokekriterierVeiledere sokekriterier);
 
     List<String> typeAheadKompetanse(String prefix);
@@ -25,19 +25,19 @@ public interface EsSokService {
     List<String> typeAheadYrkeJobbonsker(String prefix);
 
     List<String> typeAheadSprak(String prefix);
-    
-    List<String> typeAheadNavkontor(String prefix);
+
+    List<String> typeAheadNavkontor(String searchTerm);
 
     Optional<EsCv> arbeidsgiverHent(String kandidatnr);
 
     Optional<EsCv> veilederHent(String kandidatnr);
-    
+
     Sokeresultat arbeidsgiverHentKandidater(List<String> kandidatnummer);
-    
+
     Sokeresultat arbeidsgiverHentKandidaterForVisning(List<String> kandidatnummer);
-    
+
     Sokeresultat veilederHentKandidater(List<String> kandidatnummer);
 
-    Optional<no.nav.arbeid.cv.kandidatsok.es.domene.sok.EsCv> veilederSokPaaFnr(String fnr);    
+    Optional<no.nav.arbeid.cv.kandidatsok.es.domene.sok.EsCv> veilederSokPaaFnr(String fnr);
 
 }
