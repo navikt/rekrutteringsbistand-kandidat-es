@@ -356,7 +356,7 @@ public class EsSokHttpService implements EsSokService {
                 addVeiledereToQuery(sk.veiledere(), queryBuilder);
             }
 
-            if (sk.hovedmaalKode() != null && !sk.hovedmaalKode().equals("")) {
+            if (isNotEmpty(sk.hovedmaalKode())) {
                 addHovedmalToQuery(sk.hovedmaalKode(), queryBuilder);
             }
 
@@ -562,6 +562,13 @@ public class EsSokHttpService implements EsSokService {
                 .forEach(s -> addNavkontorQuery(s, innerBoolQueryBuilder));
     }
 
+    private void addHovedmalToQuery(List<String> hovedmal, BoolQueryBuilder boolQueryBuilder) {
+        BoolQueryBuilder innerBoolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(innerBoolQueryBuilder);
+        hovedmal.stream().filter((StringUtils::isNotBlank))
+                .forEach(s -> addHovedmalToQuery(s, innerBoolQueryBuilder));
+    }
+
     private void addVeiledereToQuery(List<String> veiledere, BoolQueryBuilder boolQueryBuilder) {
         BoolQueryBuilder innerBoolQueryBuilder = QueryBuilders.boolQuery();
         boolQueryBuilder.must(innerBoolQueryBuilder);
@@ -650,7 +657,7 @@ public class EsSokHttpService implements EsSokService {
     }
 
     private void addHovedmalToQuery(String hovedmalKode, BoolQueryBuilder boolQueryBuilder) {
-        boolQueryBuilder.should(QueryBuilders.termQuery("hovedmalkode", hovedmalKode));
+        boolQueryBuilder.should(QueryBuilders.termQuery("hovedmaalkode", hovedmalKode));
         LOGGER.debug("ADDING hovedmal");
     }
 
