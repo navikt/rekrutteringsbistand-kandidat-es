@@ -1,17 +1,18 @@
 package no.nav.arbeid.kandidatsok.es.client;
 
-import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import javax.annotation.PreDestroy;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Tags;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsCv;
+import no.nav.arbeid.cv.kandidatsok.es.exception.ApplicationException;
+import no.nav.arbeid.cv.kandidatsok.es.exception.OperationalException;
+import no.nav.elasticsearch.mapping.MappingBuilder;
+import no.nav.elasticsearch.mapping.MappingBuilderImpl;
+import no.nav.elasticsearch.mapping.ObjectMapping;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
-import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
@@ -28,24 +29,16 @@ import org.elasticsearch.client.Requests;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.ResponseException;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.*;
 
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Tags;
-import no.nav.arbeid.cv.kandidatsok.es.domene.EsCv;
-import no.nav.arbeid.cv.kandidatsok.es.exception.ApplicationException;
-import no.nav.arbeid.cv.kandidatsok.es.exception.OperationalException;
-import no.nav.elasticsearch.mapping.MappingBuilder;
-import no.nav.elasticsearch.mapping.MappingBuilderImpl;
-import no.nav.elasticsearch.mapping.ObjectMapping;
+import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
-public class EsIndexerHttpService implements EsIndexerService {
+public class EsIndexerHttpService implements EsIndexerService, AutoCloseable {
 
     private static final String CV_TYPE = "cvtype";
 
@@ -389,4 +382,10 @@ public class EsIndexerHttpService implements EsIndexerService {
             throw new ElasticException(ioe);
         }
     }
+
+    @Override
+    public void close() throws IOException {
+        client.close();
+    }
+
 }

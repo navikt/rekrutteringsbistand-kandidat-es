@@ -1,33 +1,14 @@
 package no.nav.arbeid.kandidatsok.es.client;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import no.nav.arbeid.cv.kandidatsok.es.domene.sok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.MatchQueryBuilder;
-import org.elasticsearch.index.query.NestedQueryBuilder;
-import org.elasticsearch.index.query.Operator;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.RangeQueryBuilder;
-import org.elasticsearch.index.query.RegexpQueryBuilder;
+import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
@@ -47,16 +28,16 @@ import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
-import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Aggregering;
-import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Aggregeringsfelt;
-import no.nav.arbeid.cv.kandidatsok.es.domene.sok.EsCv;
-import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokekriterier;
-import no.nav.arbeid.cv.kandidatsok.es.domene.sok.SokekriterierVeiledere;
-import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokeresultat;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
-public class EsSokHttpService implements EsSokService {
+public class EsSokHttpService implements EsSokService, AutoCloseable {
 
     private static enum UseCase {
         AG_SOK, AG_HENT, VEIL_SOK, VEIL_HENT;
@@ -1028,4 +1009,10 @@ public class EsSokHttpService implements EsSokService {
             return null;
         }
     }
+
+    @Override
+    public void close() throws IOException {
+        client.close();
+    }
+
 }
