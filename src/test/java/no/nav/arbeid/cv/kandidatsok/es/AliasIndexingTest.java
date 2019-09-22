@@ -1,59 +1,42 @@
 package no.nav.arbeid.cv.kandidatsok.es;
 
-import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.apache.http.HttpHost;
-import org.assertj.core.api.Assertions;
-import org.assertj.core.extractor.Extractors;
-import org.elasticsearch.action.support.WriteRequest;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.junit4.SpringRunner;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.palantir.docker.compose.DockerComposeRule;
 import com.palantir.docker.compose.configuration.ShutdownStrategy;
 import com.palantir.docker.compose.connection.DockerMachine;
-
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tags;
 import no.nav.arbeid.cv.kandidatsok.domene.es.EsCvObjectMother;
 import no.nav.arbeid.cv.kandidatsok.domene.es.KandidatsokTransformer;
-import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Aggregering;
-import no.nav.arbeid.cv.kandidatsok.es.domene.sok.EsCv;
-import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokekriterier;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.SokekriterierVeiledere;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokeresultat;
 import no.nav.arbeid.kandidatsok.es.client.EsIndexerHttpService;
 import no.nav.arbeid.kandidatsok.es.client.EsIndexerService;
 import no.nav.arbeid.kandidatsok.es.client.EsSokHttpService;
 import no.nav.arbeid.kandidatsok.es.client.EsSokService;
+import org.apache.http.HttpHost;
+import org.elasticsearch.action.support.WriteRequest;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.io.IOException;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 public class AliasIndexingTest {
@@ -80,7 +63,7 @@ public class AliasIndexingTest {
 
     @Autowired
     private EsIndexerService indexerClient;
-    
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -109,7 +92,7 @@ public class AliasIndexingTest {
 
             return meterRegistry;
         }
-        
+
         @Bean
         public EsIndexerService indexerCvService(RestHighLevelClient restHighLevelClient,
                                                  ObjectMapper objectMapper,
@@ -118,7 +101,7 @@ public class AliasIndexingTest {
             return new EsIndexerHttpService(restHighLevelClient, objectMapper, meterRegistry,
                     WriteRequest.RefreshPolicy.IMMEDIATE, 3, 2);
         }
-        
+
         @Bean
         public EsSokService esSokService(RestHighLevelClient restHighLevelClient, ObjectMapper objectMapper) {
             return new EsSokHttpService(restHighLevelClient, objectMapper, "current_cv");
@@ -153,30 +136,30 @@ public class AliasIndexingTest {
         indexerClient.index(EsCvObjectMother.giveMeCvFritattForAgKandidatsok(), indexName);
         indexerClient.index(EsCvObjectMother.giveMeCvFritattForKandidatsok(), indexName);
     }
-    
-    
-    
+
+
+
     @Test
     public void storStyggTest() {
-        
+
         //sokMotAliasFungerer() {
         assertThat(indexerClient.getTargetsForAlias("current_cv")).containsExactly("cv_4.1.21");
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("Awesome").bygg());
         assertThat(sokeresultat.getCver()).hasSize(1);
         assertThat(sokeresultat.getCver()).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
-    
+
         //indexeringMotAliasFungerer() {
         indexerAlleCVene("current_cv");
         Sokeresultat sokeresultat2 = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("Awesome").bygg());
         assertThat(sokeresultat2.getCver()).hasSize(1);
         assertThat(sokeresultat2.getCver()).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
-    
+
         //indexSwitchingFungerer() {
         indexerClient.createIndex("cv_4.1.22");
         indexerClient.updateIndexAlias("current_cv", "cv_4.1.22");
         Sokeresultat sokeresultat3 = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("Awesome").bygg());
         assertThat(sokeresultat3.getCver()).hasSize(0);
-        
+
         indexerAlleCVene("cv_4.1.22");
         Sokeresultat sokeresultat4 = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("Awesome").bygg());
         assertThat(sokeresultat4.getCver()).hasSize(1);
@@ -193,5 +176,5 @@ public class AliasIndexingTest {
         }
     }
 
-    
+
 }
