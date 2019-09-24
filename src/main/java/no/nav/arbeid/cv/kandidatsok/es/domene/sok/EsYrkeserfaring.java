@@ -1,10 +1,10 @@
 package no.nav.arbeid.cv.kandidatsok.es.domene.sok;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsYrkeserfaring {
@@ -19,10 +19,11 @@ public class EsYrkeserfaring {
 
     private Date fraDato;
 
-    public EsYrkeserfaring() {}
+    public EsYrkeserfaring() {
+    }
 
     public EsYrkeserfaring(String styrkKodeStillingstittel, String alternativStillingstittel,
-            int yrkeserfaringManeder, Date fraDato, List<String> sokeTitler) {
+                           int yrkeserfaringManeder, Date fraDato, List<String> sokeTitler) {
         this.styrkKodeStillingstittel = styrkKodeStillingstittel;
         this.alternativStillingstittel = alternativStillingstittel;
         this.yrkeserfaringManeder = yrkeserfaringManeder;

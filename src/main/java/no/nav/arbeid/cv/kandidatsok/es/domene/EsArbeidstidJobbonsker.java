@@ -9,52 +9,53 @@ import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsArbeidstidJobbonsker {
 
-  @ElasticKeywordField
-  private String arbeidstidKode;
+    @ElasticKeywordField
+    private String arbeidstidKode;
 
-  @ElasticTextField(analyzer = "norwegian")
-  @ElasticKeywordField
-  private String arbeidstidKodeTekst;
+    @ElasticTextField(analyzer = "norwegian")
+    @ElasticKeywordField
+    private String arbeidstidKodeTekst;
 
-  public EsArbeidstidJobbonsker() {}
-
-  public EsArbeidstidJobbonsker(String arbeidstidKode,
-                                String arbeidstidKodeTekst) {
-    this.arbeidstidKode = arbeidstidKode;
-    this.arbeidstidKodeTekst = arbeidstidKodeTekst;
-  }
-
-  public String getArbeidstidKode() {
-    return arbeidstidKode;
-  }
-
-  public String getArbeidstidKodeTekst() {
-    return arbeidstidKodeTekst;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
+    public EsArbeidstidJobbonsker() {
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+
+    public EsArbeidstidJobbonsker(String arbeidstidKode,
+                                  String arbeidstidKodeTekst) {
+        this.arbeidstidKode = arbeidstidKode;
+        this.arbeidstidKodeTekst = arbeidstidKodeTekst;
     }
-    EsArbeidstidJobbonsker that = (EsArbeidstidJobbonsker) o;
-    return Objects.equals(arbeidstidKode, that.arbeidstidKode)
-        && Objects.equals(arbeidstidKodeTekst, that.arbeidstidKodeTekst);
-  }
 
-  @Override
-  public int hashCode() {
+    public String getArbeidstidKode() {
+        return arbeidstidKode;
+    }
 
-    return Objects.hash(arbeidstidKode, arbeidstidKodeTekst);
-  }
+    public String getArbeidstidKodeTekst() {
+        return arbeidstidKodeTekst;
+    }
 
-  @Override
-  public String toString() {
-    return "EsArbeidstidsordningJobbonsker{" + "arbeidstidKode='" + arbeidstidKode
-        + '\'' + ", arbeidstidKodeTekst='" + arbeidstidKodeTekst + '\'' + '}';
-  }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        EsArbeidstidJobbonsker that = (EsArbeidstidJobbonsker) o;
+        return Objects.equals(arbeidstidKode, that.arbeidstidKode)
+                && Objects.equals(arbeidstidKodeTekst, that.arbeidstidKodeTekst);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(arbeidstidKode, arbeidstidKodeTekst);
+    }
+
+    @Override
+    public String toString() {
+        return "EsArbeidstidsordningJobbonsker{" + "arbeidstidKode='" + arbeidstidKode
+                + '\'' + ", arbeidstidKodeTekst='" + arbeidstidKodeTekst + '\'' + '}';
+    }
 
 }

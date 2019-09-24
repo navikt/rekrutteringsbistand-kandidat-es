@@ -1,15 +1,14 @@
 package no.nav.arbeid.cv.kandidatsok.es.domene;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-
 import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
 import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
 import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsYrkeJobbonsker {
@@ -28,10 +27,11 @@ public class EsYrkeJobbonsker {
 
     private boolean primaertJobbonske;
 
-    public EsYrkeJobbonsker() {}
+    public EsYrkeJobbonsker() {
+    }
 
     public EsYrkeJobbonsker(String styrkKode, String styrkBeskrivelse, boolean primaertJobbonske,
-            List<String> sokeTitler) {
+                            List<String> sokeTitler) {
         this.styrkKode = styrkKode;
         this.styrkBeskrivelse = styrkBeskrivelse;
         this.primaertJobbonske = primaertJobbonske;

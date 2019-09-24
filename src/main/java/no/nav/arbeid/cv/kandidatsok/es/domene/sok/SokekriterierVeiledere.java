@@ -28,7 +28,10 @@ public class SokekriterierVeiledere {
 
     private boolean tomtSok = true;
 
-    private SokekriterierVeiledere() {};
+    private SokekriterierVeiledere() {
+    }
+
+    ;
 
     public static Builder med() {
         return new Builder();
@@ -82,7 +85,9 @@ public class SokekriterierVeiledere {
         return veiledere;
     }
 
-    public List<String> hovedmaalKode() { return hovedmaalKode; }
+    public List<String> hovedmaalKode() {
+        return hovedmaalKode;
+    }
 
     public String etternavn() {
         return etternavn;
