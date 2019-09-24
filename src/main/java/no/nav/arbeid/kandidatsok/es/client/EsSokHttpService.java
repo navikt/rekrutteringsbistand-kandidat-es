@@ -349,11 +349,19 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 addFodselsdatoToQuery(null, sk.antallAarTil(), queryBuilder);
             }
 
+            if (sk.isInkluderingsbehov()) {
+                addFilterForInkluderingsbehov(queryBuilder);
+            }
+
             return toSokeresultat(esExec(() -> search(UseCase.VEIL_SOK, queryBuilder, sk.fraIndex(),
                     sk.antallResultater(), sortQueryBuilder)));
         } catch (IOException ioe) {
             throw new ElasticException(ioe);
         }
+    }
+
+    private void addFilterForInkluderingsbehov(BoolQueryBuilder boolQueryBuilder) {
+        boolQueryBuilder.filter(QueryBuilders.termQuery("inkluderingsbehov", Boolean.TRUE));
     }
 
     private void addFilterForArbeidsgivereSok(BoolQueryBuilder boolQueryBuilder) {

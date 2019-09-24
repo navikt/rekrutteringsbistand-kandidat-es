@@ -980,4 +980,15 @@ public class IndexCvTest {
 
     }
 
+    @Test
+    public void sokMedInkluderingsbehovSkalGiKorrektTreff() throws IOException {
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().inkluderingsbehov(true).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+
+        assertThat(cver.size()).isEqualTo(3);
+        assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder(
+                "6L", "4L", "3L");
+    }
+
 }
