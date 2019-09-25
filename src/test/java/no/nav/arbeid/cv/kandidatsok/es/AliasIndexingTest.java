@@ -97,7 +97,7 @@ public class AliasIndexingTest {
         public EsIndexerService indexerCvService(RestHighLevelClient restHighLevelClient,
                                                  ObjectMapper objectMapper,
                                                  MeterRegistry meterRegistry
-                                                 ) {
+        ) {
             return new EsIndexerHttpService(restHighLevelClient, objectMapper, meterRegistry,
                     WriteRequest.RefreshPolicy.IMMEDIATE, 3, 2);
         }
@@ -136,7 +136,6 @@ public class AliasIndexingTest {
         indexerClient.index(EsCvObjectMother.giveMeCvFritattForAgKandidatsok(), indexName);
         indexerClient.index(EsCvObjectMother.giveMeCvFritattForKandidatsok(), indexName);
     }
-
 
 
     @Test

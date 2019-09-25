@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import no.nav.arbeid.cv.kandidatsok.es.domene.sok.SokekriterierVeiledere.Builder;
-
 public class Sokekriterier {
     private String fritekst;
     private List<String> yrkeJobbonsker;
@@ -23,12 +21,15 @@ public class Sokekriterier {
 
     private boolean tomtSok = true;
 
-    private Sokekriterier() {};
+    private Sokekriterier() {
+    }
+
+    ;
 
     public static Builder med() {
         return new Builder();
     }
-   
+
     public String fritekst() {
         return fritekst;
     }
@@ -64,7 +65,7 @@ public class Sokekriterier {
     public List<String> geografiList() {
         return geografiList;
     }
-    
+
     public Boolean maaBoInnenforGeografi() {
         return maaBoInnenforGeografi;
     }
@@ -143,7 +144,7 @@ public class Sokekriterier {
 
             return s;
         }
-        
+
         public Builder fritekst(String fritekst) {
             this.fritekst = fritekst;
             this.tomtSok = false;
@@ -197,7 +198,7 @@ public class Sokekriterier {
             this.tomtSok = false;
             return this;
         }
-        
+
         public Builder fraIndex(int fra) {
             this.fra = fra;
             return this;

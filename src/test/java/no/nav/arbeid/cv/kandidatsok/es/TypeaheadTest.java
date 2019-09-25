@@ -1,14 +1,18 @@
 package no.nav.arbeid.cv.kandidatsok.es;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.util.List;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.palantir.docker.compose.DockerComposeRule;
+import com.palantir.docker.compose.configuration.ShutdownStrategy;
+import com.palantir.docker.compose.connection.DockerMachine;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Tags;
+import no.nav.arbeid.cv.kandidatsok.domene.es.EsCvObjectMother;
+import no.nav.arbeid.cv.kandidatsok.domene.es.KandidatsokTransformer;
+import no.nav.arbeid.kandidatsok.es.client.EsIndexerHttpService;
+import no.nav.arbeid.kandidatsok.es.client.EsIndexerService;
+import no.nav.arbeid.kandidatsok.es.client.EsSokHttpService;
+import no.nav.arbeid.kandidatsok.es.client.EsSokService;
 import org.apache.http.HttpHost;
 import org.elasticsearch.action.support.WriteRequest;
 import org.elasticsearch.client.RestClient;
@@ -22,24 +26,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.palantir.docker.compose.DockerComposeRule;
-import com.palantir.docker.compose.configuration.ShutdownStrategy;
-import com.palantir.docker.compose.connection.DockerMachine;
+import java.io.IOException;
+import java.util.List;
 
-import io.micrometer.core.instrument.Counter;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Tags;
-import no.nav.arbeid.cv.indexer.config.EsServiceConfig;
-import no.nav.arbeid.cv.kandidatsok.domene.es.EsCvObjectMother;
-import no.nav.arbeid.cv.kandidatsok.domene.es.KandidatsokTransformer;
-import no.nav.arbeid.kandidatsok.es.client.EsIndexerHttpService;
-import no.nav.arbeid.kandidatsok.es.client.EsIndexerService;
-import no.nav.arbeid.kandidatsok.es.client.EsSokHttpService;
-import no.nav.arbeid.kandidatsok.es.client.EsSokService;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 public class TypeaheadTest {
@@ -95,16 +91,16 @@ public class TypeaheadTest {
 
             return meterRegistry;
         }
-        
+
         @Bean
         public EsIndexerService indexerCvService(RestHighLevelClient restHighLevelClient,
                                                  ObjectMapper objectMapper,
                                                  MeterRegistry meterRegistry
-                                                 ) {
+        ) {
             return new EsIndexerHttpService(restHighLevelClient, objectMapper, meterRegistry,
                     WriteRequest.RefreshPolicy.IMMEDIATE, 3, 2);
         }
-        
+
         @Bean
         public EsSokService esSokService(RestHighLevelClient restHighLevelClient, ObjectMapper objectMapper) {
             return new EsSokHttpService(restHighLevelClient, objectMapper, "cvindex");
@@ -138,25 +134,25 @@ public class TypeaheadTest {
     public void after() throws IOException {
         indexerClient.deleteIndex("cvindex");
     }
-    
+
     @Test
     public void typeAheadArbeidserfaring() throws IOException {
         List<String> liste = sokClient.typeAheadYrkeserfaring("Butikk");
         assertThat(liste.size()).isEqualTo(5);
-        assertThat(liste).containsExactly("Butikkmedarbeider", 
-                "Butikkmedarbeider(dagligvarer)", 
+        assertThat(liste).containsExactly("Butikkmedarbeider",
+                "Butikkmedarbeider(dagligvarer)",
                 "Butikkmedarbeider(elektronikk)",
                 "Butikkmedarbeider(klesbutikk)",
                 "Butikkmedarbeider(trevare)");
     }
-    
+
     @Test
     public void typeAheadKompetanse() throws IOException {
         List<String> liste = sokClient.typeAheadKompetanse("Nyhet");
         assertThat(liste.size()).isEqualTo(1);
         assertThat(liste).contains("Nyhetsanker");
     }
-    
+
     @Test
     public void typeAheadGeografi() throws IOException {
         List<String> liste = sokClient.typeAheadGeografi("Bær");

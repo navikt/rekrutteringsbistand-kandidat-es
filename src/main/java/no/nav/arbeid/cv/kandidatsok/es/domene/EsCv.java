@@ -1,28 +1,12 @@
 package no.nav.arbeid.cv.kandidatsok.es.domene;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import no.nav.elasticsearch.mapping.annotations.*;
+import org.apache.commons.lang3.StringUtils;
 
-import no.nav.elasticsearch.mapping.annotations.ElasticBooleanField;
-import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
-import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
-import no.nav.elasticsearch.mapping.annotations.ElasticDocument;
-import no.nav.elasticsearch.mapping.annotations.ElasticIntegerField;
-import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
-import no.nav.elasticsearch.mapping.annotations.ElasticLongField;
-import no.nav.elasticsearch.mapping.annotations.ElasticNestedField;
-import no.nav.elasticsearch.mapping.annotations.ElasticObjectField;
-import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @ElasticDocument
@@ -218,15 +202,15 @@ public class EsCv {
     }
 
     public EsCv(String aktorId, String fodselsnummer, String fornavn, String etternavn, Date fodselsdato,
-            Boolean fodselsdatoErDnr, String formidlingsgruppekode, String epostadresse,
-            String mobiltelefon, String telefon, String statsborgerskap, String kandidatnr, String beskrivelse,
-            String samtykkeStatus, Date samtykkeDato, String adresselinje1, String adresselinje2,
-            String adresselinje3, String postnummer, String poststed, String landkode,
-            Integer kommunenummer, Boolean disponererBil, Date tidsstempel, Integer kommunenummerkw,
-            Boolean doed, String frKode, String kvalifiseringsgruppekode, String hovedmaalkode, String orgenhet,
-            Boolean fritattKandidatsok, Boolean fritattAgKandidatsok,
-            Boolean synligForArbeidsgiverSok, Boolean synligForVeilederSok, String oppstartKode, String kommunenummerstring,
-            String veileder, boolean inkluderingsbehov) {
+                Boolean fodselsdatoErDnr, String formidlingsgruppekode, String epostadresse,
+                String mobiltelefon, String telefon, String statsborgerskap, String kandidatnr, String beskrivelse,
+                String samtykkeStatus, Date samtykkeDato, String adresselinje1, String adresselinje2,
+                String adresselinje3, String postnummer, String poststed, String landkode,
+                Integer kommunenummer, Boolean disponererBil, Date tidsstempel, Integer kommunenummerkw,
+                Boolean doed, String frKode, String kvalifiseringsgruppekode, String hovedmaalkode, String orgenhet,
+                Boolean fritattKandidatsok, Boolean fritattAgKandidatsok,
+                Boolean synligForArbeidsgiverSok, Boolean synligForVeilederSok, String oppstartKode, String kommunenummerstring,
+                String veileder, boolean inkluderingsbehov) {
         this.aktorId = aktorId;
         this.fodselsnummer = fodselsnummer;
         this.fornavn = fornavn;
@@ -271,14 +255,14 @@ public class EsCv {
     }
 
     public EsCv(String aktorId, String fodselsnummer, String fornavn, String etternavn, Date fodselsdato,
-            Boolean fodselsdatoErDnr, String formidlingsgruppekode, String epostadresse,
-            String mobiltelefon, String telefon, String statsborgerskap, String kandidatnr, String beskrivelse,
-            String samtykkeStatus, Date samtykkeDato, String adresselinje1, String adresselinje2,
-            String adresselinje3, String postnummer, String poststed, String landkode,
-            Integer kommunenummer, Boolean disponererBil, Date tidsstempel, Integer kommunenummerkw,
-            Boolean doed, String frKode, String kvalifiseringsgruppekode, String hovedmaalkode, String orgenhet,
-            Boolean fritattKandidatsok, Boolean fritattAgKandidatsok, String kommunenummerstring, String veileder,
-            boolean inkluderingsbehov) {
+                Boolean fodselsdatoErDnr, String formidlingsgruppekode, String epostadresse,
+                String mobiltelefon, String telefon, String statsborgerskap, String kandidatnr, String beskrivelse,
+                String samtykkeStatus, Date samtykkeDato, String adresselinje1, String adresselinje2,
+                String adresselinje3, String postnummer, String poststed, String landkode,
+                Integer kommunenummer, Boolean disponererBil, Date tidsstempel, Integer kommunenummerkw,
+                Boolean doed, String frKode, String kvalifiseringsgruppekode, String hovedmaalkode, String orgenhet,
+                Boolean fritattKandidatsok, Boolean fritattAgKandidatsok, String kommunenummerstring, String veileder,
+                boolean inkluderingsbehov) {
         this.aktorId = aktorId;
         this.fodselsnummer = fodselsnummer;
         this.fornavn = fornavn;
@@ -322,49 +306,49 @@ public class EsCv {
     }
 
     private Boolean beregnSynlighetForVeilederSokBasertPaaGamleArenaData() {
-        if( Boolean.TRUE.equals(this.doed)) {
+        if (Boolean.TRUE.equals(this.doed)) {
             return false;
         }
-        if( "6".equals(this.frKode)) {
+        if ("6".equals(this.frKode)) {
             return false;
         }
-        if( "7".equals(this.frKode)) {
+        if ("7".equals(this.frKode)) {
             return false;
         }
-        if( !("ARBS".equals(this.formidlingsgruppekode)
+        if (!("ARBS".equals(this.formidlingsgruppekode)
                 || "PARBS".equals(this.formidlingsgruppekode)
                 || "RARBS".equals(this.formidlingsgruppekode))) {
             return false;
         }
-        if( Boolean.TRUE.equals(this.fritattKandidatsok)) {
+        if (Boolean.TRUE.equals(this.fritattKandidatsok)) {
             return false;
         }
         return true;
     }
 
     private Boolean beregnSynlighetForArbeidsgiverSokBasertPaaGamleArenaData() {
-        if( Boolean.TRUE.equals(this.doed)) {
+        if (Boolean.TRUE.equals(this.doed)) {
             return false;
         }
-        if( "6".equals(this.frKode)) {
+        if ("6".equals(this.frKode)) {
             return false;
         }
-        if( "7".equals(this.frKode)) {
+        if ("7".equals(this.frKode)) {
             return false;
         }
-        if( !("JOBBS".equals(this.formidlingsgruppekode)
+        if (!("JOBBS".equals(this.formidlingsgruppekode)
                 || "ARBS".equals(this.formidlingsgruppekode)
                 || "PARBS".equals(this.formidlingsgruppekode)
                 || "RARBS".equals(this.formidlingsgruppekode))) {
             return false;
         }
-        if( Boolean.TRUE.equals(this.fritattAgKandidatsok)) {
+        if (Boolean.TRUE.equals(this.fritattAgKandidatsok)) {
             return false;
         }
-        if( Boolean.TRUE.equals(this.fritattKandidatsok)) {
+        if (Boolean.TRUE.equals(this.fritattKandidatsok)) {
             return false;
         }
-        if( Boolean.FALSE.equals(this.harKontaktinformasjon)) {
+        if (Boolean.FALSE.equals(this.harKontaktinformasjon)) {
             return false;
         }
         return true;
@@ -379,22 +363,22 @@ public class EsCv {
         this.utdanning.addAll(utdanningListe);
     }
 
-  public void addFagdokumentasjon(Collection<EsFagdokumentasjon> fagdokumentasjonListe) {
-    this.fagdokumentasjon.addAll(fagdokumentasjonListe);
-    List<EsSamletKompetanse> liste = new ArrayList<>();
-    fagdokumentasjonListe.forEach(f -> {
-      if (f.getTittel() != null) {
-        liste.add(new EsSamletKompetanse(f.getTittel()));
-      } else {
-        liste.add(new EsSamletKompetanse(EsFagdokumentasjon.getFagdokumentTypeLabel(f.getType())));
-      }
-    });
-    this.addSamletKompetanse(liste);
-  }
+    public void addFagdokumentasjon(Collection<EsFagdokumentasjon> fagdokumentasjonListe) {
+        this.fagdokumentasjon.addAll(fagdokumentasjonListe);
+        List<EsSamletKompetanse> liste = new ArrayList<>();
+        fagdokumentasjonListe.forEach(f -> {
+            if (f.getTittel() != null) {
+                liste.add(new EsSamletKompetanse(f.getTittel()));
+            } else {
+                liste.add(new EsSamletKompetanse(EsFagdokumentasjon.getFagdokumentTypeLabel(f.getType())));
+            }
+        });
+        this.addSamletKompetanse(liste);
+    }
 
-  public void addYrkeserfaring(EsYrkeserfaring yrkeserfaring) {
-    this.yrkeserfaring.add(yrkeserfaring);
-  }
+    public void addYrkeserfaring(EsYrkeserfaring yrkeserfaring) {
+        this.yrkeserfaring.add(yrkeserfaring);
+    }
 
     public void addYrkeserfaring(Collection<EsYrkeserfaring> yrkeserfaringListe) {
         yrkeserfaringListe
@@ -405,7 +389,7 @@ public class EsCv {
     public void addKompetanse(EsKompetanse kompetanse) {
         if (kompetanse != null) {
             this.kompetanseObj.add(kompetanse);
-            this.addSamletKompetanse(kompetanse.getSokeNavn().stream().map(str->new EsSamletKompetanse(str)).collect(Collectors.toList()));
+            this.addSamletKompetanse(kompetanse.getSokeNavn().stream().map(str -> new EsSamletKompetanse(str)).collect(Collectors.toList()));
         }
     }
 
@@ -413,7 +397,7 @@ public class EsCv {
         if (kompetanseListe != null) {
             this.kompetanseObj.addAll(kompetanseListe);
             this.addSamletKompetanse(
-                    kompetanseListe.stream().flatMap(k -> k.getSokeNavn().stream()).map(str-> new EsSamletKompetanse(str))
+                    kompetanseListe.stream().flatMap(k -> k.getSokeNavn().stream()).map(str -> new EsSamletKompetanse(str))
                             .collect(Collectors.toList()));
         }
     }
@@ -504,23 +488,23 @@ public class EsCv {
         this.yrkeJobbonskerObj.addAll(yrkeJobbonskerListe);
     }
 
-    public void addOmfangJobbonske(Collection<EsOmfangJobbonsker> omfangJobbonsker){
+    public void addOmfangJobbonske(Collection<EsOmfangJobbonsker> omfangJobbonsker) {
         this.omfangJobbonskerObj.addAll(omfangJobbonsker);
     }
 
-    public void addAnsettelsesformJobbonske(Collection<EsAnsettelsesformJobbonsker> ansettelsesformJobbonsker){
+    public void addAnsettelsesformJobbonske(Collection<EsAnsettelsesformJobbonsker> ansettelsesformJobbonsker) {
         this.ansettelsesformJobbonskerObj.addAll(ansettelsesformJobbonsker);
     }
 
-    public void addArbeidstidsordningJobbonsker(Collection<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonsker){
+    public void addArbeidstidsordningJobbonsker(Collection<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonsker) {
         this.arbeidstidsordningJobbonskerObj.addAll(arbeidstidsordningJobbonsker);
     }
 
-    public void addArbeidstidJobbonsker(Collection<EsArbeidstidJobbonsker> arbeidstidJobbonsker){
+    public void addArbeidstidJobbonsker(Collection<EsArbeidstidJobbonsker> arbeidstidJobbonsker) {
         this.arbeidstidJobbonskerObj.addAll(arbeidstidJobbonsker);
     }
 
-    public void addArbeidsdagerJobbonsker(Collection<EsArbeidsdagerJobbonsker> arbeidsdagerJobbonsker){
+    public void addArbeidsdagerJobbonsker(Collection<EsArbeidsdagerJobbonsker> arbeidsdagerJobbonsker) {
         this.arbeidsdagerJobbonskerObj.addAll(arbeidsdagerJobbonsker);
     }
 
@@ -616,6 +600,10 @@ public class EsCv {
 
     public String getKandidatnr() {
         return kandidatnr;
+    }
+
+    public void setKandidatnr(String nyArenaKandidatnr) {
+        this.kandidatnr = nyArenaKandidatnr;
     }
 
     public String getArenaKandidatnr() {
@@ -881,10 +869,6 @@ public class EsCv {
                 + arbeidstidJobbonskerObj + ", samletKompetanse=" + samletKompetanseObj
                 + ", totalLengdeYrkeserfaring=" + totalLengdeYrkeserfaring
                 + ", oppstartKode=" + oppstartKode + ", inkluderingsbehov=" + inkluderingsbehov + "]";
-    }
-
-    public void setKandidatnr(String nyArenaKandidatnr) {
-        this.kandidatnr = nyArenaKandidatnr;
     }
 
 }

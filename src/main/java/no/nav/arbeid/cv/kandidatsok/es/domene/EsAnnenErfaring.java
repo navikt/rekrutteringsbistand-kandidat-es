@@ -1,80 +1,80 @@
 package no.nav.arbeid.cv.kandidatsok.es.domene;
 
-import java.util.Date;
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
 import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
+
+import java.util.Date;
+import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsAnnenErfaring {
 
-  @ElasticDateField
-  private Date fraDato;
+    @ElasticDateField
+    private Date fraDato;
 
-  @ElasticDateField
-  private Date tilDato;
+    @ElasticDateField
+    private Date tilDato;
 
-  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
-  private String beskrivelse;
-  
-  @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
-  private String rolle;
+    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
+    private String beskrivelse;
 
-  public EsAnnenErfaring() {}
+    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
+    private String rolle;
 
-  public EsAnnenErfaring(Date fraDato, Date tilDato, String beskrivelse) {
-    this.fraDato = fraDato;
-    this.tilDato = tilDato;
-    this.beskrivelse = beskrivelse;
-  }
-  
-  public EsAnnenErfaring(Date fraDato, Date tilDato, String beskrivelse, String rolle) {
-      this(fraDato, tilDato, beskrivelse);
-      this.rolle = rolle;
+    public EsAnnenErfaring() {
     }
 
-  public Date getFraDato() {
-    return fraDato;
-  }
-
-  public Date getTilDato() {
-    return tilDato;
-  }
-
-  public String getBeskrivelse() {
-    return beskrivelse;
-  }
-  
-  public String getRolle() {
-    return rolle;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
+    public EsAnnenErfaring(Date fraDato, Date tilDato, String beskrivelse) {
+        this.fraDato = fraDato;
+        this.tilDato = tilDato;
+        this.beskrivelse = beskrivelse;
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+
+    public EsAnnenErfaring(Date fraDato, Date tilDato, String beskrivelse, String rolle) {
+        this(fraDato, tilDato, beskrivelse);
+        this.rolle = rolle;
     }
-    EsAnnenErfaring that = (EsAnnenErfaring) o;
-    return Objects.equals(fraDato, that.fraDato) && Objects.equals(tilDato, that.tilDato)
-        && Objects.equals(beskrivelse, that.beskrivelse) && Objects.equals(rolle, that.rolle);
-  }
 
-  @Override
-  public int hashCode() {
+    public Date getFraDato() {
+        return fraDato;
+    }
 
-    return Objects.hash(fraDato, tilDato, beskrivelse, rolle);
-  }
+    public Date getTilDato() {
+        return tilDato;
+    }
 
-  @Override
-  public String toString() {
-    return "EsAnnenErfaring{" + "fraDato=" + fraDato + ", tilDato=" + tilDato + ", beskrivelse='"
-        + beskrivelse + '\'' + ", rolle='" + rolle + '\'' + '}';
-  }
+    public String getBeskrivelse() {
+        return beskrivelse;
+    }
+
+    public String getRolle() {
+        return rolle;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        EsAnnenErfaring that = (EsAnnenErfaring) o;
+        return Objects.equals(fraDato, that.fraDato) && Objects.equals(tilDato, that.tilDato)
+                && Objects.equals(beskrivelse, that.beskrivelse) && Objects.equals(rolle, that.rolle);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(fraDato, tilDato, beskrivelse, rolle);
+    }
+
+    @Override
+    public String toString() {
+        return "EsAnnenErfaring{" + "fraDato=" + fraDato + ", tilDato=" + tilDato + ", beskrivelse='"
+                + beskrivelse + '\'' + ", rolle='" + rolle + '\'' + '}';
+    }
 
 }

@@ -4,31 +4,34 @@ import java.util.Optional;
 
 public interface EsProperties {
 
-  String getUser();
+    String getUser();
 
-  String getPassword();
+    String getPassword();
 
-  String getTrustStoreFilename();
+    String getTrustStoreFilename();
 
-  String getTrustStorePass();
+    String getTrustStorePass();
 
-  String getKeyStoreFilename();
+    String getKeyStoreFilename();
 
-  String getKeyStorePass();
+    String getKeyStorePass();
 
-  String getHostname();
+    String getHostname();
 
-  int getPort();
+    int getPort();
 
-  String getScheme();
+    String getScheme();
 
-  default int getRequestTimeoutMS() { return 30000; }
-  default Optional<String> getApiKey() {
-    return Optional.empty();
-  }
+    default int getRequestTimeoutMS() {
+        return 30000;
+    }
 
-  default Optional<String> getPathPrefix() {
-    return Optional.empty();
-  }
+    default Optional<String> getApiKey() {
+        return Optional.empty();
+    }
+
+    default Optional<String> getPathPrefix() {
+        return Optional.empty();
+    }
 
 }
