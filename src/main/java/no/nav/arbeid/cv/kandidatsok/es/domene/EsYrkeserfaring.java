@@ -1,21 +1,10 @@
 package no.nav.arbeid.cv.kandidatsok.es.domene;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import no.nav.elasticsearch.mapping.annotations.*;
 
-import no.nav.elasticsearch.mapping.annotations.ElasticBooleanField;
-import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
-import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
-import no.nav.elasticsearch.mapping.annotations.ElasticIntegerField;
-import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
-import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
+import java.util.*;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsYrkeserfaring {
@@ -66,20 +55,21 @@ public class EsYrkeserfaring {
     @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
     private String beskrivelse;
 
-    public EsYrkeserfaring() {}
-    
+    public EsYrkeserfaring() {
+    }
+
     public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
-            String kodeverkStillingstittel, String alternativStillingstittel, String beskrivelse,
-            int yrkeserfaringManeder, List<String> sokeTitler) {
+                           String kodeverkStillingstittel, String alternativStillingstittel, String beskrivelse,
+                           int yrkeserfaringManeder, List<String> sokeTitler) {
         this(fraDato, tilDato, arbeidsgiver, styrkKode, kodeverkStillingstittel,
                 alternativStillingstittel, null, null, yrkeserfaringManeder, false, sokeTitler);
         this.beskrivelse = beskrivelse;
     }
 
     public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
-            String styrkKodeStillingstittel, String alternativStillingstittel,
-            String organisasjonsnummer, String naceKode, int yrkeserfaringManeder,
-            Boolean utelukketForFremtiden, List<String> sokeTitler) {
+                           String styrkKodeStillingstittel, String alternativStillingstittel,
+                           String organisasjonsnummer, String naceKode, int yrkeserfaringManeder,
+                           Boolean utelukketForFremtiden, List<String> sokeTitler) {
         this.fraDato = fraDato;
         this.tilDato = tilDato;
         this.arbeidsgiver = arbeidsgiver;
@@ -99,9 +89,9 @@ public class EsYrkeserfaring {
     }
 
     public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
-            String styrkKodeStillingstittel, String alternativStillingstittel,
-            String organisasjonsnummer, String naceKode, Boolean utelukketForFremtiden,
-            List<String> sokeTitler) {
+                           String styrkKodeStillingstittel, String alternativStillingstittel,
+                           String organisasjonsnummer, String naceKode, Boolean utelukketForFremtiden,
+                           List<String> sokeTitler) {
         this.fraDato = fraDato;
         this.tilDato = tilDato;
         this.arbeidsgiver = arbeidsgiver;

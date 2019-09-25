@@ -1,18 +1,14 @@
 package no.nav.arbeid.cv.kandidatsok.es.domene.sok;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.util.*;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsCv {
 
     private String aktorId;
-    
+
     private String fodselsnummer;
 
     private String fornavn;
@@ -24,7 +20,7 @@ public class EsCv {
     private Boolean fodselsdatoErDnr;
 
     private String poststed;
-        
+
     private String epostadresse;
 
     private String mobiltelefon;
@@ -47,10 +43,11 @@ public class EsCv {
 
     private float score = Float.NEGATIVE_INFINITY; // Default fra Elasticsearch..
 
-    public EsCv() {}
+    public EsCv() {
+    }
 
     public EsCv(String aktorId, String fodselsnummer, String fornavn, String etternavn, Date fodselsdato, Boolean fodselsdatoErDnr,
-                String poststed, String epostadresse, String telefon, String mobiltelefon, 
+                String poststed, String epostadresse, String telefon, String mobiltelefon,
                 String formidlingsgruppekode, String kandidatnr,
                 int totalLengdeYrkeserfaring, String kvalifiseringsgruppekode, List<EsUtdanning> utdanning,
                 List<EsYrkeserfaring> yrkeserfaring, String oppstart) {
@@ -99,7 +96,7 @@ public class EsCv {
                 .forEach(y -> this.totalLengdeYrkeserfaring += y.getYrkeserfaringManeder());
         this.yrkeserfaring.addAll(yrkeserfaringListe);
     }
-    
+
     public String getAktorId() {
         return aktorId;
     }
@@ -107,7 +104,7 @@ public class EsCv {
     public String getFodselsnummer() {
         return fodselsnummer;
     }
-    
+
     public String getEpostadresse() {
         return epostadresse;
     }
@@ -119,7 +116,7 @@ public class EsCv {
     public String getMobiltelefon() {
         return mobiltelefon;
     }
-    
+
     public String getFormidlingsgruppekode() {
         return formidlingsgruppekode;
     }

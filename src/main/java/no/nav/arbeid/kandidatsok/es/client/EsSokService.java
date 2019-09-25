@@ -1,12 +1,12 @@
 package no.nav.arbeid.kandidatsok.es.client;
 
-import java.util.List;
-import java.util.Optional;
-
 import no.nav.arbeid.cv.kandidatsok.es.domene.EsCv;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokekriterier;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.SokekriterierVeiledere;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokeresultat;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface EsSokService {
 

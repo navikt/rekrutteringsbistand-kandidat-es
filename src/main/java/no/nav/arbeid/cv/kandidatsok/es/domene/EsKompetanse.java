@@ -1,16 +1,15 @@
 package no.nav.arbeid.cv.kandidatsok.es.domene;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
+import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
+import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
-import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
-import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsKompetanse {
@@ -35,14 +34,15 @@ public class EsKompetanse {
     @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
     private String beskrivelse;
 
-    public EsKompetanse() {}
+    public EsKompetanse() {
+    }
 
     public EsKompetanse(String kompetanse, List<String> sokeNavn) {
         this(null, null, kompetanse, kompetanse, "", sokeNavn);
     }
-    
+
     public EsKompetanse(Date fraDato, String kompKode, String kompKodeNavn, String alternativtNavn,
-            String beskrivelse, List<String> sokeNavn) {
+                        String beskrivelse, List<String> sokeNavn) {
         this.fraDato = fraDato;
         this.kompKode = kompKode;
         this.kompKodeNavn = kompKodeNavn;
