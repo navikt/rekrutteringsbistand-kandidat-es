@@ -21,6 +21,7 @@ public class SokekriterierVeiledere {
     private String etternavn;
     private Boolean maaBoInnenforGeografi;
     private List<String> forerkort;
+    private boolean inkluderingsbehov;
     private int antallResultater;
     private int fraIndex;
     private Integer antallAarFra;
@@ -141,6 +142,10 @@ public class SokekriterierVeiledere {
         return antallAarTil != null;
     }
 
+    public boolean isInkluderingsbehov() {
+        return inkluderingsbehov;
+    }
+
     public static class Builder {
         private String fritekst;
         private List<String> yrkeJobbonsker;
@@ -162,6 +167,7 @@ public class SokekriterierVeiledere {
         private List<String> forerkort;
         private Integer antallAarFra;
         private Integer antallAarTil;
+        private boolean inkluderingsbehov = false;
         private boolean tomtSok = true;
 
         public SokekriterierVeiledere bygg() {
@@ -199,6 +205,8 @@ public class SokekriterierVeiledere {
 
             s.antallAarFra = antallAarFra;
             s.antallAarTil = antallAarTil;
+
+            s.inkluderingsbehov = inkluderingsbehov;
 
             s.fraIndex = fra;
             s.antallResultater = antallResultater;
@@ -320,6 +328,12 @@ public class SokekriterierVeiledere {
 
         public Builder antallAarTil(int antallAarTil) {
             this.antallAarTil = antallAarTil;
+            this.tomtSok = false;
+            return this;
+        }
+
+        public Builder inkluderingsbehov(boolean inkluderingsbehov) {
+            this.inkluderingsbehov = inkluderingsbehov;
             this.tomtSok = false;
             return this;
         }

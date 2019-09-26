@@ -39,18 +39,11 @@ import static java.util.stream.Collectors.toMap;
 
 public class EsSokHttpService implements EsSokService, AutoCloseable {
 
-    private static enum UseCase {
-        AG_SOK, AG_HENT, VEIL_SOK, VEIL_HENT;
-    }
-
     private static final String CV_TYPE = "cvtype";
-
     private static final Logger LOGGER = LoggerFactory.getLogger(EsSokHttpService.class);
-
     private final RestHighLevelClient client;
     private final ObjectMapper mapper;
     private final String indexName;
-
     public EsSokHttpService(RestHighLevelClient client, ObjectMapper objectMapper, String indexName) {
         this.client = client;
         this.mapper = objectMapper;
@@ -349,11 +342,19 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 addFodselsdatoToQuery(null, sk.antallAarTil(), queryBuilder);
             }
 
+            if (sk.isInkluderingsbehov()) {
+                addFilterForInkluderingsbehov(queryBuilder);
+            }
+
             return toSokeresultat(esExec(() -> search(UseCase.VEIL_SOK, queryBuilder, sk.fraIndex(),
                     sk.antallResultater(), sortQueryBuilder)));
         } catch (IOException ioe) {
             throw new ElasticException(ioe);
         }
+    }
+
+    private void addFilterForInkluderingsbehov(BoolQueryBuilder boolQueryBuilder) {
+        boolQueryBuilder.filter(QueryBuilders.termQuery("inkluderingsbehov", Boolean.TRUE));
     }
 
     private void addFilterForArbeidsgivereSok(BoolQueryBuilder boolQueryBuilder) {
@@ -389,7 +390,6 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
         addUtdanningsnivaQuery("Ingen", queryBuilder);
         return queryBuilder;
     }
-
 
     private BoolQueryBuilder makeUtdanningQuery(List<String> utdanninger,
                                                 List<String> utdanningsniva) {
@@ -879,13 +879,6 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
         }
     }
 
-    /**
-     * Tilsvarer java.functions.Supplier bare at get metoden kan kaste IOException
-     */
-    private interface IOSupplier<T> {
-        T get() throws IOException;
-    }
-
     @Override
     public Optional<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> arbeidsgiverHent(String kandidatnr) {
         return hentFelles(true, kandidatnr);
@@ -1013,6 +1006,17 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     @Override
     public void close() throws IOException {
         client.close();
+    }
+
+    private static enum UseCase {
+        AG_SOK, AG_HENT, VEIL_SOK, VEIL_HENT;
+    }
+
+    /**
+     * Tilsvarer java.functions.Supplier bare at get metoden kan kaste IOException
+     */
+    private interface IOSupplier<T> {
+        T get() throws IOException;
     }
 
 }

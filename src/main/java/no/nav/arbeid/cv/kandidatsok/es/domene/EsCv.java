@@ -195,6 +195,9 @@ public class EsCv {
     @ElasticKeywordField
     private String veileder;
 
+    @ElasticBooleanField
+    private boolean inkluderingsbehov;
+
     public EsCv() {
     }
 
@@ -207,7 +210,7 @@ public class EsCv {
                 Boolean doed, String frKode, String kvalifiseringsgruppekode, String hovedmaalkode, String orgenhet,
                 Boolean fritattKandidatsok, Boolean fritattAgKandidatsok,
                 Boolean synligForArbeidsgiverSok, Boolean synligForVeilederSok, String oppstartKode, String kommunenummerstring,
-                String veileder) {
+                String veileder, boolean inkluderingsbehov) {
         this.aktorId = aktorId;
         this.fodselsnummer = fodselsnummer;
         this.fornavn = fornavn;
@@ -248,6 +251,7 @@ public class EsCv {
         this.oppstartKode = oppstartKode;
         this.kommunenummerstring = kommunenummerstring;
         this.veileder = veileder == null ? null : veileder.toLowerCase();
+        this.inkluderingsbehov = inkluderingsbehov;
     }
 
     public EsCv(String aktorId, String fodselsnummer, String fornavn, String etternavn, Date fodselsdato,
@@ -257,7 +261,8 @@ public class EsCv {
                 String adresselinje3, String postnummer, String poststed, String landkode,
                 Integer kommunenummer, Boolean disponererBil, Date tidsstempel, Integer kommunenummerkw,
                 Boolean doed, String frKode, String kvalifiseringsgruppekode, String hovedmaalkode, String orgenhet,
-                Boolean fritattKandidatsok, Boolean fritattAgKandidatsok, String kommunenummerstring, String veileder) {
+                Boolean fritattKandidatsok, Boolean fritattAgKandidatsok, String kommunenummerstring, String veileder,
+                boolean inkluderingsbehov) {
         this.aktorId = aktorId;
         this.fodselsnummer = fodselsnummer;
         this.fornavn = fornavn;
@@ -297,6 +302,7 @@ public class EsCv {
         this.synligForVeilederSok = beregnSynlighetForVeilederSokBasertPaaGamleArenaData();
         this.kommunenummerstring = kommunenummerstring;
         this.veileder = veileder == null ? null : veileder.toLowerCase();
+        this.inkluderingsbehov = inkluderingsbehov;
     }
 
     private Boolean beregnSynlighetForVeilederSokBasertPaaGamleArenaData() {
@@ -596,6 +602,10 @@ public class EsCv {
         return kandidatnr;
     }
 
+    public void setKandidatnr(String nyArenaKandidatnr) {
+        this.kandidatnr = nyArenaKandidatnr;
+    }
+
     public String getArenaKandidatnr() {
         return arenaKandidatnr;
     }
@@ -744,6 +754,10 @@ public class EsCv {
         return this.oppstartKode;
     }
 
+    public boolean getInkluderingsbehov() {
+        return inkluderingsbehov;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -805,7 +819,8 @@ public class EsCv {
                 && Objects.equals(arbeidsdagerJobbonskerObj, esCv.arbeidsdagerJobbonskerObj)
                 && Objects.equals(samletKompetanseObj, esCv.samletKompetanseObj)
                 && Objects.equals(totalLengdeYrkeserfaring, esCv.totalLengdeYrkeserfaring)
-                && Objects.equals(oppstartKode, esCv.oppstartKode);
+                && Objects.equals(oppstartKode, esCv.oppstartKode)
+                && Objects.equals(inkluderingsbehov, esCv.inkluderingsbehov);
     }
 
     @Override
@@ -818,7 +833,7 @@ public class EsCv {
                 sertifikatObj, forerkort, sprak, kursObj, vervObj, geografiJobbonsker, yrkeJobbonskerObj,
                 omfangJobbonskerObj, ansettelsesformJobbonskerObj, arbeidstidsordningJobbonskerObj,
                 arbeidstidJobbonskerObj, arbeidsdagerJobbonskerObj, samletKompetanseObj, totalLengdeYrkeserfaring,
-                synligForArbeidsgiverSok, synligForVeilederSok, oppstartKode);
+                synligForArbeidsgiverSok, synligForVeilederSok, oppstartKode, inkluderingsbehov);
     }
 
     @Override
@@ -853,11 +868,7 @@ public class EsCv {
                 + ", arbeidsdagerJobbonsker=" + arbeidsdagerJobbonskerObj + ", arbeidstidJobbonsker="
                 + arbeidstidJobbonskerObj + ", samletKompetanse=" + samletKompetanseObj
                 + ", totalLengdeYrkeserfaring=" + totalLengdeYrkeserfaring
-                + ", oppstartKode=" + oppstartKode + "]";
-    }
-
-    public void setKandidatnr(String nyArenaKandidatnr) {
-        this.kandidatnr = nyArenaKandidatnr;
+                + ", oppstartKode=" + oppstartKode + ", inkluderingsbehov=" + inkluderingsbehov + "]";
     }
 
 }

@@ -71,45 +71,6 @@ public class IndexCvTest {
 
     private KandidatsokTransformer kandidatsokTransformer = new KandidatsokTransformer();
 
-    @Configuration
-    static class TestConfig {
-
-        @Bean
-        @Autowired
-        public RestHighLevelClient restHighLevelClient(@Value("${ES_PORT}") Integer port) {
-            return new RestHighLevelClient(
-                    RestClient.builder(new HttpHost("localhost", port, "http")));
-        }
-
-        @Bean
-        public ObjectMapper objectMapper() {
-            return new ObjectMapper();
-        }
-
-        @Bean
-        public MeterRegistry meterRegistry() {
-            Counter counter = mock(Counter.class);
-            MeterRegistry meterRegistry = mock(MeterRegistry.class);
-            when(meterRegistry.counter(anyString(), any(Tags.class))).thenReturn(counter);
-
-            return meterRegistry;
-        }
-
-        @Bean
-        public EsIndexerService indexerCvService(RestHighLevelClient restHighLevelClient,
-                                                 ObjectMapper objectMapper,
-                                                 MeterRegistry meterRegistry
-        ) {
-            return new EsIndexerHttpService(restHighLevelClient, objectMapper, meterRegistry,
-                    WriteRequest.RefreshPolicy.IMMEDIATE, 3, 2);
-        }
-
-        @Bean
-        public EsSokService esSokService(RestHighLevelClient restHighLevelClient, ObjectMapper objectMapper) {
-            return new EsSokHttpService(restHighLevelClient, objectMapper, "cvindex");
-        }
-    }
-
     @Before
     public void before() throws IOException {
         try {
@@ -643,7 +604,6 @@ public class IndexCvTest {
                 .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv3()));
     }
 
-
     @Test
     public void skalKunneIndeksereOppCvUtenKompetanser() throws IOException {
         indexerClient.index(EsCvObjectMother.giveMeCvUtenKompetanse(), "cvindex");
@@ -890,7 +850,6 @@ public class IndexCvTest {
         assertThat(typeAheadNavkontor).containsExactlyInAnyOrder("NAV Drammen", "NAV Drøbak");
     }
 
-
     @Test
     public void sokPaNavkontorSkalGiKorrektResultat() throws IOException {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
@@ -964,6 +923,56 @@ public class IndexCvTest {
         List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver.size()).isEqualTo(0);
 
+    }
+
+    @Test
+    public void sokMedInkluderingsbehovSkalGiKorrektTreff() throws IOException {
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().inkluderingsbehov(true).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+
+        assertThat(cver.size()).isEqualTo(3);
+        assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder(
+                "6L", "4L", "3L");
+    }
+
+    @Configuration
+    static class TestConfig {
+
+        @Bean
+        @Autowired
+        public RestHighLevelClient restHighLevelClient(@Value("${ES_PORT}") Integer port) {
+            return new RestHighLevelClient(
+                    RestClient.builder(new HttpHost("localhost", port, "http")));
+        }
+
+        @Bean
+        public ObjectMapper objectMapper() {
+            return new ObjectMapper();
+        }
+
+        @Bean
+        public MeterRegistry meterRegistry() {
+            Counter counter = mock(Counter.class);
+            MeterRegistry meterRegistry = mock(MeterRegistry.class);
+            when(meterRegistry.counter(anyString(), any(Tags.class))).thenReturn(counter);
+
+            return meterRegistry;
+        }
+
+        @Bean
+        public EsIndexerService indexerCvService(RestHighLevelClient restHighLevelClient,
+                                                 ObjectMapper objectMapper,
+                                                 MeterRegistry meterRegistry
+        ) {
+            return new EsIndexerHttpService(restHighLevelClient, objectMapper, meterRegistry,
+                    WriteRequest.RefreshPolicy.IMMEDIATE, 3, 2);
+        }
+
+        @Bean
+        public EsSokService esSokService(RestHighLevelClient restHighLevelClient, ObjectMapper objectMapper) {
+            return new EsSokHttpService(restHighLevelClient, objectMapper, "cvindex");
+        }
     }
 
 }
