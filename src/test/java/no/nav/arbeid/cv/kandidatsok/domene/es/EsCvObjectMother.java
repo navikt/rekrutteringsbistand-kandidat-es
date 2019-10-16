@@ -449,7 +449,7 @@ public class EsCvObjectMother {
                 "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring6 =
-                new EsYrkeserfaring(d("2017-10-01"), null, "Awesome coders AS", "5746.07",
+                new EsYrkeserfaring(d("2017-10-01"), d("2019-09-26"), "Awesome coders AS", "5746.07",
                         "Javautvikler", "Javautvikler", "YRKE_ORGNR", "YRKE_NACEKODE", false, Arrays.asList("Javaprogrammerer", "Javawizard", "Javaguru"));
 
         ArrayList<EsYrkeserfaring> yrkeserfaringListe = new ArrayList<>();
