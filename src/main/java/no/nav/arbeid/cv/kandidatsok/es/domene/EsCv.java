@@ -198,6 +198,9 @@ public class EsCv {
     @ElasticBooleanField
     private boolean inkluderingsbehov;
 
+    @ElasticBooleanField
+    private boolean tilretteleggingsbehov;
+
     public EsCv() {
     }
 
@@ -210,7 +213,7 @@ public class EsCv {
                 Boolean doed, String frKode, String kvalifiseringsgruppekode, String hovedmaalkode, String orgenhet,
                 Boolean fritattKandidatsok, Boolean fritattAgKandidatsok,
                 Boolean synligForArbeidsgiverSok, Boolean synligForVeilederSok, String oppstartKode, String kommunenummerstring,
-                String veileder, boolean inkluderingsbehov) {
+                String veileder, boolean tilretteleggingsbehov) {
         this.aktorId = aktorId;
         this.fodselsnummer = fodselsnummer;
         this.fornavn = fornavn;
@@ -251,7 +254,8 @@ public class EsCv {
         this.oppstartKode = oppstartKode;
         this.kommunenummerstring = kommunenummerstring;
         this.veileder = veileder == null ? null : veileder.toLowerCase();
-        this.inkluderingsbehov = inkluderingsbehov;
+        this.inkluderingsbehov = tilretteleggingsbehov;
+        this.tilretteleggingsbehov = tilretteleggingsbehov;
     }
 
     public EsCv(String aktorId, String fodselsnummer, String fornavn, String etternavn, Date fodselsdato,
@@ -262,7 +266,7 @@ public class EsCv {
                 Integer kommunenummer, Boolean disponererBil, Date tidsstempel, Integer kommunenummerkw,
                 Boolean doed, String frKode, String kvalifiseringsgruppekode, String hovedmaalkode, String orgenhet,
                 Boolean fritattKandidatsok, Boolean fritattAgKandidatsok, String kommunenummerstring, String veileder,
-                boolean inkluderingsbehov) {
+                boolean tilretteleggingsbehov) {
         this.aktorId = aktorId;
         this.fodselsnummer = fodselsnummer;
         this.fornavn = fornavn;
@@ -302,7 +306,8 @@ public class EsCv {
         this.synligForVeilederSok = beregnSynlighetForVeilederSokBasertPaaGamleArenaData();
         this.kommunenummerstring = kommunenummerstring;
         this.veileder = veileder == null ? null : veileder.toLowerCase();
-        this.inkluderingsbehov = inkluderingsbehov;
+        this.inkluderingsbehov = tilretteleggingsbehov;
+        this.tilretteleggingsbehov = tilretteleggingsbehov;
     }
 
     private Boolean beregnSynlighetForVeilederSokBasertPaaGamleArenaData() {
@@ -758,6 +763,10 @@ public class EsCv {
         return inkluderingsbehov;
     }
 
+    public boolean getTilretteleggingsbehov() {
+        return tilretteleggingsbehov;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -820,7 +829,7 @@ public class EsCv {
                 && Objects.equals(samletKompetanseObj, esCv.samletKompetanseObj)
                 && Objects.equals(totalLengdeYrkeserfaring, esCv.totalLengdeYrkeserfaring)
                 && Objects.equals(oppstartKode, esCv.oppstartKode)
-                && Objects.equals(inkluderingsbehov, esCv.inkluderingsbehov);
+                && Objects.equals(tilretteleggingsbehov, esCv.tilretteleggingsbehov);
     }
 
     @Override
@@ -833,7 +842,7 @@ public class EsCv {
                 sertifikatObj, forerkort, sprak, kursObj, vervObj, geografiJobbonsker, yrkeJobbonskerObj,
                 omfangJobbonskerObj, ansettelsesformJobbonskerObj, arbeidstidsordningJobbonskerObj,
                 arbeidstidJobbonskerObj, arbeidsdagerJobbonskerObj, samletKompetanseObj, totalLengdeYrkeserfaring,
-                synligForArbeidsgiverSok, synligForVeilederSok, oppstartKode, inkluderingsbehov);
+                synligForArbeidsgiverSok, synligForVeilederSok, oppstartKode, tilretteleggingsbehov);
     }
 
     @Override
@@ -868,7 +877,7 @@ public class EsCv {
                 + ", arbeidsdagerJobbonsker=" + arbeidsdagerJobbonskerObj + ", arbeidstidJobbonsker="
                 + arbeidstidJobbonskerObj + ", samletKompetanse=" + samletKompetanseObj
                 + ", totalLengdeYrkeserfaring=" + totalLengdeYrkeserfaring
-                + ", oppstartKode=" + oppstartKode + ", inkluderingsbehov=" + inkluderingsbehov + "]";
+                + ", oppstartKode=" + oppstartKode + ", tilretteleggingsbehov=" + tilretteleggingsbehov + "]";
     }
 
 }
