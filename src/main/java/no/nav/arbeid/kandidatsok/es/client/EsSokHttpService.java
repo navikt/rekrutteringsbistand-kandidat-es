@@ -342,8 +342,8 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 addFodselsdatoToQuery(null, sk.antallAarTil(), queryBuilder);
             }
 
-            if (sk.isInkluderingsbehov()) {
-                addFilterForInkluderingsbehov(queryBuilder);
+            if (sk.isTilretteleggingsbehovSet()) {
+                addFilterForTilretteleggingsbehov(queryBuilder, sk.getTilretteleggingsbehov());
             }
 
             return toSokeresultat(esExec(() -> search(UseCase.VEIL_SOK, queryBuilder, sk.fraIndex(),
@@ -353,8 +353,8 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
         }
     }
 
-    private void addFilterForInkluderingsbehov(BoolQueryBuilder boolQueryBuilder) {
-        boolQueryBuilder.filter(QueryBuilders.termQuery("inkluderingsbehov", Boolean.TRUE));
+    private void addFilterForTilretteleggingsbehov(BoolQueryBuilder boolQueryBuilder, Boolean value) {
+        boolQueryBuilder.filter(QueryBuilders.termQuery("tilretteleggingsbehov", value));
     }
 
     private void addFilterForArbeidsgivereSok(BoolQueryBuilder boolQueryBuilder) {

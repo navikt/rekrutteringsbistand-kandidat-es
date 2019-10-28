@@ -21,7 +21,7 @@ public class SokekriterierVeiledere {
     private String etternavn;
     private Boolean maaBoInnenforGeografi;
     private List<String> forerkort;
-    private boolean inkluderingsbehov;
+    private Boolean tilretteleggingsbehov;
     private int antallResultater;
     private int fraIndex;
     private Integer antallAarFra;
@@ -31,8 +31,6 @@ public class SokekriterierVeiledere {
 
     private SokekriterierVeiledere() {
     }
-
-    ;
 
     public static Builder med() {
         return new Builder();
@@ -142,8 +140,12 @@ public class SokekriterierVeiledere {
         return antallAarTil != null;
     }
 
-    public boolean isInkluderingsbehov() {
-        return inkluderingsbehov;
+    public boolean isTilretteleggingsbehovSet() {
+        return tilretteleggingsbehov != null;
+    }
+
+    public Boolean getTilretteleggingsbehov() {
+        return tilretteleggingsbehov;
     }
 
     public static class Builder {
@@ -167,7 +169,7 @@ public class SokekriterierVeiledere {
         private List<String> forerkort;
         private Integer antallAarFra;
         private Integer antallAarTil;
-        private boolean inkluderingsbehov = false;
+        private Boolean tilretteleggingsbehov;
         private boolean tomtSok = true;
 
         public SokekriterierVeiledere bygg() {
@@ -206,7 +208,7 @@ public class SokekriterierVeiledere {
             s.antallAarFra = antallAarFra;
             s.antallAarTil = antallAarTil;
 
-            s.inkluderingsbehov = inkluderingsbehov;
+            s.tilretteleggingsbehov = tilretteleggingsbehov;
 
             s.fraIndex = fra;
             s.antallResultater = antallResultater;
@@ -332,9 +334,11 @@ public class SokekriterierVeiledere {
             return this;
         }
 
-        public Builder inkluderingsbehov(boolean inkluderingsbehov) {
-            this.inkluderingsbehov = inkluderingsbehov;
-            this.tomtSok = false;
+        public Builder tilretteleggingsbehov(Boolean tilretteleggingsbehov) {
+            this.tilretteleggingsbehov = tilretteleggingsbehov;
+            if(null != tilretteleggingsbehov) {
+                this.tomtSok = false;
+            }
             return this;
         }
     }
