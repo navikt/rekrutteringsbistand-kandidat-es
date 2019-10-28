@@ -926,8 +926,8 @@ public class IndexCvTest {
     }
 
     @Test
-    public void sokMedInkluderingsbehovSkalGiKorrektTreff() throws IOException {
-        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().inkluderingsbehov(true).bygg());
+    public void sokMedTilretteleggingsbehovSkalGiKorrektTreff() throws IOException {
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().tilretteleggingsbehov(true).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
 
