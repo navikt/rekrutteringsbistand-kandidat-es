@@ -446,32 +446,19 @@ public class IndexCvIT {
     }
 
     @Test
-    public void sokPaKommuneSkalGiTreffPaKommune() {
+    public void sokPaaKommuneSkalGiJobbonsketreffPaaKommuneHeleNorge() {
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
                 Sokekriterier.med().geografiList(Collections.singletonList("NO19.1903")).bygg());
 
         // 09568410230 giveMeEsCv4
         // 03050316895 giveMeEsCv5
-        // 03050316895 giveMeCvUtenKompetanse
 
         List<EsCv> cver = sokeresultat.getCver();
-        for (EsCv resultCV: cver) {
-            System.out.println(resultCV);
-        }
 
-        assertThat(cver.size()).isEqualTo(3); // 3 CV-er har geografi-ønsker som matcher "NO19.1903", enten eksakt ellers om "hele norge"
+        // 2 indekserte og synlige CV-er har geografi-ønsker i eksakt kommune eller hele Norge
+        assertThat(cver.size()).isEqualTo(2);
         assertThat(cver.contains(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv4())));
         assertThat(cver.contains(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv5())));
-        assertThat(cver.contains(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeCvUtenKompetanse())));
-//
-//        cver.forEach(cv -> {
-//            assertThat(cv.get)
-//
-//        });
-//
-//        EsCv cv = cver.get(0);
-//
-//        assertThat(cv).isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv5()));
     }
 
     @Test
