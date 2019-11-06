@@ -607,8 +607,6 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
             regex += "|" + geografiKoder[0];
         }
 
-        System.out.println("XXX Query regexp: " + regex);
-
         NestedQueryBuilder geografiQueryBuilder = QueryBuilders.nestedQuery("geografiJobbonsker",
                 QueryBuilders.regexpQuery("geografiJobbonsker.geografiKode", regex),
                 ScoreMode.Total);
