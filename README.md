@@ -1,6 +1,6 @@
 ## PAM Kandidatsok ES
 Pam Kandidatsok ES er et bibliotek som håndterer indexering og søk mot Elasticsearch for bruk i 
-kandidatsøk.
+kandidatsøk. 
 
 ### Krav for utviklere
 Du trenger Docker installert lokalt, i tillegg til et "vanlig" oppsett med Java og Maven. Se 
