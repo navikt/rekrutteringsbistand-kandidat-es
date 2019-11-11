@@ -10,7 +10,7 @@
 	<version>1.4.19-SNAPSHOT</version>
 
 	<name>pam-kandidatsok-es</name>
-	<description>Indeksering av CVer i Elasticsearch</description>
+	<description>Indeksering av CVer i Elasticsearch og grensesnitt for å utføre søk</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -103,17 +103,6 @@
 			<artifactId>elasticsearch-mapping-builder</artifactId>
 			<version>6</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-stdlib-jdk8</artifactId>
-			<version>${kotlin.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-reflect</artifactId>
-			<version>${kotlin.version}</version>
-		</dependency>
 		<dependency>
     		<groupId>org.springframework</groupId>
     		<artifactId>spring-context</artifactId>
@@ -157,12 +146,6 @@
 			<version>${elasticsearch.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-test</artifactId>
-			<version>${kotlin.version}</version>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 
 
@@ -174,28 +157,18 @@
 				<version>${maven-compiler-plugin.version}</version>
 			</plugin>
 			<plugin>
-				<groupId>org.jetbrains.kotlin</groupId>
-				<artifactId>kotlin-maven-plugin</artifactId>
-				<version>${kotlin.version}</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.2.0</version>
 				<executions>
 					<execution>
-						<id>compile</id>
-						<phase>compile</phase>
+						<id>attach-sources</id>
+						<phase>verify</phase>
 						<goals>
-							<goal>compile</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>test-compile</id>
-						<phase>test-compile</phase>
-						<goals>
-							<goal>test-compile</goal>
+							<goal>jar-no-fork</goal>
 						</goals>
 					</execution>
 				</executions>
-				<configuration>
-					<jvmTarget>1.8</jvmTarget>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
