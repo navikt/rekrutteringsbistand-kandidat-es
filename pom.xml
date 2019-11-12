@@ -10,7 +10,7 @@
 	<version>1.4.19-SNAPSHOT</version>
 
 	<name>pam-kandidatsok-es</name>
-	<description>Indeksering av CVer i Elasticsearch</description>
+	<description>Indeksering av CVer i Elasticsearch og grensesnitt for å utføre søk</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -21,9 +21,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<java.version>12</java.version>
 		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
 
 		<!-- NAVs -->
@@ -34,14 +32,15 @@
 		<logback-access.version>2.7.1</logback-access.version>
 		<logback.version>1.2.3</logback.version>
 		<slf4j.version>1.7.26</slf4j.version>
-		<palantir.version>0.35.0</palantir.version>
+		<palantir.version>1.3.0</palantir.version>
 		<elasticsearch.version>6.2.2</elasticsearch.version>
 		<lucene.version>8.1.0</lucene.version>
 		<prometheus.version>0.6.0</prometheus.version>
 		<kotlin.version>1.3.31</kotlin.version>
 		<spring.version>5.1.6.RELEASE</spring.version>
 		<jackson.version>2.9.8</jackson.version>
-		<assertj.version>3.11.1</assertj.version>
+		<assertj.version>3.14.0</assertj.version>
+        <junit-jupiter.version>5.5.2</junit-jupiter.version>
 	</properties>
 
 	<dependencies>
@@ -63,11 +62,6 @@
     		<version>${jackson.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>com.palantir.docker.compose</groupId>
-			<artifactId>docker-compose-rule-junit4</artifactId>
-			<version>${palantir.version}</version>
-		</dependency>
 		<dependency>
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-core</artifactId>
@@ -109,17 +103,6 @@
 			<artifactId>elasticsearch-mapping-builder</artifactId>
 			<version>6</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-stdlib-jdk8</artifactId>
-			<version>${kotlin.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-reflect</artifactId>
-			<version>${kotlin.version}</version>
-		</dependency>
 		<dependency>
     		<groupId>org.springframework</groupId>
     		<artifactId>spring-context</artifactId>
@@ -128,9 +111,22 @@
 
 		<!-- test -->
 		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>${junit-jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.palantir.docker.compose</groupId>
+			<artifactId>docker-compose-junit-jupiter</artifactId>
+			<version>${palantir.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
   			<groupId>org.assertj</groupId>
   			<artifactId>assertj-core</artifactId>
   			<version>${assertj.version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
     		<groupId>org.springframework</groupId>
@@ -150,58 +146,26 @@
 			<version>${elasticsearch.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-test</artifactId>
-			<version>${kotlin.version}</version>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 
 
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.jetbrains.kotlin</groupId>
-				<artifactId>kotlin-maven-plugin</artifactId>
-				<version>${kotlin.version}</version>
-				<executions>
-					<execution>
-						<id>compile</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>compile</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>test-compile</id>
-						<phase>test-compile</phase>
-						<goals>
-							<goal>test-compile</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<jvmTarget>1.8</jvmTarget>
-				</configuration>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven-compiler-plugin.version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.2.0</version>
 				<executions>
 					<execution>
-						<id>compile</id>
-						<phase>compile</phase>
+						<id>attach-sources</id>
+						<phase>verify</phase>
 						<goals>
-							<goal>compile</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>testCompile</id>
-						<phase>test-compile</phase>
-						<goals>
-							<goal>testCompile</goal>
+							<goal>jar-no-fork</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -213,7 +177,7 @@
 				<executions>
 					<execution>
 						<id>reserve-es-ports</id>
-						<phase>process-resources</phase>
+						<phase>pre-integration-test</phase>
 						<goals>
 							<goal>reserve-network-port</goal>
 						</goals>
@@ -228,11 +192,25 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0-M3</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>3.0.0-M3</version>
 				<configuration>
 					<systemPropertyVariables>
 						<ES_PORT>${es.port}</ES_PORT>
 					</systemPropertyVariables>
 				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

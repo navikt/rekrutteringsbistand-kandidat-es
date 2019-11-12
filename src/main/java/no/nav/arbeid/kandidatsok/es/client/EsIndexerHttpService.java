@@ -113,7 +113,6 @@ public class EsIndexerHttpService implements EsIndexerService, AutoCloseable {
             }
             settingsContentBuilder.endObject();
 
-
             createIndexRequest.settings(settingsContentBuilder);
             MappingBuilder mappingBuilder = new MappingBuilderImpl();
             ObjectMapping mapping = mappingBuilder.build(EsCv.class);
@@ -121,11 +120,11 @@ public class EsIndexerHttpService implements EsIndexerService, AutoCloseable {
             // String jsonMapping = mapping.getContentAsString();
             XContentBuilder contentBuilder = mapping.getContent();
             String jsonMapping = contentBuilder.string();
-            LOGGER.info("MAPPING: " + jsonMapping);
+            LOGGER.debug("MAPPING: {}", jsonMapping);
             createIndexRequest.mapping(CV_TYPE, jsonMapping, XContentType.JSON);
 
             CreateIndexResponse createIndexResponse = client.indices().create(createIndexRequest);
-            LOGGER.info("CREATEINDEXRESPONSE: " + createIndexResponse);
+            LOGGER.info("CREATEINDEXRESPONSE: index={}, acknowledged={}", createIndexResponse.index(), createIndexResponse.isAcknowledged());
         } catch (IOException ioe) {
             LOGGER.error("Feilet å lage index", ioe);
             throw new ElasticException(ioe);
@@ -137,7 +136,7 @@ public class EsIndexerHttpService implements EsIndexerService, AutoCloseable {
         try {
             DeleteIndexRequest deleteRequest = new DeleteIndexRequest(indexName);
             DeleteIndexResponse deleteIndexResponse = client.indices().delete(deleteRequest);
-            LOGGER.info("DELETERESPONSE: " + deleteIndexResponse.toString());
+            LOGGER.info("DELETERESPONSE: index={}, acknowledged={}", indexName, deleteIndexResponse.isAcknowledged());
         } catch (IOException ioe) {
             LOGGER.error("Feilet å slette index", ioe);
             throw new ElasticException(ioe);
