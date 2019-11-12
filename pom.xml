@@ -164,25 +164,6 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>3.0.0</version>
-				<executions>
-					<execution>
-						<id>reserve-es-ports</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>reserve-network-port</goal>
-						</goals>
-						<configuration>
-							<portNames>
-								<portName>es.port</portName>
-							</portNames>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>3.0.0-M3</version>
@@ -191,11 +172,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>3.0.0-M3</version>
-				<configuration>
-					<systemPropertyVariables>
-						<ES_PORT>${es.port}</ES_PORT>
-					</systemPropertyVariables>
-				</configuration>
 				<executions>
 					<execution>
 						<goals>

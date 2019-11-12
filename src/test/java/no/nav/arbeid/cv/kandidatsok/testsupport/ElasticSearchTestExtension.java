@@ -16,34 +16,33 @@ import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.GLOBAL;
  * <p>with contents:</p>
  * <pre>vm.max_map_count = 262144</pre>
  */
-public class ElasticSearchIntegrationTestExtension implements BeforeAllCallback, ExtensionContext.Store.CloseableResource {
+public class ElasticSearchTestExtension implements BeforeAllCallback, ExtensionContext.Store.CloseableResource {
 
     private static DockerComposeEnv dce = null;
+    private static final DockerComposeEnv.Builder builder =
+            DockerComposeEnv.builder("src/test/resources/docker-compose-kun-es.yml")
+             .addAutoPortVariable("ES_PORT")
+             .readyOnHttpGet2xx("http://localhost:{VALUE}", "ES_PORT")
+             .dockerComposeLogDir("target");
 
-    private static final Logger LOG = LoggerFactory.getLogger(ElasticSearchIntegrationTestExtension.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ElasticSearchTestExtension.class);
+
+    public static Integer getEsPort() {
+        return Integer.parseInt(builder.getEnvVariable("ES_PORT"));
+    }
 
     @Override
     public void beforeAll(ExtensionContext extensionContext) throws Exception {
         if (dce != null) {
             return;
         }
-        LOG.info("Bring up ElasticSearch with docker-compose on port {} ..", System.getProperty("ES_PORT"));
-        dce = newDockerComposeEnv();
+        dce = builder.up();
         extensionContext.getRoot().getStore(GLOBAL).put(getClass().getName(), this);
-    }
-
-    private DockerComposeEnv newDockerComposeEnv() throws Exception {
-        return DockerComposeEnv.builder("src/test/resources/docker-compose-kun-es.yml")
-                .addEnvVariable("ES_PORT", System.getProperty("ES_PORT"))
-                .readyOnHttpGet2xx("http://localhost:{VALUE}", "ES_PORT")
-                .dockerComposeLogDir("target")
-                .up();
     }
 
     @Override
     public void close() throws Exception {
         if (dce != null) {
-            LOG.info("Shut down ElasticSearch ..");
             dce.down();
         }
     }

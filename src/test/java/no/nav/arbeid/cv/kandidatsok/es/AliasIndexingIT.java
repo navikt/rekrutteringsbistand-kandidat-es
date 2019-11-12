@@ -8,7 +8,7 @@ import no.nav.arbeid.cv.kandidatsok.domene.es.EsCvObjectMother;
 import no.nav.arbeid.cv.kandidatsok.domene.es.KandidatsokTransformer;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.SokekriterierVeiledere;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokeresultat;
-import no.nav.arbeid.cv.kandidatsok.testsupport.ElasticSearchIntegrationTestExtension;
+import no.nav.arbeid.cv.kandidatsok.testsupport.ElasticSearchTestExtension;
 import no.nav.arbeid.kandidatsok.es.client.EsIndexerHttpService;
 import no.nav.arbeid.kandidatsok.es.client.EsIndexerService;
 import no.nav.arbeid.kandidatsok.es.client.EsSokHttpService;
@@ -22,7 +22,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -36,7 +35,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-@ExtendWith(ElasticSearchIntegrationTestExtension.class)
+@ExtendWith(ElasticSearchTestExtension.class)
 public class AliasIndexingIT {
 
     @Autowired
@@ -54,10 +53,9 @@ public class AliasIndexingIT {
     static class TestConfig {
 
         @Bean
-        @Autowired
-        public RestHighLevelClient restHighLevelClient(@Value("${ES_PORT}") Integer port) {
+        public RestHighLevelClient restHighLevelClient() {
             return new RestHighLevelClient(
-                    RestClient.builder(new HttpHost("localhost", port, "http")));
+                    RestClient.builder(new HttpHost("localhost", ElasticSearchTestExtension.getEsPort(), "http")));
         }
 
         @Bean
