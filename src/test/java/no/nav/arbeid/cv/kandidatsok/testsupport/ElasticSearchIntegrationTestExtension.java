@@ -1,8 +1,5 @@
-package no.nav.arbeid.cv.kandidatsok.es;
+package no.nav.arbeid.cv.kandidatsok.testsupport;
 
-import com.palantir.docker.compose.DockerComposeExtension;
-import com.palantir.docker.compose.configuration.ShutdownStrategy;
-import com.palantir.docker.compose.connection.DockerMachine;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.slf4j.Logger;
@@ -21,7 +18,7 @@ import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.GLOBAL;
  */
 public class ElasticSearchIntegrationTestExtension implements BeforeAllCallback, ExtensionContext.Store.CloseableResource {
 
-    private static DockerComposeExtension dce = null;
+    private static DockerComposeEnv dce = null;
 
     private static final Logger LOG = LoggerFactory.getLogger(ElasticSearchIntegrationTestExtension.class);
 
@@ -31,25 +28,23 @@ public class ElasticSearchIntegrationTestExtension implements BeforeAllCallback,
             return;
         }
         LOG.info("Bring up ElasticSearch with docker-compose on port {} ..", System.getProperty("ES_PORT"));
-        (dce = newDockerComposeExt()).before();
+        dce = newDockerComposeEnv();
         extensionContext.getRoot().getStore(GLOBAL).put(getClass().getName(), this);
     }
 
-    private DockerComposeExtension newDockerComposeExt() throws Exception {
-        return new DockerComposeExtension.Builder()
-                .file("src/test/resources/docker-compose-kun-es.yml")
-                .machine(DockerMachine.localMachine()
-                        .withAdditionalEnvironmentVariable("ES_PORT",
-                                System.getProperty("ES_PORT"))
-                        .build())
-                .shutdownStrategy(ShutdownStrategy.KILL_DOWN).build();
+    private DockerComposeEnv newDockerComposeEnv() throws Exception {
+        return DockerComposeEnv.builder("src/test/resources/docker-compose-kun-es.yml")
+                .addEnvVariable("ES_PORT", System.getProperty("ES_PORT"))
+                .readyOnHttpGet2xx("http://localhost:{VALUE}", "ES_PORT")
+                .dockerComposeLogDir("target")
+                .up();
     }
 
     @Override
-    public void close() {
+    public void close() throws Exception {
         if (dce != null) {
             LOG.info("Shut down ElasticSearch ..");
-            dce.after();
+            dce.down();
         }
     }
 
