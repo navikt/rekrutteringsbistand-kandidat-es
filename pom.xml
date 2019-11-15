@@ -32,7 +32,6 @@
 		<logback-access.version>2.7.1</logback-access.version>
 		<logback.version>1.2.3</logback.version>
 		<slf4j.version>1.7.26</slf4j.version>
-		<palantir.version>1.3.0</palantir.version>
 		<elasticsearch.version>6.2.2</elasticsearch.version>
 		<lucene.version>8.1.0</lucene.version>
 		<prometheus.version>0.6.0</prometheus.version>
@@ -117,12 +116,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.palantir.docker.compose</groupId>
-			<artifactId>docker-compose-junit-jupiter</artifactId>
-			<version>${palantir.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
   			<groupId>org.assertj</groupId>
   			<artifactId>assertj-core</artifactId>
   			<version>${assertj.version}</version>
@@ -171,25 +164,6 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>3.0.0</version>
-				<executions>
-					<execution>
-						<id>reserve-es-ports</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>reserve-network-port</goal>
-						</goals>
-						<configuration>
-							<portNames>
-								<portName>es.port</portName>
-							</portNames>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>3.0.0-M3</version>
@@ -198,11 +172,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>3.0.0-M3</version>
-				<configuration>
-					<systemPropertyVariables>
-						<ES_PORT>${es.port}</ES_PORT>
-					</systemPropertyVariables>
-				</configuration>
 				<executions>
 					<execution>
 						<goals>
@@ -226,11 +195,6 @@
 			<id>repo.adeo.no</id>
 			<name>Maven repo i iApp-sonen</name>
 			<url>https://repo.adeo.no/repository</url>
-		</repository>
-		<repository>
-			<id>palantir</id>
-			<name>Repo for palantir</name>
-			<url>https://dl.bintray.com/palantir/releases</url>
 		</repository>
 		<repository>
 			<id>confluent</id>

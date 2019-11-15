@@ -6,6 +6,7 @@ import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tags;
 import no.nav.arbeid.cv.kandidatsok.domene.es.EsCvObjectMother;
 import no.nav.arbeid.cv.kandidatsok.domene.es.KandidatsokTransformer;
+import no.nav.arbeid.cv.kandidatsok.testsupport.ElasticSearchTestExtension;
 import no.nav.arbeid.kandidatsok.es.client.EsIndexerHttpService;
 import no.nav.arbeid.kandidatsok.es.client.EsIndexerService;
 import no.nav.arbeid.kandidatsok.es.client.EsSokHttpService;
@@ -19,7 +20,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -33,7 +33,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-@ExtendWith(ElasticSearchIntegrationTestExtension.class)
+@ExtendWith(ElasticSearchTestExtension.class)
 public class TypeaheadIT {
 
     @Autowired
@@ -51,10 +51,9 @@ public class TypeaheadIT {
     static class TestConfig {
 
         @Bean
-        @Autowired
-        public RestHighLevelClient restHighLevelClient(@Value("${ES_PORT}") Integer port) {
+        public RestHighLevelClient restHighLevelClient() {
             return new RestHighLevelClient(
-                    RestClient.builder(new HttpHost("localhost", port, "http")));
+                    RestClient.builder(new HttpHost("localhost", ElasticSearchTestExtension.getEsPort(), "http")));
         }
 
         @Bean
