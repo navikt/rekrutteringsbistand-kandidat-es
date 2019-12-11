@@ -101,10 +101,10 @@ public class EsCvObjectMother {
         kompetanseListee.add(kompetanse4);
 
         EsSertifikat EsSertifikat1 = new EsSertifikat(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
+                "A - Tung motorsykkel", null, "");
 
         EsSertifikat EsSertifikat2 = new EsSertifikat(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
+                "BE - Personbil med tilhenger", null, "");
 
         EsSertifikat EsSertifikat3 = new EsSertifikat(d("1996-02-01"), d("2020-12-01"), "V1.6110",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
@@ -124,13 +124,13 @@ public class EsCvObjectMother {
         EsSertifikatListe.add(EsSertifikat5);
 
         EsForerkort forerkort2 = new EsForerkort(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
+                "BE - Personbil med tilhenger", null, "");
 
         EsForerkort forerkort3 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6110",
-                "Førerkort: Kl. CE (lastebil og tilhenger)", null, "");
+                "CE - Lastebil med tilhenger", null, "");
 
         EsForerkort forerkort4 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6145",
-                "Førerkort: Kl. DE (buss og tilhenger)", null, "");
+                "DE - Buss med tilhenger", null, "");
 
         ArrayList<EsForerkort> forerkortListe = new ArrayList<>();
         forerkortListe.add(forerkort2);
@@ -294,16 +294,16 @@ public class EsCvObjectMother {
         sertifikatListe.add(sertifikat3);
 
         EsForerkort forerkort1 = new EsForerkort(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
+                "A - Tung motorsykkel", null, "");
 
         EsForerkort forerkort2 = new EsForerkort(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
+                "BE - Personbil med tilhenger", null, "");
 
         EsForerkort forerkort3 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6110",
-                "Førerkort: Kl. CE (lastebil og tilhenger)", null, "");
+                "CE - Lastebil med tilhenger", null, "");
 
         EsForerkort forerkort4 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6145",
-                "Førerkort: Kl. DE (buss og tilhenger)", null, "");
+                "DE - Buss med tilhenger", null, "");
 
         ArrayList<EsForerkort> forerkortListe = new ArrayList<>();
         forerkortListe.add(forerkort1);
@@ -494,16 +494,16 @@ public class EsCvObjectMother {
         EsSertifikatListe.add(EsSertifikat3);
 
         EsForerkort forerkort1 = new EsForerkort(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
+                "A - Tung motorsykkel", null, "");
 
         EsForerkort forerkort2 = new EsForerkort(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
+                "BE - Personbil med tilhenger", null, "");
 
         EsForerkort forerkort3 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6110",
-                "Førerkort: Kl. CE (lastebil og tilhenger)", null, "");
+                "CE - Lastebil med tilhenger", null, "");
 
         EsForerkort forerkort4 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6145",
-                "Førerkort: Kl. DE (buss og tilhenger)", null, "");
+                "DE - Buss med tilhenger", null, "");
 
         ArrayList<EsForerkort> forerkortListe = new ArrayList<>();
         forerkortListe.add(forerkort1);
@@ -683,16 +683,16 @@ public class EsCvObjectMother {
         esSertifikatListe.add(EsSertifikat4);
 
         EsForerkort forerkort1 = new EsForerkort(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
+                "A - Tung motorsykkel", null, "");
 
         EsForerkort forerkort2 = new EsForerkort(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
+                "BE - Personbil med tilhenger", null, "");
 
         EsForerkort forerkort3 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6110",
-                "Førerkort: Kl. CE (lastebil og tilhenger)", null, "");
+                "CE - Lastebil med tilhenger", null, "");
 
         EsForerkort forerkort4 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6145",
-                "Traktorlappen", null, "");
+                "T - Traktor", null, "");
 
         ArrayList<EsForerkort> forerkortListe = new ArrayList<>();
         forerkortListe.add(forerkort1);
@@ -871,17 +871,17 @@ public class EsCvObjectMother {
         EsSertifikatListe.add(EsSertifikat3);
 
         EsForerkort forerkort2 = new EsForerkort(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
+                "BE - Personbil med tilhenger", null, "");
 
         EsForerkort forerkort3 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6110",
-                "Førerkort: Kl. CE (lastebil og tilhenger)", null, "");
+                "CE - Lastebil med tilhenger", null, "");
 
         EsForerkort forerkort4 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6145",
-                "Førerkort: Kl. DE (buss og tilhenger)", null, "");
+                "DE - Buss med tilhenger", null, "");
 
         ArrayList<EsForerkort> forerkortListe = new ArrayList<>();
-        forerkortListe.add(forerkort2);
-        forerkortListe.add(forerkort3);
+        // forerkortListe.add(forerkort2);
+        // forerkortListe.add(forerkort3);
         forerkortListe.add(forerkort4);
 
 
@@ -1049,21 +1049,21 @@ public class EsCvObjectMother {
         EsSertifikatListe.add(EsSertifikat3);
 
         EsForerkort forerkort1 = new EsForerkort(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
+                "A - Tung motorsykkel", null, "");
 
         EsForerkort forerkort2 = new EsForerkort(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
+                "BE - Personbil med tilhenger", null, "");
 
         EsForerkort forerkort3 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6110",
-                "Førerkort: Kl. CE (lastebil og tilhenger)", null, "");
+                "CE - Lastebil med tilhenger", null, "");
 
         EsForerkort forerkort4 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6145",
-                "Førerkort: Kl. DE (buss og tilhenger)", null, "");
+                "DE - Buss med tilhenger", null, "");
 
         ArrayList<EsForerkort> forerkortListe = new ArrayList<>();
         forerkortListe.add(forerkort1);
-        forerkortListe.add(forerkort2);
-        forerkortListe.add(forerkort3);
+        // forerkortListe.add(forerkort2);
+        // forerkortListe.add(forerkort3);
         forerkortListe.add(forerkort4);
 
 
@@ -1219,22 +1219,22 @@ public class EsCvObjectMother {
         EsSertifikatListe.add(EsSertifikat3);
 
         EsForerkort forerkort1 = new EsForerkort(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
+                "A - Tung motorsykkel", null, "");
 
         EsForerkort forerkort2 = new EsForerkort(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
+                "BE - Personbil med tilhenger", null, "");
 
         EsForerkort forerkort3 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6110",
-                "Førerkort: Kl. CE (lastebil og tilhenger)", null, "");
+                "CE - Lastebil med tilhenger", null, "");
 
         EsForerkort forerkort4 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6145",
-                "Førerkort: Kl. DE (buss og tilhenger)", null, "");
+                "DE - Buss med tilhenger", null, "");
 
         ArrayList<EsForerkort> forerkortListe = new ArrayList<>();
-        forerkortListe.add(forerkort1);
-        forerkortListe.add(forerkort2);
+        // forerkortListe.add(forerkort1);
+        // forerkortListe.add(forerkort2);
         forerkortListe.add(forerkort3);
-        forerkortListe.add(forerkort4);
+        // forerkortListe.add(forerkort4);
 
 
         EsSprak sprak = new EsSprak(d("2012-12-01"), "78983", "Dansk", "Danish", "Uforståelig");
@@ -1406,22 +1406,22 @@ public class EsCvObjectMother {
         sertifikatListe.add(sertifikat3);
 
         EsForerkort forerkort1 = new EsForerkort(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
+                "A - Tung motorsykkel", null, "");
 
         EsForerkort forerkort2 = new EsForerkort(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
+                "BE - Personbil med tilhenger", null, "");
 
         EsForerkort forerkort3 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6110",
-                "Førerkort: Kl. CE (lastebil og tilhenger)", null, "");
+                "CE - Lastebil med tilhenger", null, "");
 
         EsForerkort forerkort4 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6145",
-                "Førerkort: Kl. DE (buss og tilhenger)", null, "");
+                "DE - Buss med tilhenger", null, "");
 
         ArrayList<EsForerkort> forerkortListe = new ArrayList<>();
         forerkortListe.add(forerkort1);
         forerkortListe.add(forerkort2);
-        forerkortListe.add(forerkort3);
-        forerkortListe.add(forerkort4);
+        // forerkortListe.add(forerkort3);
+        // forerkortListe.add(forerkort4);
 
 
         EsSprak sprak1 =
@@ -1573,10 +1573,10 @@ public class EsCvObjectMother {
         kompetanseList.add(kompetanse4);
 
         EsSertifikat sertifikat1 = new EsSertifikat(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
+                "A - Tung motorsykkel", null, "");
 
         EsSertifikat sertifikat2 = new EsSertifikat(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
+                "BE - Personbil med tilhenger", null, "");
 
         EsSertifikat sertifikat3 = new EsSertifikat(d("1996-02-01"), d("2020-12-01"), "V1.6110",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 12 tonn",
@@ -1596,22 +1596,22 @@ public class EsCvObjectMother {
         sertifikatListe.add(sertifikat5);
 
         EsForerkort forerkort1 = new EsForerkort(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
+                "A - Tung motorsykkel", null, "");
 
         EsForerkort forerkort2 = new EsForerkort(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
+                "BE - Personbil med tilhenger", null, "");
 
         EsForerkort forerkort3 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6110",
-                "Førerkort: Kl. CE (lastebil og tilhenger)", null, "");
+                "CE - Lastebil med tilhenger", null, "");
 
         EsForerkort forerkort4 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6145",
-                "Førerkort: Kl. DE (buss og tilhenger)", null, "");
+                "DE - Buss med tilhenger", null, "");
 
         ArrayList<EsForerkort> forerkortListe = new ArrayList<>();
         forerkortListe.add(forerkort1);
-        forerkortListe.add(forerkort2);
-        forerkortListe.add(forerkort3);
-        forerkortListe.add(forerkort4);
+        // forerkortListe.add(forerkort2);
+        // forerkortListe.add(forerkort3);
+        // forerkortListe.add(forerkort4);
 
 
         EsSprak sprak1 =
@@ -1761,10 +1761,10 @@ public class EsCvObjectMother {
         kompetanseList.add(kompetanse4);
 
         EsSertifikat sertifikat1 = new EsSertifikat(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
+                "A - Tung motorsykkel", null, "");
 
         EsSertifikat sertifikat2 = new EsSertifikat(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
+                "BE - Personbil med tilhenger", null, "");
 
         EsSertifikat sertifikat3 = new EsSertifikat(d("1996-02-01"), d("2020-12-01"), "V1.6110",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 12 tonn",
@@ -1784,16 +1784,16 @@ public class EsCvObjectMother {
         sertifikatListe.add(sertifikat5);
 
         EsForerkort forerkort1 = new EsForerkort(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
+                "A - Tung motorsykkel", null, "");
 
         EsForerkort forerkort2 = new EsForerkort(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
+                "BE - Personbil med tilhenger", null, "");
 
         EsForerkort forerkort3 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6110",
-                "Førerkort: Kl. CE (lastebil og tilhenger)", null, "");
+                "CE - Lastebil med tilhenger", null, "");
 
         EsForerkort forerkort4 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6145",
-                "Førerkort: Kl. DE (buss og tilhenger)", null, "");
+                "DE - Buss med tilhenger", null, "");
 
         ArrayList<EsForerkort> forerkortListe = new ArrayList<>();
         forerkortListe.add(forerkort1);
@@ -1949,10 +1949,10 @@ public class EsCvObjectMother {
         kompetanseList.add(kompetanse4);
 
         EsSertifikat sertifikat1 = new EsSertifikat(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
+                "A - Tung motorsykkel", null, "");
 
         EsSertifikat sertifikat2 = new EsSertifikat(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
+                "BE - Personbil med tilhenger", null, "");
 
         EsSertifikat sertifikat3 = new EsSertifikat(d("1996-02-01"), d("2020-12-01"), "V1.6110",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 12 tonn",
@@ -1972,16 +1972,16 @@ public class EsCvObjectMother {
         sertifikatListe.add(sertifikat5);
 
         EsForerkort forerkort1 = new EsForerkort(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
+                "A - Tung motorsykkel", null, "");
 
         EsForerkort forerkort2 = new EsForerkort(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
+                "BE - Personbil med tilhenger", null, "");
 
         EsForerkort forerkort3 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6110",
-                "Førerkort: Kl. CE (lastebil og tilhenger)", null, "");
+                "CE - Lastebil med tilhenger", null, "");
 
         EsForerkort forerkort4 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6145",
-                "Førerkort: Kl. DE (buss og tilhenger)", null, "");
+                "DE - Buss med tilhenger", null, "");
 
         ArrayList<EsForerkort> forerkortListe = new ArrayList<>();
         forerkortListe.add(forerkort1);
@@ -2137,10 +2137,10 @@ public class EsCvObjectMother {
         kompetanseList.add(kompetanse4);
 
         EsSertifikat sertifikat1 = new EsSertifikat(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
+                "A - Tung motorsykkel", null, "");
 
         EsSertifikat sertifikat2 = new EsSertifikat(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
+                "BE - Personbil med tilhenger", null, "");
 
         EsSertifikat sertifikat3 = new EsSertifikat(d("1996-02-01"), d("2020-12-01"), "V1.6110",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 12 tonn",
@@ -2160,16 +2160,16 @@ public class EsCvObjectMother {
         sertifikatListe.add(sertifikat5);
 
         EsForerkort forerkort1 = new EsForerkort(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
+                "A - Tung motorsykkel", null, "");
 
         EsForerkort forerkort2 = new EsForerkort(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
+                "BE - Personbil med tilhenger", null, "");
 
         EsForerkort forerkort3 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6110",
-                "Førerkort: Kl. CE (lastebil og tilhenger)", null, "");
+                "CE - Lastebil med tilhenger", null, "");
 
         EsForerkort forerkort4 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6145",
-                "Førerkort: Kl. DE (buss og tilhenger)", null, "");
+                "DE - Buss med tilhenger", null, "");
 
         ArrayList<EsForerkort> forerkortListe = new ArrayList<>();
         forerkortListe.add(forerkort1);
@@ -2325,10 +2325,10 @@ public class EsCvObjectMother {
         kompetanseList.add(kompetanse4);
 
         EsSertifikat sertifikat1 = new EsSertifikat(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
+                "A - Tung motorsykkel", null, "");
 
         EsSertifikat sertifikat2 = new EsSertifikat(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
+                "BE - Personbil med tilhenger", null, "");
 
         EsSertifikat sertifikat3 = new EsSertifikat(d("1996-02-01"), d("2020-12-01"), "V1.6110",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 12 tonn",
@@ -2348,16 +2348,16 @@ public class EsCvObjectMother {
         sertifikatListe.add(sertifikat5);
 
         EsForerkort forerkort1 = new EsForerkort(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
+                "A - Tung motorsykkel", null, "");
 
         EsForerkort forerkort2 = new EsForerkort(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
+                "BE - Personbil med tilhenger", null, "");
 
         EsForerkort forerkort3 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6110",
-                "Førerkort: Kl. CE (lastebil og tilhenger)", null, "");
+                "CE - Lastebil med tilhenger", null, "");
 
         EsForerkort forerkort4 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6145",
-                "Førerkort: Kl. DE (buss og tilhenger)", null, "");
+                "DE - Buss med tilhenger", null, "");
 
         ArrayList<EsForerkort> forerkortListe = new ArrayList<>();
         forerkortListe.add(forerkort1);
@@ -2513,10 +2513,10 @@ public class EsCvObjectMother {
         kompetanseList.add(kompetanse4);
 
         EsSertifikat sertifikat1 = new EsSertifikat(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
+                "A - Tung motorsykkel", null, "");
 
         EsSertifikat sertifikat2 = new EsSertifikat(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
+                "BE - Personbil med tilhenger", null, "");
 
         EsSertifikat sertifikat3 = new EsSertifikat(d("1996-02-01"), d("2020-12-01"), "V1.6110",
                 "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 12 tonn",
@@ -2536,16 +2536,16 @@ public class EsCvObjectMother {
         sertifikatListe.add(sertifikat5);
 
         EsForerkort forerkort1 = new EsForerkort(d("1994-08-01"), null, "V1.6050",
-                "Førerkort: Kl. A (tung motorsykkel)", null, "");
+                "A - Tung motorsykkel", null, "");
 
         EsForerkort forerkort2 = new EsForerkort(d("1991-01-01"), null, "V1.6070",
-                "Førerkort: Kl. BE (personbil/varebil og tilhenger)", null, "");
+                "BE - Personbil med tilhenger", null, "");
 
         EsForerkort forerkort3 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6110",
-                "Førerkort: Kl. CE (lastebil og tilhenger)", null, "");
+                "CE - Lastebil med tilhenger", null, "");
 
         EsForerkort forerkort4 = new EsForerkort(d("1996-02-01"), d("2020-12-01"), "V1.6145",
-                "Førerkort: Kl. DE (buss og tilhenger)", null, "");
+                "DE - Buss med tilhenger", null, "");
 
         ArrayList<EsForerkort> forerkortListe = new ArrayList<>();
         forerkortListe.add(forerkort1);

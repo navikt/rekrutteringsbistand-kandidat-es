@@ -261,17 +261,37 @@ public class IndexCvIT {
     @Test
     public void testFlereForerkortKriterierGirFlereTreff() {
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
-                .forerkort(Collections.singletonList("Førerkort: Kl. A (tung motorsykkel)"))
+                .forerkort(Collections.singletonList("A - Tung motorsykkel"))
                 .bygg());
         Sokeresultat sokeresultat2 = sokClient.arbeidsgiverSok(Sokekriterier.med()
                 .forerkort(
-                        asList("Førerkort: Kl. A (tung motorsykkel)", "Førerkort: Kl. CE (lastebil og tilhenger)"))
+                        asList("A - Tung motorsykkel", "CE - Lastebil med tilhenger"))
                 .bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         List<EsCv> cver2 = sokeresultat2.getCver();
 
         assertThat(cver2.size()).isGreaterThan(cver.size());
+    }
+
+    @Test
+    public void testForerkortKriterierGirTreffPaaForerkortSomErInkludertIKriteriet() {
+        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
+                .forerkort(Collections.singletonList("B - Personbil"))
+                .bygg());
+        List<EsCv> cver = sokeresultat.getCver();
+        Set<String> forerkort = new HashSet<>();
+        cver.forEach(cv -> cv.getForerkort().forEach(f -> forerkort.add(f.getForerkortKodeKlasse())));
+        assertThat(forerkort).contains("DE - Buss med tilhenger");
+        assertThat(forerkort).contains("BE - Personbil med tilhenger");
+        assertThat(forerkort).contains("C1 - Lett lastebil");
+        assertThat(forerkort).contains("C1E - Lett lastebil med tilhenger");
+        assertThat(forerkort).contains("C - Lastebil");
+        assertThat(forerkort).contains("CE - Lastebil med tilhenger");
+        assertThat(forerkort).contains("D1 - Minibuss");
+        assertThat(forerkort).contains("D1E - Minibuss med tilhenger");
+        assertThat(forerkort).contains("D - Buss");
+        assertThat(forerkort).contains("DE - Buss med tilhenger");
     }
 
     @Test
@@ -326,7 +346,7 @@ public class IndexCvIT {
     @Test
     public void testSamletKompetanseSkalIkkeGiResultatVedSokPaForerkort() {
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().kompetanser(Collections.singletonList("Traktorlappen")).bygg());
+                Sokekriterier.med().kompetanser(Collections.singletonList("T - Traktor")).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
 

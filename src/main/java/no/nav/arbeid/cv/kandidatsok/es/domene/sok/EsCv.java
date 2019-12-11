@@ -1,6 +1,7 @@
 package no.nav.arbeid.cv.kandidatsok.es.domene.sok;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsForerkort;
 
 import java.util.*;
 
@@ -39,6 +40,8 @@ public class EsCv {
 
     private List<EsYrkeserfaring> yrkeserfaring = new ArrayList<>();
 
+    private List<EsForerkort> forerkort = new ArrayList<>();
+
     private String oppstartKode;
 
     private float score = Float.NEGATIVE_INFINITY; // Default fra Elasticsearch..
@@ -50,7 +53,7 @@ public class EsCv {
                 String poststed, String epostadresse, String telefon, String mobiltelefon,
                 String formidlingsgruppekode, String kandidatnr,
                 int totalLengdeYrkeserfaring, String kvalifiseringsgruppekode, List<EsUtdanning> utdanning,
-                List<EsYrkeserfaring> yrkeserfaring, String oppstart) {
+                List<EsYrkeserfaring> yrkeserfaring, String oppstart, List<EsForerkort> forerkort) {
         this.aktorId = aktorId;
         this.fodselsnummer = fodselsnummer;
         this.fornavn = fornavn;
@@ -68,6 +71,7 @@ public class EsCv {
         this.utdanning = utdanning;
         this.yrkeserfaring = yrkeserfaring;
         this.oppstartKode = oppstart;
+        this.forerkort = forerkort;
     }
 
     public float getScore() {
@@ -95,6 +99,10 @@ public class EsCv {
         yrkeserfaringListe
                 .forEach(y -> this.totalLengdeYrkeserfaring += y.getYrkeserfaringManeder());
         this.yrkeserfaring.addAll(yrkeserfaringListe);
+    }
+
+    public void addForerkort(Collection<EsForerkort> forerkortListe) {
+       this.forerkort.addAll(forerkortListe);
     }
 
     public String getAktorId() {
@@ -165,6 +173,8 @@ public class EsCv {
         return this.oppstartKode;
     }
 
+    public List<EsForerkort> getForerkort() { return this.forerkort; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -221,6 +231,7 @@ public class EsCv {
                 ", yrkeserfaring=" + yrkeserfaring +
                 ", score=" + score +
                 ", oppstartKode=" + oppstartKode +
+                ", forerkort=" + forerkort +
                 '}';
     }
 }
