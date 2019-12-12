@@ -2,9 +2,6 @@ package no.nav.arbeid.cv.kandidatsok.es.domene;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
-import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
-import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 
 import java.util.Date;
 import java.util.Objects;
@@ -18,16 +15,11 @@ public class EsSertifikat {
 
     private String sertifikatKode;
 
-    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
-    @ElasticKeywordField
-    @ElasticCompletionField
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String sertifikatKodeNavn;
 
-    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
     private String alternativtNavn;
 
-    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
     private String utsteder;
 
     public EsSertifikat() {

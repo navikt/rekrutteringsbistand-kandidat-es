@@ -2,57 +2,39 @@ package no.nav.arbeid.cv.kandidatsok.es.domene;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import no.nav.elasticsearch.mapping.annotations.*;
 
 import java.util.*;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsYrkeserfaring {
 
-    @ElasticDateField
     private Date fraDato;
 
-    @ElasticDateField(nullValue = "2099-12-31")
     private Date tilDato;
 
-    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
     private String arbeidsgiver;
 
-    @ElasticKeywordField
     private String styrkKode;
 
-    @ElasticKeywordField
     private String styrkKode4Siffer;
 
-    @ElasticKeywordField
     private String styrkKode3Siffer;
 
-    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
-    @ElasticKeywordField
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    @ElasticCompletionField
     private String styrkKodeStillingstittel;
 
-    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
     private String alternativStillingstittel;
 
-    @ElasticTextField(analyzer = "norwegian")
-    @ElasticKeywordField
     private List<String> sokeTitler = new ArrayList<>();
 
-    @ElasticKeywordField
     private String organisasjonsnummer;
 
-    @ElasticKeywordField
     private String naceKode;
 
-    @ElasticIntegerField
     private int yrkeserfaringManeder;
 
-    @ElasticBooleanField
     private Boolean utelukketForFremtiden;
 
-    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
     private String beskrivelse;
 
     public EsYrkeserfaring() {

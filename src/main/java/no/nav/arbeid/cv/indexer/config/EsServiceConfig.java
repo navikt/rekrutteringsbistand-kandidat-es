@@ -31,7 +31,8 @@ public class EsServiceConfig {
     }
 
     public EsIndexerService indexerCvService() {
-        return new EsIndexerHttpService(restHighLevelClient, objectMapper, meterRegistry, WriteRequest.RefreshPolicy.NONE, numberOfShards, numberOfReplicas);
+        return new EsIndexerHttpService(restHighLevelClient, objectMapper, meterRegistry,
+                WriteRequest.RefreshPolicy.NONE, numberOfShards, numberOfReplicas);
     }
 
 }

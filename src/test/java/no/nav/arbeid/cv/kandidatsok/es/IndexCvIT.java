@@ -1,31 +1,21 @@
 package no.nav.arbeid.cv.kandidatsok.es;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.micrometer.core.instrument.Counter;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Tags;
 import no.nav.arbeid.cv.kandidatsok.domene.es.EsCvObjectMother;
 import no.nav.arbeid.cv.kandidatsok.domene.es.KandidatsokTransformer;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.*;
 import no.nav.arbeid.cv.kandidatsok.testsupport.ElasticSearchTestExtension;
-import no.nav.arbeid.kandidatsok.es.client.EsIndexerHttpService;
 import no.nav.arbeid.kandidatsok.es.client.EsIndexerService;
-import no.nav.arbeid.kandidatsok.es.client.EsSokHttpService;
 import no.nav.arbeid.kandidatsok.es.client.EsSokService;
-import org.apache.http.HttpHost;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.extractor.Extractors;
-import org.elasticsearch.action.support.WriteRequest;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.InputStreamReader;
@@ -34,13 +24,10 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
 @ExtendWith(ElasticSearchTestExtension.class)
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = ElasticSearchTestConfiguration.class)
 public class IndexCvIT {
 
     @Autowired
@@ -54,47 +41,9 @@ public class IndexCvIT {
 
     private KandidatsokTransformer kandidatsokTransformer = new KandidatsokTransformer();
 
-    @Configuration
-    static class TestConfig {
-
-        @Bean
-        public RestHighLevelClient restHighLevelClient() {
-            return new RestHighLevelClient(
-                    RestClient.builder(new HttpHost("localhost", ElasticSearchTestExtension.getEsPort(), "http")));
-        }
-
-        @Bean
-        public ObjectMapper objectMapper() {
-            return new ObjectMapper();
-        }
-
-        @Bean
-        public MeterRegistry meterRegistry() {
-            Counter counter = mock(Counter.class);
-            MeterRegistry meterRegistry = mock(MeterRegistry.class);
-            when(meterRegistry.counter(anyString(), any(Tags.class))).thenReturn(counter);
-
-            return meterRegistry;
-        }
-
-        @Bean
-        public EsIndexerService indexerCvService(RestHighLevelClient restHighLevelClient,
-                                                 ObjectMapper objectMapper,
-                                                 MeterRegistry meterRegistry
-        ) {
-            return new EsIndexerHttpService(restHighLevelClient, objectMapper, meterRegistry,
-                    WriteRequest.RefreshPolicy.IMMEDIATE, 3, 2);
-        }
-
-        @Bean
-        public EsSokService esSokService(RestHighLevelClient restHighLevelClient, ObjectMapper objectMapper) {
-            return new EsSokHttpService(restHighLevelClient, objectMapper, "cvindex");
-        }
-    }
-
     @BeforeEach
     public void before() {
-        indexerClient.createIndex("cvindex");
+        indexerClient.createIndex(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
 
         indexerClient.bulkIndex(List.of(
                 EsCvObjectMother.giveMeEsCv(),
@@ -108,12 +57,12 @@ public class IndexCvIT {
                 EsCvObjectMother.giveMeCvForKode7(),
                 EsCvObjectMother.giveMeCvFritattForAgKandidatsok(),
                 EsCvObjectMother.giveMeCvFritattForKandidatsok()
-        ), "cvindex");
+        ), ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
     }
 
     @AfterEach
     public void after() {
-        indexerClient.deleteIndex("cvindex");
+        indexerClient.deleteIndex(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
     }
 
     @Test
@@ -129,7 +78,7 @@ public class IndexCvIT {
 
         List<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> bulkEventer = asList(cv1, cv2);
 
-        int antallIndeksert = indexerClient.bulkIndex(bulkEventer, "cvindex");
+        int antallIndeksert = indexerClient.bulkIndex(bulkEventer, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
         assertThat(antallIndeksert).isEqualTo(bulkEventer.size());
     }
 
@@ -141,7 +90,7 @@ public class IndexCvIT {
                         EsCvObjectMother.giveMeEsCv2());
 
         bulkEventer.forEach(e -> e.setKandidatnr(e.getKandidatnr() + 9998));
-        indexerClient.bulkIndex(bulkEventer, "cvindex");
+        indexerClient.bulkIndex(bulkEventer, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
 
     }
 
@@ -525,7 +474,7 @@ public class IndexCvIT {
 
         int antallForBulkIndeksering =
                 sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
-        indexerClient.bulkIndex(bulkEventer, "cvindex");
+        indexerClient.bulkIndex(bulkEventer, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
         int antallEtterIndeksering =
                 sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
 
@@ -533,7 +482,7 @@ public class IndexCvIT {
                 .isEqualTo(bulkEventer.size());
 
         // Reindekser
-        indexerClient.bulkIndex(bulkEventer, "cvindex");
+        indexerClient.bulkIndex(bulkEventer, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
         antallEtterIndeksering =
                 sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
 
@@ -548,7 +497,7 @@ public class IndexCvIT {
 
         int antallForBulkSletting =
                 sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
-        indexerClient.bulkSlettKandidatnr(sletteIder, "cvindex");
+        indexerClient.bulkSlettKandidatnr(sletteIder, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
         int antallEtterSletting =
                 sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
 
@@ -632,7 +581,7 @@ public class IndexCvIT {
 
     @Test
     public void skalKunneIndeksereOppCvUtenKompetanser() {
-        indexerClient.index(EsCvObjectMother.giveMeCvUtenKompetanse(), "cvindex");
+        indexerClient.index(EsCvObjectMother.giveMeCvUtenKompetanse(), ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
     }
 
     @Test

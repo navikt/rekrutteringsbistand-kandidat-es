@@ -2,9 +2,6 @@ package no.nav.arbeid.cv.kandidatsok.es.domene;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
-import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
-import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,14 +12,9 @@ public class EsYrkeJobbonsker {
 
     private String styrkKode;
 
-    @ElasticTextField(analyzer = "norwegian")
-    @ElasticKeywordField
-    @ElasticCompletionField
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String styrkBeskrivelse;
 
-    @ElasticTextField(analyzer = "norwegian")
-    @ElasticKeywordField
     private List<String> sokeTitler = new ArrayList<>();
 
     private boolean primaertJobbonske;

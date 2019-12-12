@@ -1,5 +1,7 @@
 package no.nav.arbeid.cv.indexer.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
@@ -8,10 +10,11 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 
+// FIXME betingelsesløs test-konfig i main-classpath
 @Configuration
 public class TestConfiguration {
 
-    // private static final Logger LOGGER = LoggerFactory.getLogger(TestConfiguration.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestConfiguration.class);
     //
     // @PostConstruct
     // public void skrivUtEnvVariabler() {
@@ -23,8 +26,11 @@ public class TestConfiguration {
     // }
 
     @PostConstruct
-    public void disableHostnameVerification()
+    public void disableTlsCertificateVerification()
             throws NoSuchAlgorithmException, KeyManagementException {
+
+        LOGGER.warn("Skrur av TLS sertifikatsjekk for javax.net.ssl.HttpsUrlConnection");
+
         // Create a trust manager that does not validate certificate chains
         TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
             public java.security.cert.X509Certificate[] getAcceptedIssuers() {

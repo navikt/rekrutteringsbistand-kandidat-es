@@ -2,18 +2,12 @@ package no.nav.arbeid.cv.kandidatsok.es.domene;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
-import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
-import no.nav.elasticsearch.mapping.annotations.values.IntValue;
 
 import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsSamletKompetanse {
 
-    @ElasticTextField(analyzer = "norwegian")
-// @ElasticKeywordField
-    @ElasticCompletionField(maxInputLength = @IntValue(100))
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String samletKompetanseTekst;
 

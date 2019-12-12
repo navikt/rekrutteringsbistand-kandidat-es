@@ -1,7 +1,6 @@
 package no.nav.arbeid.cv.kandidatsok.es.domene;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 
 import java.util.Date;
 import java.util.Objects;
@@ -13,10 +12,8 @@ public class EsVerv {
 
     private Date tilDato;
 
-    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
     private String organisasjon;
 
-    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
     private String tittel;
 
     public EsVerv() {

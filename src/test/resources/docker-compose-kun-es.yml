@@ -7,5 +7,7 @@ services:
     hostname: elastic
     ports:
       - "${ES_PORT:?MANGLER_VERDI_FOR_ES_PORT}:9200"
+    environment:
+      discovery.type: 'single-node'
     healthcheck:
       test: "curl -f http://localhost:9200"

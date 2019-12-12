@@ -43,25 +43,21 @@ public class EsClientConfig {
             if (props.getScheme().equalsIgnoreCase("HTTPS")) {
                 RestClientBuilder builder = RestClient
                         .builder(new HttpHost(props.getHostname(), props.getPort(), props.getScheme()))
-                        .setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback() {
-                            @Override
-                            public HttpAsyncClientBuilder customizeHttpClient(
-                                    HttpAsyncClientBuilder httpClientBuilder) {
+                        .setHttpClientConfigCallback(httpClientBuilder -> {
+                            final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+                            credentialsProvider.setCredentials(AuthScope.ANY,
+                                    new UsernamePasswordCredentials(props.getUser(), props.getPassword()));
 
-                                final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-                                credentialsProvider.setCredentials(AuthScope.ANY,
-                                        new UsernamePasswordCredentials(props.getUser(), props.getPassword()));
+                            httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
 
-                                httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-
-                                RequestConfig requestConfig = RequestConfig.custom()
-                                        .setSocketTimeout(props.getRequestTimeoutMS())
-                                        .build();
-                                httpClientBuilder.setDefaultRequestConfig(requestConfig);
-                                return httpClientBuilder.setSSLContext(sslContext);
-                            }
+                            RequestConfig requestConfig = RequestConfig.custom()
+                                    .setSocketTimeout(props.getRequestTimeoutMS())
+                                    .build();
+                            httpClientBuilder.setDefaultRequestConfig(requestConfig);
+                            return httpClientBuilder.setSSLContext(sslContext);
                         });
-                builder.setMaxRetryTimeoutMillis(props.getRequestTimeoutMS());
+
+                builder.setStrictDeprecationMode(true);
                 addPathPrefix(builder);
                 addApiKeyHeader(builder);
                 return new RestHighLevelClient(builder);
@@ -71,26 +67,22 @@ public class EsClientConfig {
                         .builder(new HttpHost(props.getHostname(), props.getPort(), props.getScheme()));
                 addPathPrefix(builder);
                 addApiKeyHeader(builder);
-                builder.setMaxRetryTimeoutMillis(props.getRequestTimeoutMS());
 
                 if (props.getUser() != null && !props.getUser().isEmpty() && props.getPassword() != null && !props.getPassword().isEmpty()) {
-                    builder.setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback() {
-                        @Override
-                        public HttpAsyncClientBuilder customizeHttpClient(
-                                HttpAsyncClientBuilder httpClientBuilder) {
+                    builder.setHttpClientConfigCallback(httpClientBuilder -> {
+                        final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+                        credentialsProvider.setCredentials(AuthScope.ANY,
+                                new UsernamePasswordCredentials(props.getUser(), props.getPassword()));
 
-                            final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-                            credentialsProvider.setCredentials(AuthScope.ANY,
-                                    new UsernamePasswordCredentials(props.getUser(), props.getPassword()));
-
-                            RequestConfig requestConfig = RequestConfig.custom()
-                                    .setSocketTimeout(props.getRequestTimeoutMS())
-                                    .build();
-                            httpClientBuilder.setDefaultRequestConfig(requestConfig);
-                            return httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-                        }
+                        RequestConfig requestConfig = RequestConfig.custom()
+                                .setSocketTimeout(props.getRequestTimeoutMS())
+                                .build();
+                        httpClientBuilder.setDefaultRequestConfig(requestConfig);
+                        return httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
                     });
                 }
+
+                builder.setStrictDeprecationMode(true);
 
                 return new RestHighLevelClient(builder);
 
@@ -101,9 +93,7 @@ public class EsClientConfig {
     }
 
     private void addPathPrefix(RestClientBuilder builder) {
-        if (props.getPathPrefix().isPresent()) {
-            builder.setPathPrefix(props.getPathPrefix().get());
-        }
+        props.getPathPrefix().ifPresent(p -> builder.setPathPrefix(p));
     }
 
     private void addApiKeyHeader(RestClientBuilder builder) {

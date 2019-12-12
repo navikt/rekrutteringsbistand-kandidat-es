@@ -2,9 +2,6 @@ package no.nav.arbeid.cv.kandidatsok.es.domene;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
-import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
-import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
@@ -17,21 +14,15 @@ public class EsSprak {
 
     private String sprakKode;
 
-    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
-    @ElasticCompletionField
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String sprakKodeTekst;
 
-    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
     private String alternativTekst;
 
-    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
     private String beskrivelse;
 
-    @ElasticKeywordField
     private String ferdighetMuntlig;
 
-    @ElasticKeywordField
     private String ferdighetSkriftlig;
 
     public EsSprak() {

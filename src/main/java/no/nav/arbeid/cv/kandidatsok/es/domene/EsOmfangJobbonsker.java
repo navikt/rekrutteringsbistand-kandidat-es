@@ -1,8 +1,6 @@
 package no.nav.arbeid.cv.kandidatsok.es.domene;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
-import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 
 import java.util.Objects;
 
@@ -11,8 +9,6 @@ public class EsOmfangJobbonsker {
 
     private String omfangKode;
 
-    @ElasticTextField
-    @ElasticKeywordField
     private String omfangKodeTekst;
 
     public EsOmfangJobbonsker() {

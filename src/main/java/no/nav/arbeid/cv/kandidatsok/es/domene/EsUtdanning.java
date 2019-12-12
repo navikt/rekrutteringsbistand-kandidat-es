@@ -2,10 +2,6 @@ package no.nav.arbeid.cv.kandidatsok.es.domene;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
-import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
-import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
-import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 
 import java.util.Date;
 import java.util.Objects;
@@ -13,31 +9,22 @@ import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsUtdanning {
 
-    @ElasticDateField
     private Date fraDato;
 
-    @ElasticDateField
     private Date tilDato;
 
-    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
     private String utdannelsessted;
 
-    @ElasticKeywordField
     private String nusKode;
 
-    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
-    @ElasticCompletionField
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String nusKodeGrad;
 
-    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
     private String alternativGrad;
 
     // Her ligger autorisasjon, svennebrev_fagbrev, mesterbrev
-    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
     private String yrkestatus;
 
-    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
     private String beskrivelse;
 
     public EsUtdanning() {

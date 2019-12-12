@@ -2,206 +2,139 @@ package no.nav.arbeid.cv.kandidatsok.es.domene;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import no.nav.elasticsearch.mapping.annotations.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@ElasticDocument
 public class EsCv {
 
-    @ElasticTextField(analyzer = "norwegian")
     private String fritekst;
 
-    @ElasticKeywordField
     private String aktorId;
 
-    @ElasticTextField
     private String fodselsnummer;
 
-    @ElasticTextField
     private String fornavn;
 
-    @ElasticTextField
     private String etternavn;
 
-    @ElasticDateField
     private Date fodselsdato;
 
-    @ElasticBooleanField
     private Boolean fodselsdatoErDnr;
 
-    @ElasticKeywordField
     private String formidlingsgruppekode;
 
-    @ElasticKeywordField
     private String epostadresse;
 
-    @ElasticKeywordField
     private String mobiltelefon;
 
-    @ElasticBooleanField
     private boolean harKontaktinformasjon;
 
-    @ElasticKeywordField
     private String telefon;
 
-    @ElasticKeywordField
     private String statsborgerskap;
 
-    @ElasticKeywordField
     private String kandidatnr;
 
-    @ElasticKeywordField
     private String arenaKandidatnr;
 
-    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
     private String beskrivelse;
 
-    @ElasticKeywordField
     private String samtykkeStatus;
 
-    @ElasticDateField
     private Date samtykkeDato;
 
-    @ElasticTextField
     private String adresselinje1;
 
-    @ElasticTextField
     private String adresselinje2;
 
-    @ElasticTextField
     private String adresselinje3;
 
-    @ElasticKeywordField
     private String postnummer;
 
-    @ElasticKeywordField
     private String poststed;
 
-    @ElasticKeywordField
     private String landkode;
 
-    @ElasticLongField
     private Integer kommunenummer;
 
-    @ElasticKeywordField
     private Integer kommunenummerkw;
 
-    @ElasticKeywordField
     private String kommunenummerstring;
 
-    @ElasticBooleanField
     private Boolean disponererBil;
 
-    @ElasticDateField
     private Date tidsstempel;
 
-    @ElasticBooleanField
     private Boolean doed;
 
-    @ElasticKeywordField
     private String frKode;
 
-    @ElasticKeywordField
     private String kvalifiseringsgruppekode;
 
-    @ElasticKeywordField
     private String hovedmaalkode;
 
-    @ElasticTextField
     private String orgenhet;
 
-    @ElasticKeywordField
-    @ElasticTextField(analyzer = "norwegian_ngram_text_analyzer", searchAnalyzer = "norwegian_ngram_text_search_analyzer")
-    @ElasticCompletionField
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String navkontor;
 
-    @ElasticBooleanField
     private Boolean fritattKandidatsok;
 
-    @ElasticBooleanField
     private Boolean fritattAgKandidatsok;
 
-    @ElasticNestedField
     private List<EsUtdanning> utdanning = new ArrayList<>();
 
-    @ElasticObjectField
     private List<EsFagdokumentasjon> fagdokumentasjon = new ArrayList<>();
 
-    @ElasticNestedField
     private List<EsYrkeserfaring> yrkeserfaring = new ArrayList<>();
 
-    @ElasticObjectField
     private List<EsKompetanse> kompetanseObj = new ArrayList<>();
 
-    @ElasticObjectField
     private List<EsAnnenErfaring> annenerfaringObj = new ArrayList<>();
 
-    @ElasticObjectField
     private List<EsSertifikat> sertifikatObj = new ArrayList<>();
 
-    @ElasticNestedField
     private List<EsForerkort> forerkort = new ArrayList<>();
 
-    @ElasticNestedField
     private List<EsSprak> sprak = new ArrayList<>();
 
-    @ElasticObjectField
     private List<EsKurs> kursObj = new ArrayList<>();
 
-    @ElasticObjectField
     private List<EsVerv> vervObj = new ArrayList<>();
 
-    @ElasticNestedField
     private List<EsGeografiJobbonsker> geografiJobbonsker = new ArrayList<>();
 
-    @ElasticObjectField
     private List<EsYrkeJobbonsker> yrkeJobbonskerObj = new ArrayList<>();
 
-    @ElasticObjectField
     private List<EsOmfangJobbonsker> omfangJobbonskerObj = new ArrayList<>();
 
-    @ElasticObjectField
     private List<EsAnsettelsesformJobbonsker> ansettelsesformJobbonskerObj = new ArrayList<>();
 
-    @ElasticObjectField
     private List<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonskerObj = new ArrayList<>();
 
-    @ElasticObjectField
     private List<EsArbeidsdagerJobbonsker> arbeidsdagerJobbonskerObj = new ArrayList<>();
 
-    @ElasticObjectField
     private List<EsArbeidstidJobbonsker> arbeidstidJobbonskerObj = new ArrayList<>();
 
-    @ElasticObjectField
     private List<EsSamletKompetanse> samletKompetanseObj = new ArrayList<>();
 
-    @ElasticIntegerField
     private int totalLengdeYrkeserfaring;
 
-    @ElasticBooleanField
     private Boolean synligForArbeidsgiverSok;
 
-    @ElasticBooleanField
     private Boolean synligForVeilederSok;
 
-    @ElasticKeywordField
     private String oppstartKode;
 
-    @ElasticKeywordField
     private String veileder;
 
-    @ElasticBooleanField
     private boolean inkluderingsbehov;
 
-    @ElasticBooleanField
     private boolean tilretteleggingsbehov;
 
-    @ElasticKeywordField
     private List<String> veilTilretteleggingsbehovObj = new ArrayList<>();
 
     public EsCv() {

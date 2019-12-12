@@ -1,39 +1,24 @@
 package no.nav.arbeid.cv.kandidatsok.es;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.micrometer.core.instrument.Counter;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Tags;
 import no.nav.arbeid.cv.kandidatsok.domene.es.EsCvObjectMother;
-import no.nav.arbeid.cv.kandidatsok.domene.es.KandidatsokTransformer;
 import no.nav.arbeid.cv.kandidatsok.testsupport.ElasticSearchTestExtension;
-import no.nav.arbeid.kandidatsok.es.client.EsIndexerHttpService;
 import no.nav.arbeid.kandidatsok.es.client.EsIndexerService;
-import no.nav.arbeid.kandidatsok.es.client.EsSokHttpService;
 import no.nav.arbeid.kandidatsok.es.client.EsSokService;
-import org.apache.http.HttpHost;
-import org.elasticsearch.action.support.WriteRequest;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
 @ExtendWith(ElasticSearchTestExtension.class)
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = ElasticSearchTestConfiguration.class)
 public class TypeaheadIT {
 
     @Autowired
@@ -42,52 +27,9 @@ public class TypeaheadIT {
     @Autowired
     private EsIndexerService indexerClient;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    private KandidatsokTransformer kandidatsokTransformer = new KandidatsokTransformer();
-
-    @Configuration
-    static class TestConfig {
-
-        @Bean
-        public RestHighLevelClient restHighLevelClient() {
-            return new RestHighLevelClient(
-                    RestClient.builder(new HttpHost("localhost", ElasticSearchTestExtension.getEsPort(), "http")));
-        }
-
-        @Bean
-        public ObjectMapper objectMapper() {
-            return new ObjectMapper();
-        }
-
-        @Bean
-        public MeterRegistry meterRegistry() {
-            Counter counter = mock(Counter.class);
-            MeterRegistry meterRegistry = mock(MeterRegistry.class);
-            when(meterRegistry.counter(anyString(), any(Tags.class))).thenReturn(counter);
-
-            return meterRegistry;
-        }
-
-        @Bean
-        public EsIndexerService indexerCvService(RestHighLevelClient restHighLevelClient,
-                                                 ObjectMapper objectMapper,
-                                                 MeterRegistry meterRegistry
-        ) {
-            return new EsIndexerHttpService(restHighLevelClient, objectMapper, meterRegistry,
-                    WriteRequest.RefreshPolicy.IMMEDIATE, 3, 2);
-        }
-
-        @Bean
-        public EsSokService esSokService(RestHighLevelClient restHighLevelClient, ObjectMapper objectMapper) {
-            return new EsSokHttpService(restHighLevelClient, objectMapper, "cvindex");
-        }
-    }
-
     @BeforeEach
     public void before() {
-        indexerClient.createIndex("cvindex");
+        indexerClient.createIndex(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
 
         indexerClient.bulkIndex(List.of(
                 EsCvObjectMother.giveMeEsCv(),
@@ -101,12 +43,12 @@ public class TypeaheadIT {
                 EsCvObjectMother.giveMeCvForKode7(),
                 EsCvObjectMother.giveMeCvFritattForAgKandidatsok(),
                 EsCvObjectMother.giveMeCvFritattForKandidatsok()
-        ), "cvindex");
+        ), ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
     }
 
     @AfterEach
     public void after() {
-        indexerClient.deleteIndex("cvindex");
+        indexerClient.deleteIndex(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
     }
 
     @Test

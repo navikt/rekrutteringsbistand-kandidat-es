@@ -1,19 +1,14 @@
 package no.nav.arbeid.cv.kandidatsok.es.domene;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
-import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 
 import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsArbeidstidsordningJobbonsker {
 
-    @ElasticKeywordField
     private String arbeidstidsordningKode;
 
-    @ElasticTextField(analyzer = "norwegian")
-    @ElasticKeywordField
     private String arbeidstidsordningKodeTekst;
 
     public EsArbeidstidsordningJobbonsker() {

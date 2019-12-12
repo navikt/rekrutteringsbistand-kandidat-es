@@ -20,7 +20,7 @@ public class ElasticSearchTestExtension implements BeforeAllCallback, ExtensionC
 
     private static DockerComposeEnv dce = null;
     private static final DockerComposeEnv.Builder builder =
-            DockerComposeEnv.builder("src/test/resources/docker-compose-kun-es.yml")
+            DockerComposeEnv.builder("src/test/resources/docker-compose-odfe.yml")
              .addAutoPortVariable("ES_PORT")
              .readyOnHttpGet2xx("http://localhost:{VALUE}", "ES_PORT")
              .dockerComposeLogDir("target");
