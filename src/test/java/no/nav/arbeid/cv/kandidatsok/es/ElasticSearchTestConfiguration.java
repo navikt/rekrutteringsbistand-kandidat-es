@@ -34,11 +34,6 @@ public class ElasticSearchTestConfiguration {
 
     @Bean
     public MeterRegistry meterRegistry() {
-//        Counter counter = mock(Counter.class);
-//        MeterRegistry meterRegistry = mock(MeterRegistry.class);
-//        when(meterRegistry.counter(anyString(), any(Tags.class))).thenReturn(counter);
-//
-//        return meterRegistry;
         return new SimpleMeterRegistry();
     }
 
