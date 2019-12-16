@@ -66,7 +66,7 @@ public class EsCv {
 
     private Boolean disponererBil;
 
-    private Date tidsstempel;
+    private Date tidsstempel; // TODO Dårlig/vagt navn, bør hete sistEndret, slik at det stemmer med CV AVRO-modellen
 
     private Boolean doed;
 
