@@ -349,27 +349,6 @@ public class EsIndexerHttpService implements EsIndexerService, AutoCloseable {
         return tellDokumenter("synligForArbeidsgiverSok:true", indexName);
     }
 
-
-//    public Collection<String> getTargetsForAliasOld(String alias) {
-//        try {
-//            Response response;
-//            try {
-//                response = client.getLowLevelClient().performRequest("GET", "/*/_alias/" + alias);
-//            } catch (ResponseException e) {
-//                if (e.getResponse().getStatusLine().getStatusCode() == 404) {
-//                    return Collections.emptySet();
-//                }
-//                throw e;
-//            }
-//            String jsonString = EntityUtils.toString(response.getEntity());
-//            XContentParser parser =
-//                    XContentType.JSON.xContent().createParser(NamedXContentRegistry.EMPTY, jsonString);
-//            return parser.map().keySet();
-//        } catch (IOException ioe) {
-//            throw new ElasticException(ioe);
-//        }
-//    }
-
     @Override
     public Collection<String> getTargetsForAlias(String alias) {
         try {
@@ -379,31 +358,6 @@ public class EsIndexerHttpService implements EsIndexerService, AutoCloseable {
             throw new ElasticException(io);
         }
     }
-
-//    @Override
-//    public Response updateIndexAliasOld(String alias, String indexName) {
-//        try {
-//            XContentBuilder builder = jsonBuilder()
-//                    .startObject()
-//                    .startArray("actions")
-//                    .startObject()
-//                    .startObject("remove").field("index", "*").field("alias", alias).endObject()
-//                    .endObject()
-//                    .startObject()
-//                    .startObject("add").field("index", indexName).field("alias", alias).endObject()
-//                    .endObject()
-//                    .endArray()
-//                    .endObject();
-//
-//            StringEntity entity = new StringEntity(builder.string(), ContentType.APPLICATION_JSON);
-//            Response response = client.getLowLevelClient().performRequest("POST", "/_aliases",
-//                    Collections.emptyMap(), entity);
-//            LOGGER.info("Setter alias {} til å peke mot {}", alias, indexName);
-//            return response;
-//        } catch (IOException ioe) {
-//            throw new ElasticException(ioe);
-//        }
-//    }
 
     @Override
     public boolean updateIndexAlias(String alias, String indexName) {
