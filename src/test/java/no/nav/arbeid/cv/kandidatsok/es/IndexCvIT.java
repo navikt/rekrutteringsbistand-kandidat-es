@@ -276,8 +276,7 @@ public class IndexCvIT {
                 "CE - Lastebil med tilhenger",
                 "D1 - Minibuss",
                 "D1E - Minibuss med tilhenger",
-                "D - Buss",
-                "DE - Buss med tilhenger");
+                "D - Buss");
     }
 
     @Test

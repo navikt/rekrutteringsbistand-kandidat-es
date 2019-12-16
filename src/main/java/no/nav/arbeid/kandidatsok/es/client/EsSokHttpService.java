@@ -525,28 +525,28 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
     private void addForerkortToQuery(List<String> forerkort, BoolQueryBuilder boolQueryBuilder) {
         BoolQueryBuilder innerBoolQueryBuilder = QueryBuilders.boolQuery();
-        List<String> expandedForerkort = expandForerkort(forerkort);
+        Set<String> expandedForerkort = expandForerkort(forerkort);
         expandedForerkort.stream().filter(StringUtils::isNotBlank)
                 .forEach(s -> addForerkortQuery(s, innerBoolQueryBuilder));
         boolQueryBuilder.must(innerBoolQueryBuilder);
     }
 
-    private List<String> expandForerkort(List<String> forerkort) {
-        Map<String, List<String>> forerkortMap = new HashMap<>() {
+    private Set<String> expandForerkort(List<String> forerkort) {
+        Map<String, Set<String>> forerkortMap = new HashMap<>() {
             {
-                put("A1 - Lett motorsykkel", Collections.singletonList("AM - Moped"));
-                put("A2 - Mellomtung motorsykkel", Collections.singletonList("AM - Moped"));
-                put("A - Tung motorsykkel", Arrays.asList("AM - Moped", "A1 - Lett motorsykkel", "A2 - Mellomtung motorsykkel"));
-                put("B - Personbil", Arrays.asList("T - Traktor", "S - Snøscooter"));
-                put("BE - Personbil med tilhenger", Arrays.asList("B - Personbil", "T - Traktor", "S - Snøscooter"));
-                put("C1 - Lett lastebil", Arrays.asList("B - Personbil", "T - Traktor", "S - Snøscooter"));
-                put("C1E - Lett lastebil med tilhenger", Arrays.asList("C1 - Lett lastebil", "BE - Personbil med tilhenger", "B - Personbil", "T - Traktor", "S - Snøscooter"));
-                put("C - Lastebil", Arrays.asList("C1 - Lett lastebil", "B - Personbil", "T - Traktor", "S - Snøscooter"));
-                put("CE - Lastebil med tilhenger", Arrays.asList("C - Lastebil", "C1E - Lett lastebil med tilhenger", "C1 - Lett lastebil", "BE - Personbil med tilhenger", "B - Personbil", "T - Traktor", "S - Snøscooter"));
-                put("D1 - Minibus", Arrays.asList("B - Personbil", "T - Traktor", "S - Snøscooter"));
-                put("D1E - Minibuss med tilhenger", Arrays.asList("BE - Personbil med tilhenger", "B - Personbil", "T - Traktor", "S - Snøscooter"));
-                put("D - Buss", Arrays.asList("D1 - Minibus", "B - Personbil", "T - Traktor", "S - Snøscooter"));
-                put("DE - Buss med tilhenger", Arrays.asList("D1E - Minibuss med tilhenger", "D1 - Minibus", "BE - Personbil med tilhenger", "B - Personbil", "T - Traktor", "S - Snøscooter"));
+                put("A1 - Lett motorsykkel", Set.of("AM - Moped"));
+                put("A2 - Mellomtung motorsykkel", Set.of("AM - Moped"));
+                put("A - Tung motorsykkel", Set.of("AM - Moped", "A1 - Lett motorsykkel", "A2 - Mellomtung motorsykkel"));
+                put("B - Personbil", Set.of("T - Traktor", "S - Snøscooter", "AM - Moped"));
+                put("BE - Personbil med tilhenger", Set.of("B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
+                put("C1 - Lett lastebil", Set.of("B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
+                put("C1E - Lett lastebil med tilhenger", Set.of("C1 - Lett lastebil", "BE - Personbil med tilhenger", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
+                put("C - Lastebil", Set.of("C1 - Lett lastebil", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
+                put("CE - Lastebil med tilhenger", Set.of("C - Lastebil", "C1E - Lett lastebil med tilhenger", "C1 - Lett lastebil", "BE - Personbil med tilhenger", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
+                put("D1 - Minibus", Set.of("B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
+                put("D1E - Minibuss med tilhenger", Set.of("BE - Personbil med tilhenger", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
+                put("D - Buss", Set.of("D1 - Minibus", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
+                put("DE - Buss med tilhenger", Set.of("D1E - Minibuss med tilhenger", "D1 - Minibus", "BE - Personbil med tilhenger", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
             }
         };
         Set<String> result = new HashSet<>();
@@ -558,7 +558,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
             });
             result.add(f);
         });
-        return new ArrayList<>(result);
+        return result;
     }
 
     private void addKvalifiseringsgruppeKoderToQuery(List<String> kvalifiseringsgruppeKoder, BoolQueryBuilder boolQueryBuilder) {
