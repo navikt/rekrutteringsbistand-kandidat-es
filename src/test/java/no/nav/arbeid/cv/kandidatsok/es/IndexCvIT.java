@@ -259,19 +259,24 @@ public class IndexCvIT {
     }
 
     @Test
-    public void testFlereForerkortKriterierGirFlereTreff() {
+    public void testForerkortKriterierGirTreffPaaForerkortSomErInkludertIKriteriet() {
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
-                .forerkort(Collections.singletonList("Førerkort: Kl. A (tung motorsykkel)"))
+                .forerkort(Collections.singletonList("B - Personbil"))
                 .bygg());
-        Sokeresultat sokeresultat2 = sokClient.arbeidsgiverSok(Sokekriterier.med()
-                .forerkort(
-                        asList("Førerkort: Kl. A (tung motorsykkel)", "Førerkort: Kl. CE (lastebil og tilhenger)"))
-                .bygg());
-
         List<EsCv> cver = sokeresultat.getCver();
-        List<EsCv> cver2 = sokeresultat2.getCver();
+        Set<String> forerkort = new HashSet<>();
+        cver.forEach(cv -> cv.getForerkort().forEach(f -> forerkort.add(f.getForerkortKodeKlasse())));
 
-        assertThat(cver2.size()).isGreaterThan(cver.size());
+        assertThat(forerkort).containsAnyOf(
+                "DE - Buss med tilhenger",
+                "BE - Personbil med tilhenger",
+                "C1 - Lett lastebil",
+                "C1E - Lett lastebil med tilhenger",
+                "C - Lastebil",
+                "CE - Lastebil med tilhenger",
+                "D1 - Minibuss",
+                "D1E - Minibuss med tilhenger",
+                "D - Buss");
     }
 
     @Test
@@ -326,7 +331,7 @@ public class IndexCvIT {
     @Test
     public void testSamletKompetanseSkalIkkeGiResultatVedSokPaForerkort() {
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().kompetanser(Collections.singletonList("Traktorlappen")).bygg());
+                Sokekriterier.med().kompetanser(Collections.singletonList("T - Traktor")).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
 

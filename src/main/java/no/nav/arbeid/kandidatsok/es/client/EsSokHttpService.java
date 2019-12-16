@@ -44,6 +44,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     private final RestHighLevelClient client;
     private final ObjectMapper mapper;
     private final String indexName;
+
     public EsSokHttpService(RestHighLevelClient client, ObjectMapper objectMapper, String indexName) {
         this.client = client;
         this.mapper = objectMapper;
@@ -524,9 +525,40 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
     private void addForerkortToQuery(List<String> forerkort, BoolQueryBuilder boolQueryBuilder) {
         BoolQueryBuilder innerBoolQueryBuilder = QueryBuilders.boolQuery();
-        forerkort.stream().filter(StringUtils::isNotBlank)
+        Set<String> expandedForerkort = expandForerkort(forerkort);
+        expandedForerkort.stream().filter(StringUtils::isNotBlank)
                 .forEach(s -> addForerkortQuery(s, innerBoolQueryBuilder));
         boolQueryBuilder.must(innerBoolQueryBuilder);
+    }
+
+    private Set<String> expandForerkort(List<String> forerkort) {
+        Map<String, Set<String>> forerkortMap = new HashMap<>() {
+            {
+                put("A1 - Lett motorsykkel", Set.of("AM - Moped"));
+                put("A2 - Mellomtung motorsykkel", Set.of("AM - Moped"));
+                put("A - Tung motorsykkel", Set.of("AM - Moped", "A1 - Lett motorsykkel", "A2 - Mellomtung motorsykkel"));
+                put("B - Personbil", Set.of("T - Traktor", "S - Snøscooter", "AM - Moped"));
+                put("BE - Personbil med tilhenger", Set.of("B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
+                put("C1 - Lett lastebil", Set.of("B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
+                put("C1E - Lett lastebil med tilhenger", Set.of("C1 - Lett lastebil", "BE - Personbil med tilhenger", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
+                put("C - Lastebil", Set.of("C1 - Lett lastebil", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
+                put("CE - Lastebil med tilhenger", Set.of("C - Lastebil", "C1E - Lett lastebil med tilhenger", "C1 - Lett lastebil", "BE - Personbil med tilhenger", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
+                put("D1 - Minibus", Set.of("B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
+                put("D1E - Minibuss med tilhenger", Set.of("BE - Personbil med tilhenger", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
+                put("D - Buss", Set.of("D1 - Minibus", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
+                put("DE - Buss med tilhenger", Set.of("D1E - Minibuss med tilhenger", "D1 - Minibus", "BE - Personbil med tilhenger", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
+            }
+        };
+        Set<String> result = new HashSet<>();
+        forerkort.forEach(f -> {
+            forerkortMap.forEach((key, value) -> {
+                if (value.contains(f)) {
+                    result.add(key);
+                }
+            });
+            result.add(f);
+        });
+        return result;
     }
 
     private void addKvalifiseringsgruppeKoderToQuery(List<String> kvalifiseringsgruppeKoder, BoolQueryBuilder boolQueryBuilder) {
