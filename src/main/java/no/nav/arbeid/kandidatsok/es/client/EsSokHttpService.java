@@ -926,7 +926,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
             if (e.status().getStatus() == 404
                     && e.getMessage().contains("index_not_found_exception")) {
                 LOGGER.info(
-                        "Greide ikke å utfore operasjon mot elastic search, index er ikke opprette.");
+                        "Greide ikke å utfore operasjon mot elastic search, indeks er ikke opprettet.");
                 // return fun.get();
             }
             throw (e);
