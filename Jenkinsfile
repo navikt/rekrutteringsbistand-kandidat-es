@@ -23,10 +23,14 @@ node {
 
     def committer, committerEmail, changelog, releaseVersion, nextVersion, isSnapshot // metadata
 
-    def mvnHome = tool "maven-3.3.9"
+    def mvnHome = tool "maven-3.5.2"
     def mvn = "${mvnHome}/bin/mvn"
+    def javaHome = tool "java 12"
+    env.JAVA_HOME="${javaHome}"
+    env.PATH = "${env.JAVA_HOME}/bin:${env.PATH}"
+
     def repo = "navikt"
-    def githubAppToken = newApiToken();
+    def githubAppToken = newApiToken()
 
     def color
 
