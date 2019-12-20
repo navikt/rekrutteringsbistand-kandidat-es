@@ -14,6 +14,14 @@ public interface EsIndexerService {
 
     void bulkSlettKandidatnr(List<String> kandidatnr, String indexName);
 
+    /**
+     * Slett basert på aktør-id-er
+     * @param aktorId liste med aktør-id-er
+     * @param indexName navn på målindeks
+     * @return antall dokumenter faktisk slettet fra ElasticSearch
+     */
+    int bulkSlettAktorId(List<String> aktorId, String indexName);
+
     void createIndex(String indexName);
 
     void deleteIndex(String indexName);

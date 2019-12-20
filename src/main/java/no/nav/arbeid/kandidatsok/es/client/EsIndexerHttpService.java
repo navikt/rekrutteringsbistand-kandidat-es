@@ -25,11 +25,11 @@ import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.support.WriteRequest;
-import org.elasticsearch.client.Requests;
-import org.elasticsearch.client.Response;
-import org.elasticsearch.client.ResponseException;
-import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.*;
 import org.elasticsearch.common.xcontent.*;
+import org.elasticsearch.index.reindex.DeleteByQueryAction;
+import org.elasticsearch.index.reindex.DeleteByQueryRequest;
+import org.elasticsearch.index.reindex.DeleteByQueryRequestBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -219,6 +219,40 @@ public class EsIndexerHttpService implements EsIndexerService, AutoCloseable {
         }
         LOGGER.debug("BULKINDEX tidsbruk: " + bulkResponse.getTook());
         return antallIndeksert;
+    }
+
+    @Override
+    public int bulkSlettAktorId(List<String> aktorIdListe, String indexName)
+    {
+        try {
+            final XContentBuilder jqb = XContentFactory.jsonBuilder();
+            jqb.startObject().startObject("query").startObject("bool");
+            jqb.startArray("should");
+            for (String aktorId: aktorIdListe) {
+                jqb.startObject().startObject("term").field("aktorId", aktorId).endObject().endObject();
+            }
+            jqb.endArray();
+            jqb.field("minimum_should_match", 1);
+            jqb.endObject().endObject().endObject();
+
+            StringEntity body = new StringEntity(jqb.string(), ContentType.APPLICATION_JSON);
+
+            Response deleteResponse = esExec(
+                    () -> client.getLowLevelClient().performRequest(
+                            "POST", "/" + indexName + "/_delete_by_query",
+                            Map.of("refresh", refreshPolicy.getValue()), body), indexName);
+
+            String jsonString = EntityUtils.toString(deleteResponse.getEntity());
+            XContentParser parser = XContentType.JSON.xContent().createParser(NamedXContentRegistry.EMPTY, jsonString);
+            Map<String, Object> esDeleteResponseData = parser.map();
+            int numDeleted = Integer.valueOf(esDeleteResponseData.get("deleted").toString());
+            LOGGER.debug("Slettet {} ES-CV-er basert på aktorId-er", numDeleted);
+
+            // TODO inspect ES response for failures !
+            return numDeleted;
+        } catch(Exception e) {
+            throw new ElasticException(e);
+        }
     }
 
     @Override
