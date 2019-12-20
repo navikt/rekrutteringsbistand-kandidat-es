@@ -222,13 +222,21 @@ public class EsIndexerHttpService implements EsIndexerService, AutoCloseable {
     }
 
     @Override
-    public int bulkSlettAktorId(List<String> aktorIdListe, String indexName)
-    {
+    public int bulkSlettAktorId(List<String> aktorIdListe, String indexName) {
+
+        // Dette er essensielt, ellers risikere man at alle dokumenter i indeks slettes (en bool query uten clauses matcher
+        // tydeligvis alt, på tross av at 'minimum_should_match' er satt til 1).
+        if (aktorIdListe.isEmpty()) {
+            return 0;
+        }
+
         try {
             final XContentBuilder jqb = XContentFactory.jsonBuilder();
             jqb.startObject().startObject("query").startObject("bool");
             jqb.startArray("should");
             for (String aktorId: aktorIdListe) {
+                if (aktorId.isEmpty()) continue;
+
                 jqb.startObject().startObject("term").field("aktorId", aktorId).endObject().endObject();
             }
             jqb.endArray();

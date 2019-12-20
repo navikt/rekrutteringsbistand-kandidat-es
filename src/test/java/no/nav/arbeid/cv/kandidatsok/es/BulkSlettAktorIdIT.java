@@ -28,6 +28,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -125,11 +126,12 @@ public class BulkSlettAktorIdIT {
 
     @Test
     public void sjekkAtSlettingAvIkkeEksisterendeAktorIdGir0() {
-        List<String> aktorIdSletteListe = List.of(
-                EsCvObjectMother.giveMeEsCv().getAktorId(),
-                EsCvObjectMother.giveMeEsCv2().getAktorId());
-
         assertEquals(0, indexerClient.bulkSlettAktorId(List.of("blah"), "cvindex"));
+    }
+
+    @Test
+    public void tomListeSkalIkkeFeileOgIkkeHaNoenEffekt() {
+        assertEquals(0, indexerClient.bulkSlettAktorId(Collections.emptyList(), "cvindex"));
     }
 
 }
