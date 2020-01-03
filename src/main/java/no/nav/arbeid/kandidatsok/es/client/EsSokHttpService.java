@@ -535,7 +535,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
         Map<String, Set<String>> forerkortMap = new HashMap<>() {
             {
                 put("A1 - Lett motorsykkel", Set.of("AM - Moped"));
-                put("A2 - Mellomtung motorsykkel", Set.of("AM - Moped"));
+                put("A2 - Mellomtung motorsykkel", Set.of("AM - Moped", "A1 - Lett motorsykkel"));
                 put("A - Tung motorsykkel", Set.of("AM - Moped", "A1 - Lett motorsykkel", "A2 - Mellomtung motorsykkel"));
                 put("B - Personbil", Set.of("T - Traktor", "S - Snøscooter", "AM - Moped"));
                 put("BE - Personbil med tilhenger", Set.of("B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
