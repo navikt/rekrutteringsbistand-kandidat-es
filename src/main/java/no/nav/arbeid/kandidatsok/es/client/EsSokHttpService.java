@@ -543,10 +543,10 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 put("C1E - Lett lastebil med tilhenger", Set.of("C1 - Lett lastebil", "BE - Personbil med tilhenger", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
                 put("C - Lastebil", Set.of("C1 - Lett lastebil", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
                 put("CE - Lastebil med tilhenger", Set.of("C - Lastebil", "C1E - Lett lastebil med tilhenger", "C1 - Lett lastebil", "BE - Personbil med tilhenger", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
-                put("D1 - Minibus", Set.of("B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
-                put("D1E - Minibuss med tilhenger", Set.of("BE - Personbil med tilhenger", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
-                put("D - Buss", Set.of("D1 - Minibus", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
-                put("DE - Buss med tilhenger", Set.of("D1E - Minibuss med tilhenger", "D1 - Minibus", "BE - Personbil med tilhenger", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
+                put("D1 - Minibuss", Set.of("B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
+                put("D1E - Minibuss med tilhenger", Set.of("D1 - Minibuss", "BE - Personbil med tilhenger", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
+                put("D - Buss", Set.of("D1 - Minibuss", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
+                put("DE - Buss med tilhenger", Set.of("D - Buss", "D1E - Minibuss med tilhenger", "D1 - Minibuss", "BE - Personbil med tilhenger", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
             }
         };
         Set<String> result = new HashSet<>();
