@@ -22,6 +22,7 @@ public class SokekriterierVeiledere {
     private Boolean maaBoInnenforGeografi;
     private List<String> forerkort;
     private Boolean tilretteleggingsbehov;
+    private List<String> veilTilretteleggingsbehov;
     private int antallResultater;
     private int fraIndex;
     private Integer antallAarFra;
@@ -148,6 +149,10 @@ public class SokekriterierVeiledere {
         return tilretteleggingsbehov;
     }
 
+    public List<String> veilTilretteleggingsbehov() {
+        return veilTilretteleggingsbehov;
+    }
+
     public static class Builder {
         private String fritekst;
         private List<String> yrkeJobbonsker;
@@ -170,6 +175,7 @@ public class SokekriterierVeiledere {
         private Integer antallAarFra;
         private Integer antallAarTil;
         private Boolean tilretteleggingsbehov;
+        private List<String> veilTilretteleggingsbehov;
         private boolean tomtSok = true;
 
         public SokekriterierVeiledere bygg() {
@@ -209,6 +215,8 @@ public class SokekriterierVeiledere {
             s.antallAarTil = antallAarTil;
 
             s.tilretteleggingsbehov = tilretteleggingsbehov;
+            s.veilTilretteleggingsbehov = veilTilretteleggingsbehov == null ? Collections.emptyList()
+                    : Collections.unmodifiableList(new ArrayList<>(veilTilretteleggingsbehov));
 
             s.fraIndex = fra;
             s.antallResultater = antallResultater;
@@ -339,6 +347,12 @@ public class SokekriterierVeiledere {
             if(null != tilretteleggingsbehov) {
                 this.tomtSok = false;
             }
+            return this;
+        }
+
+        public Builder veilTilretteleggingsbehov(List<String> veilTilretteleggingsbehov) {
+            this.veilTilretteleggingsbehov = veilTilretteleggingsbehov;
+            this.tomtSok = false;
             return this;
         }
     }

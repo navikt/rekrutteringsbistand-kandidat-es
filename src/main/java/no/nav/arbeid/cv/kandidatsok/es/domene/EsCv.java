@@ -201,6 +201,9 @@ public class EsCv {
     @ElasticBooleanField
     private boolean tilretteleggingsbehov;
 
+    @ElasticKeywordField
+    private List<String> veilTilretteleggingsbehovObj = new ArrayList<>();
+
     public EsCv() {
     }
 
@@ -517,6 +520,10 @@ public class EsCv {
         this.samletKompetanseObj.addAll(samletKompetanseListe);
     }
 
+    public void addVeilTilretteleggingsbehov(Collection<String> veilTilretteleggingsbehov) {
+        this.veilTilretteleggingsbehovObj.addAll(veilTilretteleggingsbehov);
+    }
+
     // gettere
 
     public String getAktorId() {
@@ -767,6 +774,10 @@ public class EsCv {
         return tilretteleggingsbehov;
     }
 
+    public List<String> getVeilTilretteleggingsbehov() {
+        return veilTilretteleggingsbehovObj;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -829,7 +840,8 @@ public class EsCv {
                 && Objects.equals(samletKompetanseObj, esCv.samletKompetanseObj)
                 && Objects.equals(totalLengdeYrkeserfaring, esCv.totalLengdeYrkeserfaring)
                 && Objects.equals(oppstartKode, esCv.oppstartKode)
-                && Objects.equals(tilretteleggingsbehov, esCv.tilretteleggingsbehov);
+                && Objects.equals(tilretteleggingsbehov, esCv.tilretteleggingsbehov)
+                && Objects.equals(veilTilretteleggingsbehovObj, esCv.veilTilretteleggingsbehovObj);
     }
 
     @Override
@@ -842,7 +854,7 @@ public class EsCv {
                 sertifikatObj, forerkort, sprak, kursObj, vervObj, geografiJobbonsker, yrkeJobbonskerObj,
                 omfangJobbonskerObj, ansettelsesformJobbonskerObj, arbeidstidsordningJobbonskerObj,
                 arbeidstidJobbonskerObj, arbeidsdagerJobbonskerObj, samletKompetanseObj, totalLengdeYrkeserfaring,
-                synligForArbeidsgiverSok, synligForVeilederSok, oppstartKode, tilretteleggingsbehov);
+                synligForArbeidsgiverSok, synligForVeilederSok, oppstartKode, tilretteleggingsbehov, veilTilretteleggingsbehovObj);
     }
 
     @Override
@@ -877,7 +889,9 @@ public class EsCv {
                 + ", arbeidsdagerJobbonsker=" + arbeidsdagerJobbonskerObj + ", arbeidstidJobbonsker="
                 + arbeidstidJobbonskerObj + ", samletKompetanse=" + samletKompetanseObj
                 + ", totalLengdeYrkeserfaring=" + totalLengdeYrkeserfaring
-                + ", oppstartKode=" + oppstartKode + ", tilretteleggingsbehov=" + tilretteleggingsbehov + "]";
+                + ", oppstartKode=" + oppstartKode + ", tilretteleggingsbehov=" + tilretteleggingsbehov
+                + ", veilTilretteleggingsbehov=" + veilTilretteleggingsbehovObj
+                + "]";
     }
 
 }

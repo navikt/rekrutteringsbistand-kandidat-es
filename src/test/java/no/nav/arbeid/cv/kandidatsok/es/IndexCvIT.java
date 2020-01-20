@@ -961,4 +961,31 @@ public class IndexCvIT {
                 "6L", "4L", "3L");
     }
 
+    @Test
+    public void sokMedVeilTilretteleggingsbehovSkalGiKorrektTreff() {
+        Sokeresultat sokeresultat =
+                sokClient.veilederSok(SokekriterierVeiledere
+                        .med().veilTilretteleggingsbehov(Collections.singletonList("Kat1_Kode"))
+                        .bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+
+        assertThat(cver.size()).isEqualTo(1);
+        assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder(
+                "5L");
+    }
+
+    @Test
+    public void sokMedKunEnRiktigVeilTilretteleggingsbehovSkalGiKorrektTreff() {
+        Sokeresultat sokeresultat =
+                sokClient.veilederSok(SokekriterierVeiledere
+                        .med().veilTilretteleggingsbehov(Arrays.asList("Kat1_Kode", "Kat_Eksistererikke_Kode"))
+                        .bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+
+        assertThat(cver.size()).isEqualTo(1);
+        assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder(
+                "5L");
+    }
 }

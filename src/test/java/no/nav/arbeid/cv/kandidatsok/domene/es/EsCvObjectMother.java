@@ -1147,6 +1147,13 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         EsArbeidstidsordningJobbonskerListe.add(EsArbeidstidsordningJobbonsker);
 
+        ArrayList<String> esVeilTilretteleggingsbehovListe =
+                new ArrayList<>();
+        esVeilTilretteleggingsbehovListe.add("Kat1_Kode");
+        esVeilTilretteleggingsbehovListe.add("Kat2_Kode");
+
+
+
         EsCv esCv = new EsCv(AKTORID6, "03050316895", "BOB", "NORDMANN", d("1964-09-01"), false, "ARBS",
                 "bobob@mailinator.com", "(+47) 22334455", "12345678", "NO", "5L", "", "J",
                 d("2016-05-30"), "Minvei 90", "", "", "0219", "Bærum", "NO", 219, false, new Date(),
@@ -1161,6 +1168,7 @@ public class EsCvObjectMother {
         esCv.addVerv(vervListe);
         esCv.addGeografiJobbonske(geografiJobbonskerListe);
         esCv.addYrkeJobbonske(yrkeJobbonskerListe);
+        esCv.addVeilTilretteleggingsbehov(esVeilTilretteleggingsbehovListe);
         return esCv;
     }
 
