@@ -199,53 +199,13 @@ public class EsIndexerHttpService implements EsIndexerService, AutoCloseable {
 
         DeleteByQueryRequest deleteByQueryRequest = new DeleteByQueryRequest(indexName);
         deleteByQueryRequest.setQuery(deleteQueryBuilder);
+        deleteByQueryRequest.setRefresh(refreshPolicy != WriteRequest.RefreshPolicy.NONE);
 
         // TODO inspect response for failures ! If at least one failure, then fail the entire request.
         BulkByScrollResponse bulkByScrollResponse = esExec(() -> client.deleteByQuery(deleteByQueryRequest, RequestOptions.DEFAULT), indexName);
         return (int)bulkByScrollResponse.getDeleted();
     }
 
-//    @Override
-//    public int bulkSlettAktorIdES6(List<String> aktorIdListe, String indexName) {
-//
-//        // Dette er essensielt, ellers risikere man at alle dokumenter i indeks slettes (en bool query uten clauses matcher
-//        // tydeligvis alt, på tross av at 'minimum_should_match' er satt til 1).
-//        if (aktorIdListe.isEmpty()) {
-//            return 0;
-//        }
-//
-//        try {
-//            final XContentBuilder jqb = XContentFactory.jsonBuilder();
-//            jqb.startObject().startObject("query").startObject("bool");
-//            jqb.startArray("should");
-//            for (String aktorId: aktorIdListe) {
-//                if (aktorId.isEmpty()) continue;
-//
-//                jqb.startObject().startObject("term").field("aktorId", aktorId).endObject().endObject();
-//            }
-//            jqb.endArray();
-//            jqb.field("minimum_should_match", 1);
-//            jqb.endObject().endObject().endObject();
-//
-//            StringEntity body = new StringEntity(jqb.string(), ContentType.APPLICATION_JSON);
-//
-//            Response deleteResponse = esExec(
-//                    () -> client.getLowLevelClient().performRequest(
-//                            "POST", "/" + indexName + "/_delete_by_query",
-//                            Map.of("refresh", refreshPolicy.getValue()), body), indexName);
-//
-//            String jsonString = EntityUtils.toString(deleteResponse.getEntity());
-//            XContentParser parser = XContentType.JSON.xContent().createParser(NamedXContentRegistry.EMPTY, jsonString);
-//            Map<String, Object> esDeleteResponseData = parser.map();
-//            int numDeleted = Integer.valueOf(esDeleteResponseData.get("deleted").toString());
-//            LOGGER.debug("Slettet {} ES-CV-er basert på aktorId-er", numDeleted);
-//
-//            // TODO inspect ES response for failures !
-//            return numDeleted;
-//        } catch(Exception e) {
-//            throw new ElasticException(e);
-//        }
-//    }
 
     @Override
     public void bulkSlettKandidatnr(List<String> kandidatnr, String indexName) {

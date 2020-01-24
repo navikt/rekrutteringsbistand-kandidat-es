@@ -26,6 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Collections;
@@ -36,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @ExtendWith(ElasticSearchTestExtension.class)
+@ContextConfiguration(classes = ElasticSearchTestConfiguration.class)
 public class BulkSlettAktorIdIT {
 
     @Autowired
@@ -49,43 +51,10 @@ public class BulkSlettAktorIdIT {
 
     private KandidatsokTransformer kandidatsokTransformer = new KandidatsokTransformer();
 
-    @Configuration
-    static class TestConfig {
-
-        @Bean
-        public RestHighLevelClient restHighLevelClient() {
-            return new RestHighLevelClient(
-                    RestClient.builder(new HttpHost("localhost", ElasticSearchTestExtension.getEsPort(), "http")));
-        }
-
-        @Bean
-        public ObjectMapper objectMapper() {
-            return new ObjectMapper();
-        }
-
-        @Bean
-        public MeterRegistry meterRegistry() {
-            return new SimpleMeterRegistry();
-        }
-
-        @Bean
-        public EsIndexerService indexerCvService(RestHighLevelClient restHighLevelClient,
-                                                 ObjectMapper objectMapper,
-                                                 MeterRegistry meterRegistry
-        ) {
-            return new EsIndexerHttpService(restHighLevelClient, objectMapper, meterRegistry,
-                    WriteRequest.RefreshPolicy.IMMEDIATE, 1, 1);
-        }
-
-        @Bean
-        public EsSokService esSokService(RestHighLevelClient restHighLevelClient, ObjectMapper objectMapper) {
-            return new EsSokHttpService(restHighLevelClient, objectMapper, "cvindex");
-        }
-    }
 
     @BeforeEach
     public void before() {
-        indexerClient.createIndex("cvindex");
+        indexerClient.createIndex(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
 
         indexerClient.bulkIndex(List.of(
                 EsCvObjectMother.giveMeEsCv(),
@@ -99,12 +68,12 @@ public class BulkSlettAktorIdIT {
                 EsCvObjectMother.giveMeCvForKode7(),
                 EsCvObjectMother.giveMeCvFritattForAgKandidatsok(),
                 EsCvObjectMother.giveMeCvFritattForKandidatsok()
-        ), "cvindex");
+        ), ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
     }
 
     @AfterEach
     public void after() {
-        indexerClient.deleteIndex("cvindex");
+        indexerClient.deleteIndex(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
     }
 
     @Test
@@ -113,7 +82,7 @@ public class BulkSlettAktorIdIT {
                 EsCvObjectMother.giveMeEsCv().getAktorId(),
                 EsCvObjectMother.giveMeEsCv2().getAktorId());
 
-        assertEquals(2, indexerClient.bulkSlettAktorId(aktorIdSletteListe, "cvindex"));
+        assertEquals(2, indexerClient.bulkSlettAktorId(aktorIdSletteListe, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME));
 
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med().bygg());
 
@@ -126,12 +95,12 @@ public class BulkSlettAktorIdIT {
 
     @Test
     public void sjekkAtSlettingAvIkkeEksisterendeAktorIdGir0() {
-        assertEquals(0, indexerClient.bulkSlettAktorId(List.of("blah"), "cvindex"));
+        assertEquals(0, indexerClient.bulkSlettAktorId(List.of("blah"), ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME));
     }
 
     @Test
     public void tomListeSkalIkkeFeileOgIkkeHaNoenEffekt() {
-        assertEquals(0, indexerClient.bulkSlettAktorId(Collections.emptyList(), "cvindex"));
+        assertEquals(0, indexerClient.bulkSlettAktorId(Collections.emptyList(), ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME));
     }
 
 }
