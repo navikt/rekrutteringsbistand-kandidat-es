@@ -28,7 +28,6 @@
 		<pam-ansettelseskodeverk.version>1.13</pam-ansettelseskodeverk.version>
 
 		<!-- Tredjeparts, følger i størst mulig grad versjonene definert av Spring boot parent POM -->
-		<elasticsearch.version>7.2.1</elasticsearch.version>
 		<prometheus.version>0.6.0</prometheus.version>
 		<kotlin.version>1.3.31</kotlin.version>
 		<assertj.version>3.14.0</assertj.version>
@@ -63,7 +62,7 @@
 		<dependency>
 			<groupId>org.elasticsearch.client</groupId>
 			<artifactId>elasticsearch-rest-high-level-client</artifactId>
-			<version>${elasticsearch.version}</version>
+			<version>7.2.1</version>
 		</dependency>
 
 		<dependency>
