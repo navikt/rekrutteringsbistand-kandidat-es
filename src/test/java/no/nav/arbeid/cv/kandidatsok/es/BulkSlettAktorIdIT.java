@@ -1,53 +1,35 @@
 package no.nav.arbeid.cv.kandidatsok.es;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import no.nav.arbeid.cv.kandidatsok.domene.es.EsCvObjectMother;
 import no.nav.arbeid.cv.kandidatsok.domene.es.KandidatsokTransformer;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.EsCv;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokekriterier;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokeresultat;
-import no.nav.arbeid.cv.kandidatsok.testsupport.ElasticSearchTestExtension;
-import no.nav.arbeid.kandidatsok.es.client.EsIndexerHttpService;
+import no.nav.arbeid.cv.kandidatsok.testsupport.ElasticSearchTestConfiguration;
+import no.nav.arbeid.cv.kandidatsok.testsupport.ElasticSearchIntegrationTestExtension;
 import no.nav.arbeid.kandidatsok.es.client.EsIndexerService;
-import no.nav.arbeid.kandidatsok.es.client.EsSokHttpService;
 import no.nav.arbeid.kandidatsok.es.client.EsSokService;
-import org.apache.http.HttpHost;
 import org.assertj.core.extractor.Extractors;
-import org.elasticsearch.action.support.WriteRequest;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@ExtendWith(SpringExtension.class)
-@ExtendWith(ElasticSearchTestExtension.class)
-@ContextConfiguration(classes = ElasticSearchTestConfiguration.class)
+@ExtendWith(ElasticSearchIntegrationTestExtension.class)
 public class BulkSlettAktorIdIT {
 
-    @Autowired
-    private EsSokService sokClient;
+    private EsSokService sokClient = ElasticSearchTestConfiguration.esSokService();
 
-    @Autowired
-    private EsIndexerService indexerClient;
+    private EsIndexerService indexerClient = ElasticSearchTestConfiguration.indexerCvService();
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private ObjectMapper objectMapper = ElasticSearchTestConfiguration.objectMapper();
 
     private KandidatsokTransformer kandidatsokTransformer = new KandidatsokTransformer();
 

@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.arbeid.cv.kandidatsok.domene.es.EsCvObjectMother;
 import no.nav.arbeid.cv.kandidatsok.domene.es.KandidatsokTransformer;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.*;
-import no.nav.arbeid.cv.kandidatsok.testsupport.ElasticSearchTestExtension;
+import no.nav.arbeid.cv.kandidatsok.testsupport.ElasticSearchTestConfiguration;
+import no.nav.arbeid.cv.kandidatsok.testsupport.ElasticSearchIntegrationTestExtension;
 import no.nav.arbeid.kandidatsok.es.client.EsIndexerService;
 import no.nav.arbeid.kandidatsok.es.client.EsSokService;
 import org.assertj.core.api.Assertions;
@@ -14,9 +15,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.InputStreamReader;
 import java.util.*;
@@ -25,19 +23,14 @@ import java.util.stream.Collectors;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(ElasticSearchTestExtension.class)
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = ElasticSearchTestConfiguration.class)
+@ExtendWith(ElasticSearchIntegrationTestExtension.class)
 public class IndexCvIT {
 
-    @Autowired
-    private EsSokService sokClient;
+    private EsSokService sokClient = ElasticSearchTestConfiguration.esSokService();
 
-    @Autowired
-    private EsIndexerService indexerClient;
+    private EsIndexerService indexerClient = ElasticSearchTestConfiguration.indexerCvService();
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private ObjectMapper objectMapper = ElasticSearchTestConfiguration.objectMapper();
 
     private KandidatsokTransformer kandidatsokTransformer = new KandidatsokTransformer();
 
@@ -84,14 +77,13 @@ public class IndexCvIT {
 
     @Test
     @Disabled("Brukes til utforskende testing")
-    public void skalLoggFeilVedBulkIndeksereCVMedNullfelter() {
+    public void skalLoggeFeilVedBulkIndeksereCVMedNullfelter() {
         List<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> bulkEventer =
                 asList(EsCvObjectMother.giveMeEsCv(), EsCvObjectMother.giveMeEsCvMedFeil(),
                         EsCvObjectMother.giveMeEsCv2());
 
         bulkEventer.forEach(e -> e.setKandidatnr(e.getKandidatnr() + 9998));
         indexerClient.bulkIndex(bulkEventer, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
-
     }
 
     @Test

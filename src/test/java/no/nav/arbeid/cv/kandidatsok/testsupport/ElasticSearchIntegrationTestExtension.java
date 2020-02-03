@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.GLOBAL;
  * <p>with contents:</p>
  * <pre>vm.max_map_count = 262144</pre>
  */
-public class ElasticSearchTestExtension implements BeforeAllCallback, ExtensionContext.Store.CloseableResource {
+public class ElasticSearchIntegrationTestExtension implements BeforeAllCallback, ExtensionContext.Store.CloseableResource {
 
     private static DockerComposeEnv dce = null;
     private static final DockerComposeEnv.Builder builder =
@@ -25,9 +25,9 @@ public class ElasticSearchTestExtension implements BeforeAllCallback, ExtensionC
              .readyOnHttpGet2xx("http://localhost:{VALUE}", "ES_PORT")
              .dockerComposeLogDir("target");
 
-    private static final Logger LOG = LoggerFactory.getLogger(ElasticSearchTestExtension.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ElasticSearchIntegrationTestExtension.class);
 
-    public static Integer getEsPort() {
+    static Integer getEsPort() {
         return Integer.parseInt(builder.getEnvVariable("ES_PORT"));
     }
 

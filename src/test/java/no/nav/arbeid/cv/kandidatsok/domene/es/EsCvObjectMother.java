@@ -1340,13 +1340,13 @@ public class EsCvObjectMother {
         EsUtdanning utdanning = new EsUtdanning(d("1988-08-20"), d("1989-06-20"), "Otta vgs. Otta",
                 "355211", "Mekaniske fag, grunnkurs", "GK maskin/mekaniker");
 
-        EsUtdanning utdanning1 = new EsUtdanning(d("1988-08-20"), d("1989-06-20"),
+        EsUtdanning utdanning2 = new EsUtdanning(d("1988-08-20"), d("1989-06-20"),
                 "Høyskolen i Gjøvik", null, null, "Master i sikkerhet");
 
 
         ArrayList<EsUtdanning> utdanningsListe = new ArrayList<>();
         utdanningsListe.add(utdanning);
-        utdanningsListe.add(utdanning1);
+        utdanningsListe.add(utdanning2);
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(d("2000-01-01"), d("2000-01-10"),
                 "Stentransport, Kragerø", "8341.01", "", "maskinkjører og maskintransport",
                 "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());

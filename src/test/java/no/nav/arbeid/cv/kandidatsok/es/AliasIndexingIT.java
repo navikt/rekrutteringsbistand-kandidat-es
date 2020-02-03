@@ -4,31 +4,25 @@ import no.nav.arbeid.cv.kandidatsok.domene.es.EsCvObjectMother;
 import no.nav.arbeid.cv.kandidatsok.domene.es.KandidatsokTransformer;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.SokekriterierVeiledere;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.Sokeresultat;
-import no.nav.arbeid.cv.kandidatsok.testsupport.ElasticSearchTestExtension;
+import no.nav.arbeid.cv.kandidatsok.testsupport.ElasticSearchTestConfiguration;
+import no.nav.arbeid.cv.kandidatsok.testsupport.ElasticSearchIntegrationTestExtension;
 import no.nav.arbeid.kandidatsok.es.client.EsIndexerService;
 import no.nav.arbeid.kandidatsok.es.client.EsSokService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(ElasticSearchTestExtension.class)
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = ElasticSearchTestConfiguration.class)
+@ExtendWith(ElasticSearchIntegrationTestExtension.class)
 public class AliasIndexingIT {
 
-    @Autowired
-    private EsSokService sokClient;
+    private EsSokService sokClient = ElasticSearchTestConfiguration.esSokService();
 
-    @Autowired
-    private EsIndexerService indexerClient;
+    private EsIndexerService indexerClient = ElasticSearchTestConfiguration.indexerCvService();
 
     private KandidatsokTransformer kandidatsokTransformer = new KandidatsokTransformer();
 
