@@ -792,34 +792,34 @@ public class IndexCvIT {
     public void typeaheadPaaNavkontorFungerer() {
         List<String> typeAheadNavkontor = sokClient.typeAheadNavkontor("Gamle O");
         assertThat(typeAheadNavkontor).hasSize(1);
-        assertThat(typeAheadNavkontor).containsExactly("NAV Gamle Oslo");
+        assertThat(typeAheadNavkontor).containsExactly("0316 NAV Gamle Oslo");
     }
 
     @Test
     public void typeaheadPaaNavkontorSkalHaandtereFlereValg() {
         List<String> typeAheadNavkontor = sokClient.typeAheadNavkontor("NAV");
         assertThat(typeAheadNavkontor).hasSize(4);
-        assertThat(typeAheadNavkontor).containsExactlyInAnyOrder("NAV Gamle Oslo", "NAV Asker", "NAV Drammen", "NAV Drøbak");
+        assertThat(typeAheadNavkontor).containsExactlyInAnyOrder("0316 NAV Gamle Oslo", "0220 NAV Asker", "0602 NAV Drammen", "0215 NAV Drøbak");
     }
 
     @Test
     public void typeaheadPaaNavkontorSkalVaereCaseInsensitive() {
         List<String> typeAheadNavkontor = sokClient.typeAheadNavkontor("asker");
         assertThat(typeAheadNavkontor).hasSize(1);
-        assertThat(typeAheadNavkontor).containsExactly("NAV Asker");
+        assertThat(typeAheadNavkontor).containsExactly("0220 NAV Asker");
     }
 
     @Test
     public void typeaheadPaaNavkontorSkalGiFlereValg() {
         List<String> typeAheadNavkontor = sokClient.typeAheadNavkontor("dr");
         assertThat(typeAheadNavkontor).hasSize(2);
-        assertThat(typeAheadNavkontor).containsExactlyInAnyOrder("NAV Drammen", "NAV Drøbak");
+        assertThat(typeAheadNavkontor).containsExactlyInAnyOrder("0602 NAV Drammen", "0215 NAV Drøbak");
     }
 
     @Test
     public void sokPaNavkontorSkalGiKorrektResultat() {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
-                .navkontor(Collections.singletonList("NAV Gamle Oslo")).bygg());
+                .navkontor(Collections.singletonList("0316 NAV Gamle Oslo")).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver).hasSize(1);
@@ -829,7 +829,7 @@ public class IndexCvIT {
     @Test
     public void sokPaToNavkontorSkalIkkeInnsnevre() {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
-                .navkontor(Arrays.asList("NAV Gamle Oslo", "NAV Noe annet")).bygg());
+                .navkontor(Arrays.asList("0316 NAV Gamle Oslo", "NAV Noe annet")).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver).hasSize(1);
