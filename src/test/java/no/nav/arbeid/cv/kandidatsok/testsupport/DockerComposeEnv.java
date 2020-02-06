@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 import static java.lang.ProcessBuilder.Redirect.appendTo;
 
 /**
- * Support class for invocting docker-compose and waiting for services, typically to be used in tests.
+ * Support class for invoking docker-compose and waiting for services, typically to be used in tests.
  *
  * Copied from: https://raw.githubusercontent.com/navikt/kafka-sandbox/d68a3dfa16c1ece3625dc85de71409ea502a6c8c/src/test/java/no/nav/kafka/sandbox/DockerComposeEnv.java
  */
