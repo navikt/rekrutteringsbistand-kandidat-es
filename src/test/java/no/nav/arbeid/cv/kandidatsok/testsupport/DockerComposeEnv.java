@@ -20,10 +20,9 @@ import java.util.stream.Collectors;
 import static java.lang.ProcessBuilder.Redirect.appendTo;
 
 /**
- * Support class for invoking docker-compose and waiting for services, typically to be used in tests.
+ * Support class for invocting docker-compose and waiting for services, typically to be used in tests.
  *
- * Copied from:
- * https://github.com/navikt/kafka-sandbox/blob/7677187f829d23e71eee6055fb62fbd1802d074d/src/test/java/no/nav/kafka/sandbox/DockerComposeEnv.java
+ * Copied from: https://raw.githubusercontent.com/navikt/kafka-sandbox/d68a3dfa16c1ece3625dc85de71409ea502a6c8c/src/test/java/no/nav/kafka/sandbox/DockerComposeEnv.java
  */
 public final class DockerComposeEnv implements AutoCloseable {
 
@@ -42,6 +41,7 @@ public final class DockerComposeEnv implements AutoCloseable {
         private final Map<String,String> env = new HashMap<>();
         private final List<Supplier<Boolean>> readyTests = new ArrayList<>();
         private int lastAutoPort = 39999;
+        private int dockerComposeTimeoutSeconds = 1800;
 
         private Builder(String config) {
             this.config = Objects.requireNonNull(config);
@@ -96,7 +96,7 @@ public final class DockerComposeEnv implements AutoCloseable {
                     httpConnection.setReadTimeout(2000);
                     final int responseCode = httpConnection.getResponseCode();
                     if (responseCode >= 200 && responseCode < 300) {
-                        log.info("Http-service {} is ready with response code: {}", url, responseCode);
+                        log.info("Http-service is ready: {}", url);
                         return true;
                     } else {
                         return false;
@@ -210,6 +210,17 @@ public final class DockerComposeEnv implements AutoCloseable {
         }
 
         /**
+         * Set wait limit in seconds for docker-compose to finish bringing up containers. This time may involve
+         * Docker downloading images from the internet, take that into account.
+         * <p>Default value: {@code 1800} seconds</p>
+         * @return this builder
+         */
+        public Builder dockerComposeTimeout(int timeoutSeconds) {
+            this.dockerComposeTimeoutSeconds = timeoutSeconds;
+            return this;
+        }
+
+        /**
          * Bring up configured env. This call will block for some amount of time to invoke docker-compose, and then
          * to wait using any set ready-test.
          * @return a hopefully ready-to-use docker-compose environment
@@ -218,7 +229,7 @@ public final class DockerComposeEnv implements AutoCloseable {
             if (readyTests.isEmpty()) {
                 readyAfter(5, TimeUnit.SECONDS);
             }
-            return new DockerComposeEnv(this.config, this.logdir, this.env, this.readyTests).up();
+            return new DockerComposeEnv(this.config, this.dockerComposeTimeoutSeconds, this.logdir, this.env, this.readyTests).up();
         }
     }
 
@@ -233,10 +244,11 @@ public final class DockerComposeEnv implements AutoCloseable {
 
     private final Path dockerComposeLogDir;
     private final String configFile;
+    private final long timeoutSeconds;
     private final Map<String,String> env;
     private final List<Supplier<Boolean>> readyTests;
 
-    private DockerComposeEnv(String configFile, String logdir, Map<String,String> env, List<Supplier<Boolean>> readyTests) {
+    private DockerComposeEnv(String configFile, long timeoutSeconds, String logdir, Map<String,String> env, List<Supplier<Boolean>> readyTests) {
         if (logdir != null) {
             File dir = new File(logdir);
             if (!dir.isDirectory() || !dir.canWrite()) {
@@ -247,6 +259,7 @@ public final class DockerComposeEnv implements AutoCloseable {
             this.dockerComposeLogDir = null;
         }
         this.configFile = configFile;
+        this.timeoutSeconds = timeoutSeconds;
         this.env = env;
         this.readyTests = readyTests;
     }
@@ -259,12 +272,12 @@ public final class DockerComposeEnv implements AutoCloseable {
      * @throws Exception in case something goes awry during setup.
      */
     private DockerComposeEnv up() throws Exception {
-        log.info("Bringing up local docker-compose environment, env={}", this.env);
+        log.info("Bringing up local docker-compose environment, max wait={} seconds, env={}", this.timeoutSeconds, this.env);
         dockerCompose("up", "-d").start().onExit().thenAccept(process -> {
-                    if (process.exitValue() != 0) {
-                        throw new RuntimeException("docker-compose failed with status " + process.exitValue());
-                    }
-                }).get(100, TimeUnit.SECONDS);
+            if (process.exitValue() != 0) {
+                throw new RuntimeException("docker-compose failed with status " + process.exitValue());
+            }
+        }).get(this.timeoutSeconds, TimeUnit.SECONDS);
 
         log.info("Waiting for {} ready-test(s) to complete ..", readyTests.size());
         List<CompletableFuture<Void>> allReadyTestsComplete = readyTests.stream().map(
@@ -286,7 +299,7 @@ public final class DockerComposeEnv implements AutoCloseable {
         try {
             CompletableFuture.allOf(allReadyTestsComplete.toArray(new CompletableFuture[]{}))
                     .thenRun(() -> log.info("All ready-tests completed."))
-                    .get(100, TimeUnit.SECONDS);
+                    .get(240, TimeUnit.SECONDS);
         } catch (Exception e) {
             log.error("At least one ready-test failed, or we timed out while waiting", e);
             down();
@@ -356,8 +369,8 @@ public final class DockerComposeEnv implements AutoCloseable {
     }
 
     private static String findDockerComposeExecutableName() {
-        for (String executable : List.of("docker-compose.exe", "docker-compose",
-                                         "/usr/bin/docker-compose", "/usr/local/bin/docker-compose")) {
+        for (String executable : List.of("/usr/bin/docker-compose", "/usr/local/bin/docker-compose", "/usr/local/sbin/docker-compose",
+                "docker-compose", "docker-compose.exe")) {
             try {
                 if (new ProcessBuilder(executable, "--version").start().onExit().get().exitValue() == 0) {
                     return executable;
