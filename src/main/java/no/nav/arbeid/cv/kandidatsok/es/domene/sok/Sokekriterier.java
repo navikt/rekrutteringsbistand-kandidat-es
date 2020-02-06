@@ -24,8 +24,6 @@ public class Sokekriterier {
     private Sokekriterier() {
     }
 
-    ;
-
     public static Builder med() {
         return new Builder();
     }

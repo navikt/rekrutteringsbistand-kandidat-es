@@ -736,27 +736,27 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
         String excludeRegex = "";
         switch (utdanningsniva) {
             case "Ingen":
-                searchRegex = "[0-2][0-9]+";
-                excludeRegex = "[3-8][0-9]+";
+                searchRegex = "[0-2][0-9]*";
+                excludeRegex = "[3-8][0-9]*";
                 break;
             case "Videregaende":
-                searchRegex = "[3-4][0-9]+";
-                excludeRegex = "[5-8][0-9]+";
+                searchRegex = "[3-4][0-9]*";
+                excludeRegex = "[5-8][0-9]*";
                 break;
             case "Fagskole":
-                searchRegex = "5[0-9]+";
-                excludeRegex = "[6-8][0-9]+";
+                searchRegex = "5[0-9]*";
+                excludeRegex = "[6-8][0-9]*";
                 break;
             case "Bachelor":
-                searchRegex = "6[0-9]+";
-                excludeRegex = "[7-8][0-9]+";
+                searchRegex = "6[0-9]*";
+                excludeRegex = "[7-8][0-9]*";
                 break;
             case "Master":
-                searchRegex = "7[0-9]+";
-                excludeRegex = "8[0-9]+";
+                searchRegex = "7[0-9]*";
+                excludeRegex = "8[0-9]*";
                 break;
             case "Doktorgrad":
-                searchRegex = "8[0-9]+";
+                searchRegex = "8[0-9]*";
                 break;
         }
         if (!searchRegex.equals("")) {
