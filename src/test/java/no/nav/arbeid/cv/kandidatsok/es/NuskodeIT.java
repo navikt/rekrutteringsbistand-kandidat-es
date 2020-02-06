@@ -135,13 +135,11 @@ public class NuskodeIT {
         assertThat(cver)
                 .contains(kandidatsokTransformer.transformer(EsCvMedNuskodeEttsiffer.giveMeEsCvIngenUtdanning()));
 
-        for (EsCv cvIngenUtdanning: sokeresultatIngenUtdanning.getCver()) {
-            if (cvIngenUtdanning.getUtdanning().isEmpty()) {
-                assertTrue(TRUE);
-            } else{
-            Optional<EsUtdanning> firstUtdanning = cvIngenUtdanning.getUtdanning().stream().filter(esUtdanning -> esUtdanning.getNusKode().startsWith("0") || esUtdanning.getNusKode().startsWith("1") || esUtdanning.getNusKode().startsWith("2") ).findFirst();
-            assertThat(firstUtdanning).isNotEmpty();
-            }
+        // Sjekk at evt. utdanninger som finnes telles som "ingen":
+        for (EsCv ingenUtdanningCv: sokeresultatIngenUtdanning.getCver()) {
+            ingenUtdanningCv.getUtdanning().stream().map(u -> u.getNusKode()).forEach(nusKode -> {
+                assertTrue(nusKode.startsWith("0") || nusKode.startsWith("1") || nusKode.startsWith("2"));
+            });
         }
     }
 
@@ -208,13 +206,11 @@ public class NuskodeIT {
         assertThat(cver)
                 .contains(kandidatsokTransformer.transformer(EsCvMedNuskodeEttsiffer.giveMeEsCvIngenUtdanning()));
 
+        // Sjekk at evt. utdanninger som finnes telles som "ingen":
         for (EsCv ingenUtdanningCv: sokeresultatIngenUtdanning.getCver()) {
-            if (ingenUtdanningCv.getUtdanning().isEmpty()) {
-                assertTrue(TRUE);
-            } else{
-                Optional<EsUtdanning> firstUtdanning = ingenUtdanningCv.getUtdanning().stream().filter(esUtdanning -> esUtdanning.getNusKode().startsWith("0") || esUtdanning.getNusKode().startsWith("1") || esUtdanning.getNusKode().startsWith("2") ).findFirst();
-                assertThat(firstUtdanning).isNotEmpty();
-            }
+            ingenUtdanningCv.getUtdanning().stream().map(u -> u.getNusKode()).forEach(nusKode -> {
+            assertTrue(nusKode.startsWith("0") || nusKode.startsWith("1") || nusKode.startsWith("2"));
+        });
         }
     }
 
