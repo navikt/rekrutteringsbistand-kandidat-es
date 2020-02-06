@@ -23,6 +23,7 @@ public class EsFagdokumentasjon {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String tittel;
 
+    // TODO dette feltet er ikke lenger i bruk - bør fjernes
     @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String beskrivelse;
