@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(ElasticSearchIntegrationTestExtension.class)
 public class BulkSlettAktorIdIT {
 
-    private EsSokService sokClient = ElasticSearchTestConfiguration.esSokService();
+    private EsSokService sokClient = ElasticSearchTestConfiguration.esSokService(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
 
     private EsIndexerService indexerClient = ElasticSearchTestConfiguration.indexerCvService();
 

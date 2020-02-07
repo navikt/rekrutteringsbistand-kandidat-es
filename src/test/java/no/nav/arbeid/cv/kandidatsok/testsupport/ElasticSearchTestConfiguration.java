@@ -43,8 +43,8 @@ public class ElasticSearchTestConfiguration {
                 WriteRequest.RefreshPolicy.IMMEDIATE, 1, 1);
     }
 
-    public static EsSokService esSokService() {
-        return new EsSokHttpService(REST_HIGH_LEVEL_CLIENT, OBJECT_MAPPER, DEFAULT_INDEX_NAME);
+    public static EsSokService esSokService(String indexName) {
+        return new EsSokHttpService(REST_HIGH_LEVEL_CLIENT, OBJECT_MAPPER, indexName);
     }
 
 }

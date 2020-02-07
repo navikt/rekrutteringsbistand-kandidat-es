@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(ElasticSearchIntegrationTestExtension.class)
 public class AliasIndexingIT {
 
-    private EsSokService sokClient = ElasticSearchTestConfiguration.esSokService();
+    private EsSokService sokClient = ElasticSearchTestConfiguration.esSokService(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
 
     private EsIndexerService indexerClient = ElasticSearchTestConfiguration.indexerCvService();
 
