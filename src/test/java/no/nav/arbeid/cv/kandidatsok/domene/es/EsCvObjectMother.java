@@ -7,6 +7,9 @@ import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 import static java.lang.Boolean.FALSE;
@@ -40,6 +43,10 @@ public class EsCvObjectMother {
             LOGGER.error("Feilet å parse " + string, e);
             return null;
         }
+    }
+
+    private static Date fodselsdatoForAlder(int alder) {
+        return Date.from(LocalDate.now().minusYears(alder).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
     }
 
     public static EsCv giveMeEsCvIkkeTemp() {
@@ -589,7 +596,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         EsArbeidstidsordningJobbonskerListe.add(EsArbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv(AKTORID3, "05236984567", "KARI", "NORDMANN", d("1980-02-10"), false, "PARBS",
+        EsCv esCv = new EsCv(AKTORID3, "05236984567", "KARI", "NORDMANN", fodselsdatoForAlder(39), false, "PARBS",
                 "unnasluntrer2@mailinator.com", "(+47) 22334455", "12345678", "NO", "2L",
                 "Dette er beskrivelsen av hva jeg har gjort i min yrkeskarriere",
                 "J", d("2016-05-30"), "Dinvei 2", "", "", "1337", "HUSKER IKKE", "NO", 301,
