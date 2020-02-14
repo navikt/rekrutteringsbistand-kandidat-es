@@ -15,6 +15,8 @@ import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.GLOBAL;
  * <pre>/etc/sysctl.d/01-increase_vm_max_map_count.conf</pre>
  * <p>with contents:</p>
  * <pre>vm.max_map_count = 262144</pre>
+ *
+ * Requires that tests are run within a single JVM (no forks across test individual test classes).
  */
 public class ElasticSearchIntegrationTestExtension implements BeforeAllCallback, ExtensionContext.Store.CloseableResource {
 
