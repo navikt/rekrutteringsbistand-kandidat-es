@@ -371,14 +371,12 @@ public class EsCv {
     public void addForerkort(EsForerkort forerkort) {
         if (forerkort != null) {
             this.forerkort.add(forerkort);
-            this.addSamletKompetanse(Collections
-                    .singletonList(new EsSamletKompetanse(forerkort.getForerkortKodeKlasse())));
         }
     }
 
     public void addForerkort(Collection<EsForerkort> forerkortListe) {
         if (forerkortListe != null) {
-            this.forerkort.addAll(forerkortListe);
+            forerkortListe.forEach(this::addForerkort);
         }
     }
 
