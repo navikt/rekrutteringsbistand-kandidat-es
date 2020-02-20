@@ -21,12 +21,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static no.nav.arbeid.cv.kandidatsok.testsupport.ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(ElasticSearchIntegrationTestExtension.class)
 public class IndexCvIT {
 
-    private EsSokService sokClient = ElasticSearchTestConfiguration.esSokService(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
+    private EsSokService sokClient = ElasticSearchTestConfiguration.esSokService(DEFAULT_INDEX_NAME);
 
     private EsIndexerService indexerClient = ElasticSearchTestConfiguration.indexerCvService();
 
@@ -36,7 +37,7 @@ public class IndexCvIT {
 
     @BeforeEach
     public void before() {
-        indexerClient.createIndex(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
+        indexerClient.createIndex(DEFAULT_INDEX_NAME);
 
         indexerClient.bulkIndex(List.of(
                 EsCvObjectMother.giveMeEsCv(),
@@ -50,12 +51,12 @@ public class IndexCvIT {
                 EsCvObjectMother.giveMeCvForKode7(),
                 EsCvObjectMother.giveMeCvFritattForAgKandidatsok(),
                 EsCvObjectMother.giveMeCvFritattForKandidatsok()
-        ), ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
+        ), DEFAULT_INDEX_NAME);
     }
 
     @AfterEach
     public void after() {
-        indexerClient.deleteIndex(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
+        indexerClient.deleteIndex(DEFAULT_INDEX_NAME);
     }
 
     @Test
@@ -71,7 +72,7 @@ public class IndexCvIT {
 
         List<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> bulkEventer = asList(cv1, cv2);
 
-        int antallIndeksert = indexerClient.bulkIndex(bulkEventer, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
+        int antallIndeksert = indexerClient.bulkIndex(bulkEventer, DEFAULT_INDEX_NAME);
         assertThat(antallIndeksert).isEqualTo(bulkEventer.size());
     }
 
@@ -83,7 +84,7 @@ public class IndexCvIT {
                         EsCvObjectMother.giveMeEsCv2());
 
         bulkEventer.forEach(e -> e.setKandidatnr(e.getKandidatnr() + 9998));
-        indexerClient.bulkIndex(bulkEventer, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
+        indexerClient.bulkIndex(bulkEventer, DEFAULT_INDEX_NAME);
     }
 
     @Test
@@ -466,7 +467,7 @@ public class IndexCvIT {
 
         int antallForBulkIndeksering =
                 sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
-        indexerClient.bulkIndex(bulkEventer, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
+        indexerClient.bulkIndex(bulkEventer, DEFAULT_INDEX_NAME);
         int antallEtterIndeksering =
                 sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
 
@@ -474,7 +475,7 @@ public class IndexCvIT {
                 .isEqualTo(bulkEventer.size());
 
         // Reindekser
-        indexerClient.bulkIndex(bulkEventer, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
+        indexerClient.bulkIndex(bulkEventer, DEFAULT_INDEX_NAME);
         antallEtterIndeksering =
                 sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
 
@@ -489,7 +490,7 @@ public class IndexCvIT {
 
         int antallForBulkSletting =
                 sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
-        indexerClient.bulkSlettKandidatnr(sletteIder, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
+        indexerClient.bulkSlettKandidatnr(sletteIder, DEFAULT_INDEX_NAME);
         int antallEtterSletting =
                 sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
 
@@ -573,7 +574,7 @@ public class IndexCvIT {
 
     @Test
     public void skalKunneIndeksereOppCvUtenKompetanser() {
-        indexerClient.index(EsCvObjectMother.giveMeCvUtenKompetanse(), ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
+        indexerClient.index(EsCvObjectMother.giveMeCvUtenKompetanse(), DEFAULT_INDEX_NAME);
     }
 
     @Test

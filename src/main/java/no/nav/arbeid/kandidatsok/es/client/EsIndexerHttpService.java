@@ -32,6 +32,7 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.DeleteByQueryRequest;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -281,12 +282,13 @@ public class EsIndexerHttpService implements EsIndexerService, AutoCloseable {
 
     private long tellDokumenter(String query, String indexName) {
         try {
-            RequestOptions.Builder builder = RequestOptions.DEFAULT.toBuilder();
+            CountRequest countReqest = new CountRequest(indexName);
             if (query != null) {
-                builder.addHeader("q", query);
+                countReqest.source(SearchSourceBuilder.searchSource()
+                        .query(QueryBuilders.queryStringQuery(query)));
             }
 
-            CountResponse count = client.count(new CountRequest(indexName), builder.build());
+            CountResponse count = client.count(countReqest, RequestOptions.DEFAULT);
             return count.getCount();
         } catch (Exception e) {
             LOGGER.warn("Greide ikke å hente ut antall dokumenter for indeks {}, spørring '{}': {}",

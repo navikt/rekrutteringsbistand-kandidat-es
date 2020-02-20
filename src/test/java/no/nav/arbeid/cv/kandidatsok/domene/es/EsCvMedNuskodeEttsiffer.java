@@ -1,29 +1,20 @@
 package no.nav.arbeid.cv.kandidatsok.domene.es;
 
 
-import no.nav.arbeid.cv.kandidatsok.es.domene.*;
-import no.nav.arbeid.pam.kodeverk.ansettelse.*;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsCv;
+import no.nav.arbeid.cv.kandidatsok.es.domene.EsUtdanning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
-
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.UUID;
 
 import static java.lang.Boolean.FALSE;
+import static no.nav.arbeid.cv.kandidatsok.domene.es.EsCvObjectMother.nteAktorId;
 
 public class EsCvMedNuskodeEttsiffer {
-
-    private static final String AKTORID14 = UUID.randomUUID().toString();
-    private static final String AKTORID15 = UUID.randomUUID().toString();
-    private static final String AKTORID16 = UUID.randomUUID().toString();
-    private static final String AKTORID17 = UUID.randomUUID().toString();
-
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EsCvMedNuskodeEttsiffer.class);
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -46,9 +37,8 @@ public class EsCvMedNuskodeEttsiffer {
         ArrayList<EsUtdanning> utdanningsListe = new ArrayList<>();
         utdanningsListe.add(utdanning);
 
-
-        EsCv esCv = new EsCv(AKTORID14, "05236984567", "KJELL", "LARSEN", d("1980-02-10"), false, "PARBS",
-                "unnasluntrer2@mailinator.com", "(+47) 22334455", "12345678", "NO", "12L",
+        EsCv esCv = new EsCv(nteAktorId(13), "05236984567", "KJELL", "LARSEN", d("1980-02-10"), false, "PARBS",
+                "unnasluntrer2@mailinator.com", "(+47) 22334455", "12345678", "NO", "13L",
                 "Dette er beskrivelsen av hva jeg har gjort i min yrkeskarriere",
                 "J", d("2016-05-30"), "Dinvei 2", "", "", "2222", "HUSKER IKKE", "NO", 301,
                 false, new Date(), 401, FALSE, null, "IKVAL", null, "NAV Gamle Oslo", FALSE, FALSE, "0401", "H149390", false);
@@ -70,8 +60,8 @@ public class EsCvMedNuskodeEttsiffer {
         utdanningsListe.add(utdanning);
 
 
-        EsCv esCv = new EsCv(AKTORID15, "05236984567", "HEIDI", "MO", d("1980-02-10"), false, "PARBS",
-                "unnasluntrer2@mailinator.com", "(+47) 22334455", "12345678", "NO", "13L",
+        EsCv esCv = new EsCv(nteAktorId(14), "05236984567", "HEIDI", "MO", d("1980-02-10"), false, "PARBS",
+                "unnasluntrer2@mailinator.com", "(+47) 22334455", "12345678", "NO", "14L",
                 "Dette er beskrivelsen av hva jeg har gjort i min yrkeskarriere",
                 "J", d("2016-05-30"), "Dinvei 2", "", "", "1122", "USIKKER", "NO", 301,
                 false, new Date(), 401, FALSE, null, "IKVAL", null, "NAV Gamle Oslo", FALSE, FALSE, "0401", "H149390", false);
@@ -95,8 +85,8 @@ public class EsCvMedNuskodeEttsiffer {
         utdanningsListe.add(utdanning);
         utdanningsListe.add(utdanning2);
 
-        EsCv esCv = new EsCv(AKTORID16, "05236984567", "RANDI", "EILERTSEN", d("1980-02-10"), false, "PARBS",
-                "unnasluntrer2@mailinator.com", "(+47) 22334455", "12345678", "NO", "14L",
+        EsCv esCv = new EsCv(nteAktorId(15), "05236984567", "RANDI", "EILERTSEN", d("1980-02-10"), false, "PARBS",
+                "unnasluntrer2@mailinator.com", "(+47) 22334455", "12345678", "NO", "15L",
                 "Dette er beskrivelsen av hva jeg har gjort i min yrkeskarriere",
                 "J", d("2016-05-30"), "Dinvei 2", "", "", "1111", "HUSKER IKKE", "NO", 301,
                 false, new Date(), 401, FALSE, null, "IKVAL", null, "NAV Gamle Oslo", FALSE, FALSE, "0401", "H149390", false);
@@ -116,8 +106,8 @@ public class EsCvMedNuskodeEttsiffer {
         ArrayList<EsUtdanning> utdanningsListe = new ArrayList<>();
         utdanningsListe.add(utdanning);
 
-        EsCv esCv = new EsCv(AKTORID17, "05236984567", "JON", "PEDERSEN", d("1980-02-10"), false, "PARBS",
-                "unnasluntrer2@mailinator.com", "(+47) 22334455", "12345678", "NO", "15L",
+        EsCv esCv = new EsCv(nteAktorId(16), "05236984567", "JON", "PEDERSEN", d("1980-02-10"), false, "PARBS",
+                "unnasluntrer2@mailinator.com", "(+47) 22334455", "12345678", "NO", "16L",
                 "Dette er beskrivelsen av hva jeg har gjort i min yrkeskarriere",
                 "J", d("2016-05-30"), "Veien 2", "", "", "1111", "OSLO", "NO", 301,
                 false, new Date(), 401, FALSE, null, "IKVAL", null, "NAV Gamle Oslo", FALSE, FALSE, "0401", "H149390", false);

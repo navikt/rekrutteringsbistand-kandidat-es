@@ -19,21 +19,9 @@ public class EsCvObjectMother {
     private static final Logger LOGGER = LoggerFactory.getLogger(EsCvObjectMother.class);
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-    private static final String AKTORID1 = UUID.randomUUID().toString();
-    private static final String AKTORID2 = UUID.randomUUID().toString();
-    private static final String AKTORID3 = UUID.randomUUID().toString();
-    private static final String AKTORID4 = UUID.randomUUID().toString();
-    private static final String AKTORID5 = UUID.randomUUID().toString();
-    private static final String AKTORID6 = UUID.randomUUID().toString();
-    private static final String AKTORID7 = UUID.randomUUID().toString();
-    private static final String AKTORID8 = UUID.randomUUID().toString();
-    private static final String AKTORID9 = UUID.randomUUID().toString();
-    private static final String AKTORID10 = UUID.randomUUID().toString();
-    private static final String AKTORID11 = UUID.randomUUID().toString();
-    private static final String AKTORID12 = UUID.randomUUID().toString();
-    private static final String AKTORID13 = UUID.randomUUID().toString();
-    private static final String AKTORID14 = UUID.randomUUID().toString();
-
+    static String nteAktorId(int n) {
+        return String.valueOf(900000000000L + n*1000);
+    }
 
     private static Date fraIsoDato(String string) {
         try {
@@ -46,180 +34,6 @@ public class EsCvObjectMother {
 
     private static Date fodselsdatoForAlder(int alder) {
         return Date.from(LocalDate.now().minusYears(alder).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-    }
-
-    public static EsCv giveMeEsCvIkkeTemp() {
-
-        EsUtdanning EsUtdanning = new EsUtdanning(fraIsoDato("1988-08-20"), fraIsoDato("1989-06-20"),
-                "Otta vgs. Otta", "355211", "Mekaniske fag, grunnkurs", "GK maskin/mekaniker");
-
-        ArrayList<EsUtdanning> EsUtdanningListe = new ArrayList<>();
-        EsUtdanningListe.add(EsUtdanning);
-
-        EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(fraIsoDato("2000-01-01"), fraIsoDato("2002-01-01"),
-                "Stentransport, Kragerø", "8342.01", "Anleggsmaskinfører",
-                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
-
-        EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(fraIsoDato("2003-01-01"), fraIsoDato("2003-04-01"),
-                "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
-                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
-
-        EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(fraIsoDato("2003-04-01"), fraIsoDato("2003-07-01"),
-                "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
-                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
-
-        EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(fraIsoDato("2005-08-01"), fraIsoDato("2016-07-01"),
-                "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", "Industrimekaniker",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
-
-        EsYrkeserfaring yrkeserfaring5 = new EsYrkeserfaring(fraIsoDato("2016-06-01"), fraIsoDato("2017-04-01"),
-                "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", "Sjåfør kl. 2", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList());
-
-        EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(fraIsoDato("2017-10-01"), null, "NLI  Grenland",
-                "7233.03", "Industrimekaniker", "Industrimekaniker", "YRKE_ORGNR", "YRKE_NACEKODE",
-                false, Collections.emptyList());
-
-        ArrayList<EsYrkeserfaring> yrkeserfaringListe = new ArrayList<>();
-        yrkeserfaringListe.add(yrkeserfaring1);
-        yrkeserfaringListe.add(yrkeserfaring2);
-        yrkeserfaringListe.add(yrkeserfaring3);
-        yrkeserfaringListe.add(yrkeserfaring4);
-        yrkeserfaringListe.add(yrkeserfaring5);
-        yrkeserfaringListe.add(yrkeserfaring6);
-
-        EsKompetanse kompetanse1 = new EsKompetanse(fraIsoDato("2016-03-14"), "3020813",
-                "Maskin- og kranførerarbeid", null, null, Collections.emptyList());
-
-        EsKompetanse kompetanse2 = new EsKompetanse(fraIsoDato("2016-03-14"), "3281301",
-                "Mekanisk arbeid generelt", "Mekanisk arbeid generelt", null, Collections.emptyList());
-
-        EsKompetanse kompetanse3 = new EsKompetanse(fraIsoDato("2016-03-14"), "3220201",
-                "Landtransport generelt", "Landtransport generelt", null, Collections.emptyList());
-
-        EsKompetanse kompetanse4 = new EsKompetanse(fraIsoDato("2016-03-14"), "212", "Industri (bransje)",
-                "Mekanisk industri (bransje)", null, Collections.emptyList());
-
-        ArrayList<EsKompetanse> kompetanseListee = new ArrayList<>();
-        kompetanseListee.add(kompetanse1);
-        kompetanseListee.add(kompetanse2);
-        kompetanseListee.add(kompetanse3);
-        kompetanseListee.add(kompetanse4);
-
-        EsSertifikat EsSertifikat1 = new EsSertifikat(fraIsoDato("1994-08-01"), null, "V1.6050",
-                "A - Tung motorsykkel", null, "");
-
-        EsSertifikat EsSertifikat2 = new EsSertifikat(fraIsoDato("1991-01-01"), null, "V1.6070",
-                "BE - Personbil med tilhenger", null, "");
-
-        EsSertifikat EsSertifikat3 = new EsSertifikat(fraIsoDato("1996-02-01"), fraIsoDato("2020-12-01"), "V1.6110",
-                "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
-                "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn", "");
-        EsSertifikat EsSertifikat4 = new EsSertifikat(fraIsoDato("1995-01-01"), null, "A1.6820",
-                "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
-                "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn", "");
-        EsSertifikat EsSertifikat5 = new EsSertifikat(fraIsoDato("1995-01-01"), null, "A1.6820",
-                "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn",
-                "Yrkesbevis anleggsmaskinførere: Arb.klar maskin over 6 tonn", "");
-
-        ArrayList<EsSertifikat> EsSertifikatListe = new ArrayList<>();
-        EsSertifikatListe.add(EsSertifikat1);
-        EsSertifikatListe.add(EsSertifikat2);
-        EsSertifikatListe.add(EsSertifikat3);
-        EsSertifikatListe.add(EsSertifikat4);
-        EsSertifikatListe.add(EsSertifikat5);
-
-        EsForerkort forerkort2 = new EsForerkort(fraIsoDato("1991-01-01"), null, "V1.6070",
-                "BE - Personbil med tilhenger", null, "");
-
-        EsForerkort forerkort3 = new EsForerkort(fraIsoDato("1996-02-01"), fraIsoDato("2020-12-01"), "V1.6110",
-                "CE - Lastebil med tilhenger", null, "");
-
-        EsForerkort forerkort4 = new EsForerkort(fraIsoDato("1996-02-01"), fraIsoDato("2020-12-01"), "V1.6145",
-                "DE - Buss med tilhenger", null, "");
-
-        ArrayList<EsForerkort> forerkortListe = new ArrayList<>();
-        forerkortListe.add(forerkort2);
-        forerkortListe.add(forerkort3);
-        forerkortListe.add(forerkort4);
-
-        EsSprak sprak = new EsSprak(fraIsoDato("2012-12-01"), "Språk kode", "Språk kode tekst",
-                "Språk alternativ tekst", "Språk beskrivelse");
-
-        ArrayList<EsSprak> sprakListe = new ArrayList<>();
-        sprakListe.add(sprak);
-
-        EsKurs kurs1 = new EsKurs(fraIsoDato("2012-12-01"), null, "Akseloppretting", "Easy-Laser", null,
-                null, null);
-        EsKurs kurs2 = new EsKurs(fraIsoDato("2015-06-01"), null, "Varme arbeider EsSertifikat",
-                "Norsk brannvernforening", "ÅR", 5, null);
-        EsKurs kurs3 = new EsKurs(fraIsoDato("2016-02-01"), null, "Flensarbeid for Norsk Olje og Gass",
-                "Torqlite Europa a/s", "ÅR", 4, null);
-
-        ArrayList<EsKurs> kursListe = new ArrayList<>();
-        kursListe.add(kurs1);
-        kursListe.add(kurs2);
-        kursListe.add(kurs3);
-
-        EsVerv verv =
-                new EsVerv(fraIsoDato("2000-01-15"), fraIsoDato("2001-01-15"), "EsVerv organisasjon", "verv tittel");
-
-        ArrayList<EsVerv> vervListe = new ArrayList<>();
-        vervListe.add(verv);
-
-        EsGeografiJobbonsker geografiJobbonsker =
-                new EsGeografiJobbonsker("Geografikode tekst", "GeografiKode");
-
-        ArrayList<EsGeografiJobbonsker> geografiJobbonskerListe = new ArrayList<>();
-        geografiJobbonskerListe.add(geografiJobbonsker);
-
-        EsYrkeJobbonsker yrkeJobbonsker = new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode",
-                "Yrke jobb ønske Styrk beskrivelse", true, Collections.emptyList());
-
-        ArrayList<EsYrkeJobbonsker> yrkeJobbonskerListe = new ArrayList<>();
-        yrkeJobbonskerListe.add(yrkeJobbonsker);
-
-        EsOmfangJobbonsker EsHeltidDeltidJobbonsker =
-                new EsOmfangJobbonsker("HeltidDeltidKode", "HeltidDeltidKode Tekst");
-
-        ArrayList<EsOmfangJobbonsker> EsHeltidDeltidJobbonskerListe = new ArrayList<>();
-        EsHeltidDeltidJobbonskerListe.add(EsHeltidDeltidJobbonsker);
-
-        EsAnsettelsesformJobbonsker EsAnsettelsesforholdJobbonsker =
-                new EsAnsettelsesformJobbonsker("Ansettelsesforhold Kode",
-                        "Ansettelsesforhold Kode tekst");
-
-        ArrayList<EsAnsettelsesformJobbonsker> EsAnsettelsesforholdJobbonskerListe =
-                new ArrayList<>();
-        EsAnsettelsesforholdJobbonskerListe.add(EsAnsettelsesforholdJobbonsker);
-
-        EsArbeidstidsordningJobbonsker EsArbeidstidsordningJobbonsker =
-                new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
-                        "Arbeidstidsordning Kode Tekst");
-
-        ArrayList<EsArbeidstidsordningJobbonsker> EsArbeidstidsordningJobbonskerListe =
-                new ArrayList<>();
-        EsArbeidstidsordningJobbonskerListe.add(EsArbeidstidsordningJobbonsker);
-
-        EsCv esCv = new EsCv(AKTORID1, "03016012345", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
-                "unnasluntrer@mailinator.com", "(+47) 22334455", "12345678", "NO", "1L",
-                "", "J", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
-                new Date(), 301, FALSE, null, null, null, "0316 NAV Gamle Oslo", FALSE, FALSE, "0301", "H149390", false);
-        esCv.addUtdanning(EsUtdanningListe);
-        esCv.addYrkeserfaring(yrkeserfaringListe);
-        esCv.addKompetanse(kompetanseListee);
-        esCv.addSertifikat(EsSertifikatListe);
-        esCv.addForerkort(forerkortListe);
-        esCv.addSprak(sprakListe);
-        esCv.addKurs(kursListe);
-        esCv.addVerv(vervListe);
-        esCv.addGeografiJobbonske(geografiJobbonskerListe);
-        esCv.addYrkeJobbonske(yrkeJobbonskerListe);
-        // TODO:
-        // esCv.addEsHeltidDeltidJobbonskerListe(EsHeltidDeltidJobbonskerListe);
-        // esCv.addEsAnsettelsesforholdJobbonskerListe(EsAnsettelsesforholdJobbonskerListe);
-        // esCv.addEsArbeidstidsordningJobbonskerListe(EsArbeidstidsordningJobbonskerListe);
-        return esCv;
     }
 
     public static EsCv giveMeEsCv() {
@@ -402,7 +216,7 @@ public class EsCvObjectMother {
         arbeidsdagerJobbonskerList.add(arbeidsdagerJobbonskerLoerdag);
         arbeidsdagerJobbonskerList.add(arbeidsdagerJobbonskerSoendag);
 
-        EsCv esCv = new EsCv(AKTORID2, "04016012345", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "JOBBS",
+        EsCv esCv = new EsCv(nteAktorId(1), "01016012345", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "JOBBS",
                 "unnasluntrer@mailinator.com", "(+47) 22334455", "12345678", "NO", "1L",
                 "hererjeg", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 5001, false,
                 new Date(), 301, FALSE, null, "IKVAL", null, "0220 NAV Asker", FALSE, FALSE, true, false, "LEDIG_NAA", "5001", "H149390", false);
@@ -595,7 +409,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         EsArbeidstidsordningJobbonskerListe.add(EsArbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv(AKTORID3, "05236984567", "KARI", "NORDMANN", fodselsdatoForAlder(39), false, "PARBS",
+        EsCv esCv = new EsCv(nteAktorId(2), "05236984567", "KARI", "NORDMANN", fodselsdatoForAlder(39), false, "PARBS",
                 "unnasluntrer2@mailinator.com", "(+47) 22334455", "12345678", "NO", "2L",
                 "Dette er beskrivelsen av hva jeg har gjort i min yrkeskarriere",
                 "J", fraIsoDato("2016-05-30"), "Dinvei 2", "", "", "1337", "HUSKER IKKE", "NO", 301,
@@ -784,7 +598,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         EsArbeidstidsordningJobbonskerListe.add(EsArbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv(AKTORID4, "04265983651", "HANS", "NORDMANN", fraIsoDato("1955-11-04"), false, "RARBS",
+        EsCv esCv = new EsCv(nteAktorId(3), "04265983651", "HANS", "NORDMANN", fraIsoDato("1955-11-04"), false, "RARBS",
                 "alltidmed@mailinator.com", "(+47) 22334455", "12345678", "NO", "3L",
                 "Jeg jobber like godt selvstendig som i team",
                 "J", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "2323", "INGEBERG", "NO", 301, false,
@@ -967,7 +781,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         EsArbeidstidsordningJobbonskerListe.add(EsArbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv(AKTORID5, "09568410230", "HANNE", "NORDMANN", fraIsoDato("2002-06-04"), false, "ARBS",
+        EsCv esCv = new EsCv(nteAktorId(4), "09568410230", "HANNE", "NORDMANN", fraIsoDato("2002-06-04"), false, "ARBS",
                 "erjegmed@mailinator.com", "(+47) 22334455", "12345678", "NO", "4L", "",
                 "J", fraIsoDato("2016-05-30"), "Noensvei 1", "", "", "9730", "KARASJOK", "NO", 2021, false,
                 new Date(), 2021, FALSE, null, "VURDI", null, "0602 NAV Drammen", FALSE, FALSE, "2021", "H149390", true);
@@ -1159,8 +973,7 @@ public class EsCvObjectMother {
         esVeilTilretteleggingsbehovListe.add("Kat2_Kode");
 
 
-
-        EsCv esCv = new EsCv(AKTORID6, "03050316895", "BOB", "NORDMANN", fraIsoDato("1964-09-01"), false, "ARBS",
+        EsCv esCv = new EsCv(nteAktorId(5), "03050316895", "BOB", "NORDMANN", fraIsoDato("1964-09-01"), false, "ARBS",
                 "bobob@mailinator.com", "(+47) 22334455", "12345678", "NO", "5L", "", "J",
                 fraIsoDato("2016-05-30"), "Minvei 90", "", "", "0219", "Bærum", "NO", 219, false, new Date(),
                 219, FALSE, null, null, null, "0215 NAV Drøbak", FALSE, FALSE, "0219", "H149390", false);
@@ -1324,7 +1137,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         EsArbeidstidsordningJobbonskerListe.add(EsArbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv(AKTORID7, "03050316895", "BOB", "NORDMANN", fraIsoDato("1964-09-01"), false, "ARBS",
+        EsCv esCv = new EsCv(nteAktorId(5), "03050316895", "BOB", "NORDMANN", fraIsoDato("1964-09-01"), false, "ARBS",
                 "bobob@mailinator.com", "(+47) 22334455", "12345678", "NO", "5L", "", "J",
                 fraIsoDato("2016-05-30"), "Minvei 90", "", "", "0565", "OSLO", "NO", 301, false, new Date(),
                 301, FALSE, null, null, null, null, FALSE, FALSE, "0301", "H149390", false);
@@ -1508,7 +1321,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv(AKTORID8, "02016012345", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
+        EsCv esCv = new EsCv(nteAktorId(1), "02016012345", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
                 "unnasluntrer@mailinator.com", "(+47) 22334455", "12345678", "NO", "1L",
                 "", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, FALSE, null, null, null, null, FALSE, FALSE, "0301", "H149390", false);
@@ -1697,7 +1510,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv(AKTORID9, "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
+        EsCv esCv = new EsCv(nteAktorId(6), "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "6L",
                 "", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, FALSE, "5", null, null, null, FALSE, FALSE, "0301", "H149390", true);
@@ -1885,7 +1698,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv(AKTORID10, "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
+        EsCv esCv = new EsCv(nteAktorId(7), "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "7L",
                 "", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, TRUE, null, null, null, null, FALSE, FALSE, "0301", "H149390", false);
@@ -2073,7 +1886,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv(AKTORID11, "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
+        EsCv esCv = new EsCv(nteAktorId(8), "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "8L",
                 "", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, FALSE, "6", null, null, null, FALSE, FALSE, "0301", "H149390", false);
@@ -2261,7 +2074,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv(AKTORID12, "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
+        EsCv esCv = new EsCv(nteAktorId(9), "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "9L",
                 "", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, FALSE, "7", null, null, null, FALSE, FALSE, "0301", "H149390", false);
@@ -2449,7 +2262,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv(AKTORID13, "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
+        EsCv esCv = new EsCv(nteAktorId(10), "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "10L",
                 "", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, FALSE, null, "IKVAL", null, null, TRUE, FALSE, "0301", "H149390", false);
@@ -2637,7 +2450,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv(AKTORID14, "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
+        EsCv esCv = new EsCv(nteAktorId(11), "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "11L",
                 "", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, FALSE, null, null, null, null, FALSE, TRUE, "0301", "H149390", false);
@@ -2652,5 +2465,12 @@ public class EsCvObjectMother {
         esCv.addGeografiJobbonske(geografiJobbonskerListe);
         esCv.addYrkeJobbonske(yrkeJobbonskerListe);
         return esCv;
+    }
+
+    public static EsCv giveMeCvFritattForAgKandidatsok2() {
+        return new EsCv(nteAktorId(12), "01016134217", "AAGE", "USYNLIG", fraIsoDato("1961-01-01"), false, "ARBS",
+                "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "12L",
+                "", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
+                new Date(), 301, FALSE, null, null, null, null, FALSE, TRUE, "0301", "H149390", false);
     }
 }
