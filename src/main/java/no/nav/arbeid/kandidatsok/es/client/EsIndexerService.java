@@ -35,8 +35,8 @@ public interface EsIndexerService {
 
     long antallIndeksertSynligForArbeidsgiver(String indexName);
 
-    Collection<String> getTargetsForAlias(String alias);
+    Collection<String> getTargetsForAlias(String alias, String indexPattern);
 
-    boolean updateIndexAlias(String alias, String indexName);
+    boolean updateIndexAlias(String alias, String removeForIndexPattern, String addForIndexName);
 
 }

@@ -7,7 +7,6 @@ import no.nav.arbeid.cv.indexer.config.StaticMappingProvider;
 import no.nav.arbeid.cv.kandidatsok.es.domene.EsCv;
 import no.nav.arbeid.cv.kandidatsok.es.exception.ApplicationException;
 import no.nav.arbeid.cv.kandidatsok.es.exception.OperationalException;
-import org.apache.http.entity.StringEntity;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest.AliasActions;
@@ -27,13 +26,10 @@ import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.common.Strings;
-import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.DeleteByQueryRequest;
 import org.slf4j.Logger;
@@ -310,9 +306,9 @@ public class EsIndexerHttpService implements EsIndexerService, AutoCloseable {
     }
 
     @Override
-    public Collection<String> getTargetsForAlias(String alias) {
+    public Collection<String> getTargetsForAlias(String alias, String indexPattern) {
         try {
-            GetAliasesResponse aliases = client.indices().getAlias(new GetAliasesRequest(alias), RequestOptions.DEFAULT);
+            GetAliasesResponse aliases = client.indices().getAlias(new GetAliasesRequest(alias).indices(indexPattern), RequestOptions.DEFAULT);
             return aliases.getAliases().keySet();
         } catch (IOException io) {
             throw new ElasticException(io);
@@ -320,14 +316,14 @@ public class EsIndexerHttpService implements EsIndexerService, AutoCloseable {
     }
 
     @Override
-    public boolean updateIndexAlias(String alias, String indexName) {
+    public boolean updateIndexAlias(String alias, String removeForIndexPattern, String addForIndexName) {
 
         IndicesAliasesRequest request = new IndicesAliasesRequest();
-        request.addAliasAction(new AliasActions(AliasActions.Type.REMOVE).index("*").alias(alias));
-        request.addAliasAction(new AliasActions(AliasActions.Type.ADD).index(indexName).alias(alias));
+        request.addAliasAction(new AliasActions(AliasActions.Type.REMOVE).index(removeForIndexPattern).alias(alias));
+        request.addAliasAction(new AliasActions(AliasActions.Type.ADD).index(addForIndexName).alias(alias));
         try {
             AcknowledgedResponse response = client.indices().updateAliases(request, RequestOptions.DEFAULT);
-            LOGGER.info("Satt alias {} til å peke mot {}: {}", alias, indexName, response.isAcknowledged() ? "ACK" : "ERR");
+            LOGGER.info("Satt alias {} til å peke mot {}: {}", alias, addForIndexName, response.isAcknowledged() ? "ACK" : "ERR");
             return response.isAcknowledged();
         } catch (IOException e) {
             throw new ElasticException(e);

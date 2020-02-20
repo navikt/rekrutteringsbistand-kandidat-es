@@ -28,17 +28,17 @@ public class AliasIndexingIT {
 
     @BeforeEach
     public void before() {
-        indexerClient.createIndex("cv_4.1.21");
-        indexerClient.updateIndexAlias(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME, "cv_4.1.21");
+        indexerClient.createIndex("cvindex_4.1.21");
+        indexerClient.updateIndexAlias(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME, "cvindex*", "cvindex_4.1.21");
 
-        indexerAlleCVene("cv_4.1.21");
+        indexerAlleCVene("cvindex_4.1.21");
     }
 
     @AfterEach
     public void after() {
         try {
-            indexerClient.deleteIndex("cv_4.1.21");
-            indexerClient.deleteIndex("cv_4.1.22");
+            indexerClient.deleteIndex("cvindex_4.1.21");
+            indexerClient.deleteIndex("cvindex_4.1.22");
         } catch (Exception e) {
             // Ignore
         }
@@ -65,7 +65,7 @@ public class AliasIndexingIT {
     public void storStyggTest() {
 
         //sokMotAliasFungerer() {
-        assertThat(indexerClient.getTargetsForAlias(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME)).containsExactly("cv_4.1.21");
+        assertThat(indexerClient.getTargetsForAlias(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME, "cvindex*")).containsExactly("cvindex_4.1.21");
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("Awesome").bygg());
         assertThat(sokeresultat.getCver()).hasSize(1);
         assertThat(sokeresultat.getCver()).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
@@ -77,12 +77,12 @@ public class AliasIndexingIT {
         assertThat(sokeresultat2.getCver()).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
 
         //indexSwitchingFungerer() {
-        indexerClient.createIndex("cv_4.1.22");
-        indexerClient.updateIndexAlias(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME, "cv_4.1.22");
+        indexerClient.createIndex("cvindex_4.1.22");
+        indexerClient.updateIndexAlias(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME, "cvindex*", "cvindex_4.1.22");
         Sokeresultat sokeresultat3 = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("Awesome").bygg());
         assertThat(sokeresultat3.getCver()).hasSize(0);
 
-        indexerAlleCVene("cv_4.1.22");
+        indexerAlleCVene("cvindex_4.1.22");
         Sokeresultat sokeresultat4 = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("Awesome").bygg());
         assertThat(sokeresultat4.getCver()).hasSize(1);
         assertThat(sokeresultat4.getCver()).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
