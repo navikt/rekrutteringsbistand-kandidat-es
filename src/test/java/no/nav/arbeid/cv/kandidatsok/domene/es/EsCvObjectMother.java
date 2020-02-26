@@ -52,27 +52,27 @@ public class EsCvObjectMother {
 
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(d("2000-01-01"), d("2002-01-01"),
                 "Stentransport, Kragerø", "8342.01", "Anleggsmaskinfører",
-                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(d("2003-01-01"), d("2003-04-01"),
                 "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
-                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(d("2003-04-01"), d("2003-07-01"),
                 "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
-                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(d("2005-08-01"), d("2016-07-01"),
                 "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", "Industrimekaniker",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring5 = new EsYrkeserfaring(d("2016-06-01"), d("2017-04-01"),
                 "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", "Sjåfør kl. 2", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(d("2017-10-01"), null, "NLI  Grenland",
                 "7233.03", "Industrimekaniker", "Industrimekaniker", "YRKE_ORGNR", "YRKE_NACEKODE",
-                false, Collections.emptyList(), "Oslo");
+                false, Collections.emptyList());
 
         ArrayList<EsYrkeserfaring> yrkeserfaringListe = new ArrayList<>();
         yrkeserfaringListe.add(yrkeserfaring1);
@@ -230,27 +230,27 @@ public class EsCvObjectMother {
         utdanningsListe.add(utdanning1);
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(d("2000-01-01"), d("2000-01-10"),
                 "Stentransport, Kragerø", "8341.01", "Anleggsmaskindrifter",
-                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(d("2003-01-01"), d("2003-02-01"),
                 "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
-                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(d("2003-04-01"), d("2003-05-01"),
                 "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
-                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(d("2005-08-01"), d("2005-09-01"),
                 "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", "Industrimekaniker",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring5 = new EsYrkeserfaring(d("2016-06-01"), d("2016-07-01"),
                 "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", "Sjåfør kl. 2", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(d("2017-10-01"), d("2017-12-01"),
                 "NLI  Grenland", "7233.03", "Industrimekaniker", "Industrimekaniker", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, Collections.emptyList());
 
         ArrayList<EsYrkeserfaring> yrkeserfaringsListe = new ArrayList<>();
         yrkeserfaringsListe.add(yrkeserfaring1);
@@ -430,27 +430,27 @@ public class EsCvObjectMother {
         utdanningListe.add(EsUtdanning);
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(d("2000-01-01"), d("2002-01-01"),
                 "Kodesentralen Vardø", "5746.07", "Programvareutvikler", "Fullstackutvikler",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(d("2003-01-01"), d("2003-07-01"),
                 "Programvarefabrikken Førde", "5746.07", "Systemutvikler",
-                "Utvikling av nytt kandidatsøk", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "Utvikling av nytt kandidatsøk", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(d("2003-04-01"), d("2003-05-01"),
                 "Tjenestetest Norge", "6859.02", "Systemtester",
-                "Automatiske tester av nytt kandidatsøk", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "Automatiske tester av nytt kandidatsøk", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(d("2005-08-01"), d("2006-07-01"),
                 "lagerarbeiderne L. H.", "8659.03", "Lagermedarbeider", "Lagermedarbeider",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring5 = new EsYrkeserfaring(d("2016-06-01"), d("2017-04-01"),
                 "lagerarbeiderne L. H.", "8659.03", "Truckfører lager", "Stortruck", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring6 =
                 new EsYrkeserfaring(d("2017-10-01"), d("2019-09-26"), "Awesome coders AS", "5746.07",
-                        "Javautvikler", "Javautvikler", "YRKE_ORGNR", "YRKE_NACEKODE", false, Arrays.asList("Javaprogrammerer", "Javawizard", "Javaguru"), "Oslo");
+                        "Javautvikler", "Javautvikler", "YRKE_ORGNR", "YRKE_NACEKODE", false, Arrays.asList("Javaprogrammerer", "Javawizard", "Javaguru"));
 
         ArrayList<EsYrkeserfaring> yrkeserfaringListe = new ArrayList<>();
         yrkeserfaringListe.add(yrkeserfaring1);
@@ -589,7 +589,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         EsArbeidstidsordningJobbonskerListe.add(EsArbeidstidsordningJobbonsker);
 
-        EsCv esCv = new EsCv(AKTORID3, "05236984567", "KARI", "NORDMANN", d("1985-02-10"), false, "PARBS",
+        EsCv esCv = new EsCv(AKTORID3, "05236984567", "KARI", "NORDMANN", d("1980-02-10"), false, "PARBS",
                 "unnasluntrer2@mailinator.com", "(+47) 22334455", "12345678", "NO", "2L",
                 "Dette er beskrivelsen av hva jeg har gjort i min yrkeskarriere",
                 "J", d("2016-05-30"), "Dinvei 2", "", "", "1337", "HUSKER IKKE", "NO", 301,
@@ -616,26 +616,26 @@ public class EsCvObjectMother {
         utdanningListe.add(EsUtdanning);
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(d("2000-01-01"), d("2000-02-01"),
                 "Butikken i nærheten", "1010.01", "Butikkmedarbeider", "Butikkmedarbeider i Førde",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(d("2003-01-01"), d("2003-02-01"),
                 "Butikken i nærheten", "1010.01", "Butikkmedarbeider(dagligvarer)",
-                "Butikkmedarbeider(dagligvarer)", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "Butikkmedarbeider(dagligvarer)", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(d("2003-04-01"), d("2003-05-01"),
                 "Butikken langt unna", "1010.01", "Butikkmedarbeider(trevare)",
-                "Butikkmedarbeider(trevare)", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "Butikkmedarbeider(trevare)", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(d("2005-08-01"), d("2005-09-01"),
                 "Butikken", "4561.03", "Butikkmedarbeider(elektronikk)",
-                "Butikkmedarbeider(elektronikk)", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "Butikkmedarbeider(elektronikk)", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring5 =
                 new EsYrkeserfaring(d("2016-06-01"), d("2016-07-01"), "Tvkanalen TV?", "5684.05",
-                        "Presentør", "Presentør", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                        "Presentør", "Presentør", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(d("2017-10-01"), null, "NLI  Grenland",
-                "5684.05", "Nyhetsanker", "Nyhetsanker", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "5684.05", "Nyhetsanker", "Nyhetsanker", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         ArrayList<EsYrkeserfaring> yrkeserfaringListe = new ArrayList<>();
         yrkeserfaringListe.add(yrkeserfaring1);
@@ -806,27 +806,27 @@ public class EsCvObjectMother {
         utdanningListe.add(EsUtdanning);
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(d("2000-01-01"), d("2002-01-01"),
                 "Jokah", "1010.01", "Butikkmedarbeider", "Butikkmedarbeider", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(d("2003-01-01"), d("2003-04-01"),
                 "Nærbutikkern", "1010.01", "Butikkmedarbeider(klesbutikk)",
-                "Butikkmedarbeider(klebutikk)", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "Butikkmedarbeider(klebutikk)", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring3 =
                 new EsYrkeserfaring(d("2003-04-01"), d("2003-07-01"), "Tv tv tv", "5684.05",
-                        "Nyhetspresentør", "Nyhetspresentør", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                        "Nyhetspresentør", "Nyhetspresentør", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring4 =
                 new EsYrkeserfaring(d("2005-08-01"), d("2016-07-01"), "Vard Group,avd.Brevik",
-                        "5684.05", "Hallovert", "Hallovert", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                        "5684.05", "Hallovert", "Hallovert", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring5 =
                 new EsYrkeserfaring(d("2016-06-01"), d("2017-04-01"), "DN teater", "5124.46",
-                        "Skuespiller", "Skuespiller", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                        "Skuespiller", "Skuespiller", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(d("2017-10-01"), null,
                 "Dukketeateret Rena", "5124.46", "Skuespiller(dukketeater)",
-                "Skuespiller(dukketeater)", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "Skuespiller(dukketeater)", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         ArrayList<EsYrkeserfaring> yrkeserfaringListe = new ArrayList<>();
         yrkeserfaringListe.add(yrkeserfaring1);
@@ -985,26 +985,26 @@ public class EsCvObjectMother {
 
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(d("2000-01-01"), d("2000-02-01"),
                 "Bankhvelvet BBL", "4865.75", "Bankhvelvoperatør", "Bankhvelvoperatør",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring2 =
                 new EsYrkeserfaring(d("2003-01-01"), d("2003-02-01"), "Proggehula", "5746.07",
-                        "Progger", "Progger", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                        "Progger", "Progger", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(d("2003-04-01"), d("2003-05-01"),
-                "Test a.a.s", "6859.02", "Tester", "Tester", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "Test a.a.s", "6859.02", "Tester", "Tester", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring4 =
                 new EsYrkeserfaring(d("2005-08-01"), d("2005-09-01"), "K.O. kranservice", "8342.01",
-                        "Kranoperatør", "Kranoperatør", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.singletonList("Operatør av kran"), "Oslo");
+                        "Kranoperatør", "Kranoperatør", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.singletonList("Operatør av kran"));
 
         EsYrkeserfaring yrkeserfaring5 = new EsYrkeserfaring(d("2016-06-01"), d("2016-06-02"),
                 "Lang transport A.S.", "8332.03", "Lastebil- og trailersjåfør", "Sjåfør kl. 3",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(d("2017-10-01"), d(null),
                 "Mekken mekk", "7233.03", "Industrimekaniker", "Industrimekaniker", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, Collections.emptyList());
 
         ArrayList<EsYrkeserfaring> yrkeserfaringListe = new ArrayList<>();
         yrkeserfaringListe.add(yrkeserfaring1);
@@ -1179,26 +1179,26 @@ public class EsCvObjectMother {
 
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(d("2000-01-01"), d("2000-02-01"),
                 "Bankhvelvet BBL", "4865.75", "Bankhvelvoperatør", "Bankhvelvoperatør",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring2 =
                 new EsYrkeserfaring(d("2003-01-01"), d("2003-02-01"), "Proggehula", "5746.07",
-                        "Progger", "Progger", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                        "Progger", "Progger", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(d("2003-04-01"), d("2003-05-01"),
-                "Test a.a.s", "6859.02", "Tester", "Tester", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "Test a.a.s", "6859.02", "Tester", "Tester", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring4 =
                 new EsYrkeserfaring(d("2005-08-01"), d("2005-09-01"), "K.O. kranservice", "8342.01",
-                        "Kranoperatør", "Kranoperatør", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                        "Kranoperatør", "Kranoperatør", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring5 = new EsYrkeserfaring(d("2016-06-01"), d("2016-06-02"),
                 "Lang transport A.S.", "8332.03", "Lastebil- og trailersjåfør", "Sjåfør kl. 3",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(d("2017-10-01"), d("2017-11-01"),
                 "Mekken mekk", "7233.03", "Industrimekaniker", "Industrimekaniker", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, Collections.emptyList());
 
         ArrayList<EsYrkeserfaring> yrkeserfaringListe = new ArrayList<>();
         yrkeserfaringListe.add(yrkeserfaring1);
@@ -1349,27 +1349,27 @@ public class EsCvObjectMother {
         utdanningsListe.add(utdanning1);
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(d("2000-01-01"), d("2000-01-10"),
                 "Stentransport, Kragerø", "8341.01", "", "maskinkjører og maskintransport",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(d("2003-01-01"), d("2003-02-01"),
                 "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
-                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(d("2003-04-01"), d("2003-05-01"),
                 "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
-                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(d("2005-08-01"), d("2005-09-01"),
                 "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", "Industrimekaniker",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring5 = new EsYrkeserfaring(d("2016-06-01"), d("2016-07-01"),
                 "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", "Sjåfør kl. 2", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(d("2017-10-01"), d("2017-12-01"),
                 "NLI  Grenland", "7233.03", "Industrimekaniker", "Industrimekaniker", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, Collections.emptyList());
 
         ArrayList<EsYrkeserfaring> yrkeserfaringsListe = new ArrayList<>();
         yrkeserfaringsListe.add(yrkeserfaring1);
@@ -1532,27 +1532,27 @@ public class EsCvObjectMother {
 
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(d("2000-01-01"), d("2000-01-10"),
                 "Stentransport, Kragerø", "8341.01", "", "maskinkjører og maskintransport",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(d("2003-01-01"), d("2003-02-01"),
                 "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
-                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(d("2003-04-01"), d("2003-05-01"),
                 "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
-                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(d("2005-08-01"), d("2005-09-01"),
                 "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", "Industrimekaniker",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring5 = new EsYrkeserfaring(d("2016-06-01"), d("2016-07-01"),
                 "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", "Sjåfør kl. 2", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(d("2017-10-01"), d("2017-12-01"),
                 "NLI  Grenland", "7233.03", "Industrimekaniker", "Industrimekaniker", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, Collections.emptyList());
 
         ArrayList<EsYrkeserfaring> yrkeserfaringsListe = new ArrayList<>();
         yrkeserfaringsListe.add(yrkeserfaring1);
@@ -1720,27 +1720,27 @@ public class EsCvObjectMother {
 
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(d("2000-01-01"), d("2000-01-10"),
                 "Stentransport, Kragerø", "8341.01", "", "maskinkjører og maskintransport",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(d("2003-01-01"), d("2003-02-01"),
                 "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
-                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(d("2003-04-01"), d("2003-05-01"),
                 "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
-                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(d("2005-08-01"), d("2005-09-01"),
                 "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", "Industrimekaniker",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring5 = new EsYrkeserfaring(d("2016-06-01"), d("2016-07-01"),
                 "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", "Sjåfør kl. 2", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(d("2017-10-01"), d("2017-12-01"),
                 "NLI  Grenland", "7233.03", "Industrimekaniker", "Industrimekaniker", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, Collections.emptyList());
 
         ArrayList<EsYrkeserfaring> yrkeserfaringsListe = new ArrayList<>();
         yrkeserfaringsListe.add(yrkeserfaring1);
@@ -1908,27 +1908,27 @@ public class EsCvObjectMother {
 
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(d("2000-01-01"), d("2000-01-10"),
                 "Stentransport, Kragerø", "8341.01", "", "maskinkjører og maskintransport",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(d("2003-01-01"), d("2003-02-01"),
                 "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
-                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(d("2003-04-01"), d("2003-05-01"),
                 "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
-                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(d("2005-08-01"), d("2005-09-01"),
                 "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", "Industrimekaniker",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring5 = new EsYrkeserfaring(d("2016-06-01"), d("2016-07-01"),
                 "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", "Sjåfør kl. 2", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(d("2017-10-01"), d("2017-12-01"),
                 "NLI  Grenland", "7233.03", "Industrimekaniker", "Industrimekaniker", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, Collections.emptyList());
 
         ArrayList<EsYrkeserfaring> yrkeserfaringsListe = new ArrayList<>();
         yrkeserfaringsListe.add(yrkeserfaring1);
@@ -2096,27 +2096,27 @@ public class EsCvObjectMother {
 
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(d("2000-01-01"), d("2000-01-10"),
                 "Stentransport, Kragerø", "8341.01", "", "maskinkjører og maskintransport",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(d("2003-01-01"), d("2003-02-01"),
                 "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
-                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(d("2003-04-01"), d("2003-05-01"),
                 "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
-                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(d("2005-08-01"), d("2005-09-01"),
                 "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", "Industrimekaniker",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring5 = new EsYrkeserfaring(d("2016-06-01"), d("2016-07-01"),
                 "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", "Sjåfør kl. 2", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(d("2017-10-01"), d("2017-12-01"),
                 "NLI  Grenland", "7233.03", "Industrimekaniker", "Industrimekaniker", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, Collections.emptyList());
 
         ArrayList<EsYrkeserfaring> yrkeserfaringsListe = new ArrayList<>();
         yrkeserfaringsListe.add(yrkeserfaring1);
@@ -2284,27 +2284,27 @@ public class EsCvObjectMother {
 
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(d("2000-01-01"), d("2000-01-10"),
                 "Stentransport, Kragerø", "8341.01", "", "maskinkjører og maskintransport",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(d("2003-01-01"), d("2003-02-01"),
                 "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
-                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(d("2003-04-01"), d("2003-05-01"),
                 "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
-                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(d("2005-08-01"), d("2005-09-01"),
                 "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", "Industrimekaniker",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring5 = new EsYrkeserfaring(d("2016-06-01"), d("2016-07-01"),
                 "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", "Sjåfør kl. 2", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(d("2017-10-01"), d("2017-12-01"),
                 "NLI  Grenland", "7233.03", "Industrimekaniker", "Industrimekaniker", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, Collections.emptyList());
 
         ArrayList<EsYrkeserfaring> yrkeserfaringsListe = new ArrayList<>();
         yrkeserfaringsListe.add(yrkeserfaring1);
@@ -2472,27 +2472,27 @@ public class EsCvObjectMother {
 
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(d("2000-01-01"), d("2000-01-10"),
                 "Stentransport, Kragerø", "8341.01", "", "maskinkjører og maskintransport",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(d("2003-01-01"), d("2003-02-01"),
                 "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
-                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(d("2003-04-01"), d("2003-05-01"),
                 "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
-                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(d("2005-08-01"), d("2005-09-01"),
                 "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", "Industrimekaniker",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring5 = new EsYrkeserfaring(d("2016-06-01"), d("2016-07-01"),
                 "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", "Sjåfør kl. 2", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, Collections.emptyList());
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(d("2017-10-01"), d("2017-12-01"),
                 "NLI  Grenland", "7233.03", "Industrimekaniker", "Industrimekaniker", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, Collections.emptyList());
 
         ArrayList<EsYrkeserfaring> yrkeserfaringsListe = new ArrayList<>();
         yrkeserfaringsListe.add(yrkeserfaring1);

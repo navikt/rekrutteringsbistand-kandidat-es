@@ -134,7 +134,7 @@ public class IndexCvIT {
     }
 
     @Test
-    //@Disabled("Brukes til utforskende testing")
+    @Disabled("Brukes til utforskende testing")
     public void skalLoggFeilVedBulkIndeksereCVMedNullfelter() {
         List<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> bulkEventer =
                 asList(EsCvObjectMother.giveMeEsCv(), EsCvObjectMother.giveMeEsCvMedFeil(),
@@ -898,7 +898,7 @@ public class IndexCvIT {
     @Test
     public void sokPaaFodselsdatoMedFraTilSkalGiTreff() {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
-                .antallAarFra(35).antallAarTil(40).bygg());
+                .antallAarFra(39).antallAarTil(40).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver.size()).isGreaterThanOrEqualTo(1);
@@ -909,7 +909,7 @@ public class IndexCvIT {
     @Test
     public void sokPaaFodselsdatoMedKunFraSkalGiTreff() {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
-                .antallAarFra(35).bygg());
+                .antallAarFra(39).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver.size()).isGreaterThanOrEqualTo(1);
@@ -931,7 +931,7 @@ public class IndexCvIT {
     @Test
     public void sokPaaFodselsdatoUtenforRangeSkalIkkeGiTreff() {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
-                .antallAarFra(10).antallAarTil(34).bygg());
+                .antallAarFra(10).antallAarTil(38).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver).doesNotContain(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
