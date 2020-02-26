@@ -55,24 +55,21 @@ public class EsYrkeserfaring {
     @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
     private String beskrivelse;
 
-    @ElasticTextField
-    private String sted;
-
     public EsYrkeserfaring() {
     }
 
     public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
                            String kodeverkStillingstittel, String alternativStillingstittel, String beskrivelse,
-                           int yrkeserfaringManeder, List<String> sokeTitler, String sted) {
+                           int yrkeserfaringManeder, List<String> sokeTitler) {
         this(fraDato, tilDato, arbeidsgiver, styrkKode, kodeverkStillingstittel,
-                alternativStillingstittel, null, null, yrkeserfaringManeder, false, sokeTitler, sted);
+                alternativStillingstittel, null, null, yrkeserfaringManeder, false, sokeTitler);
         this.beskrivelse = beskrivelse;
     }
 
     public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
                            String styrkKodeStillingstittel, String alternativStillingstittel,
                            String organisasjonsnummer, String naceKode, int yrkeserfaringManeder,
-                           Boolean utelukketForFremtiden, List<String> sokeTitler, String sted) {
+                           Boolean utelukketForFremtiden, List<String> sokeTitler) {
         this.fraDato = fraDato;
         this.tilDato = tilDato;
         this.arbeidsgiver = arbeidsgiver;
@@ -89,13 +86,12 @@ public class EsYrkeserfaring {
         this.utelukketForFremtiden = utelukketForFremtiden;
         this.sokeTitler.add(styrkKodeStillingstittel);
         this.sokeTitler.addAll(sokeTitler);
-        this.sted = sted;
     }
 
     public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
                            String styrkKodeStillingstittel, String alternativStillingstittel,
                            String organisasjonsnummer, String naceKode, Boolean utelukketForFremtiden,
-                           List<String> sokeTitler, String sted) {
+                           List<String> sokeTitler) {
         this.fraDato = fraDato;
         this.tilDato = tilDato;
         this.arbeidsgiver = arbeidsgiver;
@@ -112,7 +108,6 @@ public class EsYrkeserfaring {
         this.utelukketForFremtiden = utelukketForFremtiden;
         this.sokeTitler.add(styrkKodeStillingstittel);
         this.sokeTitler.addAll(sokeTitler);
-        this.sted = sted;
     }
 
     private static int toYrkeserfaringManeder(Date fraDato, Date tilDato) {
@@ -192,10 +187,6 @@ public class EsYrkeserfaring {
         return sokeTitler;
     }
 
-    public String getSted() {
-        return sted;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -214,8 +205,7 @@ public class EsYrkeserfaring {
                 && Objects.equals(organisasjonsnummer, that.organisasjonsnummer)
                 && Objects.equals(naceKode, that.naceKode)
                 && Objects.equals(yrkeserfaringManeder, that.yrkeserfaringManeder)
-                && Objects.equals(utelukketForFremtiden, that.utelukketForFremtiden)
-                && Objects.equals(sted, that.sted);
+                && Objects.equals(utelukketForFremtiden, that.utelukketForFremtiden);
     }
 
     @Override
@@ -223,7 +213,7 @@ public class EsYrkeserfaring {
 
         return Objects.hash(fraDato, tilDato, arbeidsgiver, styrkKode, styrkKodeStillingstittel,
                 alternativStillingstittel, beskrivelse, organisasjonsnummer, naceKode,
-                yrkeserfaringManeder, utelukketForFremtiden, sted);
+                yrkeserfaringManeder, utelukketForFremtiden);
     }
 
     @Override
@@ -235,7 +225,6 @@ public class EsYrkeserfaring {
                 + ", beskrivelse='" + beskrivelse + '\'' + ", organisasjonsnummer='"
                 + organisasjonsnummer + '\'' + ", naceKode='" + naceKode + '\''
                 + ", yrkeserfaringManeder='" + yrkeserfaringManeder + '\''
-                + ", sted='" + sted + '\''
                 + ", utelukketForFremtiden='" + utelukketForFremtiden + '\'' + '}';
     }
 
