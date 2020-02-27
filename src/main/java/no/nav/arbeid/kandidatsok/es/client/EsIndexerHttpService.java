@@ -133,7 +133,7 @@ public class EsIndexerHttpService implements EsIndexerService, AutoCloseable {
                 bulkRequest.add(ir);
             }
         } catch (Exception e) {
-            LOGGER.info(
+            LOGGER.error(
                     "Greide ikke å serialisere CV til JSON for å bygge opp bulk-indekseringsrequest: {}. Kandidatnr: {}",
                     e.getMessage(), currentKandidatnr, e);
             throw new ApplicationException(
@@ -142,7 +142,7 @@ public class EsIndexerHttpService implements EsIndexerService, AutoCloseable {
                     e);
         }
 
-        LOGGER.info("Sender bulk indexrequest med {} cv'er", esCver.size());
+        LOGGER.debug("Sender bulk indexrequest med {} cv'er", esCver.size());
         bulkRequest.setRefreshPolicy(refreshPolicy);
         BulkResponse bulkResponse = esExec(() -> client.bulk(bulkRequest, RequestOptions.DEFAULT), indexName);
         int antallIndeksert = esCver.size();
@@ -212,7 +212,7 @@ public class EsIndexerHttpService implements EsIndexerService, AutoCloseable {
             bulkRequest.add(Requests.deleteRequest(indexName).id(id));
         }
 
-        LOGGER.info("Sender bulksletting av {} cv'er", kandidatnr.size());
+        LOGGER.debug("Sender bulksletting av {} cv'er", kandidatnr.size());
         bulkRequest.setRefreshPolicy(refreshPolicy);
         BulkResponse bulkResponse = esExec(() -> client.bulk(bulkRequest, RequestOptions.DEFAULT), indexName);
         if (bulkResponse.hasFailures()) {
@@ -233,7 +233,7 @@ public class EsIndexerHttpService implements EsIndexerService, AutoCloseable {
 //                    client.getLowLevelClient().performRequest(new Request("HEAD", "/" + indexName));
 //            return restResponse.getStatusLine().getStatusCode() == 200;
         } catch (ResponseException e) {
-            LOGGER.info("Exception while calling isExistingIndex", e);
+            LOGGER.warn("Exception while calling isExistingIndex", e);
         } catch (IOException ioe) {
             throw new ElasticException(ioe);
         }
