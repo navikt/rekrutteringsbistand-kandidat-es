@@ -30,8 +30,8 @@ node {
     try {
 
         // Temporary odfe branch build
-        stage("info") {
-            println("Using Jenkinsfile from odfe branch")
+        stage("init") {
+            println("Using Jenkinsfile from master branch")
         }
 
         stage("checkout") {
@@ -41,7 +41,6 @@ node {
                 // Would be great if withCredentials could be used to mask the value, mark it as secret, or similar
                 println("Repository URL is https://x-access-token:****@github.com/${repo}/${application}.git")
                 sh(script: "set +x; git clone https://x-access-token:${githubAppToken}@github.com/${repo}/${application}.git .")
-                sh(script: 'git checkout odfe')
             }
         }
 
