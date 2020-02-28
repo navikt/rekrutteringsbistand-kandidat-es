@@ -2,6 +2,7 @@ package no.nav.arbeid.kandidatsok.es.client;
 
 import no.nav.arbeid.cv.kandidatsok.es.domene.EsCv;
 import org.elasticsearch.client.Response;
+import org.elasticsearch.client.core.AcknowledgedResponse;
 
 import java.util.Collection;
 import java.util.List;
@@ -34,7 +35,8 @@ public interface EsIndexerService {
 
     long antallIndeksertSynligForArbeidsgiver(String indexName);
 
-    Collection<String> getTargetsForAlias(String alias);
+    Collection<String> getTargetsForAlias(String alias, String indexPattern);
 
-    Response updateIndexAlias(String alias, String indexName);
+    boolean updateIndexAlias(String alias, String removeForIndexPattern, String addForIndexName);
+
 }

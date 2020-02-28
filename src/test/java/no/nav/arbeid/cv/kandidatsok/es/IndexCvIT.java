@@ -1,100 +1,43 @@
 package no.nav.arbeid.cv.kandidatsok.es;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.micrometer.core.instrument.Counter;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Tags;
 import no.nav.arbeid.cv.kandidatsok.domene.es.EsCvObjectMother;
 import no.nav.arbeid.cv.kandidatsok.domene.es.KandidatsokTransformer;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.*;
-import no.nav.arbeid.cv.kandidatsok.testsupport.ElasticSearchTestExtension;
-import no.nav.arbeid.kandidatsok.es.client.EsIndexerHttpService;
+import no.nav.arbeid.cv.kandidatsok.testsupport.ElasticSearchTestConfiguration;
+import no.nav.arbeid.cv.kandidatsok.testsupport.ElasticSearchIntegrationTestExtension;
 import no.nav.arbeid.kandidatsok.es.client.EsIndexerService;
-import no.nav.arbeid.kandidatsok.es.client.EsSokHttpService;
 import no.nav.arbeid.kandidatsok.es.client.EsSokService;
-import org.apache.http.HttpHost;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.extractor.Extractors;
-import org.elasticsearch.action.support.WriteRequest;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.InputStreamReader;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static no.nav.arbeid.cv.kandidatsok.testsupport.ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
-@ExtendWith(ElasticSearchTestExtension.class)
+@ExtendWith(ElasticSearchIntegrationTestExtension.class)
 public class IndexCvIT {
 
-    @Autowired
-    private EsSokService sokClient;
+    private EsSokService sokClient = ElasticSearchTestConfiguration.esSokService(DEFAULT_INDEX_NAME);
 
-    @Autowired
-    private EsIndexerService indexerClient;
+    private EsIndexerService indexerClient = ElasticSearchTestConfiguration.indexerCvService();
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private ObjectMapper objectMapper = ElasticSearchTestConfiguration.objectMapper();
 
     private KandidatsokTransformer kandidatsokTransformer = new KandidatsokTransformer();
 
-    @Configuration
-    static class TestConfig {
-
-        @Bean
-        public RestHighLevelClient restHighLevelClient() {
-            return new RestHighLevelClient(
-                    RestClient.builder(new HttpHost("localhost", ElasticSearchTestExtension.getEsPort(), "http")));
-        }
-
-        @Bean
-        public ObjectMapper objectMapper() {
-            return new ObjectMapper();
-        }
-
-        @Bean
-        public MeterRegistry meterRegistry() {
-            Counter counter = mock(Counter.class);
-            MeterRegistry meterRegistry = mock(MeterRegistry.class);
-            when(meterRegistry.counter(anyString(), any(Tags.class))).thenReturn(counter);
-
-            return meterRegistry;
-        }
-
-        @Bean
-        public EsIndexerService indexerCvService(RestHighLevelClient restHighLevelClient,
-                                                 ObjectMapper objectMapper,
-                                                 MeterRegistry meterRegistry
-        ) {
-            return new EsIndexerHttpService(restHighLevelClient, objectMapper, meterRegistry,
-                    WriteRequest.RefreshPolicy.IMMEDIATE, 3, 2);
-        }
-
-        @Bean
-        public EsSokService esSokService(RestHighLevelClient restHighLevelClient, ObjectMapper objectMapper) {
-            return new EsSokHttpService(restHighLevelClient, objectMapper, "cvindex");
-        }
-    }
-
     @BeforeEach
     public void before() {
-        indexerClient.createIndex("cvindex");
+        indexerClient.createIndex(DEFAULT_INDEX_NAME);
 
         indexerClient.bulkIndex(List.of(
                 EsCvObjectMother.giveMeEsCv(),
@@ -108,12 +51,12 @@ public class IndexCvIT {
                 EsCvObjectMother.giveMeCvForKode7(),
                 EsCvObjectMother.giveMeCvFritattForAgKandidatsok(),
                 EsCvObjectMother.giveMeCvFritattForKandidatsok()
-        ), "cvindex");
+        ), DEFAULT_INDEX_NAME);
     }
 
     @AfterEach
     public void after() {
-        indexerClient.deleteIndex("cvindex");
+        indexerClient.deleteIndex(DEFAULT_INDEX_NAME);
     }
 
     @Test
@@ -129,20 +72,19 @@ public class IndexCvIT {
 
         List<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> bulkEventer = asList(cv1, cv2);
 
-        int antallIndeksert = indexerClient.bulkIndex(bulkEventer, "cvindex");
+        int antallIndeksert = indexerClient.bulkIndex(bulkEventer, DEFAULT_INDEX_NAME);
         assertThat(antallIndeksert).isEqualTo(bulkEventer.size());
     }
 
     @Test
     @Disabled("Brukes til utforskende testing")
-    public void skalLoggFeilVedBulkIndeksereCVMedNullfelter() {
+    public void skalLoggeFeilVedBulkIndeksereCVMedNullfelter() {
         List<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> bulkEventer =
                 asList(EsCvObjectMother.giveMeEsCv(), EsCvObjectMother.giveMeEsCvMedFeil(),
                         EsCvObjectMother.giveMeEsCv2());
 
         bulkEventer.forEach(e -> e.setKandidatnr(e.getKandidatnr() + 9998));
-        indexerClient.bulkIndex(bulkEventer, "cvindex");
-
+        indexerClient.bulkIndex(bulkEventer, DEFAULT_INDEX_NAME);
     }
 
     @Test
@@ -525,7 +467,7 @@ public class IndexCvIT {
 
         int antallForBulkIndeksering =
                 sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
-        indexerClient.bulkIndex(bulkEventer, "cvindex");
+        indexerClient.bulkIndex(bulkEventer, DEFAULT_INDEX_NAME);
         int antallEtterIndeksering =
                 sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
 
@@ -533,7 +475,7 @@ public class IndexCvIT {
                 .isEqualTo(bulkEventer.size());
 
         // Reindekser
-        indexerClient.bulkIndex(bulkEventer, "cvindex");
+        indexerClient.bulkIndex(bulkEventer, DEFAULT_INDEX_NAME);
         antallEtterIndeksering =
                 sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
 
@@ -548,7 +490,7 @@ public class IndexCvIT {
 
         int antallForBulkSletting =
                 sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
-        indexerClient.bulkSlettKandidatnr(sletteIder, "cvindex");
+        indexerClient.bulkSlettKandidatnr(sletteIder, DEFAULT_INDEX_NAME);
         int antallEtterSletting =
                 sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
 
@@ -632,7 +574,7 @@ public class IndexCvIT {
 
     @Test
     public void skalKunneIndeksereOppCvUtenKompetanser() {
-        indexerClient.index(EsCvObjectMother.giveMeCvUtenKompetanse(), "cvindex");
+        indexerClient.index(EsCvObjectMother.giveMeCvUtenKompetanse(), DEFAULT_INDEX_NAME);
     }
 
     @Test
@@ -851,34 +793,34 @@ public class IndexCvIT {
     public void typeaheadPaaNavkontorFungerer() {
         List<String> typeAheadNavkontor = sokClient.typeAheadNavkontor("Gamle O");
         assertThat(typeAheadNavkontor).hasSize(1);
-        assertThat(typeAheadNavkontor).containsExactly("NAV Gamle Oslo");
+        assertThat(typeAheadNavkontor).containsExactly("0316 NAV Gamle Oslo");
     }
 
     @Test
     public void typeaheadPaaNavkontorSkalHaandtereFlereValg() {
         List<String> typeAheadNavkontor = sokClient.typeAheadNavkontor("NAV");
         assertThat(typeAheadNavkontor).hasSize(4);
-        assertThat(typeAheadNavkontor).containsExactlyInAnyOrder("NAV Gamle Oslo", "NAV Asker", "NAV Drammen", "NAV Drøbak");
+        assertThat(typeAheadNavkontor).containsExactlyInAnyOrder("0316 NAV Gamle Oslo", "0220 NAV Asker", "0602 NAV Drammen", "0215 NAV Drøbak");
     }
 
     @Test
     public void typeaheadPaaNavkontorSkalVaereCaseInsensitive() {
         List<String> typeAheadNavkontor = sokClient.typeAheadNavkontor("asker");
         assertThat(typeAheadNavkontor).hasSize(1);
-        assertThat(typeAheadNavkontor).containsExactly("NAV Asker");
+        assertThat(typeAheadNavkontor).containsExactly("0220 NAV Asker");
     }
 
     @Test
     public void typeaheadPaaNavkontorSkalGiFlereValg() {
         List<String> typeAheadNavkontor = sokClient.typeAheadNavkontor("dr");
         assertThat(typeAheadNavkontor).hasSize(2);
-        assertThat(typeAheadNavkontor).containsExactlyInAnyOrder("NAV Drammen", "NAV Drøbak");
+        assertThat(typeAheadNavkontor).containsExactlyInAnyOrder("0602 NAV Drammen", "0215 NAV Drøbak");
     }
 
     @Test
     public void sokPaNavkontorSkalGiKorrektResultat() {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
-                .navkontor(Collections.singletonList("NAV Gamle Oslo")).bygg());
+                .navkontor(Collections.singletonList("0316 NAV Gamle Oslo")).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver).hasSize(1);
@@ -888,7 +830,7 @@ public class IndexCvIT {
     @Test
     public void sokPaToNavkontorSkalIkkeInnsnevre() {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
-                .navkontor(Arrays.asList("NAV Gamle Oslo", "NAV Noe annet")).bygg());
+                .navkontor(Arrays.asList("0316 NAV Gamle Oslo", "NAV Noe annet")).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver).hasSize(1);

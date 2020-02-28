@@ -2,9 +2,6 @@ package no.nav.arbeid.cv.kandidatsok.es.domene;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import no.nav.elasticsearch.mapping.annotations.ElasticDateField;
-import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
-import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 
 import java.util.Date;
 import java.util.Objects;
@@ -12,23 +9,17 @@ import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsForerkort {
 
-    @ElasticDateField
     private Date fraDato;
 
-    @ElasticDateField
     private Date tilDato;
 
-    @ElasticKeywordField
     private String forerkortKode;
 
-    @ElasticKeywordField
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String forerkortKodeKlasse;
 
-    @ElasticTextField
     private String alternativKlasse;
 
-    @ElasticTextField
     private String utsteder;
 
     public EsForerkort() {

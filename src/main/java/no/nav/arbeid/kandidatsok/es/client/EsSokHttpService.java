@@ -3,10 +3,12 @@ package no.nav.arbeid.kandidatsok.es.client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.arbeid.cv.kandidatsok.es.domene.sok.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.lucene.search.TotalHits;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.SearchHit;
@@ -39,7 +41,6 @@ import static java.util.stream.Collectors.toMap;
 
 public class EsSokHttpService implements EsSokService, AutoCloseable {
 
-    private static final String CV_TYPE = "cvtype";
     private static final Logger LOGGER = LoggerFactory.getLogger(EsSokHttpService.class);
     private final RestHighLevelClient client;
     private final ObjectMapper mapper;
@@ -80,7 +81,6 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     public List<String> typeAheadGeografi(String prefix) {
         try {
             SearchRequest searchRequest = new SearchRequest(indexName);
-            searchRequest.types(CV_TYPE);
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
             CompletionSuggestionBuilder suggestionBuilder = SuggestBuilders
                     .completionSuggestion("geografiJobbonsker.geografiKodeTekst.completion")
@@ -91,8 +91,8 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
             searchSourceBuilder.suggest(suggestBuilder);
 
             searchRequest.source(searchSourceBuilder);
-            SearchResponse searchResponse = esExec(() -> client.search(searchRequest));
-            LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
+            SearchResponse searchResponse = esExec(() -> client.search(searchRequest, RequestOptions.DEFAULT));
+            LOGGER.debug("SEARCHRESPONSE: {}", searchResponse);
             CompletionSuggestion compSuggestion =
                     searchResponse.getSuggest().getSuggestion("typeahead");
 
@@ -110,7 +110,6 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     private List<String> typeAhead(String prefix, String suggestionField) {
         try {
             SearchRequest searchRequest = new SearchRequest(indexName);
-            searchRequest.types(CV_TYPE);
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
             searchSourceBuilder.fetchSource(false);
             CompletionSuggestionBuilder suggestionBuilder =
@@ -123,7 +122,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
             searchSourceBuilder.suggest(suggestBuilder);
 
             searchRequest.source(searchSourceBuilder);
-            SearchResponse searchResponse = esExec(() -> client.search(searchRequest));
+            SearchResponse searchResponse = esExec(() -> client.search(searchRequest, RequestOptions.DEFAULT));
             LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
             CompletionSuggestion compSuggestion =
                     searchResponse.getSuggest().getSuggestion("typeahead");
@@ -148,13 +147,13 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
             SearchRequest searchRequest = new SearchRequest();
             searchRequest.indices(indexName);
             searchRequest.source(searchSourceBuilder);
-            SearchResponse searchResponse = esExec(() -> client.search(searchRequest));
-            LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
+            SearchResponse searchResponse = esExec(() -> client.search(searchRequest, RequestOptions.DEFAULT));
+            LOGGER.debug("SEARCHRESPONSE: {}", searchResponse);
 
             List<Aggregering> aggs = toAggregeringList(searchResponse);
             List<String> aggregateList = new ArrayList<>();
             aggs.forEach(a -> a.getFelt().forEach(f -> aggregateList.add(f.getFeltnavn())));
-            LOGGER.debug("AGGREGATELIST: " + aggregateList);
+            LOGGER.debug("AGGREGATELIST: {}", aggregateList);
 
             return aggregateList;
         } catch (IOException ioe) {
@@ -244,7 +243,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
             LOGGER.debug("SEARCHREQUEST: " + searchRequest.toString());
 
-            SearchResponse searchResponse = client.search(searchRequest);
+            SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
             LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
             LOGGER.info("Søketid: {}", searchResponse.getTook());
             LOGGER.debug("Totalt antall treff: " + searchResponse.getHits().getTotalHits());
@@ -790,7 +789,11 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
         LOGGER.debug("Totalt antall treff: " + searchResponse.getHits().getTotalHits());
         List<EsCv> cver = toCvList(searchResponse);
         List<Aggregering> aggregeringer = toAggregeringList(searchResponse);
-        return new Sokeresultat(searchResponse.getHits().getTotalHits(), cver, aggregeringer);
+        TotalHits total = searchResponse.getHits().getTotalHits();
+        if (total.relation == TotalHits.Relation.GREATER_THAN_OR_EQUAL_TO) {
+            LOGGER.warn("Inaccurate total hits computation");
+        }
+        return new Sokeresultat(total.value, cver, aggregeringer);
     }
 
     private List<Aggregering> toAggregeringList(SearchResponse searchResponse) {
@@ -859,6 +862,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
         searchSourceBuilder.query(queryBuilder);
         searchSourceBuilder.from(from);
         searchSourceBuilder.size(size);
+        searchSourceBuilder.trackTotalHits(true); // Consider removing this if we don't actually need accurate counts
 
         // Sortering på nyeste relevante arbeidserfaring
         if (sortQueryBuilder != null && sortQueryBuilder.hasClauses()) {
@@ -882,7 +886,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
         LOGGER.debug("SEARCHREQUEST: " + searchRequest.toString());
 
-        SearchResponse searchResponse = client.search(searchRequest);
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
         LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
         LOGGER.info("Søketid: {}", searchResponse.getTook());
         return searchResponse;
@@ -922,7 +926,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
             if (e.status().getStatus() == 404
                     && e.getMessage().contains("index_not_found_exception")) {
                 LOGGER.info(
-                        "Greide ikke å utfore operasjon mot elastic search, index er ikke opprette.");
+                        "Greide ikke å utfore operasjon mot elastic search, indeks er ikke opprettet.");
                 // return fun.get();
             }
             throw (e);
@@ -960,7 +964,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
             LOGGER.debug("HENTREQUEST: " + searchRequest.toString());
 
-            SearchResponse searchResponse = client.search(searchRequest);
+            SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
             LOGGER.debug("HENTRESPONSE: " + searchResponse);
 
             List<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> liste = StreamSupport
@@ -1058,7 +1062,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
         client.close();
     }
 
-    private static enum UseCase {
+    private enum UseCase {
         AG_SOK, AG_HENT, VEIL_SOK, VEIL_HENT;
     }
 

@@ -1,21 +1,14 @@
 package no.nav.arbeid.cv.kandidatsok.es.domene;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
-import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
-import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 
 import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsGeografiJobbonsker {
 
-    @ElasticTextField(analyzer = "norwegian")
-    @ElasticKeywordField
-    @ElasticCompletionField
     private String geografiKodeTekst;
 
-    @ElasticKeywordField
     private String geografiKode;
 
     public EsGeografiJobbonsker() {

@@ -1,8 +1,3 @@
-@Library('deploy')
-import deploy
-
-def deployLib = new deploy()
-
 // Obtain ephemeral "installation" API token which can be used for GitHub repository access.
 // A token is valid for one hour after creation.
 githubAppId = '23179'
@@ -23,7 +18,7 @@ node {
 
     def committer, committerEmail, changelog, releaseVersion, nextVersion, isSnapshot // metadata
 
-    def mvnHome = tool "maven-3.5.2"
+    def mvnHome = tool "maven-3.6.3"
     def mvn = "${mvnHome}/bin/mvn"
     def javaHome = tool "java 12"
     env.JAVA_HOME="${javaHome}"
@@ -32,9 +27,12 @@ node {
     def repo = "navikt"
     def githubAppToken = newApiToken()
 
-    def color
-
     try {
+
+        // Temporary odfe branch build
+        stage("info") {
+            println("Using Jenkinsfile from odfe branch")
+        }
 
         stage("checkout") {
             cleanWs()
@@ -43,6 +41,7 @@ node {
                 // Would be great if withCredentials could be used to mask the value, mark it as secret, or similar
                 println("Repository URL is https://x-access-token:****@github.com/${repo}/${application}.git")
                 sh(script: "set +x; git clone https://x-access-token:${githubAppToken}@github.com/${repo}/${application}.git .")
+                sh(script: 'git checkout odfe')
             }
         }
 
@@ -63,13 +62,12 @@ node {
             sh 'while read line;do if [ "$line" != "" ];then if [ `grep SNAPSHOT $line/pom.xml | wc -l` -gt 1 ];then echo "SNAPSHOT-dependencies found. See file $line/pom.xml.";exit 1;fi;fi;done < snapshots.txt'
         }
 
-        stage("build and test backend") {
+        stage("build and test") {
             if (isSnapshot) {
-                sh "${mvn} clean install -Dit.skip=true -Djava.io.tmpdir=/tmp/${application} -B -e"
+                sh "${mvn} clean install -Djava.io.tmpdir=/tmp/${application} -B -e"
             } else {
                 println("POM version is not a SNAPSHOT, it is ${pom.version}. Skipping build and testing of backend")
             }
-
         }
 
         stage("release version") {
@@ -103,15 +101,15 @@ node {
             }
         }
 
-        color = '#BDFFC3'
+        def color = '#BDFFC3'
         GString message = ":heart_eyes_cat: Siste commit på ${application} bygd OK.\nSiste commit ${changelog}"
-        slackSend color: color, channel: '#pam_bygg', message: message, teamDomain: 'nav-it', tokenCredentialId: 'pam-slack'
+        slackSend color: color, channel: '#team-bedrift-dev', message: message, teamDomain: 'nav-it', tokenCredentialId: 'pam-slack'
 
 
     } catch (e) {
-        color = '#FF0004'
+        def color = '#FF0004'
         GString message = ":crying_cat_face: :crying_cat_face: :crying_cat_face: :crying_cat_face: :crying_cat_face: :crying_cat_face: Help sad cat! \n Siste commit på ${application} gikk ikkje gjennom. Sjå logg for meir info ${env.BUILD_URL}\nLast commit ${changelog}"
-        slackSend color: color, channel: '#pam_bygg', message: message, teamDomain: 'nav-it', tokenCredentialId: 'pam-slack'
+        slackSend color: color, channel: '#team-bedrift-dev', message: message, teamDomain: 'nav-it', tokenCredentialId: 'pam-slack'
     }
 
 }

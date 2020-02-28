@@ -1,6 +1,7 @@
 ---
-# Amazon Open Distro for Elastic Search 1.2.0 (ES 7.2), single node development setup.
-# Default port for ES http service is 9272.
+# Amazon Open Distro for Elastic Search 1.2.0 (ES 7.2), single node development
+# setup. Default port for ES http service is 9272, but can be overridden by
+# setting ES_PORT env var.
 version: '3'
 services:
   elastic_search:

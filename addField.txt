@@ -1,9 +1,0 @@
-curl -X PUT -u pamcvindexer:A89dwG86vtfs -k https://tpa-pamsecsok-t6-elasticsearch.nais.preprod.local/cvindex/_mapping/cvtype" -H 'Content-Type: application/json' -d'
-{
-  "properties": {w
-    "kommunenrkw": {
-      "type": "keyword"
-    }
-  }
-}
-'

@@ -2,9 +2,6 @@ package no.nav.arbeid.cv.kandidatsok.es.domene;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import no.nav.elasticsearch.mapping.annotations.ElasticCompletionField;
-import no.nav.elasticsearch.mapping.annotations.ElasticKeywordField;
-import no.nav.elasticsearch.mapping.annotations.ElasticTextField;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,20 +15,13 @@ public class EsKompetanse {
 
     private String kompKode;
 
-    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
-    @ElasticKeywordField
-    @ElasticCompletionField
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String kompKodeNavn;
 
-    @ElasticTextField(analyzer = "norwegian")
-    @ElasticKeywordField
     private List<String> sokeNavn = new ArrayList<>();
 
-    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
     private String alternativtNavn;
 
-    @ElasticTextField(copyTo = "fritekst", analyzer = "norwegian")
     private String beskrivelse;
 
     public EsKompetanse() {
