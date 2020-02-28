@@ -1,6 +1,7 @@
 ## PAM Kandidatsok ES
+
 Pam Kandidatsok ES er et bibliotek som håndterer indexering og søk mot Elasticsearch for bruk i 
-kandidatsøk. 
+kandidatsøk og cv-indexer. 
 
 ### Krav for utviklere
 Du trenger Docker installert lokalt, i tillegg til et "vanlig" oppsett med Java og Maven. Se 
@@ -21,18 +22,4 @@ For at innstillingen skal være permanent må du opprette filen
 vm.max_map_count=262144
 ```
 
-nå kan du kjøre *mvn clean install*.
-
-
-### Hvordan kjøre applikasjonen lokalt
-For å kjøre applikasjonen fra IntelliJ må du først starte docker-imaget som inneholder elastic 
-search:
-
-```
-docker-compose -f src/test/resources/docker-compose-kun-es.yml up
-```
-
-Deretter starter du *no.nav.arbeid.cv.es.PamCvIndexerApplication* med VM Options:
-```
--Dspring.profiles.active=dev 
-```
+Nå kan du kjøre *mvn clean install*, som vil kjøre testene og bygge JAR.
