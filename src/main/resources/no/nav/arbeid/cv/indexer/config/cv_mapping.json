@@ -272,6 +272,9 @@
           "type": "text",
           "analyzer": "norwegian",
           "copy_to": "fritekst"
+        },
+        "sted": {
+          "type": "text"
         }
       }
     },
