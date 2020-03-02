@@ -274,7 +274,7 @@
           "copy_to": "fritekst"
         },
         "sted": {
-          "type": "text"
+          "type": "keyword"
         }
       }
     },
