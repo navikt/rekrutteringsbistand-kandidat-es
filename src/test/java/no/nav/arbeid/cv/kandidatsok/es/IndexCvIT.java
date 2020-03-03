@@ -222,6 +222,34 @@ public class IndexCvIT {
     }
 
     @Test
+    public void testForerkortTraktorIkkeInkludertIAndreForerkort() {
+        Sokeresultat sokeresultatForerkort = sokClient.arbeidsgiverSok(
+                Sokekriterier.med().forerkort(Collections.singletonList("T - Traktor")).bygg());
+
+        List<EsCv> cver = sokeresultatForerkort.getCver();
+        assertThat(cver)
+                .doesNotContain(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv5()));
+
+        Set<String> forerkort = new HashSet<>();
+        cver.forEach(cv -> cv.getForerkort().forEach(f -> forerkort.add(f.getForerkortKodeKlasse())));
+        assertThat(forerkort).contains("T - Traktor");
+    }
+
+    @Test
+    public void testForerkortSnoscooterIkkeInkludertIAndreForerkort() {
+        Sokeresultat sokeresultatForerkort = sokClient.arbeidsgiverSok(
+                Sokekriterier.med().forerkort(Collections.singletonList("S - Snøscooter")).bygg());
+
+        List<EsCv> cver = sokeresultatForerkort.getCver();
+        assertThat(cver)
+                .doesNotContain(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv5()));
+
+        Set<String> forerkort = new HashSet<>();
+        cver.forEach(cv -> cv.getForerkort().forEach(f -> forerkort.add(f.getForerkortKodeKlasse())));
+        assertThat(forerkort).contains("S - Snøscooter");
+    }
+
+    @Test
     public void testStemOrdSkalGiSammeResultat() {
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
                 Sokekriterier.med().stillingstitler(Collections.singletonList("Progger")).bygg());
