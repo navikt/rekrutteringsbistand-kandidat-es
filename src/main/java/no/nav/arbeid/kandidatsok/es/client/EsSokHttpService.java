@@ -550,16 +550,16 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 put("A1 - Lett motorsykkel", Set.of("AM - Moped"));
                 put("A2 - Mellomtung motorsykkel", Set.of("AM - Moped", "A1 - Lett motorsykkel"));
                 put("A - Tung motorsykkel", Set.of("AM - Moped", "A1 - Lett motorsykkel", "A2 - Mellomtung motorsykkel"));
-                put("B - Personbil", Set.of("T - Traktor", "S - Snøscooter", "AM - Moped"));
-                put("BE - Personbil med tilhenger", Set.of("B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
-                put("C1 - Lett lastebil", Set.of("B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
-                put("C1E - Lett lastebil med tilhenger", Set.of("C1 - Lett lastebil", "BE - Personbil med tilhenger", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
+                put("B - Personbil", Set.of("AM - Moped"));
+                put("BE - Personbil med tilhenger", Set.of("B - Personbil", "AM - Moped"));
+                put("C1 - Lett lastebil", Set.of("B - Personbil", "AM - Moped"));
+                put("C1E - Lett lastebil med tilhenger", Set.of("C1 - Lett lastebil", "BE - Personbil med tilhenger", "B - Personbil", "AM - Moped"));
                 put("C - Lastebil", Set.of("C1 - Lett lastebil", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
-                put("CE - Lastebil med tilhenger", Set.of("C - Lastebil", "C1E - Lett lastebil med tilhenger", "C1 - Lett lastebil", "BE - Personbil med tilhenger", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
-                put("D1 - Minibuss", Set.of("B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
-                put("D1E - Minibuss med tilhenger", Set.of("D1 - Minibuss", "BE - Personbil med tilhenger", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
-                put("D - Buss", Set.of("D1 - Minibuss", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
-                put("DE - Buss med tilhenger", Set.of("D - Buss", "D1E - Minibuss med tilhenger", "D1 - Minibuss", "BE - Personbil med tilhenger", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
+                put("CE - Lastebil med tilhenger", Set.of("C - Lastebil", "C1E - Lett lastebil med tilhenger", "C1 - Lett lastebil", "BE - Personbil med tilhenger", "B - Personbil", "AM - Moped"));
+                put("D1 - Minibuss", Set.of("B - Personbil", "AM - Moped"));
+                put("D1E - Minibuss med tilhenger", Set.of("D1 - Minibuss", "BE - Personbil med tilhenger", "B - Personbil", "AM - Moped"));
+                put("D - Buss", Set.of("D1 - Minibuss", "B - Personbil", "AM - Moped"));
+                put("DE - Buss med tilhenger", Set.of("D - Buss", "D1E - Minibuss med tilhenger", "D1 - Minibuss", "BE - Personbil med tilhenger", "B - Personbil", "AM - Moped"));
             }
         };
         Set<String> result = new HashSet<>();

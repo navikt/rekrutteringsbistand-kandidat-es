@@ -699,10 +699,15 @@ public class EsCvObjectMother {
         EsForerkort forerkort4 = new EsForerkort(fraIsoDato("1996-02-01"), fraIsoDato("2020-12-01"), "V1.6145",
                 "DE - Buss med tilhenger", null, "");
 
+        EsForerkort forerkort5 = new EsForerkort(fraIsoDato("1996-02-01"), fraIsoDato("2020-12-01"), "V1.6145",
+                "S - Snøscooter", null, "");
+
         ArrayList<EsForerkort> forerkortListe = new ArrayList<>();
         // forerkortListe.add(forerkort2);
         // forerkortListe.add(forerkort3);
         forerkortListe.add(forerkort4);
+        forerkortListe.add(forerkort5);
+
 
 
         EsSprak sprak = new EsSprak(fraIsoDato("2012-12-01"), "78985", "Tysk", "German", "Begynner");
