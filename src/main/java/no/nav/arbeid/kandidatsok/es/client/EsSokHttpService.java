@@ -554,7 +554,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 put("BE - Personbil med tilhenger", Set.of("B - Personbil", "AM - Moped"));
                 put("C1 - Lett lastebil", Set.of("B - Personbil", "AM - Moped"));
                 put("C1E - Lett lastebil med tilhenger", Set.of("C1 - Lett lastebil", "BE - Personbil med tilhenger", "B - Personbil", "AM - Moped"));
-                put("C - Lastebil", Set.of("C1 - Lett lastebil", "B - Personbil", "T - Traktor", "S - Snøscooter", "AM - Moped"));
+                put("C - Lastebil", Set.of("C1 - Lett lastebil", "B - Personbil", "AM - Moped"));
                 put("CE - Lastebil med tilhenger", Set.of("C - Lastebil", "C1E - Lett lastebil med tilhenger", "C1 - Lett lastebil", "BE - Personbil med tilhenger", "B - Personbil", "AM - Moped"));
                 put("D1 - Minibuss", Set.of("B - Personbil", "AM - Moped"));
                 put("D1E - Minibuss med tilhenger", Set.of("D1 - Minibuss", "BE - Personbil med tilhenger", "B - Personbil", "AM - Moped"));
