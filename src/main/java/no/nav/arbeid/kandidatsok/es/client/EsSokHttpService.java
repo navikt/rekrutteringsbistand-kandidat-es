@@ -6,6 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.search.TotalHits;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.ElasticsearchStatusException;
+import org.elasticsearch.action.get.GetRequest;
+import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -943,44 +945,23 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
         return hentFelles(false, kandidatnr);
     }
 
-    private Optional<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> hentFelles(boolean isAg, String kandidatnr) {
+    private Optional<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> hentFelles(boolean forArbeidsgiver, String kandidatnr) {
 
         try {
-            BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery()
-                    .must(QueryBuilders.termQuery("kandidatnr", kandidatnr));
-            if (isAg) {
-                addFilterForArbeidsgivereHent(queryBuilder);
-            } else {
-                addFilterForVeiledereHent(queryBuilder);
-            }
-
-            SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-            searchSourceBuilder.query(queryBuilder).from(0).size(10)
-                    .sort(new FieldSortBuilder("tidsstempel").order(SortOrder.DESC));
-
-            SearchRequest searchRequest = new SearchRequest();
-            searchRequest.indices(indexName);
-            searchRequest.source(searchSourceBuilder);
-
-            LOGGER.debug("HENTREQUEST: " + searchRequest.toString());
-
-            SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
-            LOGGER.debug("HENTRESPONSE: " + searchResponse);
-
-            List<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> liste = StreamSupport
-                    .stream(searchResponse.getHits().spliterator(), false)
-                    .map(hit -> mapEsCvHent(hit)).filter(Objects::nonNull).collect(toList());
-            if (liste.size() == 0) {
-                LOGGER.info("Finner ikke CV for kandidat {}", kandidatnr);
+            GetResponse esCvResponse = client.get(new GetRequest(indexName, kandidatnr), RequestOptions.DEFAULT);
+            if (!esCvResponse.isExists()) {
                 return Optional.empty();
-            } else if (liste.size() > 1) {
-                LOGGER.error("Fant mer enn én CV for kandidat {}. Fant {} CVer: {}", kandidatnr,
-                        liste.size(),
-                        liste.stream()
-                                .map(cv -> String.format("(kandidatnr: %s)", cv.getKandidatnr()))
-                                .collect(Collectors.joining(", ")));
             }
-            return liste.stream().findFirst();
+            no.nav.arbeid.cv.kandidatsok.es.domene.EsCv esCv = mapEsCvHent(kandidatnr, esCvResponse.getSourceAsString());
+            if (forArbeidsgiver) {
+                if (!(esCv.isSynligForArbeidsgiverSok() || esCv.isSynligForVeilederSok())) {
+                    return Optional.empty();
+                }
+            } else if (! esCv.isSynligForVeilederSok()){
+                return Optional.empty();
+            }
+
+            return Optional.ofNullable(esCv);
         } catch (IOException ioe) {
             throw new ElasticException(ioe);
         }
@@ -1045,14 +1026,12 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 .collect(toList());
     }
 
-    private no.nav.arbeid.cv.kandidatsok.es.domene.EsCv mapEsCvHent(SearchHit hit) {
+    private no.nav.arbeid.cv.kandidatsok.es.domene.EsCv mapEsCvHent(String id, String jsonSource) {
         try {
-            return mapper.readValue(hit.getSourceAsString(),
+            return mapper.readValue(jsonSource,
                     no.nav.arbeid.cv.kandidatsok.es.domene.EsCv.class);
         } catch (IOException e) {
-            LOGGER.warn(
-                    "Klarte ikke å parse CV fra Elasticsearch id {}, docId {}, CV: {}, returnerer null",
-                    hit.getId(), hit.docId(), hit.getSourceAsString(), e);
+            LOGGER.warn("Klarte ikke å parse CV fra Elasticsearch med id/kandidatnr {}, returnerer null", id, e);
             return null;
         }
     }

@@ -742,6 +742,30 @@ public class IndexCvIT {
     }
 
     @Test
+    public void veilederHentEnKandidat() {
+        Optional<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> esCv = sokClient.veilederHent("2L");
+        assertThat(esCv.get().getKandidatnr()).isEqualTo("2L");
+    }
+
+    @Test
+    public void veilederHentEnKandidatSomBareErSynligForAg() {
+        Optional<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> esCv = sokClient.veilederHent("1L");
+        assertThat(esCv).isNotPresent();
+    }
+
+    @Test
+    public void arbeidsgiverHentEnKandidat() {
+        Optional<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> esCv = sokClient.arbeidsgiverHent("1L");
+        assertThat(esCv.get().getKandidatnr()).isEqualTo("1L");
+    }
+
+    @Test
+    public void arbeidsgiverHentEnKandidatSomIkkeFinnes() {
+        Optional<no.nav.arbeid.cv.kandidatsok.es.domene.EsCv> esCv = sokClient.arbeidsgiverHent("finnes-ikke");
+        assertThat(esCv).isNotPresent();
+    }
+
+    @Test
     public void sokMedFritekstSkalGiTreffPaaBeskrivelseUavhengigAvCasing() {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("YRKESkarriere").bygg());
         assertThat(sokeresultat.getCver()).hasSize(1);
