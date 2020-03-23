@@ -188,6 +188,34 @@ public class IndexCvIT {
     }
 
     @Test
+    public void testKompetanseSkalBrukeFraseMatchMedMulighetForNoeOmstokkingAvOrd() {
+        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
+                .kompetanser(Collections.singletonList("Mekanisk arbeid generelt")).bygg());
+        Sokeresultat sokeresultat2 = sokClient.arbeidsgiverSok(Sokekriterier.med()
+                .kompetanser(Collections.singletonList("Mekanisk generelt arbeid")).bygg());
+        Sokeresultat sokeresultat3 = sokClient.arbeidsgiverSok(Sokekriterier.med()
+                .kompetanser(Collections.singletonList("arbeid generelt mekanisk")).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver2 = sokeresultat2.getCver();
+        List<EsCv> cver3 = sokeresultat3.getCver();
+
+        assertThat(cver).isNotEmpty();
+        assertThat(cver.size()).isEqualTo(cver2.size());
+        assertThat(cver.size()).isEqualTo(cver3.size());
+    }
+
+    @Test
+    public void testKompetanseFraseSkalIkkeMatchePaaTversAvUlikeKompetanserFlerverdi() {
+        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
+                .kompetanser(Collections.singletonList("kranførerarbeid landtransport")).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+
+        assertThat(cver).isEmpty();
+    }
+
+    @Test
     public void testFlereInputUtdanningGirMindreTreff() {
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
                 .utdanninger(Collections.singletonList("Bygg og anlegg")).bygg());

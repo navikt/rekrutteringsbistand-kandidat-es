@@ -632,7 +632,10 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     }
 
     private void addKompetanseQuery(String kompetanse, BoolQueryBuilder boolQueryBuilder) {
-        boolQueryBuilder.should(QueryBuilders.matchQuery("samletKompetanseObj.samletKompetanseTekst", kompetanse).operator(Operator.AND));
+        //boolQueryBuilder.should(QueryBuilders.matchQuery("samletKompetanseObj.samletKompetanseTekst", kompetanse).operator(Operator.AND));
+        // Bruk frasesøk for å sikre at ikke settet av søketermer matcher på tvers av ulike kompetanser.
+        // Dette er avhengig av at feltet er indeksert med position increment gap > 0, siden vi tillater noe slop (omstokking av ord).
+        boolQueryBuilder.should(QueryBuilders.matchPhraseQuery("samletKompetanseObj.samletKompetanseTekst", kompetanse).slop(4));
         LOGGER.debug("ADDING kompetanse");
     }
 

@@ -574,6 +574,7 @@
         "samletKompetanseTekst": {
           "type": "text",
           "analyzer": "norwegian",
+          "position_increment_gap": 100,
           "fields": {
             "completion": {
               "type": "completion",
