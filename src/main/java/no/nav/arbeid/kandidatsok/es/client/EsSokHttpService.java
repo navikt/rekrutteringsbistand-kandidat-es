@@ -336,6 +336,10 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 addHovedmalToQuery(sk.hovedmaalKode(), queryBuilder);
             }
 
+            if (isNotEmpty(sk.oppstartKoder())) {
+                addOppstartKoderToQuery(sk.oppstartKoder(), queryBuilder);
+            }
+
             if (sk.isAntallAarFraSet() && sk.isAntallAarTilSet()) {
                 addFodselsdatoToQuery(sk.antallAarFra(), sk.antallAarTil(), queryBuilder);
             } else if (sk.isAntallAarFraSet()) {
@@ -597,6 +601,13 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 .forEach(s -> addHovedmalToQuery(s, innerBoolQueryBuilder));
     }
 
+    private void addOppstartKoderToQuery(List<String> oppstartKoder, BoolQueryBuilder boolQueryBuilder) {
+        BoolQueryBuilder innerBoolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(innerBoolQueryBuilder);
+        oppstartKoder.stream().filter((StringUtils::isNotBlank))
+                .forEach(s -> addOppstartKodeToQuery(s, innerBoolQueryBuilder));
+    }
+
     private void addVeiledereToQuery(List<String> veiledere, BoolQueryBuilder boolQueryBuilder) {
         BoolQueryBuilder innerBoolQueryBuilder = QueryBuilders.boolQuery();
         boolQueryBuilder.must(innerBoolQueryBuilder);
@@ -694,6 +705,11 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     private void addHovedmalToQuery(String hovedmalKode, BoolQueryBuilder boolQueryBuilder) {
         boolQueryBuilder.should(QueryBuilders.termQuery("hovedmaalkode", hovedmalKode));
         LOGGER.debug("ADDING hovedmal");
+    }
+
+    private void addOppstartKodeToQuery(String oppstartKode, BoolQueryBuilder boolQueryBuilder) {
+        boolQueryBuilder.should(QueryBuilders.termQuery("oppstartKode", oppstartKode));
+        LOGGER.debug("ADDING oppstartKode");
     }
 
     private void addKommunenummerQuery(String geografi, BoolQueryBuilder boolQueryBuilder) {
