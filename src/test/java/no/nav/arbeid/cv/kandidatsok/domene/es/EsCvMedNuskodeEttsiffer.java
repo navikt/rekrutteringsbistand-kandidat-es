@@ -42,7 +42,7 @@ public class EsCvMedNuskodeEttsiffer {
                 "Dette er beskrivelsen av hva jeg har gjort i min yrkeskarriere",
                 "J", d("2016-05-30"), "Dinvei 2", "", "", "2222", "HUSKER IKKE", "NO", 301,
                 false, new Date(), 401, FALSE, null, "IKVAL", null, "NAV Gamle Oslo", FALSE, FALSE,
-                null, null, null, "0401", "H149390", false, "Lier", "Viken");
+                true, true, null, "0401", "H149390", false, "Lier", "Viken");
 
         esCv.addUtdanning(utdanningsListe);
 
@@ -66,7 +66,7 @@ public class EsCvMedNuskodeEttsiffer {
                 "Dette er beskrivelsen av hva jeg har gjort i min yrkeskarriere",
                 "J", d("2016-05-30"), "Dinvei 2", "", "", "1122", "USIKKER", "NO", 301,
                 false, new Date(), 401, FALSE, null, "IKVAL", null, "NAV Gamle Oslo", FALSE, FALSE,
-                null, null, null, "0401", "H149390", false, "Lier", "Viken");
+                true, true, null, "0401", "H149390", false, "Lier", "Viken");
 
         esCv.addUtdanning(utdanningsListe);
 
@@ -92,7 +92,7 @@ public class EsCvMedNuskodeEttsiffer {
                 "Dette er beskrivelsen av hva jeg har gjort i min yrkeskarriere",
                 "J", d("2016-05-30"), "Dinvei 2", "", "", "1111", "HUSKER IKKE", "NO", 301,
                 false, new Date(), 401, FALSE, null, "IKVAL", null, "NAV Gamle Oslo", FALSE, FALSE,
-                null, null, null, "0401", "H149390", false, "Lier", "Viken");
+                true, true, null, "0401", "H149390", false, "Lier", "Viken");
 
         esCv.addUtdanning(utdanningsListe);
 
@@ -114,7 +114,7 @@ public class EsCvMedNuskodeEttsiffer {
                 "Dette er beskrivelsen av hva jeg har gjort i min yrkeskarriere",
                 "J", d("2016-05-30"), "Veien 2", "", "", "1111", "OSLO", "NO", 301,
                 false, new Date(), 401, FALSE, null, "IKVAL", null, "NAV Gamle Oslo", FALSE, FALSE,
-                null, null, null, "0401", "H149390", false, "Lier", "Viken");
+                true, true, null, "0401", "H149390", false, "Lier", "Viken");
 
         esCv.addUtdanning(utdanningsListe);
 

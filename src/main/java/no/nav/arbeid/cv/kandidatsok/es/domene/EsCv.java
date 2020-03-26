@@ -240,55 +240,6 @@ public class EsCv {
         this.kommuneNavn = kommuneNavn;
     }
 
-    private Boolean beregnSynlighetForVeilederSokBasertPaaGamleArenaData() {
-        if (Boolean.TRUE.equals(this.doed)) {
-            return false;
-        }
-        if ("6".equals(this.frKode)) {
-            return false;
-        }
-        if ("7".equals(this.frKode)) {
-            return false;
-        }
-        if (!("ARBS".equals(this.formidlingsgruppekode)
-                || "PARBS".equals(this.formidlingsgruppekode)
-                || "RARBS".equals(this.formidlingsgruppekode))) {
-            return false;
-        }
-        if (Boolean.TRUE.equals(this.fritattKandidatsok)) {
-            return false;
-        }
-        return true;
-    }
-
-    private Boolean beregnSynlighetForArbeidsgiverSokBasertPaaGamleArenaData() {
-        if (Boolean.TRUE.equals(this.doed)) {
-            return false;
-        }
-        if ("6".equals(this.frKode)) {
-            return false;
-        }
-        if ("7".equals(this.frKode)) {
-            return false;
-        }
-        if (!("JOBBS".equals(this.formidlingsgruppekode)
-                || "ARBS".equals(this.formidlingsgruppekode)
-                || "PARBS".equals(this.formidlingsgruppekode)
-                || "RARBS".equals(this.formidlingsgruppekode))) {
-            return false;
-        }
-        if (Boolean.TRUE.equals(this.fritattAgKandidatsok)) {
-            return false;
-        }
-        if (Boolean.TRUE.equals(this.fritattKandidatsok)) {
-            return false;
-        }
-        if (Boolean.FALSE.equals(this.harKontaktinformasjon)) {
-            return false;
-        }
-        return true;
-    }
-
     // Adderfunksjoner
     public void addUtdanning(EsUtdanning utdanning) {
         this.utdanning.add(utdanning);
@@ -389,19 +340,12 @@ public class EsCv {
     public void addKurs(EsKurs kurs) {
         if (kurs != null) {
             this.kursObj.add(kurs);
-//            if (StringUtils.isNotBlank(kurs.getTittel())) {
-//                this.addSamletKompetanse(
-//                        Collections.singletonList(new EsSamletKompetanse(kurs.getTittel())));
-//            }
         }
     }
 
     public void addKurs(Collection<EsKurs> kursListe) {
         if (kursListe != null) {
             this.kursObj.addAll(kursListe);
-            // this.addSamletKompetanse(kursListe.stream().map(s -> s.getTittel())
-            // .filter(t -> StringUtils.isNotBlank(t)).map(t -> new EsSamletKompetanse(t))
-            // .collect(Collectors.toList()));
         }
     }
 
@@ -774,7 +718,9 @@ public class EsCv {
                 && Objects.equals(totalLengdeYrkeserfaring, esCv.totalLengdeYrkeserfaring)
                 && Objects.equals(oppstartKode, esCv.oppstartKode)
                 && Objects.equals(tilretteleggingsbehov, esCv.tilretteleggingsbehov)
-                && Objects.equals(veilTilretteleggingsbehovObj, esCv.veilTilretteleggingsbehovObj);
+                && Objects.equals(veilTilretteleggingsbehovObj, esCv.veilTilretteleggingsbehovObj)
+                && Objects.equals(kommuneNavn, esCv.kommuneNavn)
+                && Objects.equals(fylkeNavn, esCv.fylkeNavn);
     }
 
     @Override
@@ -787,7 +733,8 @@ public class EsCv {
                 sertifikatObj, forerkort, sprak, kursObj, vervObj, geografiJobbonsker, yrkeJobbonskerObj,
                 omfangJobbonskerObj, ansettelsesformJobbonskerObj, arbeidstidsordningJobbonskerObj,
                 arbeidstidJobbonskerObj, arbeidsdagerJobbonskerObj, samletKompetanseObj, totalLengdeYrkeserfaring,
-                synligForArbeidsgiverSok, synligForVeilederSok, oppstartKode, tilretteleggingsbehov, veilTilretteleggingsbehovObj);
+                synligForArbeidsgiverSok, synligForVeilederSok, oppstartKode, tilretteleggingsbehov, veilTilretteleggingsbehovObj,
+                kommuneNavn, fylkeNavn);
     }
 
     @Override

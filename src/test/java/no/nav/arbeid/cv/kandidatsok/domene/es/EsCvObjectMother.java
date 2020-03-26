@@ -219,8 +219,8 @@ public class EsCvObjectMother {
         EsCv esCv = new EsCv(nteAktorId(1), "01016012345", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "JOBBS",
                 "unnasluntrer@mailinator.com", "(+47) 22334455", "12345678", "NO", "1L",
                 "hererjeg", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 5001, false,
-                new Date(), 301, FALSE, null, "IKVAL", null, "0220 NAV Asker", FALSE, FALSE, true, false, "LEDIG_NAA",
-                "5001", "H149390", false, "Lier", "Viken");
+                new Date(), 301, FALSE, null, "IKVAL", null, "0220 NAV Asker", FALSE, FALSE,
+                true, false, "LEDIG_NAA", "5001", "H149390", false, "Viken", "Lier");
         esCv.addUtdanning(utdanningsListe);
         esCv.addYrkeserfaring(yrkeserfaringsListe);
         esCv.addKompetanse(kompetanseList);
@@ -415,7 +415,7 @@ public class EsCvObjectMother {
                 "Dette er beskrivelsen av hva jeg har gjort i min yrkeskarriere",
                 "J", fraIsoDato("2016-05-30"), "Dinvei 2", "", "", "1337", "HUSKER IKKE", "NO", 301,
                 false, new Date(), 401, FALSE, null, "IKVAL", null, "0316 NAV Gamle Oslo", FALSE, FALSE,
-                null, null, null, "0401", "H149390", false, "Lier", "Viken");
+                true, true, null, "0401", "H149390", false, "Viken", "Lier");
         esCv.addUtdanning(utdanningListe);
         esCv.addYrkeserfaring(yrkeserfaringListe);
         esCv.addKompetanse(kompetanseListe);
@@ -605,7 +605,7 @@ public class EsCvObjectMother {
                 "Jeg jobber like godt selvstendig som i team",
                 "J", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "2323", "INGEBERG", "NO", 301, false,
                 new Date(), 301, FALSE, null, "VARIG", null, "0220 NAV Asker", FALSE, FALSE,
-                null, null, null, "0301", "H149390", true, "Drammen", "Viken");
+                true, true, null, "0301", "H149390", true, "Viken", "Drammen");
         esCv.addUtdanning(utdanningListe);
         esCv.addYrkeserfaring(yrkeserfaringListe);
         esCv.addKompetanse(kompetanseListe);
@@ -793,7 +793,7 @@ public class EsCvObjectMother {
                 "erjegmed@mailinator.com", "(+47) 22334455", "12345678", "NO", "4L", "",
                 "J", fraIsoDato("2016-05-30"), "Noensvei 1", "", "", "9730", "KARASJOK", "NO", 2021, false,
                 new Date(), 2021, FALSE, null, "VURDI", null, "0602 NAV Drammen", FALSE, FALSE,
-                null, null, null, "2021", "H149390", true, "Oslo", "Oslo");
+                true, true, null, "2021", "H149390", true, "Oslo", "Oslo");
         esCv.addUtdanning(utdanningListe);
         esCv.addYrkeserfaring(yrkeserfaringListe);
         esCv.addKompetanse(kompetanseListe);
@@ -986,7 +986,7 @@ public class EsCvObjectMother {
                 "bobob@mailinator.com", "(+47) 22334455", "12345678", "NO", "5L", "", "J",
                 fraIsoDato("2016-05-30"), "Minvei 90", "", "", "0219", "Bærum", "NO", 219, false, new Date(),
                 219, FALSE, null, null, null, "0215 NAV Drøbak", FALSE, FALSE,
-                null, null, null, "0219", "H149390", false, null, null);
+                true, true, null, "0219", "H149390", false, null, null);
         esCv.addUtdanning(utdanningListe);
         esCv.addYrkeserfaring(yrkeserfaringListe);
         esCv.addKompetanse(kompetanseListe);
@@ -1151,7 +1151,7 @@ public class EsCvObjectMother {
                 "bobob@mailinator.com", "(+47) 22334455", "12345678", "NO", "5L", "", "J",
                 fraIsoDato("2016-05-30"), "Minvei 90", "", "", "0565", "OSLO", "NO", 301, false, new Date(),
                 301, FALSE, null, null, null, null, FALSE, FALSE,
-                null, null, null, "0301", "H149390", false, "Lier", "Viken");
+                true, true, null, "0301", "H149390", false, "Viken", "Lier");
         esCv.addUtdanning(utdanningListe);
         esCv.addYrkeserfaring(yrkeserfaringListe);
         esCv.addKompetanse(kompetanseListe);
@@ -1336,7 +1336,7 @@ public class EsCvObjectMother {
                 "unnasluntrer@mailinator.com", "(+47) 22334455", "12345678", "NO", "1L",
                 "", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, FALSE, null, null, null, null, FALSE, FALSE,
-                null, null, null, "0301", "H149390", false, null, null);
+                true, true, null, "0301", "H149390", false, null, null);
         esCv.addUtdanning(utdanningsListe);
         esCv.addYrkeserfaring(yrkeserfaringsListe);
         esCv.addKompetanse(kompetanseList);
@@ -1526,7 +1526,7 @@ public class EsCvObjectMother {
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "6L",
                 "", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, FALSE, "5", null, null, null, FALSE, FALSE,
-                null, null, null, "0301", "H149390", true, null, null);
+                true, true, null, "0301", "H149390", true, null, null);
         esCv.addUtdanning(utdanningsListe);
         esCv.addYrkeserfaring(yrkeserfaringsListe);
         esCv.addKompetanse(kompetanseList);
@@ -1715,7 +1715,7 @@ public class EsCvObjectMother {
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "7L",
                 "", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, TRUE, null, null, null, null, FALSE, FALSE,
-                null, null, null, "0301", "H149390", false, null, null
+                false, false, null, "0301", "H149390", false, null, null
         );
         esCv.addUtdanning(utdanningsListe);
         esCv.addYrkeserfaring(yrkeserfaringsListe);
@@ -1905,7 +1905,7 @@ public class EsCvObjectMother {
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "8L",
                 "", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, FALSE, "6", null, null, null, FALSE, FALSE,
-                null, null, null, "0301", "H149390", false, null, null);
+                false, false, null, "0301", "H149390", false, null, null);
         esCv.addUtdanning(utdanningsListe);
         esCv.addYrkeserfaring(yrkeserfaringsListe);
         esCv.addKompetanse(kompetanseList);
@@ -2094,7 +2094,7 @@ public class EsCvObjectMother {
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "9L",
                 "", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, FALSE, "7", null, null, null, FALSE, FALSE,
-                null, null, null, "0301", "H149390", false, null, null);
+                false, false, null, "0301", "H149390", false, null, null);
         esCv.addUtdanning(utdanningsListe);
         esCv.addYrkeserfaring(yrkeserfaringsListe);
         esCv.addKompetanse(kompetanseList);
@@ -2283,7 +2283,7 @@ public class EsCvObjectMother {
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "10L",
                 "", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, FALSE, null, "IKVAL", null, null, TRUE, FALSE,
-                null, null, null, "0301", "H149390", false, null, null);
+                false, false, null, "0301", "H149390", false, null, null);
         esCv.addUtdanning(utdanningsListe);
         esCv.addYrkeserfaring(yrkeserfaringsListe);
         esCv.addKompetanse(kompetanseList);
@@ -2472,7 +2472,7 @@ public class EsCvObjectMother {
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "11L",
                 "", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, FALSE, null, null, null, null, FALSE, TRUE,
-                null, null, null, "0301", "H149390", false, null, null);
+                false, true, null, "0301", "H149390", false, null, null);
         esCv.addUtdanning(utdanningsListe);
         esCv.addYrkeserfaring(yrkeserfaringsListe);
         esCv.addKompetanse(kompetanseList);
@@ -2491,6 +2491,6 @@ public class EsCvObjectMother {
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "12L",
                 "", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, FALSE, null, null, null, null, FALSE, TRUE,
-                null, null, null, "0301", "H149390", false, null, null);
+                false, true, null, "0301", "H149390", false, null, null);
     }
 }
