@@ -42,6 +42,10 @@ public class EsCv {
 
     private List<EsForerkort> forerkort = new ArrayList<>();
 
+    private String kommuneNavn;
+
+    private String fylkeNavn;
+
     private String oppstartKode;
 
     private float score = Float.NEGATIVE_INFINITY; // Default fra Elasticsearch..
@@ -53,7 +57,7 @@ public class EsCv {
                 String poststed, String epostadresse, String telefon, String mobiltelefon,
                 String formidlingsgruppekode, String kandidatnr,
                 int totalLengdeYrkeserfaring, String kvalifiseringsgruppekode, List<EsUtdanning> utdanning,
-                List<EsYrkeserfaring> yrkeserfaring, String oppstart, List<EsForerkort> forerkort) {
+                List<EsYrkeserfaring> yrkeserfaring, String oppstart, List<EsForerkort> forerkort, String kommuneNavn, String fylkeNavn) {
         this.aktorId = aktorId;
         this.fodselsnummer = fodselsnummer;
         this.fornavn = fornavn;
@@ -72,6 +76,8 @@ public class EsCv {
         this.yrkeserfaring = yrkeserfaring;
         this.oppstartKode = oppstart;
         this.forerkort = forerkort;
+        this.kommuneNavn = kommuneNavn;
+        this.fylkeNavn = fylkeNavn;
     }
 
     public float getScore() {
@@ -175,6 +181,14 @@ public class EsCv {
 
     public List<EsForerkort> getForerkort() { return this.forerkort; }
 
+    public String getKommuneNavn() {
+        return kommuneNavn;
+    }
+
+    public String getFylkeNavn() {
+        return fylkeNavn;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -196,7 +210,9 @@ public class EsCv {
                 Objects.equals(kvalifiseringsgruppekode, esCv.kvalifiseringsgruppekode) &&
                 Objects.equals(utdanning, esCv.utdanning) &&
                 Objects.equals(yrkeserfaring, esCv.yrkeserfaring) &&
-                Objects.equals(oppstartKode, esCv.oppstartKode);
+                Objects.equals(oppstartKode, esCv.oppstartKode) &&
+                Objects.equals(kommuneNavn, esCv.kommuneNavn) &&
+                Objects.equals(fylkeNavn, esCv.fylkeNavn);
 
     }
 
@@ -206,7 +222,7 @@ public class EsCv {
                 aktorId, fodselsnummer, fornavn, etternavn, fodselsdato, fodselsdatoErDnr, poststed,
                 epostadresse, telefon, mobiltelefon,
                 formidlingsgruppekode, kandidatnr, totalLengdeYrkeserfaring,
-                kvalifiseringsgruppekode, utdanning, yrkeserfaring, oppstartKode
+                kvalifiseringsgruppekode, utdanning, yrkeserfaring, oppstartKode, kommuneNavn, fylkeNavn
         );
     }
 
@@ -232,6 +248,8 @@ public class EsCv {
                 ", score=" + score +
                 ", oppstartKode=" + oppstartKode +
                 ", forerkort=" + forerkort +
+                ", kommuneNavn=" + kommuneNavn +
+                ", fylkeNavn=" + fylkeNavn +
                 '}';
     }
 }

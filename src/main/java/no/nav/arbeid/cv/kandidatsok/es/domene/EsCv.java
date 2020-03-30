@@ -64,6 +64,10 @@ public class EsCv {
 
     private String kommunenummerstring;
 
+    private String fylkeNavn;
+
+    private String kommuneNavn;
+
     private Boolean disponererBil;
 
     private Date tidsstempel; // TODO Dårlig/vagt navn, bør hete sistEndret, slik at det stemmer med CV AVRO-modellen
@@ -140,16 +144,56 @@ public class EsCv {
     public EsCv() {
     }
 
-    public EsCv(String aktorId, String fodselsnummer, String fornavn, String etternavn, Date fodselsdato,
-                Boolean fodselsdatoErDnr, String formidlingsgruppekode, String epostadresse,
-                String mobiltelefon, String telefon, String statsborgerskap, String kandidatnr, String beskrivelse,
-                String samtykkeStatus, Date samtykkeDato, String adresselinje1, String adresselinje2,
-                String adresselinje3, String postnummer, String poststed, String landkode,
-                Integer kommunenummer, Boolean disponererBil, Date tidsstempel, Integer kommunenummerkw,
-                Boolean doed, String frKode, String kvalifiseringsgruppekode, String hovedmaalkode, String orgenhet,
-                Boolean fritattKandidatsok, Boolean fritattAgKandidatsok,
-                Boolean synligForArbeidsgiverSok, Boolean synligForVeilederSok, String oppstartKode, String kommunenummerstring,
-                String veileder, boolean tilretteleggingsbehov) {
+    public EsCv(
+            String aktorId,
+            String fodselsnummer,
+            String fornavn,
+            String etternavn,
+            Date fodselsdato,
+
+            Boolean fodselsdatoErDnr,
+            String formidlingsgruppekode,
+            String epostadresse,
+            String mobiltelefon,
+            String telefon,
+
+            String statsborgerskap,
+            String kandidatnr,
+            String beskrivelse,
+            String samtykkeStatus,
+            Date samtykkeDato,
+
+            String adresselinje1,
+            String adresselinje2,
+            String adresselinje3,
+            String postnummer,
+            String poststed,
+
+            String landkode,
+            Integer kommunenummer,
+            Boolean disponererBil,
+            Date tidsstempel,
+            Integer kommunenummerkw,
+
+            Boolean doed,
+            String frKode,
+            String kvalifiseringsgruppekode,
+            String hovedmaalkode,
+            String orgenhet,
+
+            Boolean fritattKandidatsok,
+            Boolean fritattAgKandidatsok,
+            Boolean synligForArbeidsgiverSok,
+            Boolean synligForVeilederSok,
+            String oppstartKode,
+
+            String kommunenummerstring,
+            String veileder,
+            boolean tilretteleggingsbehov,
+            String fylkeNavn,
+            String kommuneNavn
+            ) {
+
         this.aktorId = aktorId;
         this.fodselsnummer = fodselsnummer;
         this.fornavn = fornavn;
@@ -192,107 +236,8 @@ public class EsCv {
         this.veileder = veileder == null ? null : veileder.toLowerCase();
         this.inkluderingsbehov = tilretteleggingsbehov;
         this.tilretteleggingsbehov = tilretteleggingsbehov;
-    }
-
-    public EsCv(String aktorId, String fodselsnummer, String fornavn, String etternavn, Date fodselsdato,
-                Boolean fodselsdatoErDnr, String formidlingsgruppekode, String epostadresse,
-                String mobiltelefon, String telefon, String statsborgerskap, String kandidatnr, String beskrivelse,
-                String samtykkeStatus, Date samtykkeDato, String adresselinje1, String adresselinje2,
-                String adresselinje3, String postnummer, String poststed, String landkode,
-                Integer kommunenummer, Boolean disponererBil, Date tidsstempel, Integer kommunenummerkw,
-                Boolean doed, String frKode, String kvalifiseringsgruppekode, String hovedmaalkode, String orgenhet,
-                Boolean fritattKandidatsok, Boolean fritattAgKandidatsok, String kommunenummerstring, String veileder,
-                boolean tilretteleggingsbehov) {
-        this.aktorId = aktorId;
-        this.fodselsnummer = fodselsnummer;
-        this.fornavn = fornavn;
-        this.etternavn = etternavn;
-        this.fodselsdato = fodselsdato;
-        this.fodselsdatoErDnr = fodselsdatoErDnr;
-        this.formidlingsgruppekode = formidlingsgruppekode;
-        this.epostadresse = epostadresse;
-        this.mobiltelefon = mobiltelefon;
-        this.telefon = telefon;
-        this.harKontaktinformasjon = !StringUtils.isAllBlank(this.epostadresse, this.mobiltelefon, this.telefon);
-        this.statsborgerskap = statsborgerskap;
-        this.kandidatnr = kandidatnr;
-        this.arenaKandidatnr = kandidatnr;
-        this.beskrivelse = beskrivelse;
-        this.samtykkeStatus = samtykkeStatus;
-        this.samtykkeDato = samtykkeDato;
-        this.adresselinje1 = adresselinje1;
-        this.adresselinje2 = adresselinje2;
-        this.adresselinje3 = adresselinje3;
-        this.postnummer = postnummer;
-        this.poststed = poststed;
-        this.landkode = landkode;
-        this.kommunenummer = kommunenummer;
-        this.disponererBil = disponererBil;
-        this.tidsstempel = tidsstempel;
-        this.kommunenummerkw = kommunenummerkw;
-        this.doed = doed;
-        this.frKode = frKode;
-        this.kvalifiseringsgruppekode = kvalifiseringsgruppekode;
-        this.hovedmaalkode = hovedmaalkode;
-        this.orgenhet = orgenhet;
-        this.navkontor = orgenhet;
-        this.fritattKandidatsok = fritattKandidatsok;
-        this.fritattAgKandidatsok = fritattAgKandidatsok;
-        this.synligForArbeidsgiverSok = beregnSynlighetForArbeidsgiverSokBasertPaaGamleArenaData();
-        this.synligForVeilederSok = beregnSynlighetForVeilederSokBasertPaaGamleArenaData();
-        this.kommunenummerstring = kommunenummerstring;
-        this.veileder = veileder == null ? null : veileder.toLowerCase();
-        this.inkluderingsbehov = tilretteleggingsbehov;
-        this.tilretteleggingsbehov = tilretteleggingsbehov;
-    }
-
-    private Boolean beregnSynlighetForVeilederSokBasertPaaGamleArenaData() {
-        if (Boolean.TRUE.equals(this.doed)) {
-            return false;
-        }
-        if ("6".equals(this.frKode)) {
-            return false;
-        }
-        if ("7".equals(this.frKode)) {
-            return false;
-        }
-        if (!("ARBS".equals(this.formidlingsgruppekode)
-                || "PARBS".equals(this.formidlingsgruppekode)
-                || "RARBS".equals(this.formidlingsgruppekode))) {
-            return false;
-        }
-        if (Boolean.TRUE.equals(this.fritattKandidatsok)) {
-            return false;
-        }
-        return true;
-    }
-
-    private Boolean beregnSynlighetForArbeidsgiverSokBasertPaaGamleArenaData() {
-        if (Boolean.TRUE.equals(this.doed)) {
-            return false;
-        }
-        if ("6".equals(this.frKode)) {
-            return false;
-        }
-        if ("7".equals(this.frKode)) {
-            return false;
-        }
-        if (!("JOBBS".equals(this.formidlingsgruppekode)
-                || "ARBS".equals(this.formidlingsgruppekode)
-                || "PARBS".equals(this.formidlingsgruppekode)
-                || "RARBS".equals(this.formidlingsgruppekode))) {
-            return false;
-        }
-        if (Boolean.TRUE.equals(this.fritattAgKandidatsok)) {
-            return false;
-        }
-        if (Boolean.TRUE.equals(this.fritattKandidatsok)) {
-            return false;
-        }
-        if (Boolean.FALSE.equals(this.harKontaktinformasjon)) {
-            return false;
-        }
-        return true;
+        this.fylkeNavn = fylkeNavn;
+        this.kommuneNavn = kommuneNavn;
     }
 
     // Adderfunksjoner
@@ -395,19 +340,12 @@ public class EsCv {
     public void addKurs(EsKurs kurs) {
         if (kurs != null) {
             this.kursObj.add(kurs);
-//            if (StringUtils.isNotBlank(kurs.getTittel())) {
-//                this.addSamletKompetanse(
-//                        Collections.singletonList(new EsSamletKompetanse(kurs.getTittel())));
-//            }
         }
     }
 
     public void addKurs(Collection<EsKurs> kursListe) {
         if (kursListe != null) {
             this.kursObj.addAll(kursListe);
-            // this.addSamletKompetanse(kursListe.stream().map(s -> s.getTittel())
-            // .filter(t -> StringUtils.isNotBlank(t)).map(t -> new EsSamletKompetanse(t))
-            // .collect(Collectors.toList()));
         }
     }
 
@@ -601,6 +539,14 @@ public class EsCv {
         return kommunenummerstring;
     }
 
+    public String getFylkeNavn() {
+        return fylkeNavn;
+    }
+
+    public String getKommuneNavn() {
+        return kommuneNavn;
+    }
+
     public Boolean getDisponererBil() {
         return disponererBil;
     }
@@ -772,7 +718,9 @@ public class EsCv {
                 && Objects.equals(totalLengdeYrkeserfaring, esCv.totalLengdeYrkeserfaring)
                 && Objects.equals(oppstartKode, esCv.oppstartKode)
                 && Objects.equals(tilretteleggingsbehov, esCv.tilretteleggingsbehov)
-                && Objects.equals(veilTilretteleggingsbehovObj, esCv.veilTilretteleggingsbehovObj);
+                && Objects.equals(veilTilretteleggingsbehovObj, esCv.veilTilretteleggingsbehovObj)
+                && Objects.equals(kommuneNavn, esCv.kommuneNavn)
+                && Objects.equals(fylkeNavn, esCv.fylkeNavn);
     }
 
     @Override
@@ -785,7 +733,8 @@ public class EsCv {
                 sertifikatObj, forerkort, sprak, kursObj, vervObj, geografiJobbonsker, yrkeJobbonskerObj,
                 omfangJobbonskerObj, ansettelsesformJobbonskerObj, arbeidstidsordningJobbonskerObj,
                 arbeidstidJobbonskerObj, arbeidsdagerJobbonskerObj, samletKompetanseObj, totalLengdeYrkeserfaring,
-                synligForArbeidsgiverSok, synligForVeilederSok, oppstartKode, tilretteleggingsbehov, veilTilretteleggingsbehovObj);
+                synligForArbeidsgiverSok, synligForVeilederSok, oppstartKode, tilretteleggingsbehov, veilTilretteleggingsbehovObj,
+                kommuneNavn, fylkeNavn);
     }
 
     @Override
