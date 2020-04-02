@@ -355,6 +355,10 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 addVeilTilretteleggingsbehovToQuery(sk.veilTilretteleggingsbehov(), queryBuilder);
             }
 
+            if (isNotEmpty(sk.veilTilretteleggingsbehovUtelukkes())) {
+                addVeilTilretteleggingsbehovUtelukkesToQuery(sk.veilTilretteleggingsbehovUtelukkes(), queryBuilder);
+            }
+
             return toSokeresultat(esExec(() -> search(UseCase.VEIL_SOK, queryBuilder, sk.fraIndex(),
                     sk.antallResultater(), sortQueryBuilder)));
         } catch (IOException ioe) {
@@ -374,6 +378,16 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 .forEach(g -> addVeilTilretteleggingsbehovQuery(g, veilTilretteleggingsbehovQueryBuilder));
 
         boolQueryBuilder.must(veilTilretteleggingsbehovQueryBuilder);
+    }
+
+    private void addVeilTilretteleggingsbehovUtelukkesToQuery(List<String> veilTilretteleggingsbehovUtelukkes, BoolQueryBuilder boolQueryBuilder) {
+
+        BoolQueryBuilder veilTilretteleggingsbehovUtelukkesQueryBuilder = QueryBuilders.boolQuery();
+
+        veilTilretteleggingsbehovUtelukkes.stream().filter(StringUtils::isNotBlank)
+                .forEach(g -> addVeilTilretteleggingsbehovUtelukkesQuery(g, veilTilretteleggingsbehovUtelukkesQueryBuilder));
+
+        boolQueryBuilder.mustNot(veilTilretteleggingsbehovUtelukkesQueryBuilder);
     }
 
     private void addFilterForArbeidsgivereSok(BoolQueryBuilder boolQueryBuilder) {
@@ -676,6 +690,10 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
     private void addVeilTilretteleggingsbehovQuery(String veilTilretteleggingsbehov, BoolQueryBuilder boolQueryBuilder) {
         boolQueryBuilder.should(QueryBuilders.matchQuery("veilTilretteleggingsbehov", veilTilretteleggingsbehov).operator(Operator.AND));
+    }
+
+    private void addVeilTilretteleggingsbehovUtelukkesQuery(String veilTilretteleggingsbehovUtelukkes, BoolQueryBuilder boolQueryBuilder) {
+        boolQueryBuilder.should(QueryBuilders.matchQuery("veilTilretteleggingsbehov", veilTilretteleggingsbehovUtelukkes).operator(Operator.AND));
     }
 
     private void addForerkortQuery(String forerkort, BoolQueryBuilder boolQueryBuilder) {
