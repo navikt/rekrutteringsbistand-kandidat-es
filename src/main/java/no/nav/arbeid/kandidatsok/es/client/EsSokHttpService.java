@@ -43,7 +43,6 @@ import static java.util.stream.Collectors.toMap;
 public class EsSokHttpService implements EsSokService, AutoCloseable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EsSokHttpService.class);
-    public static final String PERMITTERT = "permittert";
     private final RestHighLevelClient client;
     private final ObjectMapper mapper;
     private final String indexName;
@@ -377,9 +376,9 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
     private void addFilterForPermittert(BoolQueryBuilder queryBuilder, boolean inkluder) {
         if( inkluder ) {
-            addVeilTilretteleggingsbehovToQuery(Collections.singletonList(PERMITTERT), queryBuilder);
+            addVeilTilretteleggingsbehovToQuery(Collections.singletonList("permittert" ), queryBuilder);
         } else {
-            addVeilTilretteleggingsbehovUtelukkesToQuery(Collections.singletonList(PERMITTERT), queryBuilder);
+            addVeilTilretteleggingsbehovUtelukkesToQuery(Collections.singletonList("permittert" ), queryBuilder);
         }
     }
 
