@@ -604,6 +604,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         esVeilTilretteleggingsbehovListe.add("Kat2_Kode");
         esVeilTilretteleggingsbehovListe.add("Kat3_Kode");
+        esVeilTilretteleggingsbehovListe.add("permittert");
 
         EsCv esCv = new EsCv(nteAktorId(3), "04265983651", "HANS", "NORDMANN", fraIsoDato("1955-11-04"), false, "RARBS",
                 "alltidmed@mailinator.com", "(+47) 22334455", "12345678", "NO", "3L",
@@ -992,7 +993,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         esVeilTilretteleggingsbehovListe.add("Kat1_Kode");
         esVeilTilretteleggingsbehovListe.add("Kat2_Kode");
-
+        esVeilTilretteleggingsbehovListe.add("permittert");
 
         EsCv esCv = new EsCv(nteAktorId(5), "03050316895", "BOB", "NORDMANN", fraIsoDato("1964-09-01"), false, "ARBS",
                 "bobob@mailinator.com", "(+47) 22334455", "12345678", "NO", "5L", "", "J",

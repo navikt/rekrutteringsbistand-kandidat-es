@@ -43,6 +43,7 @@ import static java.util.stream.Collectors.toMap;
 public class EsSokHttpService implements EsSokService, AutoCloseable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EsSokHttpService.class);
+    public static final String PERMITTERT = "permittert";
     private final RestHighLevelClient client;
     private final ObjectMapper mapper;
     private final String indexName;
@@ -351,6 +352,10 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 addFilterForTilretteleggingsbehov(queryBuilder, sk.getTilretteleggingsbehov());
             }
 
+            if (sk.isPermittertSet()) {
+                addFilterForPermittert(queryBuilder, sk.getPermittert().booleanValue());
+            }
+
             if (isNotEmpty(sk.veilTilretteleggingsbehov())) {
                 addVeilTilretteleggingsbehovToQuery(sk.veilTilretteleggingsbehov(), queryBuilder);
             }
@@ -369,6 +374,15 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     private void addFilterForTilretteleggingsbehov(BoolQueryBuilder boolQueryBuilder, Boolean value) {
         boolQueryBuilder.filter(QueryBuilders.termQuery("tilretteleggingsbehov", value));
     }
+
+    private void addFilterForPermittert(BoolQueryBuilder queryBuilder, boolean inkluder) {
+        if( inkluder ) {
+            addVeilTilretteleggingsbehovToQuery(Collections.singletonList(PERMITTERT), queryBuilder);
+        } else {
+            addVeilTilretteleggingsbehovUtelukkesToQuery(Collections.singletonList(PERMITTERT), queryBuilder);
+        }
+    }
+
 
     private void addVeilTilretteleggingsbehovToQuery(List<String> veilTilretteleggingsbehov, BoolQueryBuilder boolQueryBuilder) {
         boolQueryBuilder.must(QueryBuilders.termsQuery("veilTilretteleggingsbehov.keyword", veilTilretteleggingsbehov));

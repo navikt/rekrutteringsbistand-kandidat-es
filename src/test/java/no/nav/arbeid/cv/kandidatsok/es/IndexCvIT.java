@@ -1013,6 +1013,20 @@ public class IndexCvIT {
     }
 
     @Test
+    public void sokMedVeilTilretteleggingsbehovOgPermittertSkalGiKorrektTreff() {
+        Sokeresultat sokeresultat =
+                sokClient.veilederSok(SokekriterierVeiledere
+                        .med().veilTilretteleggingsbehov(Arrays.asList("Kat1_Kode", "Kat_Eksistererikke_Kode"))
+                        .permittert(Boolean.TRUE).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+
+        assertThat(cver.size()).isEqualTo(1);
+        assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder(
+                "5L");
+    }
+
+    @Test
     public void sokMedVeilTilretteleggingsbehovUtelukketSkalGiKorrektTreff() {
         Sokeresultat sokeresultat =
                 sokClient.veilederSok(SokekriterierVeiledere
@@ -1038,5 +1052,35 @@ public class IndexCvIT {
         assertThat(cver.size()).isEqualTo(4);
         assertThat(cver).extracting(Extractors.byName("kandidatnr")).doesNotContain(
                 "4L", "5L");
+    }
+
+    @Test
+    public void sokMedVeilTilretteleggingsbehovUtelukketOgIkkePermittertSkalGiKorrektTreff() {
+        Sokeresultat sokeresultat =
+                sokClient.veilederSok(SokekriterierVeiledere
+                        .med().veilTilretteleggingsbehovUtelukkes(Arrays.asList("Kat1_Kode", "Kat_Eksistererikke_Kode"))
+                        .permittert(Boolean.FALSE).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+
+        assertThat(cver.size()).isEqualTo(3);
+        assertThat(cver).extracting(Extractors.byName("kandidatnr")).doesNotContain(
+                "3L", "4L", "5L");
+    }
+
+    @Test
+    public void sokMedVeilTilretteleggingsbehovUtelukketOgPermittertSkalGiKorrektTreff() {
+        Sokeresultat sokeresultat =
+                sokClient.veilederSok(SokekriterierVeiledere
+                        .med().veilTilretteleggingsbehovUtelukkes(Arrays.asList("Kat1_Kode", "Kat_Eksistererikke_Kode"))
+                        .permittert(Boolean.TRUE).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+
+        assertThat(cver.size()).isEqualTo(1);
+        assertThat(cver).extracting(Extractors.byName("kandidatnr")).doesNotContain(
+                "5L");
+        assertThat(cver).extracting(Extractors.byName("kandidatnr")).contains(
+                "3L");
     }
 }

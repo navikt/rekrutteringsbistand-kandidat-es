@@ -23,6 +23,7 @@ public class SokekriterierVeiledere {
     private Boolean maaBoInnenforGeografi;
     private List<String> forerkort;
     private Boolean tilretteleggingsbehov;
+    private Boolean permittert;
     private List<String> veilTilretteleggingsbehov;
     private List<String> veilTilretteleggingsbehovUtelukkes;
     private int antallResultater;
@@ -155,6 +156,14 @@ public class SokekriterierVeiledere {
         return tilretteleggingsbehov;
     }
 
+    public boolean isPermittertSet() {
+        return permittert != null;
+    }
+
+    public Boolean getPermittert() {
+        return permittert;
+    }
+
     public List<String> veilTilretteleggingsbehov() {
         return veilTilretteleggingsbehov;
     }
@@ -186,6 +195,7 @@ public class SokekriterierVeiledere {
         private Integer antallAarFra;
         private Integer antallAarTil;
         private Boolean tilretteleggingsbehov;
+        private Boolean permittert;
         private List<String> veilTilretteleggingsbehov;
         private List<String> veilTilretteleggingsbehovUtelukkes;
         private boolean tomtSok = true;
@@ -229,6 +239,7 @@ public class SokekriterierVeiledere {
             s.antallAarTil = antallAarTil;
 
             s.tilretteleggingsbehov = tilretteleggingsbehov;
+            s.permittert = permittert;
             s.veilTilretteleggingsbehov = veilTilretteleggingsbehov == null ? Collections.emptyList()
                     : Collections.unmodifiableList(new ArrayList<>(veilTilretteleggingsbehov));
             s.veilTilretteleggingsbehovUtelukkes = veilTilretteleggingsbehovUtelukkes == null ? Collections.emptyList()
@@ -367,6 +378,14 @@ public class SokekriterierVeiledere {
         public Builder tilretteleggingsbehov(Boolean tilretteleggingsbehov) {
             this.tilretteleggingsbehov = tilretteleggingsbehov;
             if(null != tilretteleggingsbehov) {
+                this.tomtSok = false;
+            }
+            return this;
+        }
+
+        public Builder permittert(Boolean permittert) {
+            this.permittert = permittert;
+            if(null != permittert) {
                 this.tomtSok = false;
             }
             return this;
