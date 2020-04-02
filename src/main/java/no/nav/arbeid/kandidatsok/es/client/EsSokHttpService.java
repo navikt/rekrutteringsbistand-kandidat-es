@@ -351,8 +351,16 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 addFilterForTilretteleggingsbehov(queryBuilder, sk.getTilretteleggingsbehov());
             }
 
+            if (sk.isPermittertSet()) {
+                addFilterForPermittert(queryBuilder, sk.getPermittert().booleanValue());
+            }
+
             if (isNotEmpty(sk.veilTilretteleggingsbehov())) {
                 addVeilTilretteleggingsbehovToQuery(sk.veilTilretteleggingsbehov(), queryBuilder);
+            }
+
+            if (isNotEmpty(sk.veilTilretteleggingsbehovUtelukkes())) {
+                addVeilTilretteleggingsbehovUtelukkesToQuery(sk.veilTilretteleggingsbehovUtelukkes(), queryBuilder);
             }
 
             return toSokeresultat(esExec(() -> search(UseCase.VEIL_SOK, queryBuilder, sk.fraIndex(),
@@ -366,14 +374,21 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
         boolQueryBuilder.filter(QueryBuilders.termQuery("tilretteleggingsbehov", value));
     }
 
+    private void addFilterForPermittert(BoolQueryBuilder queryBuilder, boolean inkluder) {
+        if( inkluder ) {
+            addVeilTilretteleggingsbehovToQuery(Collections.singletonList("permittert" ), queryBuilder);
+        } else {
+            addVeilTilretteleggingsbehovUtelukkesToQuery(Collections.singletonList("permittert" ), queryBuilder);
+        }
+    }
+
+
     private void addVeilTilretteleggingsbehovToQuery(List<String> veilTilretteleggingsbehov, BoolQueryBuilder boolQueryBuilder) {
+        boolQueryBuilder.must(QueryBuilders.termsQuery("veilTilretteleggingsbehov.keyword", veilTilretteleggingsbehov));
+    }
 
-        BoolQueryBuilder veilTilretteleggingsbehovQueryBuilder = QueryBuilders.boolQuery();
-
-        veilTilretteleggingsbehov.stream().filter(StringUtils::isNotBlank)
-                .forEach(g -> addVeilTilretteleggingsbehovQuery(g, veilTilretteleggingsbehovQueryBuilder));
-
-        boolQueryBuilder.must(veilTilretteleggingsbehovQueryBuilder);
+    private void addVeilTilretteleggingsbehovUtelukkesToQuery(List<String> veilTilretteleggingsbehovUtelukkes, BoolQueryBuilder boolQueryBuilder) {
+        boolQueryBuilder.mustNot(QueryBuilders.termsQuery("veilTilretteleggingsbehov.keyword", veilTilretteleggingsbehovUtelukkes));
     }
 
     private void addFilterForArbeidsgivereSok(BoolQueryBuilder boolQueryBuilder) {
@@ -672,10 +687,6 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 ScoreMode.Total);
         boolQueryBuilder.should(geografiQueryBuilder);
         LOGGER.debug("ADDING geografiJobbonske");
-    }
-
-    private void addVeilTilretteleggingsbehovQuery(String veilTilretteleggingsbehov, BoolQueryBuilder boolQueryBuilder) {
-        boolQueryBuilder.should(QueryBuilders.matchQuery("veilTilretteleggingsbehov", veilTilretteleggingsbehov).operator(Operator.AND));
     }
 
     private void addForerkortQuery(String forerkort, BoolQueryBuilder boolQueryBuilder) {

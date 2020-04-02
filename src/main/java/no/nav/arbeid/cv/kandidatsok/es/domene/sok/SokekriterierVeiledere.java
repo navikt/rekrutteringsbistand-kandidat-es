@@ -23,7 +23,9 @@ public class SokekriterierVeiledere {
     private Boolean maaBoInnenforGeografi;
     private List<String> forerkort;
     private Boolean tilretteleggingsbehov;
+    private Boolean permittert;
     private List<String> veilTilretteleggingsbehov;
+    private List<String> veilTilretteleggingsbehovUtelukkes;
     private int antallResultater;
     private int fraIndex;
     private Integer antallAarFra;
@@ -154,8 +156,20 @@ public class SokekriterierVeiledere {
         return tilretteleggingsbehov;
     }
 
+    public boolean isPermittertSet() {
+        return permittert != null;
+    }
+
+    public Boolean getPermittert() {
+        return permittert;
+    }
+
     public List<String> veilTilretteleggingsbehov() {
         return veilTilretteleggingsbehov;
+    }
+
+    public List<String> veilTilretteleggingsbehovUtelukkes() {
+        return veilTilretteleggingsbehovUtelukkes;
     }
 
     public static class Builder {
@@ -181,7 +195,9 @@ public class SokekriterierVeiledere {
         private Integer antallAarFra;
         private Integer antallAarTil;
         private Boolean tilretteleggingsbehov;
+        private Boolean permittert;
         private List<String> veilTilretteleggingsbehov;
+        private List<String> veilTilretteleggingsbehovUtelukkes;
         private boolean tomtSok = true;
 
         public SokekriterierVeiledere bygg() {
@@ -223,8 +239,11 @@ public class SokekriterierVeiledere {
             s.antallAarTil = antallAarTil;
 
             s.tilretteleggingsbehov = tilretteleggingsbehov;
+            s.permittert = permittert;
             s.veilTilretteleggingsbehov = veilTilretteleggingsbehov == null ? Collections.emptyList()
                     : Collections.unmodifiableList(new ArrayList<>(veilTilretteleggingsbehov));
+            s.veilTilretteleggingsbehovUtelukkes = veilTilretteleggingsbehovUtelukkes == null ? Collections.emptyList()
+                    : Collections.unmodifiableList(new ArrayList<>(veilTilretteleggingsbehovUtelukkes));
 
             s.fraIndex = fra;
             s.antallResultater = antallResultater;
@@ -364,8 +383,22 @@ public class SokekriterierVeiledere {
             return this;
         }
 
+        public Builder permittert(Boolean permittert) {
+            this.permittert = permittert;
+            if(null != permittert) {
+                this.tomtSok = false;
+            }
+            return this;
+        }
+
         public Builder veilTilretteleggingsbehov(List<String> veilTilretteleggingsbehov) {
             this.veilTilretteleggingsbehov = veilTilretteleggingsbehov;
+            this.tomtSok = false;
+            return this;
+        }
+
+        public Builder veilTilretteleggingsbehovUtelukkes(List<String> veilTilretteleggingsbehovUtelukkes) {
+            this.veilTilretteleggingsbehovUtelukkes = veilTilretteleggingsbehovUtelukkes;
             this.tomtSok = false;
             return this;
         }
