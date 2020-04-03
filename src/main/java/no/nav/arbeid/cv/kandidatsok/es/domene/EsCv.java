@@ -635,6 +635,10 @@ public class EsCv {
         return samletKompetanseObj;
     }
 
+    public void setSamletKompetanseObj(List<EsSamletKompetanse> samletKompetanseObj) {
+        this.samletKompetanseObj = Objects.requireNonNull(samletKompetanseObj);
+    }
+
     public int getTotalLengdeYrkeserfaring() {
         return totalLengdeYrkeserfaring;
     }
