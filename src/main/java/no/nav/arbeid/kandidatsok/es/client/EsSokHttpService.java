@@ -136,12 +136,8 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
     private List<String> ngramTypeAhead(String searchTerm, String searchField, String sourceField) {
         try {
-            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-            boolQueryBuilder.must(QueryBuilders.matchPhraseQuery(searchField, searchTerm).slop(5));
-
-
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-            searchSourceBuilder.query(boolQueryBuilder)
+            searchSourceBuilder.query(QueryBuilders.matchPhraseQuery(searchField, searchTerm).slop(5))
                     .aggregation(AggregationBuilders.terms(sourceField).field(sourceField))
                     .size(0);
 
@@ -664,7 +660,6 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     }
 
     private void addKompetanseQuery(String kompetanse, BoolQueryBuilder boolQueryBuilder) {
-        //boolQueryBuilder.should(QueryBuilders.matchQuery("samletKompetanseObj.samletKompetanseTekst", kompetanse).operator(Operator.AND));
         // Bruk frasesøk for å sikre at ikke settet av søketermer matcher på tvers av ulike kompetanser.
         // Dette er avhengig av at feltet er indeksert med position increment gap > 0, siden vi tillater noe slop (omstokking av ord).
         boolQueryBuilder.should(QueryBuilders.matchPhraseQuery("samletKompetanseObj.samletKompetanseTekst", kompetanse).slop(4));
