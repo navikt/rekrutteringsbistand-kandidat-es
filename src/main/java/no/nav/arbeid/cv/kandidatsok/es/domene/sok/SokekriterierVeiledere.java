@@ -30,6 +30,7 @@ public class SokekriterierVeiledere {
     private int fraIndex;
     private Integer antallAarFra;
     private Integer antallAarTil;
+    private Integer antallDagerSistEndret;
 
     private boolean tomtSok = true;
 
@@ -172,6 +173,10 @@ public class SokekriterierVeiledere {
         return veilTilretteleggingsbehovUtelukkes;
     }
 
+    public Integer antallDagerSistEndret() {
+        return antallDagerSistEndret;
+    }
+
     public static class Builder {
         private String fritekst;
         private List<String> yrkeJobbonsker;
@@ -198,6 +203,7 @@ public class SokekriterierVeiledere {
         private Boolean permittert;
         private List<String> veilTilretteleggingsbehov;
         private List<String> veilTilretteleggingsbehovUtelukkes;
+        private Integer antallDagerSistEndret;
         private boolean tomtSok = true;
 
         public SokekriterierVeiledere bygg() {
@@ -237,6 +243,7 @@ public class SokekriterierVeiledere {
 
             s.antallAarFra = antallAarFra;
             s.antallAarTil = antallAarTil;
+            s.antallDagerSistEndret = antallDagerSistEndret;
 
             s.tilretteleggingsbehov = tilretteleggingsbehov;
             s.permittert = permittert;
@@ -399,6 +406,12 @@ public class SokekriterierVeiledere {
 
         public Builder veilTilretteleggingsbehovUtelukkes(List<String> veilTilretteleggingsbehovUtelukkes) {
             this.veilTilretteleggingsbehovUtelukkes = veilTilretteleggingsbehovUtelukkes;
+            this.tomtSok = false;
+            return this;
+        }
+
+        public Builder antallDagerSistEndret(Integer antallDagerSistEndret) {
+            this.antallDagerSistEndret = antallDagerSistEndret;
             this.tomtSok = false;
             return this;
         }
