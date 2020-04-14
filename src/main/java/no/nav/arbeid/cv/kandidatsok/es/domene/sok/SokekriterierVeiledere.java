@@ -30,6 +30,7 @@ public class SokekriterierVeiledere {
     private int fraIndex;
     private Integer antallAarFra;
     private Integer antallAarTil;
+    private Integer antallAarGammelYrkeserfaring;
 
     private boolean tomtSok = true;
 
@@ -172,6 +173,10 @@ public class SokekriterierVeiledere {
         return veilTilretteleggingsbehovUtelukkes;
     }
 
+    public Integer antallAarGammelYrkeserfaring() {
+        return antallAarGammelYrkeserfaring;
+    }
+
     public static class Builder {
         private String fritekst;
         private List<String> yrkeJobbonsker;
@@ -198,6 +203,7 @@ public class SokekriterierVeiledere {
         private Boolean permittert;
         private List<String> veilTilretteleggingsbehov;
         private List<String> veilTilretteleggingsbehovUtelukkes;
+        private Integer antallAarGammelYrkeserfaring;
         private boolean tomtSok = true;
 
         public SokekriterierVeiledere bygg() {
@@ -244,6 +250,7 @@ public class SokekriterierVeiledere {
                     : Collections.unmodifiableList(new ArrayList<>(veilTilretteleggingsbehov));
             s.veilTilretteleggingsbehovUtelukkes = veilTilretteleggingsbehovUtelukkes == null ? Collections.emptyList()
                     : Collections.unmodifiableList(new ArrayList<>(veilTilretteleggingsbehovUtelukkes));
+            s.antallAarGammelYrkeserfaring = antallAarGammelYrkeserfaring;
 
             s.fraIndex = fra;
             s.antallResultater = antallResultater;
@@ -399,6 +406,12 @@ public class SokekriterierVeiledere {
 
         public Builder veilTilretteleggingsbehovUtelukkes(List<String> veilTilretteleggingsbehovUtelukkes) {
             this.veilTilretteleggingsbehovUtelukkes = veilTilretteleggingsbehovUtelukkes;
+            this.tomtSok = false;
+            return this;
+        }
+
+        public Builder antallAarGammelYrkeserfaring(Integer antallAarGammelYrkeserfaring) {
+            this.antallAarGammelYrkeserfaring = antallAarGammelYrkeserfaring;
             this.tomtSok = false;
             return this;
         }

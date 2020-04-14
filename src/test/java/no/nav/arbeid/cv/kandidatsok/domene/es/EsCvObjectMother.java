@@ -52,7 +52,7 @@ public class EsCvObjectMother {
                 "Stentransport, Kragerø", "8341.01", "Anleggsmaskindrifter",
                 "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
 
-        EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(fraIsoDato("2003-01-01"), fraIsoDato("2003-02-01"),
+        EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(fraIsoDato("2003-01-01"), fraIsoDato("2013-02-01"),
                 "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
                 "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
 
@@ -2324,7 +2324,7 @@ public class EsCvObjectMother {
                 "Stentransport, Kragerø", "8341.01", "", "maskinkjører og maskintransport",
                 "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
 
-        EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(fraIsoDato("2003-01-01"), fraIsoDato("2003-02-01"),
+        EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(fraIsoDato("2003-01-01"), fraIsoDato("2013-02-01"),
                 "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
                 "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
 
