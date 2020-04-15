@@ -30,6 +30,7 @@ public class SokekriterierVeiledere {
     private int fraIndex;
     private Integer antallAarFra;
     private Integer antallAarTil;
+    private Integer antallDagerSistEndret;
     private Integer antallAarGammelYrkeserfaring;
 
     private boolean tomtSok = true;
@@ -173,6 +174,10 @@ public class SokekriterierVeiledere {
         return veilTilretteleggingsbehovUtelukkes;
     }
 
+    public Integer antallDagerSistEndret() {
+        return antallDagerSistEndret;
+    }
+
     public Integer antallAarGammelYrkeserfaring() {
         return antallAarGammelYrkeserfaring;
     }
@@ -203,6 +208,7 @@ public class SokekriterierVeiledere {
         private Boolean permittert;
         private List<String> veilTilretteleggingsbehov;
         private List<String> veilTilretteleggingsbehovUtelukkes;
+        private Integer antallDagerSistEndret;
         private Integer antallAarGammelYrkeserfaring;
         private boolean tomtSok = true;
 
@@ -243,6 +249,7 @@ public class SokekriterierVeiledere {
 
             s.antallAarFra = antallAarFra;
             s.antallAarTil = antallAarTil;
+            s.antallDagerSistEndret = antallDagerSistEndret;
 
             s.tilretteleggingsbehov = tilretteleggingsbehov;
             s.permittert = permittert;
@@ -410,9 +417,14 @@ public class SokekriterierVeiledere {
             return this;
         }
 
+        public Builder antallDagerSistEndret(Integer antallDagerSistEndret) {
+            this.antallDagerSistEndret = antallDagerSistEndret;
+            this.tomtSok = false;
+            return this;
+        }
+
         public Builder antallAarGammelYrkeserfaring(Integer antallAarGammelYrkeserfaring) {
             this.antallAarGammelYrkeserfaring = antallAarGammelYrkeserfaring;
-            this.tomtSok = false;
             return this;
         }
     }

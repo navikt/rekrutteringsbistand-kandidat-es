@@ -1110,4 +1110,31 @@ public class IndexCvIT {
         assertThat(cver).extracting(Extractors.byName("kandidatnr")).contains(
                 "3L");
     }
+
+    @Test
+    public void sokMedSistEndretFilterSkalGiKorrektTreff() {
+        Sokeresultat sokeresultat =
+                sokClient.veilederSok(SokekriterierVeiledere
+                        .med().antallDagerSistEndret(7)
+                        .bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+
+        assertThat(cver.size()).isEqualTo(2);
+        assertThat(cver).extracting(Extractors.byName("kandidatnr")).contains(
+                "3L", "2L");
+        assertThat(cver).extracting(Extractors.byName("kandidatnr")).doesNotContain(
+                "6L", "11L");
+
+        Sokeresultat sokeresultat2 =
+                sokClient.veilederSok(SokekriterierVeiledere
+                        .med().antallDagerSistEndret(15)
+                        .bygg());
+
+        List<EsCv> cver2 = sokeresultat2.getCver();
+
+        assertThat(cver2.size()).isEqualTo(6);
+        assertThat(cver2).extracting(Extractors.byName("kandidatnr")).contains(
+                "6L", "11L", "3L", "2L");
+    }
 }

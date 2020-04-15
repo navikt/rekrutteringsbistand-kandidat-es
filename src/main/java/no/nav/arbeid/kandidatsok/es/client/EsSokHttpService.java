@@ -363,6 +363,10 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 addVeilTilretteleggingsbehovUtelukkesToQuery(sk.veilTilretteleggingsbehovUtelukkes(), queryBuilder);
             }
 
+            if (sk.antallDagerSistEndret() != null) {
+                addFilterForSistEndret(sk.antallDagerSistEndret(), queryBuilder);
+            }
+
             return toSokeresultat(esExec(() -> search(UseCase.VEIL_SOK, queryBuilder, sk.fraIndex(),
                     sk.antallResultater(), sortQueryBuilder)));
         } catch (IOException ioe) {
@@ -382,6 +386,9 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
         }
     }
 
+    private void addFilterForSistEndret(int antallDager, BoolQueryBuilder boolQueryBuilder) {
+        boolQueryBuilder.must(QueryBuilders.rangeQuery("tidsstempel").gte("now-" + antallDager + "d/d").lte("now/d"));
+    }
 
     private void addVeilTilretteleggingsbehovToQuery(List<String> veilTilretteleggingsbehov, BoolQueryBuilder boolQueryBuilder) {
         boolQueryBuilder.must(QueryBuilders.termsQuery("veilTilretteleggingsbehov.keyword", veilTilretteleggingsbehov));
