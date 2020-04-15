@@ -851,6 +851,33 @@ public class IndexCvIT {
     }
 
     @Test
+    public void sokPaaStillingsTittelMedFilterPaaNyligeSkalGiTreff() {
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
+                .stillingstitler(Collections.singletonList("Anleggsmaskinfører")).antallAarGammelYrkeserfaring(null).bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        assertThat(cver.size()).isEqualTo(2);
+
+        assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder(
+                "11L", "6L");
+
+        Sokeresultat sokeresultat2 = sokClient.veilederSok(SokekriterierVeiledere.med()
+                .stillingstitler(Collections.singletonList("Anleggsmaskinfører")).antallAarGammelYrkeserfaring(10).bygg());
+
+        List<EsCv> cver2 = sokeresultat2.getCver();
+        assertThat(cver2.size()).isEqualTo(1);
+
+        assertThat(cver2).extracting(Extractors.byName("kandidatnr")).containsExactly(
+                "11L");
+
+        Sokeresultat sokeresultat3 = sokClient.veilederSok(SokekriterierVeiledere.med()
+                .stillingstitler(Collections.singletonList("Anleggsmaskinfører")).antallAarGammelYrkeserfaring(5).bygg());
+
+        List<EsCv> cver3 = sokeresultat3.getCver();
+        assertThat(cver3.size()).isEqualTo(0);
+    }
+
+    @Test
     public void sokMedSynonymerIKompetanseSkalGiTreff() {
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
                 Sokekriterier.med().kompetanser(Collections.singletonList("Java (8)")).bygg());

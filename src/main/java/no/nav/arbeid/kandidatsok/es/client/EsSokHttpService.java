@@ -280,7 +280,11 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
             }
 
             if (isNotEmpty(sk.stillingstitler())) {
-                addStillingstitlerToQuery(sk.stillingstitler(), queryBuilder, sortQueryBuilder);
+                if( sk.antallAarGammelYrkeserfaring() != null ) {
+                    addNyligeStillingstitlerToQuery(sk.stillingstitler(), sk.antallAarGammelYrkeserfaring(), queryBuilder, sortQueryBuilder);
+                } else {
+                    addStillingstitlerToQuery(sk.stillingstitler(), queryBuilder, sortQueryBuilder);
+                }
             }
 
             if (isNotEmpty(sk.kompetanser())) {
@@ -531,6 +535,14 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
         boolQueryBuilder.must(innerBoolQuery);
     }
 
+    private void addNyligeStillingstitlerToQuery(List<String> stillingstitler, int antallAar,
+                                           BoolQueryBuilder boolQueryBuilder, BoolQueryBuilder sortQueryBuilder) {
+        BoolQueryBuilder innerBoolQuery = QueryBuilders.boolQuery();
+        stillingstitler.stream().filter(StringUtils::isNotBlank)
+                .forEach(s -> addNyligStillingsTittelQuery(s, antallAar, innerBoolQuery, sortQueryBuilder));
+        boolQueryBuilder.must(innerBoolQuery);
+    }
+
     private void addJobbonskerToQuery(List<String> jobbonsker, BoolQueryBuilder boolQueryBuilder,
                                       BoolQueryBuilder sortQueryBuilder) {
         BoolQueryBuilder yrkeJobbonskerBoolQueryBuilder = QueryBuilders.boolQuery();
@@ -634,6 +646,24 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
         NestedQueryBuilder yrkeserfaringQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
                 QueryBuilders.matchQuery("yrkeserfaring.sokeTitler", stillingstittel)
                         .operator(Operator.AND),
+                ScoreMode.Total);
+
+        boolQueryBuilder.should(yrkeserfaringQueryBuilder);
+        LOGGER.debug("ADDING yrkeserfaring");
+
+        MatchQueryBuilder matchQueryBuilder =
+                QueryBuilders.matchQuery("yrkeserfaring.sokeTitler", stillingstittel);
+        sortBoolQueryBuilder.should(matchQueryBuilder);
+    }
+
+    private void addNyligStillingsTittelQuery(String stillingstittel, int antallAar, BoolQueryBuilder boolQueryBuilder,
+                                         BoolQueryBuilder sortBoolQueryBuilder) {
+        BoolQueryBuilder boolQueryInNestedQuery = QueryBuilders.boolQuery();
+        boolQueryInNestedQuery.must(QueryBuilders.matchQuery("yrkeserfaring.sokeTitler", stillingstittel)
+                .operator(Operator.AND));
+        boolQueryInNestedQuery.must(QueryBuilders.rangeQuery("yrkeserfaring.tilDato").gte(("now-" + antallAar + "y")));
+        NestedQueryBuilder yrkeserfaringQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
+                boolQueryInNestedQuery,
                 ScoreMode.Total);
 
         boolQueryBuilder.should(yrkeserfaringQueryBuilder);
