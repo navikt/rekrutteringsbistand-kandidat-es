@@ -31,6 +31,7 @@ public class SokekriterierVeiledere {
     private Integer antallAarFra;
     private Integer antallAarTil;
     private Integer antallDagerSistEndret;
+    private Integer antallAarGammelYrkeserfaring;
 
     private boolean tomtSok = true;
 
@@ -177,6 +178,10 @@ public class SokekriterierVeiledere {
         return antallDagerSistEndret;
     }
 
+    public Integer antallAarGammelYrkeserfaring() {
+        return antallAarGammelYrkeserfaring;
+    }
+
     public static class Builder {
         private String fritekst;
         private List<String> yrkeJobbonsker;
@@ -204,6 +209,7 @@ public class SokekriterierVeiledere {
         private List<String> veilTilretteleggingsbehov;
         private List<String> veilTilretteleggingsbehovUtelukkes;
         private Integer antallDagerSistEndret;
+        private Integer antallAarGammelYrkeserfaring;
         private boolean tomtSok = true;
 
         public SokekriterierVeiledere bygg() {
@@ -251,6 +257,7 @@ public class SokekriterierVeiledere {
                     : Collections.unmodifiableList(new ArrayList<>(veilTilretteleggingsbehov));
             s.veilTilretteleggingsbehovUtelukkes = veilTilretteleggingsbehovUtelukkes == null ? Collections.emptyList()
                     : Collections.unmodifiableList(new ArrayList<>(veilTilretteleggingsbehovUtelukkes));
+            s.antallAarGammelYrkeserfaring = antallAarGammelYrkeserfaring;
 
             s.fraIndex = fra;
             s.antallResultater = antallResultater;
@@ -413,6 +420,11 @@ public class SokekriterierVeiledere {
         public Builder antallDagerSistEndret(Integer antallDagerSistEndret) {
             this.antallDagerSistEndret = antallDagerSistEndret;
             this.tomtSok = false;
+            return this;
+        }
+
+        public Builder antallAarGammelYrkeserfaring(Integer antallAarGammelYrkeserfaring) {
+            this.antallAarGammelYrkeserfaring = antallAarGammelYrkeserfaring;
             return this;
         }
     }
