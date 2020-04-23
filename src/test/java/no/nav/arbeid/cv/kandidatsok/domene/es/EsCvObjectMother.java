@@ -611,6 +611,7 @@ public class EsCvObjectMother {
         esVeilTilretteleggingsbehovListe.add("Kat2_Kode");
         esVeilTilretteleggingsbehovListe.add("Kat3_Kode");
         esVeilTilretteleggingsbehovListe.add("permittert");
+        esVeilTilretteleggingsbehovListe.add("midlertidigutilgjengelig");
 
         EsCv esCv = new EsCv(nteAktorId(3), "04265983651", "HANS", "NORDMANN", fraIsoDato("1955-11-04"), false, "RARBS",
                 "alltidmed@mailinator.com", "(+47) 22334455", "12345678", "NO", "3L",
@@ -806,6 +807,7 @@ public class EsCvObjectMother {
                 new ArrayList<>();
         esVeilTilretteleggingsbehovListe.add("Kat1_Kode");
         esVeilTilretteleggingsbehovListe.add("Kat3_Kode");
+        esVeilTilretteleggingsbehovListe.add("tilgjengeliginnen1uke");
 
         EsCv esCv = new EsCv(nteAktorId(4), "09568410230", "HANNE", "NORDMANN", fraIsoDato("2002-06-04"), false, "ARBS",
                 "erjegmed@mailinator.com", "(+47) 22334455", "12345678", "NO", "4L", "",
@@ -1000,6 +1002,7 @@ public class EsCvObjectMother {
         esVeilTilretteleggingsbehovListe.add("Kat1_Kode");
         esVeilTilretteleggingsbehovListe.add("Kat2_Kode");
         esVeilTilretteleggingsbehovListe.add("permittert");
+        esVeilTilretteleggingsbehovListe.add("midlertidigutilgjengelig");
 
         EsCv esCv = new EsCv(nteAktorId(5), "03050316895", "BOB", "NORDMANN", fraIsoDato("1964-09-01"), false, "ARBS",
                 "bobob@mailinator.com", "(+47) 22334455", "12345678", "NO", "5L", "", "J",

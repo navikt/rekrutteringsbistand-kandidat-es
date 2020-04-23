@@ -26,6 +26,7 @@ public class SokekriterierVeiledere {
     private Boolean permittert;
     private List<String> veilTilretteleggingsbehov;
     private List<String> veilTilretteleggingsbehovUtelukkes;
+    private List<String> midlertidigUtilgjengelig;
     private int antallResultater;
     private int fraIndex;
     private Integer antallAarFra;
@@ -174,6 +175,10 @@ public class SokekriterierVeiledere {
         return veilTilretteleggingsbehovUtelukkes;
     }
 
+    public List<String> midlertidigUtilgjengelig() {
+        return midlertidigUtilgjengelig;
+    }
+
     public Integer antallDagerSistEndret() {
         return antallDagerSistEndret;
     }
@@ -208,6 +213,7 @@ public class SokekriterierVeiledere {
         private Boolean permittert;
         private List<String> veilTilretteleggingsbehov;
         private List<String> veilTilretteleggingsbehovUtelukkes;
+        private List<String> midlertidigUtilgjengelig;
         private Integer antallDagerSistEndret;
         private Integer antallAarGammelYrkeserfaring;
         private boolean tomtSok = true;
@@ -257,6 +263,8 @@ public class SokekriterierVeiledere {
                     : Collections.unmodifiableList(new ArrayList<>(veilTilretteleggingsbehov));
             s.veilTilretteleggingsbehovUtelukkes = veilTilretteleggingsbehovUtelukkes == null ? Collections.emptyList()
                     : Collections.unmodifiableList(new ArrayList<>(veilTilretteleggingsbehovUtelukkes));
+            s.midlertidigUtilgjengelig = midlertidigUtilgjengelig == null ? Collections.emptyList()
+                    : Collections.unmodifiableList(new ArrayList<>(midlertidigUtilgjengelig));
             s.antallAarGammelYrkeserfaring = antallAarGammelYrkeserfaring;
 
             s.fraIndex = fra;
@@ -413,6 +421,12 @@ public class SokekriterierVeiledere {
 
         public Builder veilTilretteleggingsbehovUtelukkes(List<String> veilTilretteleggingsbehovUtelukkes) {
             this.veilTilretteleggingsbehovUtelukkes = veilTilretteleggingsbehovUtelukkes;
+            this.tomtSok = false;
+            return this;
+        }
+
+        public Builder midlertidigUtilgjengelig(List<String> midlertidigUtilgjengelig) {
+            this.midlertidigUtilgjengelig = midlertidigUtilgjengelig;
             this.tomtSok = false;
             return this;
         }

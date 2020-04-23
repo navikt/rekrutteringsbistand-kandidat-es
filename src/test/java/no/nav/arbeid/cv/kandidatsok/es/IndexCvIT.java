@@ -1137,4 +1137,102 @@ public class IndexCvIT {
         assertThat(cver2).extracting(Extractors.byName("kandidatnr")).contains(
                 "6L", "11L", "3L", "2L");
     }
+
+    @Test
+    public void sokMedTilgjengeligFilterSkalSkalGiKorrektTreff() {
+        Sokeresultat sokeresultat =
+                sokClient.veilederSok(SokekriterierVeiledere
+                        .med().midlertidigUtilgjengelig(Collections.singletonList("tilgjengelig"))
+                        .bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+
+        assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder("2L", "6L", "11L");
+    }
+
+    @Test
+    public void sokMedMidlertidigUtilgjengeligEnUkeSkalGiKorrektTreff() {
+        Sokeresultat sokeresultat =
+                sokClient.veilederSok(SokekriterierVeiledere
+                        .med().midlertidigUtilgjengelig(Collections.singletonList("tilgjengeliginnen1uke"))
+                        .bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactly("4L");
+    }
+
+    @Test
+    public void sokMedMidlertidigUtilgjengeligSkalGiKorrektTreff() {
+        Sokeresultat sokeresultat =
+                sokClient.veilederSok(SokekriterierVeiledere
+                        .med().midlertidigUtilgjengelig(Collections.singletonList("midlertidigutilgjengelig"))
+                        .bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder("3L", "5L");
+    }
+
+    @Test
+    public void sokMedIngenEllerAlleMidlertidigTilgjengeligFilterSkalGiAlleKandidater() {
+        Sokeresultat sokeresultat =
+                sokClient.veilederSok(SokekriterierVeiledere
+                        .med().midlertidigUtilgjengelig(Collections.emptyList())
+                        .bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder("2L", "6L", "11L", "4L", "5L", "3L");
+
+        Sokeresultat sokeresultat2 =
+                sokClient.veilederSok(SokekriterierVeiledere
+                        .med().midlertidigUtilgjengelig(Arrays.asList("tilgjengelig", "midlertidigutilgjengelig", "tilgjengeliginnen1uke"))
+                        .bygg());
+
+        List<EsCv> cver2 = sokeresultat2.getCver();
+        assertThat(cver2).containsExactlyInAnyOrderElementsOf(cver);
+    }
+
+    @Test
+    public void sokMedMidlertidigUtilgjengeligOgMidlertidigUtilgjengeligEnUkeSkalGiKorrektTreff() {
+        Sokeresultat sokeresultat =
+                sokClient.veilederSok(SokekriterierVeiledere
+                        .med().midlertidigUtilgjengelig(Arrays.asList("midlertidigutilgjengelig", "tilgjengeliginnen1uke"))
+                        .bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder("3L", "4L", "5L");
+    }
+
+    @Test
+    public void sokMedMidlertidigUtilgjengeligOgTilgjengeligSkalGiKorrektTreff() {
+        Sokeresultat sokeresultat =
+                sokClient.veilederSok(SokekriterierVeiledere
+                        .med().midlertidigUtilgjengelig(Arrays.asList("midlertidigutilgjengelig", "tilgjengelig"))
+                        .bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder("2L", "3L", "11L", "6L", "5L");
+    }
+
+    @Test
+    public void sokMedTilgjengeligOgTilgjengeligEnUkeSkalGiKorrektTreff() {
+        Sokeresultat sokeresultat =
+                sokClient.veilederSok(SokekriterierVeiledere
+                        .med().midlertidigUtilgjengelig(Arrays.asList("tilgjengelig", "tilgjengeliginnen1uke"))
+                        .bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder("2L", "11L", "4L", "6L");
+    }
+
+    @Test
+    public void sokMedMidlertidigUtilgjengeligOgPermittertSkalGiKorrektTreff() {
+        Sokeresultat sokeresultat =
+                sokClient.veilederSok(SokekriterierVeiledere
+                        .med().midlertidigUtilgjengelig(Collections.singletonList("midlertidigutilgjengelig"))
+                        .permittert(true)
+                        .bygg());
+
+        List<EsCv> cver = sokeresultat.getCver();
+        assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder("3L", "5L");
+    }
 }
