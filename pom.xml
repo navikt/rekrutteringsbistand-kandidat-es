@@ -7,7 +7,7 @@
     <groupId>no.nav.arbeid.pam</groupId>
     <artifactId>pam-kandidatsok-es</artifactId>
     <packaging>jar</packaging>
-    <version>72.16</version>
+    <version>72.17-SNAPSHOT</version>
 
     <name>pam-kandidatsok-es</name>
     <description>Indeksering av CVer i Elasticsearch og grensesnitt for å utføre søk</description>
