@@ -1235,4 +1235,16 @@ public class IndexCvIT {
         List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder("3L", "5L");
     }
+
+    @Test
+    public void veilederSokSkalReturnereTilretteleggingsbehov() {
+        Sokeresultat sokeresultat =
+                sokClient.veilederSok(SokekriterierVeiledere
+                        .med().midlertidigUtilgjengelig(Collections.singletonList("tilgjengeliginnen1uke"))
+                        .bygg());
+
+        List<String> tilretteleggingbehov = sokeresultat.getCver().get(0).getVeilTilretteleggingsbehov();
+        assertThat(tilretteleggingbehov).isNotEmpty();
+        assertThat(tilretteleggingbehov).containsExactlyInAnyOrderElementsOf(EsCvObjectMother.giveMeEsCv4().getVeilTilretteleggingsbehov());
+    }
 }
