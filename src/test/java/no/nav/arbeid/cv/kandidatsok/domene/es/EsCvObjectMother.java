@@ -34,8 +34,8 @@ public class EsCvObjectMother {
     }
 
     private static Date antallDagerTilbakeFraNow(int antallDager) {
-        LocalDateTime now = LocalDateTime.now().minusDays(antallDager);
-        return Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
+        LocalDateTime then = LocalDateTime.now().minusDays(antallDager);
+        return Date.from(then.atZone(ZoneId.systemDefault()).toInstant());
     }
 
     private static Date fodselsdatoForAlder(int alder) {
