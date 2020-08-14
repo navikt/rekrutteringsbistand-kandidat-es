@@ -149,25 +149,18 @@
     </scm>
 
     <repositories>
-        <repository>
-            <id>repo.adeo.no</id>
-            <name>Maven repo i iApp-sonen</name>
-            <url>https://repo.adeo.no/repository/maven-releases</url>
-        </repository>
+      <repository>
+        <name>github</name>
+        <id>github</id>
+        <url>https://github-package-registry-mirror.gc.nav.no/cached/maven-release</url>
+      </repository>
     </repositories>
-
-    <distributionManagement>
-        <repository>
-            <id>m2internal</id>
-            <name>NAV Maven2 Internal Repository</name>
-            <url>https://repo.adeo.no/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>m2snapshot</id>
-            <name>NAV Maven2 Snapshot Repository</name>
-            <url>https://repo.adeo.no/repository/maven-snapshots/</url>
-            <uniqueVersion>false</uniqueVersion>
-        </snapshotRepository>
-    </distributionManagement>
+    
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <url>https://maven.pkg.github.com/navikt/pam-kandidatsok-es</url>
+    </repository>
+  </distributionManagement>
 
 </project>
