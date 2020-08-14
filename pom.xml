@@ -23,7 +23,7 @@
         <dependency>
             <groupId>no.nav.arbeid.pam</groupId>
             <artifactId>pam-ansettelseskodeverk</artifactId>
-            <version>1.13</version>
+            <version>1.14</version>
         </dependency>
 
         <dependency>
