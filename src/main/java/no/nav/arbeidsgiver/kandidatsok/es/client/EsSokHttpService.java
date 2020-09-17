@@ -1,7 +1,6 @@
 package no.nav.arbeidsgiver.kandidatsok.es.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import no.nav.arbeid.cv.kandidatsok.es.domene.sok.*;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.search.TotalHits;

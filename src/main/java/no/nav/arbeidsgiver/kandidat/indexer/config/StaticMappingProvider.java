@@ -13,9 +13,9 @@ import java.util.Map;
  */
 public class StaticMappingProvider {
 
-    public static final String CV_SETTINGS_CONFIG = "/no/nav/arbeidsgiver/cv/indexer/config/cv_settings.json";
+    public static final String CV_SETTINGS_CONFIG = "/no/nav/arbeidsgiver/kandidat/indexer/config/cv_settings.json";
 
-    public static final String CV_MAPPING_CONFIG = "/no/nav/arbeidsgiver/cv/indexer/config/cv_mapping.json";
+    public static final String CV_MAPPING_CONFIG = "/no/nav/arbeidsgiver/kandidat/indexer/config/cv_mapping.json";
 
     public static Map<String, Object> cvSettings() throws IOException {
         XContentParser parser = XContentType.JSON.xContent().createParser(NamedXContentRegistry.EMPTY, null,
