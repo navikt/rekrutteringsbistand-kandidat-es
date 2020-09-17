@@ -1,7 +1,7 @@
-## PAM Kandidatsøk ES
+## Rekrutteringsbistand kaandidat ES
 
-PAM Kandidatsøk ES er et bibliotek som håndterer indeksering og søk mot Elasticsearch for bruk i 
-kandidatsøk og cv-indekser. Innholder blant annet abstraksjoner for spørringer fra arbeidsgivers og veileders kandidatsøk, 
+Rekrutteringsbistand kandidat ES er et bibliotek som håndterer indeksering og søk mot Elasticsearch for bruk i 
+rekrutteringsbistand-kandidat-api og rekrutteringsbistand-kandidat-indekser. Biblioteket innholder blant annet abstraksjoner for spørringer fra veileders kandidatsøk, 
 ElasticSearch CV mapping (schema) og oppsett av ElasticSearch klient.
 
 ### Krav for utviklere
