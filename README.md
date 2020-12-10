@@ -1,10 +1,11 @@
-## Rekrutteringsbistand kandidat ES
+# Rekrutteringsbistand kandidat ES
 
 Rekrutteringsbistand kandidat ES er et bibliotek som håndterer indeksering og søk mot Elasticsearch for bruk i 
 rekrutteringsbistand-kandidat-api og rekrutteringsbistand-kandidat-indekser. Biblioteket innholder blant annet abstraksjoner for spørringer fra veileders kandidatsøk, 
 ElasticSearch CV mapping (schema) og oppsett av ElasticSearch klient.
 
-### Krav for utviklere
+
+## Krav for utviklere
 
 Du trenger Docker installert lokalt, i tillegg til et "vanlig" oppsett med Java og Maven. Se 
 [Auras side om Linux utviklerimage på 
