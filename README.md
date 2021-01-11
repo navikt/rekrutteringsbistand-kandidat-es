@@ -1,6 +1,6 @@
-# Rekrutteringsbistand kandidat ES
+# Rekrutteringsbistand kandidat Elasticsearch
 
-Rekrutteringsbistand kandidat ES er et bibliotek som håndterer indeksering og søk mot Elasticsearch for bruk i 
+rekrutteringsbistand-kandidat-es er et bibliotek som håndterer indeksering og søk mot Elasticsearch for bruk i 
 rekrutteringsbistand-kandidat-api og rekrutteringsbistand-kandidat-indekser. Biblioteket innholder blant annet abstraksjoner for spørringer fra veileders kandidatsøk, 
 ElasticSearch CV mapping (schema) og oppsett av ElasticSearch klient.
 
