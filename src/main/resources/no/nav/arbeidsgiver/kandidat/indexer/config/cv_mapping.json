@@ -1,6 +1,5 @@
 {
   "date_detection": false,
-
   "properties": {
     "fritekst": {
       "type": "text",
@@ -317,6 +316,19 @@
           "type": "text",
           "analyzer": "norwegian",
           "copy_to": "fritekst"
+        }
+      }
+    },
+    "godkjenning": {
+      "properties": {
+        "tittel": {
+          "type": "text"
+        },
+        "gjennomfoert": {
+          "type": "date"
+        },
+        "utloeper": {
+          "type": "date"
         }
       }
     },
