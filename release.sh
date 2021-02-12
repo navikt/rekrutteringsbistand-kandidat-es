@@ -2,6 +2,7 @@
 # Build Maven project, release, commit release, bump to next version, commit next version.
 # The last (in a dotted version scheme) or only version number will be incremeted by one.
 set -e
+set -o xtrace
 
 test "$GITHUB_TOKEN" || { echo "Error: env var GITHUB_TOKEN not set"; exit 1; }
 test "$GITHUB_ACTOR" || { echo "Error: env var GITHUB_ACTOR not set"; exit 1; }
