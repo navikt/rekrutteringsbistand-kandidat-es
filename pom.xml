@@ -139,29 +139,13 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>versions-maven-plugin</artifactId>
-                <version>2.3</version>
-                <configuration>
-                    <rulesUri>file:///${project.basedir}/rules.xml</rulesUri>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>display-dependency-updates</goal>
-                            <goal>display-plugin-updates</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
     <scm>
         <connection>scm:git:https://github.com/navikt/rekrutteringsbistand-kandidat-es.git</connection>
-        <developerConnection>scm:git:https://github.com/navikt/rekrutteringsbistand-kandidat-es.git</developerConnection>
+        <developerConnection>scm:git:https://github.com/navikt/rekrutteringsbistand-kandidat-es.git
+        </developerConnection>
         <tag>HEAD</tag>
     </scm>
 
