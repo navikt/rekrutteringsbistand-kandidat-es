@@ -45,8 +45,8 @@ public class EsYrkeserfaring {
     }
 
     public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
-                           String kodeverkStillingstittel, String alternativStillingstittel, String beskrivelse,
-                           int yrkeserfaringManeder, List<String> sokeTitler, String sted, String stillingstittelFraStyrkkodeForTypeahead) {
+                           String kodeverkStillingstittel, String stillingstittelFraStyrkkodeForTypeahead, String alternativStillingstittel, String beskrivelse,
+                           int yrkeserfaringManeder, List<String> sokeTitler, String sted) {
         this(fraDato, tilDato, arbeidsgiver, styrkKode, kodeverkStillingstittel,
                 stillingstittelFraStyrkkodeForTypeahead, alternativStillingstittel, null, null, yrkeserfaringManeder, false, sokeTitler, sted);
         this.beskrivelse = beskrivelse;
