@@ -41,8 +41,6 @@ public class EsYrkeserfaring {
 
     private String sted;
 
-    public EsYrkeserfaring() {
-    }
 
     public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
                            String kodeverkStillingstittel, String stillingstittelFraStyrkkodeForTypeahead, String alternativStillingstittel, String beskrivelse,
@@ -52,10 +50,10 @@ public class EsYrkeserfaring {
         this.beskrivelse = beskrivelse;
     }
 
-    public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
-                           String styrkKodeStillingstittel, String stillingstittelFraStyrkkodeForTypeahead, String alternativStillingstittel,
-                           String organisasjonsnummer, String naceKode, int yrkeserfaringManeder,
-                           Boolean utelukketForFremtiden, List<String> sokeTitler, String sted) {
+    private EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
+                            String styrkKodeStillingstittel, String stillingstittelFraStyrkkodeForTypeahead, String alternativStillingstittel,
+                            String organisasjonsnummer, String naceKode, int yrkeserfaringManeder,
+                            Boolean utelukketForFremtiden, List<String> sokeTitler, String sted) {
         this.fraDato = fraDato;
         this.tilDato = tilDato;
         this.arbeidsgiver = arbeidsgiver;
@@ -76,10 +74,10 @@ public class EsYrkeserfaring {
         this.sted = sted;
     }
 
-    public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
-                           String styrkKodeStillingstittel, String stillingstittelFraStyrkkodeForTypeahead, String alternativStillingstittel,
-                           String organisasjonsnummer, String naceKode, Boolean utelukketForFremtiden,
-                           List<String> sokeTitler, String sted) {
+    EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
+                    String styrkKodeStillingstittel, String stillingstittelFraStyrkkodeForTypeahead, String alternativStillingstittel,
+                    String organisasjonsnummer, String naceKode, Boolean utelukketForFremtiden,
+                    List<String> sokeTitler, String sted) {
         this.fraDato = fraDato;
         this.tilDato = tilDato;
         this.arbeidsgiver = arbeidsgiver;

@@ -1,6 +1,6 @@
 package no.nav.arbeidsgiver.kandidat.kandidatsok.es;
 
-import no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es.EsCvObjectMother;
+import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCvObjectMother;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchTestConfiguration;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchIntegrationTestExtension;
 import no.nav.arbeidsgiver.kandidatsok.es.client.EsIndexerService;

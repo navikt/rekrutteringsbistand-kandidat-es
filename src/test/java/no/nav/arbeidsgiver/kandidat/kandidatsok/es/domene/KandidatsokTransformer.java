@@ -1,4 +1,4 @@
-package no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es;
+package no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene;
 
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsUtdanning;

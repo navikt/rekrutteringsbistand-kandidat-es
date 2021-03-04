@@ -1,7 +1,6 @@
-package no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es;
+package no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene;
 
 import no.nav.arbeid.pam.kodeverk.ansettelse.*;
-import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
