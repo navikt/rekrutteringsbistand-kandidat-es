@@ -79,6 +79,11 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     }
 
     @Override
+    public List<String> typeaheadYrkeserfaringStyrk(String prefix) {
+        return typeAhead(prefix, "yrkeserfaring.stillingstittelFraStyrkkodeForTypeahead");
+    }
+
+    @Override
     public List<String> typeAheadGeografi(String prefix) {
         try {
             SearchRequest searchRequest = new SearchRequest(indexName);

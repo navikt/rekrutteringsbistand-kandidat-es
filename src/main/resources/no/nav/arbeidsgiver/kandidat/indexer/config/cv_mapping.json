@@ -247,6 +247,9 @@
             }
           }
         },
+        "stillingstittelFraStyrkkodeForTypeahead": {
+          "type": "completion"
+        },
         "alternativStillingstittel": {
           "type": "text",
           "analyzer": "norwegian",

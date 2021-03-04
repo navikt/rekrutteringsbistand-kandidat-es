@@ -20,6 +20,8 @@ public interface EsSokService {
 
     List<String> typeAheadYrkeserfaring(String prefix);
 
+    List<String> typeaheadYrkeserfaringStyrk(String prefix);
+
     List<String> typeAheadGeografi(String prefix);
 
     List<String> typeAheadYrkeJobbonsker(String prefix);

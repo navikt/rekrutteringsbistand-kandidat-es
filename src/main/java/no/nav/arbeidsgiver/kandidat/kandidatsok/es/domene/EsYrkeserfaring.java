@@ -23,6 +23,8 @@ public class EsYrkeserfaring {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String styrkKodeStillingstittel;
 
+    private String stillingstittelFraStyrkkodeForTypeahead;
+
     private String alternativStillingstittel;
 
     private List<String> sokeTitler = new ArrayList<>();
@@ -44,14 +46,14 @@ public class EsYrkeserfaring {
 
     public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
                            String kodeverkStillingstittel, String alternativStillingstittel, String beskrivelse,
-                           int yrkeserfaringManeder, List<String> sokeTitler, String sted) {
+                           int yrkeserfaringManeder, List<String> sokeTitler, String sted, String stillingstittelFraStyrkkodeForTypeahead) {
         this(fraDato, tilDato, arbeidsgiver, styrkKode, kodeverkStillingstittel,
-                alternativStillingstittel, null, null, yrkeserfaringManeder, false, sokeTitler, sted);
+                stillingstittelFraStyrkkodeForTypeahead, alternativStillingstittel, null, null, yrkeserfaringManeder, false, sokeTitler, sted);
         this.beskrivelse = beskrivelse;
     }
 
     public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
-                           String styrkKodeStillingstittel, String alternativStillingstittel,
+                           String styrkKodeStillingstittel, String stillingstittelFraStyrkkodeForTypeahead, String alternativStillingstittel,
                            String organisasjonsnummer, String naceKode, int yrkeserfaringManeder,
                            Boolean utelukketForFremtiden, List<String> sokeTitler, String sted) {
         this.fraDato = fraDato;
@@ -63,6 +65,7 @@ public class EsYrkeserfaring {
         this.styrkKode3Siffer = (styrkKode == null ? null
                 : (styrkKode.length() <= 2 ? null : styrkKode.substring(0, 3)));
         this.styrkKodeStillingstittel = styrkKodeStillingstittel;
+        this.stillingstittelFraStyrkkodeForTypeahead = stillingstittelFraStyrkkodeForTypeahead;
         this.alternativStillingstittel = alternativStillingstittel;
         this.organisasjonsnummer = organisasjonsnummer;
         this.naceKode = naceKode;
@@ -74,7 +77,7 @@ public class EsYrkeserfaring {
     }
 
     public EsYrkeserfaring(Date fraDato, Date tilDato, String arbeidsgiver, String styrkKode,
-                           String styrkKodeStillingstittel, String alternativStillingstittel,
+                           String styrkKodeStillingstittel, String stillingstittelFraStyrkkodeForTypeahead, String alternativStillingstittel,
                            String organisasjonsnummer, String naceKode, Boolean utelukketForFremtiden,
                            List<String> sokeTitler, String sted) {
         this.fraDato = fraDato;
@@ -86,6 +89,7 @@ public class EsYrkeserfaring {
         this.styrkKode3Siffer = (styrkKode == null ? null
                 : (styrkKode.length() <= 2 ? null : styrkKode.substring(0, 3)));
         this.styrkKodeStillingstittel = styrkKodeStillingstittel;
+        this.stillingstittelFraStyrkkodeForTypeahead = stillingstittelFraStyrkkodeForTypeahead;
         this.alternativStillingstittel = alternativStillingstittel;
         this.organisasjonsnummer = organisasjonsnummer;
         this.naceKode = naceKode;
@@ -145,6 +149,10 @@ public class EsYrkeserfaring {
         return styrkKodeStillingstittel;
     }
 
+    public String getStillingstittelFraStyrkkodeForTypeahead() {
+        return stillingstittelFraStyrkkodeForTypeahead;
+    }
+
     public String getAlternativStillingstittel() {
         return alternativStillingstittel;
     }
@@ -190,6 +198,7 @@ public class EsYrkeserfaring {
                 && Objects.equals(arbeidsgiver, that.arbeidsgiver)
                 && Objects.equals(styrkKode, that.styrkKode)
                 && Objects.equals(styrkKodeStillingstittel, that.styrkKodeStillingstittel)
+                && Objects.equals(stillingstittelFraStyrkkodeForTypeahead, that.stillingstittelFraStyrkkodeForTypeahead)
                 && Objects.equals(alternativStillingstittel, that.alternativStillingstittel)
                 && Objects.equals(beskrivelse, that.beskrivelse)
                 && Objects.equals(organisasjonsnummer, that.organisasjonsnummer)
@@ -203,7 +212,7 @@ public class EsYrkeserfaring {
     public int hashCode() {
 
         return Objects.hash(fraDato, tilDato, arbeidsgiver, styrkKode, styrkKodeStillingstittel,
-                alternativStillingstittel, beskrivelse, organisasjonsnummer, naceKode,
+                stillingstittelFraStyrkkodeForTypeahead, alternativStillingstittel, beskrivelse, organisasjonsnummer, naceKode,
                 yrkeserfaringManeder, utelukketForFremtiden, sted);
     }
 
@@ -212,6 +221,7 @@ public class EsYrkeserfaring {
         return "EsYrkeserfaring{" + "fraDato=" + fraDato + ", tilDato=" + tilDato
                 + ", arbeidsgiver='" + arbeidsgiver + '\'' + ", styrkKode='" + styrkKode + '\''
                 + ", styrkKodeStillingstittel='" + styrkKodeStillingstittel + '\''
+                + ", stillingstittelFraStyrkkodeForTypeahead='" + stillingstittelFraStyrkkodeForTypeahead + '\''
                 + ", alternativStillingstittel='" + alternativStillingstittel + '\''
                 + ", beskrivelse='" + beskrivelse + '\'' + ", organisasjonsnummer='"
                 + organisasjonsnummer + '\'' + ", naceKode='" + naceKode + '\''
@@ -219,5 +229,4 @@ public class EsYrkeserfaring {
                 + ", sted='" + sted + '\''
                 + ", utelukketForFremtiden='" + utelukketForFremtiden + '\'' + '}';
     }
-
 }
