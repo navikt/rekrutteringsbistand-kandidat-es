@@ -1,7 +1,7 @@
 package no.nav.arbeidsgiver.kandidat.kandidatsok.es;
 
-import no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es.EsCvObjectMother;
-import no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es.KandidatsokTransformer;
+import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCvObjectMother;
+import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.KandidatsokTransformer;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.SokekriterierVeiledere;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.Sokeresultat;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchTestConfiguration;

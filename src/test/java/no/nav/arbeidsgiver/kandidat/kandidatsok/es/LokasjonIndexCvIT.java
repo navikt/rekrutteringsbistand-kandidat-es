@@ -1,6 +1,6 @@
 package no.nav.arbeidsgiver.kandidat.kandidatsok.es;
 
-import no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es.EsCvObjectMother;
+import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCvObjectMother;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.Sokekriterier;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.Sokeresultat;
