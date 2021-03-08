@@ -277,7 +277,7 @@ public class EsCvObjectMother {
 
         EsYrkeserfaring yrkeserfaring6 =
                 new EsYrkeserfaring(fraIsoDato("2017-10-01"), fraIsoDato("2019-09-26"), "Awesome coders AS", "5746.07",
-                        "Javautvikler", "Javautvikler", "Javautvikler", "YRKE_ORGNR", "YRKE_NACEKODE", false, Arrays.asList("Javaprogrammerer", "Javawizard", "Javaguru"), "Oslo");
+                        "Javautvikler", "JavautviklerTypeahead", "Javautvikler", "YRKE_ORGNR", "YRKE_NACEKODE", false, Arrays.asList("Javaprogrammerer", "Javawizard", "Javaguru"), "Oslo");
 
         ArrayList<EsYrkeserfaring> yrkeserfaringListe = new ArrayList<>();
         yrkeserfaringListe.add(yrkeserfaring1);

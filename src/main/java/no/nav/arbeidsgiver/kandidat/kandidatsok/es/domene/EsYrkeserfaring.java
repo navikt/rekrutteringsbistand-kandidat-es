@@ -2,6 +2,7 @@ package no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
@@ -72,8 +73,10 @@ public class EsYrkeserfaring {
         this.yrkeserfaringManeder = yrkeserfaringManeder;
         this.utelukketForFremtiden = utelukketForFremtiden;
         this.sokeTitler.add(styrkKodeStillingstittel);
+        if(!StringUtils.equalsIgnoreCase(stillingstittelFraStyrkkodeForTypeahead, styrkKodeStillingstittel)) {
+            this.sokeTitler.add(stillingstittelFraStyrkkodeForTypeahead);
+        }
         this.sokeTitler.addAll(sokeTitler);
-        this.sokeTitler.add(stillingstittelFraStyrkkodeForTypeahead);
         this.sted = sted;
     }
 
@@ -97,8 +100,10 @@ public class EsYrkeserfaring {
         yrkeserfaringManeder = toYrkeserfaringManeder(fraDato, tilDato);
         this.utelukketForFremtiden = utelukketForFremtiden;
         this.sokeTitler.add(styrkKodeStillingstittel);
+        if(!StringUtils.equalsIgnoreCase(stillingstittelFraStyrkkodeForTypeahead, styrkKodeStillingstittel)) {
+            this.sokeTitler.add(stillingstittelFraStyrkkodeForTypeahead);
+        }
         this.sokeTitler.addAll(sokeTitler);
-        this.sokeTitler.add(stillingstittelFraStyrkkodeForTypeahead);
         this.sted = sted;
     }
 

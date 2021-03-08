@@ -854,6 +854,19 @@ public class IndexCvIT {
     }
 
     @Test
+    public void sokMedTypeaheadForYrkeserfaringSkalGiTreff() {
+        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
+                .stillingstitler(Collections.singletonList("JavautviklerTypeahead")).bygg());
+
+        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        assertThat(cver.size()).isEqualTo(1);
+        no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv cv = cver.get(0);
+        assertThat(cv)
+                .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
+
+    }
+
+    @Test
     public void sokPaaStillingsTittelMedFilterPaaNyligeSkalGiTreff() {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .stillingstitler(Collections.singletonList("Anleggsmaskinfører")).antallAarGammelYrkeserfaring(null).bygg());
