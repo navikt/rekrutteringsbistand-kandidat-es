@@ -73,7 +73,7 @@ public class EsYrkeserfaring {
         this.yrkeserfaringManeder = yrkeserfaringManeder;
         this.utelukketForFremtiden = utelukketForFremtiden;
         this.sokeTitler.add(styrkKodeStillingstittel);
-        if(!StringUtils.equalsIgnoreCase(stillingstittelFraStyrkkodeForTypeahead, styrkKodeStillingstittel)) {
+        if (erUlike(stillingstittelFraStyrkkodeForTypeahead, styrkKodeStillingstittel)) {
             this.sokeTitler.add(stillingstittelFraStyrkkodeForTypeahead);
         }
         this.sokeTitler.addAll(sokeTitler);
@@ -100,11 +100,19 @@ public class EsYrkeserfaring {
         yrkeserfaringManeder = toYrkeserfaringManeder(fraDato, tilDato);
         this.utelukketForFremtiden = utelukketForFremtiden;
         this.sokeTitler.add(styrkKodeStillingstittel);
-        if(!StringUtils.equalsIgnoreCase(stillingstittelFraStyrkkodeForTypeahead, styrkKodeStillingstittel)) {
+        if (erUlike(stillingstittelFraStyrkkodeForTypeahead, styrkKodeStillingstittel)) {
             this.sokeTitler.add(stillingstittelFraStyrkkodeForTypeahead);
         }
         this.sokeTitler.addAll(sokeTitler);
         this.sted = sted;
+    }
+
+    private static boolean erUlike(String enString, String enAnnenString) {
+        if (StringUtils.isEmpty(enString)) {
+            return false;
+        }
+
+        return !StringUtils.equalsIgnoreCase(enString, enAnnenString);
     }
 
     private static int toYrkeserfaringManeder(Date fraDato, Date tilDato) {
