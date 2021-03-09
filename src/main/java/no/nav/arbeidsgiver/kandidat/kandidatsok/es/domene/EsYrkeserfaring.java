@@ -2,6 +2,7 @@ package no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
@@ -60,9 +61,9 @@ public class EsYrkeserfaring {
         this.tilDato = tilDato;
         this.arbeidsgiver = arbeidsgiver;
         this.styrkKode = styrkKode;
-        this.styrkKode4Siffer = (styrkKode == null ? null
+        styrkKode4Siffer = (styrkKode == null ? null
                 : (styrkKode.length() <= 3 ? null : styrkKode.substring(0, 4)));
-        this.styrkKode3Siffer = (styrkKode == null ? null
+        styrkKode3Siffer = (styrkKode == null ? null
                 : (styrkKode.length() <= 2 ? null : styrkKode.substring(0, 3)));
         this.styrkKodeStillingstittel = styrkKodeStillingstittel;
         this.stillingstittelFraStyrkkodeForTypeahead = stillingstittelFraStyrkkodeForTypeahead;
@@ -72,6 +73,9 @@ public class EsYrkeserfaring {
         this.yrkeserfaringManeder = yrkeserfaringManeder;
         this.utelukketForFremtiden = utelukketForFremtiden;
         this.sokeTitler.add(styrkKodeStillingstittel);
+        if (erUlike(stillingstittelFraStyrkkodeForTypeahead, styrkKodeStillingstittel)) {
+            this.sokeTitler.add(stillingstittelFraStyrkkodeForTypeahead);
+        }
         this.sokeTitler.addAll(sokeTitler);
         this.sted = sted;
     }
@@ -84,20 +88,31 @@ public class EsYrkeserfaring {
         this.tilDato = tilDato;
         this.arbeidsgiver = arbeidsgiver;
         this.styrkKode = styrkKode;
-        this.styrkKode4Siffer = (styrkKode == null ? null
+        styrkKode4Siffer = (styrkKode == null ? null
                 : (styrkKode.length() <= 3 ? null : styrkKode.substring(0, 4)));
-        this.styrkKode3Siffer = (styrkKode == null ? null
+        styrkKode3Siffer = (styrkKode == null ? null
                 : (styrkKode.length() <= 2 ? null : styrkKode.substring(0, 3)));
         this.styrkKodeStillingstittel = styrkKodeStillingstittel;
         this.stillingstittelFraStyrkkodeForTypeahead = stillingstittelFraStyrkkodeForTypeahead;
         this.alternativStillingstittel = alternativStillingstittel;
         this.organisasjonsnummer = organisasjonsnummer;
         this.naceKode = naceKode;
-        this.yrkeserfaringManeder = toYrkeserfaringManeder(fraDato, tilDato);
+        yrkeserfaringManeder = toYrkeserfaringManeder(fraDato, tilDato);
         this.utelukketForFremtiden = utelukketForFremtiden;
         this.sokeTitler.add(styrkKodeStillingstittel);
+        if (erUlike(stillingstittelFraStyrkkodeForTypeahead, styrkKodeStillingstittel)) {
+            this.sokeTitler.add(stillingstittelFraStyrkkodeForTypeahead);
+        }
         this.sokeTitler.addAll(sokeTitler);
         this.sted = sted;
+    }
+
+    private static boolean erUlike(String enString, String enAnnenString) {
+        if (StringUtils.isEmpty(enString)) {
+            return false;
+        }
+
+        return !StringUtils.equalsIgnoreCase(enString, enAnnenString);
     }
 
     private static int toYrkeserfaringManeder(Date fraDato, Date tilDato) {
