@@ -18,9 +18,7 @@ public interface EsSokService {
 
     List<String> typeAheadUtdanning(String prefix);
 
-    List<String> typeAheadYrkeserfaring(String prefix);
-
-    List<String> typeaheadYrkeserfaringStyrk(String prefix);
+    List<String> typeaheadYrkeserfaring(String prefix);
 
     List<String> typeAheadGeografi(String prefix);
 
