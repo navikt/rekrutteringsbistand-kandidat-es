@@ -3,15 +3,12 @@ package no.nav.arbeidsgiver.kandidat.kandidatsok.es;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es.EsCvObjectMother;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es.KandidatsokTransformer;
-import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchTestConfiguration;
+import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv;
+import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.*;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchIntegrationTestExtension;
+import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchTestConfiguration;
 import no.nav.arbeidsgiver.kandidatsok.es.client.EsIndexerService;
 import no.nav.arbeidsgiver.kandidatsok.es.client.EsSokService;
-import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv;
-import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.Aggregering;
-import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.Sokekriterier;
-import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.SokekriterierVeiledere;
-import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.Sokeresultat;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.extractor.Extractors;
 import org.junit.jupiter.api.AfterEach;
@@ -26,7 +23,6 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 
 @ExtendWith(ElasticSearchIntegrationTestExtension.class)
 public class IndexCvIT {
@@ -854,9 +850,9 @@ public class IndexCvIT {
     }
 
     @Test
-    public void sokMedTypeaheadForYrkeserfaringSkalGiTreff() {
+    public void sokMedTypeaheadForYrkeserfaringSkalGiTreffFordiTypeaheadFeltSkalLiggeISoketitler() {
         Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
-                .stillingstitler(Collections.singletonList("JavautviklerTypeahead")).bygg());
+                .stillingstitler(Collections.singletonList("Javautvikler")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
         assertThat(cver.size()).isEqualTo(1);
@@ -864,6 +860,13 @@ public class IndexCvIT {
         assertThat(cv)
                 .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
 
+        List<EsYrkeserfaring> yrkeserfaringer = sokeresultat.getCver().get(0).getYrkeserfaring();
+
+        assertThat(yrkeserfaringer.stream()
+                .anyMatch(yrkeserfaring ->
+                        yrkeserfaring.getSokeTitler().stream()
+                                .anyMatch("Javautvikler"::equals)
+                )).isTrue();
     }
 
     @Test
