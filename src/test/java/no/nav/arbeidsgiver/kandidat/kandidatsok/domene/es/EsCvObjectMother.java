@@ -21,7 +21,7 @@ public class EsCvObjectMother {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     static String nteAktorId(int n) {
-        return String.valueOf(900000000000L + n*1000);
+        return String.valueOf(900000000000L + n * 1000);
     }
 
     private static Date fraIsoDato(String string) {
@@ -277,7 +277,7 @@ public class EsCvObjectMother {
 
         EsYrkeserfaring yrkeserfaring6 =
                 new EsYrkeserfaring(fraIsoDato("2017-10-01"), fraIsoDato("2019-09-26"), "Awesome coders AS", "5746.07",
-                        "Javautvikler", "JavautviklerTypeahead", "Javautvikler", "YRKE_ORGNR", "YRKE_NACEKODE", false, Arrays.asList("Javaprogrammerer", "Javawizard", "Javaguru"), "Oslo");
+                        "Javautvikler", "Javautvikler", "Javautvikler", "YRKE_ORGNR", "YRKE_NACEKODE", false, Arrays.asList("Javaprogrammerer", "Javawizard", "Javaguru"), "Oslo");
 
         ArrayList<EsYrkeserfaring> yrkeserfaringListe = new ArrayList<>();
         yrkeserfaringListe.add(yrkeserfaring1);
@@ -724,7 +724,6 @@ public class EsCvObjectMother {
         // forerkortListe.add(forerkort3);
         forerkortListe.add(forerkort4);
         forerkortListe.add(forerkort5);
-
 
 
         EsSprak sprak = new EsSprak(fraIsoDato("2012-12-01"), "78985", "Tysk", "German", "Begynner");

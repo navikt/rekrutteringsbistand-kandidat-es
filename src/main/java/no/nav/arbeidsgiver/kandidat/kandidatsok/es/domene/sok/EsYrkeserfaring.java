@@ -9,7 +9,7 @@ import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsYrkeserfaring {
 
-    private String styrkKodeStillingstittel;
+    private String stillingstittel;
 
     private String alternativStillingstittel;
 
@@ -22,17 +22,17 @@ public class EsYrkeserfaring {
     public EsYrkeserfaring() {
     }
 
-    public EsYrkeserfaring(String styrkKodeStillingstittel, String alternativStillingstittel,
+    public EsYrkeserfaring(String stillingstittel, String alternativStillingstittel,
                            int yrkeserfaringManeder, Date fraDato, List<String> sokeTitler) {
-        this.styrkKodeStillingstittel = styrkKodeStillingstittel;
+        this.stillingstittel = stillingstittel;
         this.alternativStillingstittel = alternativStillingstittel;
         this.yrkeserfaringManeder = yrkeserfaringManeder;
         this.fraDato = fraDato;
         this.sokeTitler = sokeTitler;
     }
 
-    public String getStyrkKodeStillingstittel() {
-        return styrkKodeStillingstittel;
+    public String getStillingstittel() {
+        return stillingstittel;
     }
 
     public String getAlternativStillingstittel() {
@@ -60,7 +60,7 @@ public class EsYrkeserfaring {
             return false;
         }
         EsYrkeserfaring that = (EsYrkeserfaring) o;
-        return Objects.equals(styrkKodeStillingstittel, that.styrkKodeStillingstittel)
+        return Objects.equals(stillingstittel, that.stillingstittel)
                 && Objects.equals(alternativStillingstittel, that.alternativStillingstittel)
                 && Objects.equals(yrkeserfaringManeder, that.yrkeserfaringManeder)
                 && Objects.equals(fraDato, that.fraDato);
@@ -69,13 +69,13 @@ public class EsYrkeserfaring {
     @Override
     public int hashCode() {
 
-        return Objects.hash(styrkKodeStillingstittel, alternativStillingstittel,
+        return Objects.hash(stillingstittel, alternativStillingstittel,
                 yrkeserfaringManeder, fraDato);
     }
 
     @Override
     public String toString() {
-        return "EsYrkeserfaring{" + " styrkKodeStillingstittel='" + styrkKodeStillingstittel + '\''
+        return "EsYrkeserfaring{" + " stillingstittel='" + stillingstittel + '\''
                 + " alternativStillingstittel='" + alternativStillingstittel + '\''
                 + ", yrkeserfaringManeder='" + yrkeserfaringManeder + '\'' + ", fraDato='" + fraDato
                 + '\'' + '}';

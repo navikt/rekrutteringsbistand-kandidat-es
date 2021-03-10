@@ -46,19 +46,8 @@ public class TypeaheadIT {
     }
 
     @Test
-    public void typeAheadArbeidserfaring() {
-        List<String> liste = sokClient.typeAheadYrkeserfaring("Butikk");
-        assertThat(liste.size()).isEqualTo(5);
-        assertThat(liste).containsExactly("Butikkmedarbeider",
-                "Butikkmedarbeider(dagligvarer)",
-                "Butikkmedarbeider(elektronikk)",
-                "Butikkmedarbeider(klesbutikk)",
-                "Butikkmedarbeider(trevare)");
-    }
-
-    @Test
-    public void typeAheadYrkeserfaringStyrk() {
-        List<String> liste = sokClient.typeaheadYrkeserfaringStyrk("Anlegg");
+    public void typeAheadYrkeserfaring() {
+        List<String> liste = sokClient.typeaheadYrkeserfaring("Anlegg");
         assertThat(liste).containsExactly(
                 "Anleggsmaskindrifter",
                 "Anleggsmaskinfører"

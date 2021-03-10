@@ -49,7 +49,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
     public EsSokHttpService(RestHighLevelClient client, ObjectMapper objectMapper, String indexName) {
         this.client = client;
-        this.mapper = objectMapper;
+        mapper = objectMapper;
         this.indexName = indexName;
     }
 
@@ -74,13 +74,8 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     }
 
     @Override
-    public List<String> typeAheadYrkeserfaring(String prefix) {
-        return typeAhead(prefix, "yrkeserfaring.styrkKodeStillingstittel.completion");
-    }
-
-    @Override
-    public List<String> typeaheadYrkeserfaringStyrk(String prefix) {
-        return typeAhead(prefix, "yrkeserfaring.stillingstittelFraStyrkkodeForTypeahead");
+    public List<String> typeaheadYrkeserfaring(String prefix) {
+        return typeAhead(prefix, "yrkeserfaring.stillingstittelForTypeahead");
     }
 
     @Override
@@ -285,7 +280,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
             }
 
             if (isNotEmpty(sk.stillingstitler())) {
-                if( sk.antallAarGammelYrkeserfaring() != null ) {
+                if (sk.antallAarGammelYrkeserfaring() != null) {
                     addNyligeStillingstitlerToQuery(sk.stillingstitler(), sk.antallAarGammelYrkeserfaring(), queryBuilder, sortQueryBuilder);
                 } else {
                     addStillingstitlerToQuery(sk.stillingstitler(), queryBuilder, sortQueryBuilder);
@@ -410,7 +405,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     }
 
     private void addFilterForPermittert(BoolQueryBuilder queryBuilder, boolean inkluder) {
-        if( inkluder ) {
+        if (inkluder) {
             addVeilTilretteleggingsbehovToQuery(Collections.singletonList("permittert"), queryBuilder);
         } else {
             addVeilTilretteleggingsbehovUtelukkesToQuery(Collections.singletonList("permittert"), queryBuilder);
@@ -574,7 +569,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     }
 
     private void addNyligeStillingstitlerToQuery(List<String> stillingstitler, int antallAar,
-                                           BoolQueryBuilder boolQueryBuilder, BoolQueryBuilder sortQueryBuilder) {
+                                                 BoolQueryBuilder boolQueryBuilder, BoolQueryBuilder sortQueryBuilder) {
         BoolQueryBuilder innerBoolQuery = QueryBuilders.boolQuery();
         stillingstitler.stream().filter(StringUtils::isNotBlank)
                 .forEach(s -> addNyligStillingsTittelQuery(s, antallAar, innerBoolQuery, sortQueryBuilder));
@@ -695,7 +690,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     }
 
     private void addNyligStillingsTittelQuery(String stillingstittel, int antallAar, BoolQueryBuilder boolQueryBuilder,
-                                         BoolQueryBuilder sortBoolQueryBuilder) {
+                                              BoolQueryBuilder sortBoolQueryBuilder) {
         BoolQueryBuilder boolQueryInNestedQuery = QueryBuilders.boolQuery();
         boolQueryInNestedQuery.must(QueryBuilders.matchQuery("yrkeserfaring.sokeTitler", stillingstittel)
                 .operator(Operator.AND));
@@ -1049,7 +1044,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 if (!(esCv.isSynligForArbeidsgiverSok() || esCv.isSynligForVeilederSok())) {
                     return Optional.empty();
                 }
-            } else if (! esCv.isSynligForVeilederSok()){
+            } else if (!esCv.isSynligForVeilederSok()) {
                 return Optional.empty();
             }
 
