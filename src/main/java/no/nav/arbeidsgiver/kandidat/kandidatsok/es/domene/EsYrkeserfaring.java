@@ -2,7 +2,6 @@ package no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
@@ -73,9 +72,6 @@ public class EsYrkeserfaring {
         this.yrkeserfaringManeder = yrkeserfaringManeder;
         this.utelukketForFremtiden = utelukketForFremtiden;
         this.sokeTitler.add(stillingstittel);
-        if (erUlike(stillingstittelForTypeahead, stillingstittel)) {
-            this.sokeTitler.add(stillingstittelForTypeahead);
-        }
         this.sokeTitler.addAll(sokeTitler);
         this.sted = sted;
     }
@@ -100,19 +96,8 @@ public class EsYrkeserfaring {
         yrkeserfaringManeder = toYrkeserfaringManeder(fraDato, tilDato);
         this.utelukketForFremtiden = utelukketForFremtiden;
         this.sokeTitler.add(stillingstittel);
-        if (erUlike(stillingstittelForTypeahead, stillingstittel)) {
-            this.sokeTitler.add(stillingstittelForTypeahead);
-        }
         this.sokeTitler.addAll(sokeTitler);
         this.sted = sted;
-    }
-
-    private static boolean erUlike(String enString, String enAnnenString) {
-        if (StringUtils.isEmpty(enString)) {
-            return false;
-        }
-
-        return !StringUtils.equalsIgnoreCase(enString, enAnnenString);
     }
 
     private static int toYrkeserfaringManeder(Date fraDato, Date tilDato) {
