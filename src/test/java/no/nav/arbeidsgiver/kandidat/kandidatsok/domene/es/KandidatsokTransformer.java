@@ -35,6 +35,6 @@ public class KandidatsokTransformer {
     }
 
     private EsYrkeserfaring transformer(no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsYrkeserfaring yrke) {
-        return new EsYrkeserfaring(yrke.getStyrkKodeStillingstittel(), yrke.getAlternativStillingstittel(), yrke.getYrkeserfaringManeder(), yrke.getFraDato(), yrke.getSokeTitler());
+        return new EsYrkeserfaring(yrke.getStillingstittel(), yrke.getAlternativStillingstittel(), yrke.getYrkeserfaringManeder(), yrke.getFraDato(), yrke.getSokeTitler());
     }
 }

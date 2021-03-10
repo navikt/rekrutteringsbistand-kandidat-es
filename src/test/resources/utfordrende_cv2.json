@@ -1,211 +1,211 @@
 {
-    "adresselinje1": "Arbeids- og velferdsdirektoratet",
-    "adresselinje2": "Sannergata 2",
-    "adresselinje3": "",
-    "annenerfaring": [],
-    "ansettelsesforholdJobbonsker": [],
-    "arbeidstidsordningJobbonsker": [],
-    "arenaKandidatnr": "HG284906",
-    "arenaPersonId": 4275896,
-    "beskrivelse": "\u00bf\tStrong quantitative and analytical capabilities \n\u00bf\tExcellent skills at Office software \n\u00bf\tConscientious and able to work as part of a team\n\u00bf\tAbility to work under pressure and remain calm\n\u00bf\tKnowledge of key accounting principles and procedures \n",
-    "disponererBil": false,
-    "epostadresse": "spammenot@mailinator.com",
-    "etternavn": "Nordmann",
-    "fodselsdato": "2018-08-06T22:00:00.000+0000",
-    "fodselsdatoErDnr": false,
-    "fodselsnummer": "01017012345",
-    "forerkort": [],
-    "formidlingsgruppekode": "ARBS",
-    "fornavn": "Ola",
-    "geografiJobbonsker": [
-        {
-            "geografiKode": "NO50.5001",
-            "geografiKodeTekst": "Trondheim"
-        },
-        {
-            "geografiKode": "NO50.50012",
-            "geografiKodeTekst": "Trondheim/Bydel \u00d8stbyen"
-        },
-        {
-            "geografiKode": "NO03",
-            "geografiKodeTekst": "Oslo"
-        }
-    ],
-    "heltidDeltidJobbonsker": [],
-    "kommunenummer": 1,
-    "kompetanse": [
-        {
-            "alternativtNavn": null,
-            "beskrivelse": null,
-            "fraDato": "2018-02-18T23:00:00.000+0000",
-            "kompKode": "",
-            "kompKodeNavn": ""
-        }
-    ],
-    "kurs": [],
-    "landkode": "NO",
-    "postnummer": "0557",
-    "poststed": "Oslo",
-    "samletKompetanse": [
-        {
-            "samletKompetanseTekst": ""
-        }
-    ],
-    "samtykkeDato": "2018-04-26T22:00:00.000+0000",
-    "samtykkeStatus": "G",
-    "sertifikat": [],
-    "sprak": [
-        {
-            "alternativTekst": "Kinesisk",
-            "beskrivelse": null,
-            "fraDato": "2018-02-18T23:00:00.000+0000",
-            "sprakKode": "430097",
-            "sprakKodeTekst": "Kinesisk"
-        },
-        {
-            "alternativTekst": "Mandarin",
-            "beskrivelse": null,
-            "fraDato": "2018-02-18T23:00:00.000+0000",
-            "sprakKode": "430136",
-            "sprakKodeTekst": "Mandarin"
-        },
-        {
-            "alternativTekst": "Engelsk",
-            "beskrivelse": null,
-            "fraDato": "2018-02-18T23:00:00.000+0000",
-            "sprakKode": "4201",
-            "sprakKodeTekst": "Engelsk"
-        }
-    ],
-    "statsborgerskap": "CN",
-    "tidsstempel": "2018-05-02T22:00:00.000+0000",
-    "totalLengdeYrkeserfaring": 67,
-    "utdanning": [
-        {
-            "alternativGrad": "Master of Science, economics and business administration, to\u00e5rig",
-            "fraDato": "2007-08-31T22:00:00.000+0000",
-            "nusKode": "741131",
-            "nusKodeGrad": "Master of Science, economics and business administration, to\u00e5rig",
-            "tilDato": "2010-05-31T22:00:00.000+0000",
-            "utdannelsessted": "Shanghai Academy of Social Sciences, China"
-        }
-    ],
-    "verv": [],
-    "yrkeJobbonsker": [
-        {
-            "primaertJobbonske": false,
-            "styrkBeskrivelse": "Bankfunksjon\u00e6r",
-            "styrkKode": "3312.01"
-        },
-        {
-            "primaertJobbonske": false,
-            "styrkBeskrivelse": "Reisebyr\u00e5medarbeider",
-            "styrkKode": "4221.01"
-        },
-        {
-            "primaertJobbonske": false,
-            "styrkBeskrivelse": "Reisekonsulent",
-            "styrkKode": "4221.03"
-        },
-        {
-            "primaertJobbonske": false,
-            "styrkBeskrivelse": "Reisekoordinator",
-            "styrkKode": "4221.04"
-        },
-        {
-            "primaertJobbonske": false,
-            "styrkBeskrivelse": "L\u00f8nningsmedarbeider",
-            "styrkKode": "4313.02"
-        },
-        {
-            "primaertJobbonske": false,
-            "styrkBeskrivelse": "Guide",
-            "styrkKode": "5113.01"
-        },
-        {
-            "primaertJobbonske": false,
-            "styrkBeskrivelse": "Barnehageassistent",
-            "styrkKode": "5311.04"
-        },
-        {
-            "primaertJobbonske": false,
-            "styrkBeskrivelse": "Reisebyr\u00e5funksjon\u00e6r",
-            "styrkKode": "4221.18"
-        },
-        {
-            "primaertJobbonske": false,
-            "styrkBeskrivelse": "Risiko controller (bank)",
-            "styrkKode": "2412.20"
-        },
-        {
-            "primaertJobbonske": false,
-            "styrkBeskrivelse": "Risk account manager",
-            "styrkKode": "2413.18"
-        },
-        {
-            "primaertJobbonske": false,
-            "styrkBeskrivelse": "Bokholder",
-            "styrkKode": "4311.05"
-        },
-        {
-            "primaertJobbonske": false,
-            "styrkBeskrivelse": "Bokholderassistent",
-            "styrkKode": "4311.06"
-        },
-        {
-            "primaertJobbonske": false,
-            "styrkBeskrivelse": "Kontormedarbeider (regnskap)",
-            "styrkKode": "4311.08"
-        },
-        {
-            "primaertJobbonske": false,
-            "styrkBeskrivelse": "Regnskapsassistent",
-            "styrkKode": "4311.10"
-        },
-        {
-            "primaertJobbonske": false,
-            "styrkBeskrivelse": "Regnskapsfullmektig",
-            "styrkKode": "4311.11"
-        },
-        {
-            "primaertJobbonske": false,
-            "styrkBeskrivelse": "L\u00f8nningsassistent",
-            "styrkKode": "4313.03"
-        },
-        {
-            "primaertJobbonske": true,
-            "styrkBeskrivelse": "L\u00f8nningssekret\u00e6r",
-            "styrkKode": "4313.04"
-        }
-    ],
-    "yrkeserfaring": [
-        {
-            "alternativStillingstittel": "Kontormedarbeider (regnskap)",
-            "arbeidsgiver": "Shanghai Yingmingde Accounting Firm",
-            "fraDato": "2008-09-30T22:00:00.000+0000",
-            "naceKode": null,
-            "organisasjonsnummer": null,
-            "styrkKode": "4311.08",
-            "styrkKode3Siffer": "431",
-            "styrkKode4Siffer": "4311",
-            "styrkKodeStillingstittel": "Kontormedarbeider (regnskap)",
-            "tilDato": "2009-05-31T22:00:00.000+0000",
-            "utelukketForFremtiden": false,
-            "yrkeserfaringManeder": 8
-        },
-        {
-            "alternativStillingstittel": "Bankfunksjon\u00e6r",
-            "arbeidsgiver": "Credit Card Center, China Construction Bank",
-            "fraDato": "2010-06-30T22:00:00.000+0000",
-            "naceKode": null,
-            "organisasjonsnummer": null,
-            "styrkKode": "3312.01",
-            "styrkKode3Siffer": "331",
-            "styrkKode4Siffer": "3312",
-            "styrkKodeStillingstittel": "Bankfunksjon\u00e6r",
-            "tilDato": "2015-05-31T22:00:00.000+0000",
-            "utelukketForFremtiden": false,
-            "yrkeserfaringManeder": 59
-        }
-    ]
+  "adresselinje1": "Arbeids- og velferdsdirektoratet",
+  "adresselinje2": "Sannergata 2",
+  "adresselinje3": "",
+  "annenerfaring": [],
+  "ansettelsesforholdJobbonsker": [],
+  "arbeidstidsordningJobbonsker": [],
+  "arenaKandidatnr": "HG284906",
+  "arenaPersonId": 4275896,
+  "beskrivelse": "\u00bf\tStrong quantitative and analytical capabilities \n\u00bf\tExcellent skills at Office software \n\u00bf\tConscientious and able to work as part of a team\n\u00bf\tAbility to work under pressure and remain calm\n\u00bf\tKnowledge of key accounting principles and procedures \n",
+  "disponererBil": false,
+  "epostadresse": "spammenot@mailinator.com",
+  "etternavn": "Nordmann",
+  "fodselsdato": "2018-08-06T22:00:00.000+0000",
+  "fodselsdatoErDnr": false,
+  "fodselsnummer": "01017012345",
+  "forerkort": [],
+  "formidlingsgruppekode": "ARBS",
+  "fornavn": "Ola",
+  "geografiJobbonsker": [
+    {
+      "geografiKode": "NO50.5001",
+      "geografiKodeTekst": "Trondheim"
+    },
+    {
+      "geografiKode": "NO50.50012",
+      "geografiKodeTekst": "Trondheim/Bydel \u00d8stbyen"
+    },
+    {
+      "geografiKode": "NO03",
+      "geografiKodeTekst": "Oslo"
+    }
+  ],
+  "heltidDeltidJobbonsker": [],
+  "kommunenummer": 1,
+  "kompetanse": [
+    {
+      "alternativtNavn": null,
+      "beskrivelse": null,
+      "fraDato": "2018-02-18T23:00:00.000+0000",
+      "kompKode": "",
+      "kompKodeNavn": ""
+    }
+  ],
+  "kurs": [],
+  "landkode": "NO",
+  "postnummer": "0557",
+  "poststed": "Oslo",
+  "samletKompetanse": [
+    {
+      "samletKompetanseTekst": ""
+    }
+  ],
+  "samtykkeDato": "2018-04-26T22:00:00.000+0000",
+  "samtykkeStatus": "G",
+  "sertifikat": [],
+  "sprak": [
+    {
+      "alternativTekst": "Kinesisk",
+      "beskrivelse": null,
+      "fraDato": "2018-02-18T23:00:00.000+0000",
+      "sprakKode": "430097",
+      "sprakKodeTekst": "Kinesisk"
+    },
+    {
+      "alternativTekst": "Mandarin",
+      "beskrivelse": null,
+      "fraDato": "2018-02-18T23:00:00.000+0000",
+      "sprakKode": "430136",
+      "sprakKodeTekst": "Mandarin"
+    },
+    {
+      "alternativTekst": "Engelsk",
+      "beskrivelse": null,
+      "fraDato": "2018-02-18T23:00:00.000+0000",
+      "sprakKode": "4201",
+      "sprakKodeTekst": "Engelsk"
+    }
+  ],
+  "statsborgerskap": "CN",
+  "tidsstempel": "2018-05-02T22:00:00.000+0000",
+  "totalLengdeYrkeserfaring": 67,
+  "utdanning": [
+    {
+      "alternativGrad": "Master of Science, economics and business administration, to\u00e5rig",
+      "fraDato": "2007-08-31T22:00:00.000+0000",
+      "nusKode": "741131",
+      "nusKodeGrad": "Master of Science, economics and business administration, to\u00e5rig",
+      "tilDato": "2010-05-31T22:00:00.000+0000",
+      "utdannelsessted": "Shanghai Academy of Social Sciences, China"
+    }
+  ],
+  "verv": [],
+  "yrkeJobbonsker": [
+    {
+      "primaertJobbonske": false,
+      "styrkBeskrivelse": "Bankfunksjon\u00e6r",
+      "styrkKode": "3312.01"
+    },
+    {
+      "primaertJobbonske": false,
+      "styrkBeskrivelse": "Reisebyr\u00e5medarbeider",
+      "styrkKode": "4221.01"
+    },
+    {
+      "primaertJobbonske": false,
+      "styrkBeskrivelse": "Reisekonsulent",
+      "styrkKode": "4221.03"
+    },
+    {
+      "primaertJobbonske": false,
+      "styrkBeskrivelse": "Reisekoordinator",
+      "styrkKode": "4221.04"
+    },
+    {
+      "primaertJobbonske": false,
+      "styrkBeskrivelse": "L\u00f8nningsmedarbeider",
+      "styrkKode": "4313.02"
+    },
+    {
+      "primaertJobbonske": false,
+      "styrkBeskrivelse": "Guide",
+      "styrkKode": "5113.01"
+    },
+    {
+      "primaertJobbonske": false,
+      "styrkBeskrivelse": "Barnehageassistent",
+      "styrkKode": "5311.04"
+    },
+    {
+      "primaertJobbonske": false,
+      "styrkBeskrivelse": "Reisebyr\u00e5funksjon\u00e6r",
+      "styrkKode": "4221.18"
+    },
+    {
+      "primaertJobbonske": false,
+      "styrkBeskrivelse": "Risiko controller (bank)",
+      "styrkKode": "2412.20"
+    },
+    {
+      "primaertJobbonske": false,
+      "styrkBeskrivelse": "Risk account manager",
+      "styrkKode": "2413.18"
+    },
+    {
+      "primaertJobbonske": false,
+      "styrkBeskrivelse": "Bokholder",
+      "styrkKode": "4311.05"
+    },
+    {
+      "primaertJobbonske": false,
+      "styrkBeskrivelse": "Bokholderassistent",
+      "styrkKode": "4311.06"
+    },
+    {
+      "primaertJobbonske": false,
+      "styrkBeskrivelse": "Kontormedarbeider (regnskap)",
+      "styrkKode": "4311.08"
+    },
+    {
+      "primaertJobbonske": false,
+      "styrkBeskrivelse": "Regnskapsassistent",
+      "styrkKode": "4311.10"
+    },
+    {
+      "primaertJobbonske": false,
+      "styrkBeskrivelse": "Regnskapsfullmektig",
+      "styrkKode": "4311.11"
+    },
+    {
+      "primaertJobbonske": false,
+      "styrkBeskrivelse": "L\u00f8nningsassistent",
+      "styrkKode": "4313.03"
+    },
+    {
+      "primaertJobbonske": true,
+      "styrkBeskrivelse": "L\u00f8nningssekret\u00e6r",
+      "styrkKode": "4313.04"
+    }
+  ],
+  "yrkeserfaring": [
+    {
+      "alternativStillingstittel": "Kontormedarbeider (regnskap)",
+      "arbeidsgiver": "Shanghai Yingmingde Accounting Firm",
+      "fraDato": "2008-09-30T22:00:00.000+0000",
+      "naceKode": null,
+      "organisasjonsnummer": null,
+      "styrkKode": "4311.08",
+      "styrkKode3Siffer": "431",
+      "styrkKode4Siffer": "4311",
+      "stillingstittel": "Kontormedarbeider (regnskap)",
+      "tilDato": "2009-05-31T22:00:00.000+0000",
+      "utelukketForFremtiden": false,
+      "yrkeserfaringManeder": 8
+    },
+    {
+      "alternativStillingstittel": "Bankfunksjon\u00e6r",
+      "arbeidsgiver": "Credit Card Center, China Construction Bank",
+      "fraDato": "2010-06-30T22:00:00.000+0000",
+      "naceKode": null,
+      "organisasjonsnummer": null,
+      "styrkKode": "3312.01",
+      "styrkKode3Siffer": "331",
+      "styrkKode4Siffer": "3312",
+      "stillingstittel": "Bankfunksjon\u00e6r",
+      "tilDato": "2015-05-31T22:00:00.000+0000",
+      "utelukketForFremtiden": false,
+      "yrkeserfaringManeder": 59
+    }
+  ]
 }

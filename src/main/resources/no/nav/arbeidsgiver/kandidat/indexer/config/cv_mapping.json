@@ -234,7 +234,7 @@
         "styrkKode3Siffer": {
           "type": "keyword"
         },
-        "styrkKodeStillingstittel": {
+        "stillingstittel": {
           "type": "text",
           "analyzer": "norwegian",
           "copy_to": "fritekst",
@@ -247,7 +247,7 @@
             }
           }
         },
-        "stillingstittelFraStyrkkodeForTypeahead": {
+        "stillingstittelForTypeahead": {
           "type": "completion"
         },
         "alternativStillingstittel": {
