@@ -241,9 +241,6 @@
           "fields": {
             "keyword": {
               "type": "keyword"
-            },
-            "completion": {
-              "type": "completion"
             }
           }
         },
