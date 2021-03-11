@@ -27,7 +27,7 @@ public class EsYrkeserfaring {
 
     private String alternativStillingstittel;
 
-    private List<String> sokeTitler = new ArrayList<>();
+    private Set<String> sokeTitler = new HashSet();
 
     private String organisasjonsnummer;
 
@@ -176,7 +176,7 @@ public class EsYrkeserfaring {
         return utelukketForFremtiden;
     }
 
-    public List<String> getSokeTitler() {
+    public Set<String> getSokeTitler() {
         return sokeTitler;
     }
 
