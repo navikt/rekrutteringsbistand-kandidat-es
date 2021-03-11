@@ -70,7 +70,6 @@ public class EsYrkeserfaring {
         this.naceKode = naceKode;
         this.yrkeserfaringManeder = yrkeserfaringManeder;
         this.utelukketForFremtiden = utelukketForFremtiden;
-        this.sokeTitler.add(stillingstittel);
         this.sokeTitler.addAll(sokeTitler);
         this.sted = sted;
     }
@@ -94,7 +93,6 @@ public class EsYrkeserfaring {
         this.naceKode = naceKode;
         yrkeserfaringManeder = toYrkeserfaringManeder(fraDato, tilDato);
         this.utelukketForFremtiden = utelukketForFremtiden;
-        this.sokeTitler.add(stillingstittel);
         this.sokeTitler.addAll(sokeTitler);
         this.sted = sted;
     }
