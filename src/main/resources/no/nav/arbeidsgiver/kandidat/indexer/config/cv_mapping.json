@@ -244,9 +244,6 @@
             }
           }
         },
-        "stillingstittelForTypeahead": {
-          "type": "completion"
-        },
         "stillingstitlerForTypeahead": {
           "type": "completion"
         },
