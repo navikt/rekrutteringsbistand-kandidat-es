@@ -75,7 +75,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
     @Override
     public List<String> typeaheadYrkeserfaring(String prefix) {
-        return typeAhead(prefix, "yrkeserfaring.stillingstittelForTypeahead");
+        return typeAhead(prefix, "yrkeserfaring.stillingstitlerForTypeahead");
     }
 
     @Override

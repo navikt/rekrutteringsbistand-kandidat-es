@@ -247,6 +247,9 @@
         "stillingstittelForTypeahead": {
           "type": "completion"
         },
+        "stillingstitlerForTypeahead": {
+          "type": "completion"
+        },
         "alternativStillingstittel": {
           "type": "text",
           "analyzer": "norwegian",
