@@ -3,8 +3,8 @@ package no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsYrkeserfaring {
@@ -13,7 +13,7 @@ public class EsYrkeserfaring {
 
     private String alternativStillingstittel;
 
-    private List<String> sokeTitler;
+    private Set<String> sokeTitler;
 
     private int yrkeserfaringManeder;
 
@@ -23,7 +23,7 @@ public class EsYrkeserfaring {
     }
 
     public EsYrkeserfaring(String stillingstittel, String alternativStillingstittel,
-                           int yrkeserfaringManeder, Date fraDato, List<String> sokeTitler) {
+                           int yrkeserfaringManeder, Date fraDato, Set<String> sokeTitler) {
         this.stillingstittel = stillingstittel;
         this.alternativStillingstittel = alternativStillingstittel;
         this.yrkeserfaringManeder = yrkeserfaringManeder;
@@ -47,7 +47,7 @@ public class EsYrkeserfaring {
         return fraDato;
     }
 
-    public List<String> getSokeTitler() {
+    public Set<String> getSokeTitler() {
         return sokeTitler;
     }
 
