@@ -1,25 +1,25 @@
 package no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
 public class EsPerioderMedInaktivitet {
 
-    private LocalDate startdatoForInneværendeInaktivePeriode;
-    private List<LocalDate> sluttdatoer = new ArrayList<>();
+    private Date startdatoForInneværendeInaktivePeriode;
+    private List<Date> sluttdatoer = new ArrayList<>();
 
-    public EsPerioderMedInaktivitet(LocalDate startdatoForInneværendeInaktivePeriode, List<LocalDate> sluttdatoer) {
+    public EsPerioderMedInaktivitet(Date startdatoForInneværendeInaktivePeriode, List<Date> sluttdatoer) {
         this.startdatoForInneværendeInaktivePeriode = startdatoForInneværendeInaktivePeriode;
         this.sluttdatoer.addAll(sluttdatoer);
     }
 
-    public LocalDate getStartdatoForInneværendeInaktivePeriode() {
+    public Date getStartdatoForInneværendeInaktivePeriode() {
         return startdatoForInneværendeInaktivePeriode;
     }
 
-    public List<LocalDate> getSluttdatoer() {
+    public List<Date> getSluttdatoer() {
         return sluttdatoer;
     }
 
