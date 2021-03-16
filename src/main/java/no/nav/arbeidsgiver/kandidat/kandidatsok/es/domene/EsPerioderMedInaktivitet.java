@@ -19,7 +19,7 @@ public class EsPerioderMedInaktivitet {
         return startdatoForInneværendeInaktivePeriode;
     }
 
-    public List<Date> getSluttdatoer() {
+    public List<Date> getSluttdatoerForInaktivitet() {
         return sluttdatoer;
     }
 
@@ -28,11 +28,11 @@ public class EsPerioderMedInaktivitet {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EsPerioderMedInaktivitet that = (EsPerioderMedInaktivitet) o;
-        return Objects.equals(getStartdatoForInneværendeInaktivePeriode(), that.getStartdatoForInneværendeInaktivePeriode()) && getSluttdatoer().equals(that.getSluttdatoer());
+        return Objects.equals(getStartdatoForInneværendeInaktivePeriode(), that.getStartdatoForInneværendeInaktivePeriode()) && getSluttdatoerForInaktivitet().equals(that.getSluttdatoerForInaktivitet());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getStartdatoForInneværendeInaktivePeriode(), getSluttdatoer());
+        return Objects.hash(getStartdatoForInneværendeInaktivePeriode(), getSluttdatoerForInaktivitet());
     }
 }
