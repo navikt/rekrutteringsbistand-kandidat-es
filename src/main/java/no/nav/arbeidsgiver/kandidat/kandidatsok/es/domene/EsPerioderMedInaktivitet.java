@@ -7,20 +7,20 @@ import java.util.Objects;
 
 public class EsPerioderMedInaktivitet {
 
-    private Date startdatoForInneværendeInaktivePeriode;
-    private List<Date> sluttdatoerForInaktivePerioderPåToÅrEllerMer = new ArrayList<>();
+    private Date startdatoForInnevarendeInaktivePeriode;
+    private List<Date> sluttdatoerForInaktivePerioderPaToArEllerMer = new ArrayList<>();
 
-    public EsPerioderMedInaktivitet(Date startdatoForInneværendeInaktivePeriode, List<Date> sluttdatoerForInaktivePerioderPåToÅrEllerMer) {
-        this.startdatoForInneværendeInaktivePeriode = startdatoForInneværendeInaktivePeriode;
-        this.sluttdatoerForInaktivePerioderPåToÅrEllerMer.addAll(sluttdatoerForInaktivePerioderPåToÅrEllerMer);
+    public EsPerioderMedInaktivitet(Date startdatoForInnevarendeInaktivePeriode, List<Date> sluttdatoerForInaktivePerioderPaToArEllerMer) {
+        this.startdatoForInnevarendeInaktivePeriode = startdatoForInnevarendeInaktivePeriode;
+        this.sluttdatoerForInaktivePerioderPaToArEllerMer.addAll(sluttdatoerForInaktivePerioderPaToArEllerMer);
     }
 
-    public List<Date> getSluttdatoerForInaktivePerioderPåToÅrEllerMer() {
-        return sluttdatoerForInaktivePerioderPåToÅrEllerMer;
+    public List<Date> getSluttdatoerForInaktivePerioderPaToArEllerMer() {
+        return sluttdatoerForInaktivePerioderPaToArEllerMer;
     }
 
-    public Date getStartdatoForInneværendeInaktivePeriode() {
-        return startdatoForInneværendeInaktivePeriode;
+    public Date getStartdatoForInnevarendeInaktivePeriode() {
+        return startdatoForInnevarendeInaktivePeriode;
     }
 
     @Override
@@ -28,11 +28,11 @@ public class EsPerioderMedInaktivitet {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EsPerioderMedInaktivitet that = (EsPerioderMedInaktivitet) o;
-        return Objects.equals(getStartdatoForInneværendeInaktivePeriode(), that.getStartdatoForInneværendeInaktivePeriode()) && getSluttdatoerForInaktivePerioderPåToÅrEllerMer().equals(that.getSluttdatoerForInaktivePerioderPåToÅrEllerMer());
+        return Objects.equals(getStartdatoForInnevarendeInaktivePeriode(), that.getStartdatoForInnevarendeInaktivePeriode()) && Objects.equals(getSluttdatoerForInaktivePerioderPaToArEllerMer(), that.getSluttdatoerForInaktivePerioderPaToArEllerMer());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getStartdatoForInneværendeInaktivePeriode(), getSluttdatoerForInaktivePerioderPåToÅrEllerMer());
+        return Objects.hash(getStartdatoForInnevarendeInaktivePeriode(), getSluttdatoerForInaktivePerioderPaToArEllerMer());
     }
 }
