@@ -8,19 +8,19 @@ import java.util.Objects;
 public class EsPerioderMedInaktivitet {
 
     private Date startdatoForInneværendeInaktivePeriode;
-    private List<Date> sluttdatoer = new ArrayList<>();
+    private List<Date> sluttdatoerForInaktivePerioderPåToÅrEllerMer = new ArrayList<>();
 
-    public EsPerioderMedInaktivitet(Date startdatoForInneværendeInaktivePeriode, List<Date> sluttdatoer) {
+    public EsPerioderMedInaktivitet(Date startdatoForInneværendeInaktivePeriode, List<Date> sluttdatoerForInaktivePerioderPåToÅrEllerMer) {
         this.startdatoForInneværendeInaktivePeriode = startdatoForInneværendeInaktivePeriode;
-        this.sluttdatoer.addAll(sluttdatoer);
+        this.sluttdatoerForInaktivePerioderPåToÅrEllerMer.addAll(sluttdatoerForInaktivePerioderPåToÅrEllerMer);
+    }
+
+    public List<Date> getSluttdatoerForInaktivePerioderPåToÅrEllerMer() {
+        return sluttdatoerForInaktivePerioderPåToÅrEllerMer;
     }
 
     public Date getStartdatoForInneværendeInaktivePeriode() {
         return startdatoForInneværendeInaktivePeriode;
-    }
-
-    public List<Date> getSluttdatoerForInaktivitet() {
-        return sluttdatoer;
     }
 
     @Override
@@ -28,11 +28,11 @@ public class EsPerioderMedInaktivitet {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EsPerioderMedInaktivitet that = (EsPerioderMedInaktivitet) o;
-        return Objects.equals(getStartdatoForInneværendeInaktivePeriode(), that.getStartdatoForInneværendeInaktivePeriode()) && getSluttdatoerForInaktivitet().equals(that.getSluttdatoerForInaktivitet());
+        return Objects.equals(getStartdatoForInneværendeInaktivePeriode(), that.getStartdatoForInneværendeInaktivePeriode()) && getSluttdatoerForInaktivePerioderPåToÅrEllerMer().equals(that.getSluttdatoerForInaktivePerioderPåToÅrEllerMer());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getStartdatoForInneværendeInaktivePeriode(), getSluttdatoerForInaktivitet());
+        return Objects.hash(getStartdatoForInneværendeInaktivePeriode(), getSluttdatoerForInaktivePerioderPåToÅrEllerMer());
     }
 }
