@@ -625,6 +625,10 @@
     },
     "veilTilretteleggingsbehovObj": {
       "type": "keyword"
+    },
+    "perioderMedInaktivitet": {
+      "startdatoForInneværendeInaktivePeriode": "date",
+      "sluttdatoerForInaktivePerioderPåToÅrEllerMer": "date"
     }
   }
 }
