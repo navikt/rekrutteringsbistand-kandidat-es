@@ -627,8 +627,14 @@
       "type": "keyword"
     },
     "perioderMedInaktivitet": {
-      "startdatoForInneværendeInaktivePeriode": "date",
-      "sluttdatoerForInaktivePerioderPåToÅrEllerMer": "date"
+      "properties": {
+        "startdatoForInneværendeInaktivePeriode": {
+          "type": "date"
+        },
+        "sluttdatoerForInaktivePerioderPåToÅrEllerMer": {
+          "type": "date"
+        }
+      }
     }
   }
 }
