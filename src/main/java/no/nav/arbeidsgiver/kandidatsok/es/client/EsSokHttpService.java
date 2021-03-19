@@ -372,7 +372,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
             }
 
             if (sk.isHullICv()) {
-                addFilterForHullICv(2);
+                addFilterForHullICv(2, queryBuilder);
             }
 
             return toSokeresultat(esExec(() -> search(UseCase.VEIL_SOK, queryBuilder, sk.fraIndex(),
@@ -878,8 +878,40 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
         }
     }
 
-    private void addFilterForHullICv(int minAntallÅrIHull) {
+    private void addFilterForHullICv(int minAntallÅrIHull, BoolQueryBuilder rootQueryBuilder) {
+        BoolQueryBuilder hull = QueryBuilders.boolQuery();
+
+
+        BoolQueryBuilder altErTomt = QueryBuilders.boolQuery();
+        BoolQueryBuilder inaktivNå = QueryBuilders.boolQuery();
+
+        //*** altErTomt
+        hull.should(altErTomt);
+
+        ExistsQueryBuilder harFom = QueryBuilders.existsQuery("perioderMedInaktivitet.startdatoForInnevarendeInaktivePeriode");
+        ExistsQueryBuilder harTomListe = QueryBuilders.existsQuery("perioderMedInaktivitet.sluttdatoerForInaktivePerioderPaToArEllerMer");
+
+        altErTomt.mustNot(harFom);
+        altErTomt.mustNot(harTomListe);
+        //*** altErTomt slutt
+
+        //*** inaktivNå
+        hull.should(inaktivNå);
+
+        BoolQueryBuilder sjekkPerioder = new BoolQueryBuilder();
+
+        RangeQueryBuilder fraRange = QueryBuilders.rangeQuery("perioderMedInaktivitet.startdatoForInnevarendeInaktivePeriode").lte("now-2y/d");
+        RangeQueryBuilder tilListeRange = QueryBuilders.rangeQuery("perioderMedInaktivitet.sluttdatoerForInaktivePerioderPaToArEllerMer").gte("now-3y/d");
+
+        sjekkPerioder.should(fraRange);
+        sjekkPerioder.should(tilListeRange);
+
+        //*** inaktivNå slutt
+
+        inaktivNå.must(harFom);
+        inaktivNå.must(sjekkPerioder);
         
+        rootQueryBuilder.must(hull);
     }
 
     private Sokeresultat toSokeresultat(SearchResponse searchResponse) {
