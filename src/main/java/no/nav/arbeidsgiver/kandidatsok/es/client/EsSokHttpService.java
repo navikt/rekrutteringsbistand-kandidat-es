@@ -371,6 +371,10 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 addFilterForSistEndret(sk.antallDagerSistEndret(), queryBuilder);
             }
 
+            if (sk.isHullICv()) {
+                addFilterForHullICv(2);
+            }
+
             return toSokeresultat(esExec(() -> search(UseCase.VEIL_SOK, queryBuilder, sk.fraIndex(),
                     sk.antallResultater(), sortQueryBuilder)));
         } catch (IOException ioe) {
@@ -872,6 +876,10 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
             boolQueryBuilder1.mustNot(utdanningsnivaQueryBuilder);
             boolQueryBuilder.should(boolQueryBuilder1);
         }
+    }
+
+    private void addFilterForHullICv(int minAntallÅrIHull) {
+        
     }
 
     private Sokeresultat toSokeresultat(SearchResponse searchResponse) {

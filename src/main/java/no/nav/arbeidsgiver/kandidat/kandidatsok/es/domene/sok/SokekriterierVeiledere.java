@@ -33,6 +33,7 @@ public class SokekriterierVeiledere {
     private Integer antallAarTil;
     private Integer antallDagerSistEndret;
     private Integer antallAarGammelYrkeserfaring;
+    private boolean hullICv;
 
     private boolean tomtSok = true;
 
@@ -187,6 +188,14 @@ public class SokekriterierVeiledere {
         return antallAarGammelYrkeserfaring;
     }
 
+    public boolean isHullICv() {
+        return hullICv;
+    }
+
+    public void setHullICv(boolean hullICv) {
+        this.hullICv = hullICv;
+    }
+
     public static class Builder {
         private String fritekst;
         private List<String> yrkeJobbonsker;
@@ -216,6 +225,7 @@ public class SokekriterierVeiledere {
         private List<String> midlertidigUtilgjengelig;
         private Integer antallDagerSistEndret;
         private Integer antallAarGammelYrkeserfaring;
+        private boolean hullICv = false;
         private boolean tomtSok = true;
 
         public SokekriterierVeiledere bygg() {
@@ -269,6 +279,7 @@ public class SokekriterierVeiledere {
 
             s.fraIndex = fra;
             s.antallResultater = antallResultater;
+            s.hullICv = hullICv;
             s.tomtSok = tomtSok;
 
             return s;
@@ -439,6 +450,11 @@ public class SokekriterierVeiledere {
 
         public Builder antallAarGammelYrkeserfaring(Integer antallAarGammelYrkeserfaring) {
             this.antallAarGammelYrkeserfaring = antallAarGammelYrkeserfaring;
+            return this;
+        }
+
+        public Builder hullICv(boolean hullICv) {
+            this.hullICv = hullICv;
             return this;
         }
     }
