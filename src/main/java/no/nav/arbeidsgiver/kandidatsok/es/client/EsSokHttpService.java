@@ -896,12 +896,10 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                                 .must(
                                         boolQuery()
                                                 .should(
-                                                        rangeQuery("perioderMedInaktivitet.startdatoForInnevarendeInaktivePeriode")
-                                                                .lte("now-2y/d")
+                                                        rangeQuery("perioderMedInaktivitet.startdatoForInnevarendeInaktivePeriode").lte("now-2y/d")
                                                 )
                                                 .should(
-                                                        rangeQuery("perioderMedInaktivitet.sluttdatoerForInaktivePerioderPaToArEllerMer")
-                                                                .gte("now-3y/d")
+                                                        rangeQuery("perioderMedInaktivitet.sluttdatoerForInaktivePerioderPaToArEllerMer").gte("now-3y/d")
                                                 )
                                 )
                         )
