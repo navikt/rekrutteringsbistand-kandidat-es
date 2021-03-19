@@ -373,7 +373,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
             }
 
             if (sk.isHullICv()) {
-                addFilterForHullICv(2, queryBuilder);
+                addFilterForHullICv(queryBuilder);
             }
 
             return toSokeresultat(esExec(() -> search(UseCase.VEIL_SOK, queryBuilder, sk.fraIndex(),
@@ -879,7 +879,14 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
         }
     }
 
-    private void addFilterForHullICv(int minAntallÅrIHull, BoolQueryBuilder rootQueryBuilder) {
+    private void addFilterForHullICv(BoolQueryBuilder rootQueryBuilder) {
+      /*
+         Et hull i en CV er definert som en periode på 2 år eller med med inaktivitet i løpet av de siste 5 årene fra tidspunktet spørringen kjøres på.
+         Hele algoritmen for å finne et hull er implementert delvis her i denne Elastic-search spørringen og delvis i
+         applikasjonen rekrutteringsbistand-kandidat-indekser: Sistnevnte har ansvar for 1) å finne de periodene med inaktivitet
+         som har lang nok varighet til å kunne være et hull, og 2) å lagre dem i Elsticsearch-indeksen, slik at de kan søkes i med denne spørringen.
+         Grensen på 2 år er hadrkodet både her og i appen rekrutteringsbistand-kandidat-indekser. Grensen på 5 år er hardkodet bare her.
+    */
         rootQueryBuilder.must(
                 boolQuery()
                         .should(boolQuery()
