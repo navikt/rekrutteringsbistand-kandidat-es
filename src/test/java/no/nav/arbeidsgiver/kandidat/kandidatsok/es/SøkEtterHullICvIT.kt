@@ -94,9 +94,9 @@ class SøkEtterHullICvIT {
                         listOf(toDate(LocalDate.now().minusYears(5)))
                 )
         )
-        indexerClient.index(cv, DEFAULT_INDEX_NAME)
+        indexerClient.bulkIndex(listOf(cv), DEFAULT_INDEX_NAME)
 
-        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
+        val actual = sokClient.veilederSok(SokekriterierVeiledere.med().bygg()).cver
 
         assertThat(actual).hasSize(1)
         assertThat(actual.first().aktorId).isEqualTo(cv!!.aktorId)
@@ -175,7 +175,7 @@ class SøkEtterHullICvIT {
                 false,
                 false,
                 true,
-                false,
+                true,
                 "LEDIG_NAA",
                 "5001",
                 "H149390",
