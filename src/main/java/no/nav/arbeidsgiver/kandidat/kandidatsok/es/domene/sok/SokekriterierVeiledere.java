@@ -451,6 +451,7 @@ public class SokekriterierVeiledere {
 
         public Builder hullICv(boolean hullICv) {
             this.hullICv = hullICv;
+            this.tomtSok = false;
             return this;
         }
     }

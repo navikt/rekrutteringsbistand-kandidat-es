@@ -20,7 +20,7 @@ import java.util.*
 class SøkEtterHullICvIT {
 
     private val sokClient =
-        ElasticSearchTestConfiguration.esSokService(DEFAULT_INDEX_NAME)
+            ElasticSearchTestConfiguration.esSokService(DEFAULT_INDEX_NAME)
 
     private val indexerClient = ElasticSearchTestConfiguration.indexerCvService()
 
@@ -41,11 +41,11 @@ class SøkEtterHullICvIT {
     @Test
     fun harIkkeHullHvisErIJobb() {
         val cv = giveMeEsCv(
-            "125687",
-            EsPerioderMedInaktivitet(
-                null,
-                listOf(toDate(LocalDate.now().minusYears(minimumHullVarighetAntallÅr)))
-            )
+                "125687",
+                EsPerioderMedInaktivitet(
+                        null,
+                        listOf(toDate(LocalDate.now().minusYears(minimumHullVarighetAntallÅr)))
+                )
         )
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
@@ -56,11 +56,11 @@ class SøkEtterHullICvIT {
     @Test
     fun harIkkeHullNårHarBlittInaktivForKortTidSiden() {
         val cv = giveMeEsCv(
-            "9846517",
-            EsPerioderMedInaktivitet(
-                toDate(LocalDate.now().minusYears(minimumHullVarighetAntallÅr).plusDays(1)),
-                listOf(toDate(LocalDate.now().minusYears(8)))
-            )
+                "9846517",
+                EsPerioderMedInaktivitet(
+                        toDate(LocalDate.now().minusYears(minimumHullVarighetAntallÅr).plusDays(1)),
+                        listOf(toDate(LocalDate.now().minusYears(8)))
+                )
         )
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
@@ -72,11 +72,11 @@ class SøkEtterHullICvIT {
     @Test
     fun harIkkeHullFordiLangInaktivPeriodeErForGammel() {
         val cv = giveMeEsCv(
-            "9846517",
-            EsPerioderMedInaktivitet(
-                toDate(LocalDate.now().minusYears(1)),
-                listOf(toDate(LocalDate.now().minusYears(8)))
-            )
+                "9846517",
+                EsPerioderMedInaktivitet(
+                        toDate(LocalDate.now().minusYears(1)),
+                        listOf(toDate(LocalDate.now().minusYears(8)))
+                )
         )
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
@@ -88,11 +88,11 @@ class SøkEtterHullICvIT {
     @Test
     fun harHullHvisKandidatenHarVærtInaktivLenge() {
         val cv = giveMeEsCv(
-            "9846517",
-            EsPerioderMedInaktivitet(
-                toDate(LocalDate.now().minusYears(2)),
-                listOf(toDate(LocalDate.now().minusYears(5)))
-            )
+                "9846517",
+                EsPerioderMedInaktivitet(
+                        toDate(LocalDate.now().minusYears(2)),
+                        listOf(toDate(LocalDate.now().minusYears(5)))
+                )
         )
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
@@ -105,11 +105,11 @@ class SøkEtterHullICvIT {
     @Test
     fun harHullHvisNyligInaktivMenHarLangNokInaktivPeriodeFraTidligere() {
         val cv = giveMeEsCv(
-            "213548",
-            EsPerioderMedInaktivitet(
-                toDate(LocalDate.now().minusDays(2)),
-                listOf(toDate(LocalDate.now().minusYears(1)))
-            )
+                "213548",
+                EsPerioderMedInaktivitet(
+                        toDate(LocalDate.now().minusDays(2)),
+                        listOf(toDate(LocalDate.now().minusYears(1)))
+                )
         )
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
@@ -122,11 +122,11 @@ class SøkEtterHullICvIT {
     @Test
     fun harHullHvisAldriVærtIAktivitet() {
         val cv = giveMeEsCv(
-            "213548",
-            EsPerioderMedInaktivitet(
-                null,
-                null
-            )
+                "213548",
+                EsPerioderMedInaktivitet(
+                        null,
+                        null
+                )
         )
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
@@ -142,46 +142,46 @@ class SøkEtterHullICvIT {
 
     private fun giveMeEsCv(aktorId: String, esPerioderMedInaktivitet: EsPerioderMedInaktivitet): EsCv? {
         val esCv = EsCv(
-            "96541328",
-            "01016012345",
-            "JENS",
-            "NORDMANN",
-            Date.from(Instant.now()),
-            false,
-            "JOBBS",
-            "måpussetenna@mamma.com",
-            "(+47) 22334455",
-            "12345678",
-            "NO",
-            "1L",
-            "hererjeg",
-            "N",
-            Date.from(Instant.now()),
-            "Minvei 1",
-            "",
-            "",
-            "0654",
-            "OSLO",
-            "NO",
-            5001,
-            false,
-            Date.from(Instant.now()),
-            301,
-            false,
-            null,
-            "IKVAL",
-            null,
-            "0220 NAV Asker",
-            false,
-            false,
-            true,
-            false,
-            "LEDIG_NAA",
-            "5001",
-            "H149390",
-            false,
-            "Viken",
-            "Lier"
+                "96541328",
+                "01016012345",
+                "JENS",
+                "NORDMANN",
+                Date.from(Instant.now()),
+                false,
+                "JOBBS",
+                "måpussetenna@mamma.com",
+                "(+47) 22334455",
+                "12345678",
+                "NO",
+                "1L",
+                "hererjeg",
+                "N",
+                Date.from(Instant.now()),
+                "Minvei 1",
+                "",
+                "",
+                "0654",
+                "OSLO",
+                "NO",
+                5001,
+                false,
+                Date.from(Instant.now()),
+                301,
+                false,
+                null,
+                "IKVAL",
+                null,
+                "0220 NAV Asker",
+                false,
+                false,
+                true,
+                false,
+                "LEDIG_NAA",
+                "5001",
+                "H149390",
+                false,
+                "Viken",
+                "Lier"
         )
         esCv.addPerioderMedInaktivitet(esPerioderMedInaktivitet)
         return esCv
