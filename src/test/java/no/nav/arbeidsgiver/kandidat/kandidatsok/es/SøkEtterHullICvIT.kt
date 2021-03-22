@@ -15,14 +15,12 @@ import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.*
 
-class SøkEtterHullICv {
+class SøkEtterHullICvIT {
 
     private val sokClient =
         ElasticSearchTestConfiguration.esSokService(DEFAULT_INDEX_NAME)
 
     private val indexerClient = ElasticSearchTestConfiguration.indexerCvService()
-
-    private val kandidatsokTransformer = KandidatsokTransformer()
 
     private val søkekriterierHullICv = SokekriterierVeiledere.med().hullICv(true).bygg()
 
