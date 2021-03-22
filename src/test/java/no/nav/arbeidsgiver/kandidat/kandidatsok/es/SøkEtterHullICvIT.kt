@@ -1,20 +1,22 @@
 package no.nav.arbeidsgiver.kandidat.kandidatsok.es
 
-import no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es.KandidatsokTransformer
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsPerioderMedInaktivitet
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.SokekriterierVeiledere
+import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchIntegrationTestExtension
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchTestConfiguration
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.BeforeClass
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.*
 
+@ExtendWith(ElasticSearchIntegrationTestExtension::class)
 class SøkEtterHullICvIT {
 
     private val sokClient =
@@ -26,7 +28,7 @@ class SøkEtterHullICvIT {
 
     private val minimumHullVarighetAntallÅr = 2L
 
-    @BeforeClass
+    @BeforeEach
     fun before() {
         indexerClient.createIndex(DEFAULT_INDEX_NAME)
     }
