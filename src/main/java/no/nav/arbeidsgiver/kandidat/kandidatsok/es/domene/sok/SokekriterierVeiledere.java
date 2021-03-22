@@ -191,11 +191,7 @@ public class SokekriterierVeiledere {
     public boolean isHullICv() {
         return hullICv;
     }
-
-    public void setHullICv(boolean hullICv) {
-        this.hullICv = hullICv;
-    }
-
+    
     public static class Builder {
         private String fritekst;
         private List<String> yrkeJobbonsker;
@@ -410,7 +406,7 @@ public class SokekriterierVeiledere {
 
         public Builder tilretteleggingsbehov(Boolean tilretteleggingsbehov) {
             this.tilretteleggingsbehov = tilretteleggingsbehov;
-            if(null != tilretteleggingsbehov) {
+            if (null != tilretteleggingsbehov) {
                 this.tomtSok = false;
             }
             return this;
@@ -418,7 +414,7 @@ public class SokekriterierVeiledere {
 
         public Builder permittert(Boolean permittert) {
             this.permittert = permittert;
-            if(null != permittert) {
+            if (null != permittert) {
                 this.tomtSok = false;
             }
             return this;
