@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.StreamSupport;
@@ -887,29 +888,24 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
          som har lang nok varighet til å kunne være et hull, og 2) å lagre dem i Elsticsearch-indeksen, slik at de kan søkes i med denne spørringen.
          Grensen på 2 år er hadrkodet både her og i appen rekrutteringsbistand-kandidat-indekser. Grensen på 5 år er hardkodet bare her.
     */
+
+        BoolQueryBuilder aldriVærtIAktivitet = boolQuery()
+                .mustNot(existsQuery("perioderMedInaktivitet.startdatoForInnevarendeInaktivePeriode"))
+                .mustNot(existsQuery("perioderMedInaktivitet.sluttdatoerForInaktivePerioderPaToArEllerMer"));
+
+        BoolQueryBuilder erInaktivOgHarHull = boolQuery()
+                .must(existsQuery("perioderMedInaktivitet.startdatoForInnevarendeInaktivePeriode"))
+                .must(
+                        boolQuery()
+                                .should(rangeQuery("perioderMedInaktivitet.startdatoForInnevarendeInaktivePeriode").lte(LocalDate.now().minusYears(2)))
+                                .should(rangeQuery("perioderMedInaktivitet.sluttdatoerForInaktivePerioderPaToArEllerMer").gte(LocalDate.now().minusYears(3))
+                                )
+                );
+
         rootQueryBuilder.must(
                 boolQuery()
-                        .should(boolQuery()
-                                .mustNot(
-                                        existsQuery("perioderMedInaktivitet.startdatoForInnevarendeInaktivePeriode")
-                                ).mustNot(
-                                        existsQuery("perioderMedInaktivitet.sluttdatoerForInaktivePerioderPaToArEllerMer")
-                                )
-                        )
-                        .should(boolQuery()
-                                .must(
-                                        existsQuery("perioderMedInaktivitet.startdatoForInnevarendeInaktivePeriode")
-                                )
-                                .must(
-                                        boolQuery()
-                                                .should(
-                                                        rangeQuery("perioderMedInaktivitet.startdatoForInnevarendeInaktivePeriode").lte("now-2y/d")
-                                                )
-                                                .should(
-                                                        rangeQuery("perioderMedInaktivitet.sluttdatoerForInaktivePerioderPaToArEllerMer").gte("now-3y/d")
-                                                )
-                                )
-                        )
+                        .should(aldriVærtIAktivitet)
+                        .should(erInaktivOgHarHull)
         );
     }
 
