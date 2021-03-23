@@ -10,6 +10,9 @@ public class EsPerioderMedInaktivitet {
     private Date startdatoForInnevarendeInaktivePeriode;
     private List<Date> sluttdatoerForInaktivePerioderPaToArEllerMer = new ArrayList<>();
 
+    public EsPerioderMedInaktivitet() {
+    }
+
     public EsPerioderMedInaktivitet(Date startdatoForInnevarendeInaktivePeriode, List<Date> sluttdatoerForInaktivePerioderPaToArEllerMer) {
         this.startdatoForInnevarendeInaktivePeriode = startdatoForInnevarendeInaktivePeriode;
         if (sluttdatoerForInaktivePerioderPaToArEllerMer != null) {
