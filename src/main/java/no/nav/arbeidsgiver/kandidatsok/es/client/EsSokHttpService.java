@@ -33,12 +33,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.StreamSupport;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 public class EsSokHttpService implements EsSokService, AutoCloseable {
 
@@ -167,8 +169,8 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     public Sokeresultat arbeidsgiverSok(Sokekriterier sk) {
         try {
 
-            BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
-            BoolQueryBuilder sortQueryBuilder = QueryBuilders.boolQuery();
+            BoolQueryBuilder queryBuilder = boolQuery();
+            BoolQueryBuilder sortQueryBuilder = boolQuery();
 
             if (sk.isTomtSok()) {
                 LOGGER.debug("MATCH ALL!");
@@ -227,7 +229,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     @Override
     public Optional<EsCv> veilederSokPaaFnr(String fnr) {
         try {
-            BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+            BoolQueryBuilder queryBuilder = boolQuery();
             queryBuilder.must(QueryBuilders.termQuery("fodselsnummer", fnr));
             addFilterForVeiledereSok(queryBuilder);
 
@@ -261,8 +263,8 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     public Sokeresultat veilederSok(SokekriterierVeiledere sk) {
 
         try {
-            BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
-            BoolQueryBuilder sortQueryBuilder = QueryBuilders.boolQuery();
+            BoolQueryBuilder queryBuilder = boolQuery();
+            BoolQueryBuilder sortQueryBuilder = boolQuery();
 
             if (sk.isTomtSok()) {
                 LOGGER.debug("MATCH ALL!");
@@ -371,6 +373,10 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 addFilterForSistEndret(sk.antallDagerSistEndret(), queryBuilder);
             }
 
+            if (sk.isHullICv()) {
+                addFilterForHullICv(queryBuilder);
+            }
+
             return toSokeresultat(esExec(() -> search(UseCase.VEIL_SOK, queryBuilder, sk.fraIndex(),
                     sk.antallResultater(), sortQueryBuilder)));
         } catch (IOException ioe) {
@@ -387,11 +393,11 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
         String tilgjengeligInnen1uke = "tilgjengeliginnen1uke";
         String midlertidigutilgjengelig = "midlertidigutilgjengelig";
 
-        BoolQueryBuilder innerQuery = QueryBuilders.boolQuery().minimumShouldMatch(1);
+        BoolQueryBuilder innerQuery = boolQuery().minimumShouldMatch(1);
         queryBuilder.must(innerQuery);
 
         if (midlertidigUtilgjengelig.contains(tilgjengelig)) {
-            innerQuery.should(QueryBuilders.boolQuery()
+            innerQuery.should(boolQuery()
                     .mustNot(QueryBuilders.termsQuery("veilTilretteleggingsbehov.keyword", midlertidigutilgjengelig, tilgjengeligInnen1uke)));
         }
 
@@ -413,7 +419,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     }
 
     private void addFilterForSistEndret(int antallDager, BoolQueryBuilder boolQueryBuilder) {
-        boolQueryBuilder.must(QueryBuilders.rangeQuery("tidsstempel").gte("now-" + antallDager + "d/d").lte("now/d"));
+        boolQueryBuilder.must(rangeQuery("tidsstempel").gte("now-" + antallDager + "d/d").lte("now/d"));
     }
 
     private void addVeilTilretteleggingsbehovToQuery(List<String> veilTilretteleggingsbehov, BoolQueryBuilder boolQueryBuilder) {
@@ -429,7 +435,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     }
 
     private void addFilterForArbeidsgivereHent(BoolQueryBuilder boolQueryBuilder) {
-        BoolQueryBuilder innerQuery = QueryBuilders.boolQuery();
+        BoolQueryBuilder innerQuery = boolQuery();
         innerQuery.should(QueryBuilders.termQuery("synligForArbeidsgiverSok", Boolean.TRUE));
         innerQuery.should(QueryBuilders.termQuery("synligForVeilederSok", Boolean.TRUE));
         innerQuery.minimumShouldMatch(1);
@@ -453,7 +459,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     }
 
     private BoolQueryBuilder makeIngenUtdanningQuery() {
-        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+        BoolQueryBuilder queryBuilder = boolQuery();
         addUtdanningsnivaQuery("Ingen", queryBuilder);
         return queryBuilder;
     }
@@ -461,8 +467,8 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     private BoolQueryBuilder makeUtdanningQuery(List<String> utdanninger,
                                                 List<String> utdanningsniva) {
 
-        BoolQueryBuilder utdanningerBuilder = QueryBuilders.boolQuery();
-        BoolQueryBuilder utdanningsnivaBuilder = QueryBuilders.boolQuery();
+        BoolQueryBuilder utdanningerBuilder = boolQuery();
+        BoolQueryBuilder utdanningsnivaBuilder = boolQuery();
 
         if (isNotEmpty(utdanninger)) {
             utdanninger.stream().filter(StringUtils::isNotBlank)
@@ -475,7 +481,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
         }
 
 
-        BoolQueryBuilder utdanningQueryBuilder = QueryBuilders.boolQuery();
+        BoolQueryBuilder utdanningQueryBuilder = boolQuery();
 
         utdanningQueryBuilder.must(utdanningerBuilder);
         utdanningQueryBuilder.must(utdanningsnivaBuilder);
@@ -490,7 +496,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 boolQueryBuilder.must(makeIngenUtdanningQuery());
 
             } else {
-                BoolQueryBuilder utdanningEllerIngenQuery = QueryBuilders.boolQuery();
+                BoolQueryBuilder utdanningEllerIngenQuery = boolQuery();
 
                 utdanningEllerIngenQuery.should(makeIngenUtdanningQuery());
                 utdanningEllerIngenQuery.should(makeUtdanningQuery(utdanninger, utdanningsniva));
@@ -507,7 +513,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
     private void addYrkeserfaringToQuery(List<String> yrkeserfaring,
                                          BoolQueryBuilder boolQueryBuilder) {
-        BoolQueryBuilder yrkeserfaringQueryBuilder = QueryBuilders.boolQuery();
+        BoolQueryBuilder yrkeserfaringQueryBuilder = boolQuery();
 
         yrkeserfaring.stream().filter(StringUtils::isNotBlank)
                 .forEach(te -> addTotalYrkeserfaringQuery(te, yrkeserfaringQueryBuilder));
@@ -517,7 +523,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
     private void addGeografiToQuery(List<String> geografi, BoolQueryBuilder boolQueryBuilder) {
 
-        BoolQueryBuilder geografiQueryBuilder = QueryBuilders.boolQuery();
+        BoolQueryBuilder geografiQueryBuilder = boolQuery();
 
         geografi.stream().filter(StringUtils::isNotBlank)
                 .forEach(g -> addGeografiQuery(g, geografiQueryBuilder));
@@ -527,7 +533,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
     private void addKommunenummerToQuery(List<String> geografi, BoolQueryBuilder boolQueryBuilder) {
 
-        BoolQueryBuilder kommunenummerQueryBuilder = QueryBuilders.boolQuery();
+        BoolQueryBuilder kommunenummerQueryBuilder = boolQuery();
 
         geografi.stream().filter(StringUtils::isNotBlank)
                 .forEach(g -> addKommunenummerQuery(g, kommunenummerQueryBuilder));
@@ -542,7 +548,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
     private void addKompetanserToQuery(List<String> kompetanser,
                                        BoolQueryBuilder boolQueryBuilder) {
-        BoolQueryBuilder innerBoolQuery = QueryBuilders.boolQuery();
+        BoolQueryBuilder innerBoolQuery = boolQuery();
         kompetanser.stream().filter(StringUtils::isNotBlank)
                 .forEach(k -> addKompetanseQuery(k, innerBoolQuery));
         boolQueryBuilder.must(innerBoolQuery);
@@ -550,11 +556,11 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
     private void addFodselsdatoToQuery(Integer antallAarFra, Integer antallAarTil, BoolQueryBuilder boolQueryBuilder) {
         if (antallAarFra != null && antallAarTil != null) {
-            boolQueryBuilder.must(QueryBuilders.rangeQuery("fodselsdato").gte("now-" + antallAarTil + "y/d").lte("now-" + antallAarFra + "y/d"));
+            boolQueryBuilder.must(rangeQuery("fodselsdato").gte("now-" + antallAarTil + "y/d").lte("now-" + antallAarFra + "y/d"));
         } else if (antallAarFra != null) {
-            boolQueryBuilder.must(QueryBuilders.rangeQuery("fodselsdato").gte("now-200y/d").lte("now-" + antallAarFra + "y/d"));
+            boolQueryBuilder.must(rangeQuery("fodselsdato").gte("now-200y/d").lte("now-" + antallAarFra + "y/d"));
         } else if (antallAarTil != null) {
-            boolQueryBuilder.must(QueryBuilders.rangeQuery("fodselsdato").gte("now-" + antallAarTil + "y/d").lte("now"));
+            boolQueryBuilder.must(rangeQuery("fodselsdato").gte("now-" + antallAarTil + "y/d").lte("now"));
         } else {
             //noop
         }
@@ -562,7 +568,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
     private void addStillingstitlerToQuery(List<String> stillingstitler,
                                            BoolQueryBuilder boolQueryBuilder, BoolQueryBuilder sortQueryBuilder) {
-        BoolQueryBuilder innerBoolQuery = QueryBuilders.boolQuery();
+        BoolQueryBuilder innerBoolQuery = boolQuery();
         stillingstitler.stream().filter(StringUtils::isNotBlank)
                 .forEach(s -> addStillingsTittelQuery(s, innerBoolQuery, sortQueryBuilder));
         boolQueryBuilder.must(innerBoolQuery);
@@ -570,7 +576,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
     private void addNyligeStillingstitlerToQuery(List<String> stillingstitler, int antallAar,
                                                  BoolQueryBuilder boolQueryBuilder, BoolQueryBuilder sortQueryBuilder) {
-        BoolQueryBuilder innerBoolQuery = QueryBuilders.boolQuery();
+        BoolQueryBuilder innerBoolQuery = boolQuery();
         stillingstitler.stream().filter(StringUtils::isNotBlank)
                 .forEach(s -> addNyligStillingsTittelQuery(s, antallAar, innerBoolQuery, sortQueryBuilder));
         boolQueryBuilder.must(innerBoolQuery);
@@ -578,7 +584,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
     private void addJobbonskerToQuery(List<String> jobbonsker, BoolQueryBuilder boolQueryBuilder,
                                       BoolQueryBuilder sortQueryBuilder) {
-        BoolQueryBuilder yrkeJobbonskerBoolQueryBuilder = QueryBuilders.boolQuery();
+        BoolQueryBuilder yrkeJobbonskerBoolQueryBuilder = boolQuery();
 
         jobbonsker.stream().filter(StringUtils::isNotBlank)
                 .forEach(y -> addYrkeJobbonskerQuery(y, yrkeJobbonskerBoolQueryBuilder));
@@ -598,7 +604,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     }
 
     private void addForerkortToQuery(List<String> forerkort, BoolQueryBuilder boolQueryBuilder) {
-        BoolQueryBuilder innerBoolQueryBuilder = QueryBuilders.boolQuery();
+        BoolQueryBuilder innerBoolQueryBuilder = boolQuery();
         Set<String> expandedForerkort = expandForerkort(forerkort);
         expandedForerkort.stream().filter(StringUtils::isNotBlank)
                 .forEach(s -> addForerkortQuery(s, innerBoolQueryBuilder));
@@ -636,35 +642,35 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     }
 
     private void addKvalifiseringsgruppeKoderToQuery(List<String> kvalifiseringsgruppeKoder, BoolQueryBuilder boolQueryBuilder) {
-        BoolQueryBuilder innerBoolQueryBuilder = QueryBuilders.boolQuery();
+        BoolQueryBuilder innerBoolQueryBuilder = boolQuery();
         boolQueryBuilder.must(innerBoolQueryBuilder);
         kvalifiseringsgruppeKoder.stream().filter(StringUtils::isNotBlank)
                 .forEach(s -> addKvalifiseringsgruppekodeQuery(s, innerBoolQueryBuilder));
     }
 
     private void addNavkontorToQuery(List<String> navkontor, BoolQueryBuilder boolQueryBuilder) {
-        BoolQueryBuilder innerBoolQueryBuilder = QueryBuilders.boolQuery();
+        BoolQueryBuilder innerBoolQueryBuilder = boolQuery();
         boolQueryBuilder.must(innerBoolQueryBuilder);
         navkontor.stream().filter(StringUtils::isNotBlank)
                 .forEach(s -> addNavkontorQuery(s, innerBoolQueryBuilder));
     }
 
     private void addHovedmalToQuery(List<String> hovedmal, BoolQueryBuilder boolQueryBuilder) {
-        BoolQueryBuilder innerBoolQueryBuilder = QueryBuilders.boolQuery();
+        BoolQueryBuilder innerBoolQueryBuilder = boolQuery();
         boolQueryBuilder.must(innerBoolQueryBuilder);
         hovedmal.stream().filter((StringUtils::isNotBlank))
                 .forEach(s -> addHovedmalToQuery(s, innerBoolQueryBuilder));
     }
 
     private void addOppstartKoderToQuery(List<String> oppstartKoder, BoolQueryBuilder boolQueryBuilder) {
-        BoolQueryBuilder innerBoolQueryBuilder = QueryBuilders.boolQuery();
+        BoolQueryBuilder innerBoolQueryBuilder = boolQuery();
         boolQueryBuilder.must(innerBoolQueryBuilder);
         oppstartKoder.stream().filter((StringUtils::isNotBlank))
                 .forEach(s -> addOppstartKodeToQuery(s, innerBoolQueryBuilder));
     }
 
     private void addVeiledereToQuery(List<String> veiledere, BoolQueryBuilder boolQueryBuilder) {
-        BoolQueryBuilder innerBoolQueryBuilder = QueryBuilders.boolQuery();
+        BoolQueryBuilder innerBoolQueryBuilder = boolQuery();
         boolQueryBuilder.must(innerBoolQueryBuilder);
         veiledere.stream().filter(StringUtils::isNotBlank)
                 .forEach(s -> addVeilederToQuery(s, innerBoolQueryBuilder));
@@ -691,10 +697,10 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
     private void addNyligStillingsTittelQuery(String stillingstittel, int antallAar, BoolQueryBuilder boolQueryBuilder,
                                               BoolQueryBuilder sortBoolQueryBuilder) {
-        BoolQueryBuilder boolQueryInNestedQuery = QueryBuilders.boolQuery();
+        BoolQueryBuilder boolQueryInNestedQuery = boolQuery();
         boolQueryInNestedQuery.must(QueryBuilders.matchQuery("yrkeserfaring.sokeTitler", stillingstittel)
                 .operator(Operator.AND));
-        boolQueryInNestedQuery.must(QueryBuilders.rangeQuery("yrkeserfaring.tilDato").gte(("now-" + antallAar + "y")));
+        boolQueryInNestedQuery.must(rangeQuery("yrkeserfaring.tilDato").gte(("now-" + antallAar + "y")));
         NestedQueryBuilder yrkeserfaringQueryBuilder = QueryBuilders.nestedQuery("yrkeserfaring",
                 boolQueryInNestedQuery,
                 ScoreMode.Total);
@@ -808,12 +814,12 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
         String[] interval = totalYrkeserfaring.split("-");
         RangeQueryBuilder totalErfaringQueryBuilder;
         if (interval.length == 2) {
-            totalErfaringQueryBuilder = QueryBuilders.rangeQuery("totalLengdeYrkeserfaring")
+            totalErfaringQueryBuilder = rangeQuery("totalLengdeYrkeserfaring")
                     .gte(interval[0]).lte(interval[1]);
             boolQueryBuilder.should(totalErfaringQueryBuilder);
         } else if (interval.length == 1) {
             totalErfaringQueryBuilder =
-                    QueryBuilders.rangeQuery("totalLengdeYrkeserfaring").gte(interval[0]).lte(null);
+                    rangeQuery("totalLengdeYrkeserfaring").gte(interval[0]).lte(null);
             boolQueryBuilder.should(totalErfaringQueryBuilder);
         }
         LOGGER.debug("ADDING totalYrkeserfaringLengde");
@@ -848,7 +854,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 break;
         }
         if (!searchRegex.equals("")) {
-            BoolQueryBuilder boolQueryBuilder1 = QueryBuilders.boolQuery();
+            BoolQueryBuilder boolQueryBuilder1 = boolQuery();
 
             NestedQueryBuilder includeUtdanningsnivaQueryBuilder = QueryBuilders.nestedQuery(
                     "utdanning", QueryBuilders.regexpQuery("utdanning.nusKode", searchRegex),
@@ -864,14 +870,43 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
             boolQueryBuilder.should(boolQueryBuilder1);
         }
         if (utdanningsniva.equals("Ingen")) {
-            BoolQueryBuilder boolQueryBuilder1 = QueryBuilders.boolQuery();
+            BoolQueryBuilder boolQueryBuilder1 = boolQuery();
 
             NestedQueryBuilder utdanningsnivaQueryBuilder = QueryBuilders.nestedQuery("utdanning",
-                    QueryBuilders.existsQuery("utdanning.nusKode"), ScoreMode.Total);
+                    existsQuery("utdanning.nusKode"), ScoreMode.Total);
 
             boolQueryBuilder1.mustNot(utdanningsnivaQueryBuilder);
             boolQueryBuilder.should(boolQueryBuilder1);
         }
+    }
+
+    private void addFilterForHullICv(BoolQueryBuilder rootQueryBuilder) {
+      /*
+         Et hull i en CV er definert som en periode på 2 år eller med med inaktivitet i løpet av de siste 5 årene fra tidspunktet spørringen kjøres på.
+         Hele algoritmen for å finne et hull er implementert delvis her i denne Elastic-search spørringen og delvis i
+         applikasjonen rekrutteringsbistand-kandidat-indekser: Sistnevnte har ansvar for 1) å finne de periodene med inaktivitet
+         som har lang nok varighet til å kunne være et hull, og 2) å lagre dem i Elsticsearch-indeksen, slik at de kan søkes i med denne spørringen.
+         Grensen på 2 år er hadrkodet både her og i appen rekrutteringsbistand-kandidat-indekser. Grensen på 5 år er hardkodet bare her.
+    */
+
+        BoolQueryBuilder aldriVærtIAktivitet = boolQuery()
+                .mustNot(existsQuery("perioderMedInaktivitet.startdatoForInnevarendeInaktivePeriode"))
+                .mustNot(existsQuery("perioderMedInaktivitet.sluttdatoerForInaktivePerioderPaToArEllerMer"));
+
+        BoolQueryBuilder erInaktivOgHarHull = boolQuery()
+                .must(existsQuery("perioderMedInaktivitet.startdatoForInnevarendeInaktivePeriode"))
+                .must(
+                        boolQuery()
+                                .should(rangeQuery("perioderMedInaktivitet.startdatoForInnevarendeInaktivePeriode").lte(LocalDate.now().minusYears(2)))
+                                .should(rangeQuery("perioderMedInaktivitet.sluttdatoerForInaktivePerioderPaToArEllerMer").gte(LocalDate.now().minusYears(3))
+                                )
+                );
+
+        rootQueryBuilder.must(
+                boolQuery()
+                        .should(aldriVærtIAktivitet)
+                        .should(erInaktivOgHarHull)
+        );
     }
 
     private Sokeresultat toSokeresultat(SearchResponse searchResponse) {
@@ -1055,7 +1090,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     }
 
     private BoolQueryBuilder kandidatnrQuery(List<String> kandidatnummer) {
-        return QueryBuilders.boolQuery()
+        return boolQuery()
                 .must(QueryBuilders.termsQuery("kandidatnr", kandidatnummer));
     }
 

@@ -33,6 +33,7 @@ public class SokekriterierVeiledere {
     private Integer antallAarTil;
     private Integer antallDagerSistEndret;
     private Integer antallAarGammelYrkeserfaring;
+    private boolean hullICv;
 
     private boolean tomtSok = true;
 
@@ -187,6 +188,10 @@ public class SokekriterierVeiledere {
         return antallAarGammelYrkeserfaring;
     }
 
+    public boolean isHullICv() {
+        return hullICv;
+    }
+    
     public static class Builder {
         private String fritekst;
         private List<String> yrkeJobbonsker;
@@ -216,6 +221,7 @@ public class SokekriterierVeiledere {
         private List<String> midlertidigUtilgjengelig;
         private Integer antallDagerSistEndret;
         private Integer antallAarGammelYrkeserfaring;
+        private boolean hullICv = false;
         private boolean tomtSok = true;
 
         public SokekriterierVeiledere bygg() {
@@ -269,6 +275,7 @@ public class SokekriterierVeiledere {
 
             s.fraIndex = fra;
             s.antallResultater = antallResultater;
+            s.hullICv = hullICv;
             s.tomtSok = tomtSok;
 
             return s;
@@ -399,7 +406,7 @@ public class SokekriterierVeiledere {
 
         public Builder tilretteleggingsbehov(Boolean tilretteleggingsbehov) {
             this.tilretteleggingsbehov = tilretteleggingsbehov;
-            if(null != tilretteleggingsbehov) {
+            if (null != tilretteleggingsbehov) {
                 this.tomtSok = false;
             }
             return this;
@@ -407,7 +414,7 @@ public class SokekriterierVeiledere {
 
         public Builder permittert(Boolean permittert) {
             this.permittert = permittert;
-            if(null != permittert) {
+            if (null != permittert) {
                 this.tomtSok = false;
             }
             return this;
@@ -439,6 +446,12 @@ public class SokekriterierVeiledere {
 
         public Builder antallAarGammelYrkeserfaring(Integer antallAarGammelYrkeserfaring) {
             this.antallAarGammelYrkeserfaring = antallAarGammelYrkeserfaring;
+            return this;
+        }
+
+        public Builder hullICv(boolean hullICv) {
+            this.hullICv = hullICv;
+            this.tomtSok = false;
             return this;
         }
     }
