@@ -902,11 +902,29 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                                 )
                 );
 
+        BoolQueryBuilder harUtfyltCv = boolQuery()
+                .should(nestedExists("yrkeserfaring"))
+                .should(nestedExists("utdanning"))
+                .should(nestedExists("forerkort"))
+                .should(existsQuery("kursObj"))
+                .should(existsQuery("fagdokumentasjon"))
+                .should(existsQuery("annenerfaringObj"))
+                .should(existsQuery("godkjenninger"));
+
         rootQueryBuilder.must(
                 boolQuery()
-                        .should(aldriVærtIAktivitet)
-                        .should(erInaktivOgHarHull)
-        );
+                        .must(harUtfyltCv)
+                        .must(boolQuery()
+                                .should(aldriVærtIAktivitet)
+                                .should(erInaktivOgHarHull)));
+    }
+    
+    private NestedQueryBuilder nestedExists(String felt) {
+        return nestedQuery(
+                felt,
+                boolQuery().filter(
+                        existsQuery(felt)
+                ), ScoreMode.Total);
     }
 
     private Sokeresultat toSokeresultat(SearchResponse searchResponse) {

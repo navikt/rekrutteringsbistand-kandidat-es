@@ -1,6 +1,8 @@
 package no.nav.arbeidsgiver.kandidat.kandidatsok.es
 
+import no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es.EsCvObjectMother.*
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv
+import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsForerkort
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsPerioderMedInaktivitet
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.SokekriterierVeiledere
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchIntegrationTestExtension
@@ -15,6 +17,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.*
+import java.util.Arrays.asList
 
 @ExtendWith(ElasticSearchIntegrationTestExtension::class)
 class SøkEtterHullICvIT {
@@ -96,7 +99,7 @@ class SøkEtterHullICvIT {
         )
         indexerClient.bulkIndex(listOf(cv), DEFAULT_INDEX_NAME)
 
-        val actual = sokClient.veilederSok(SokekriterierVeiledere.med().bygg()).cver
+        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
 
         assertThat(actual).hasSize(1)
         assertThat(actual.first().aktorId).isEqualTo(cv!!.aktorId)
@@ -111,6 +114,7 @@ class SøkEtterHullICvIT {
                 listOf(toDate(LocalDate.now().minusYears(1)))
             )
         )
+        assertThat(cv.forerkort).isNotEmpty
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
         val actual = sokClient.veilederSok(søkekriterierHullICv).cver
@@ -136,12 +140,155 @@ class SøkEtterHullICvIT {
         assertThat(actual.first().aktorId).isEqualTo(cv!!.aktorId)
     }
 
+    @Test
+    fun harIkkeHullHvisAldriVærtIAktivitetOgTomCv() {
+        val cv = giveMeTomCv(
+            "213548",
+            EsPerioderMedInaktivitet(
+                null,
+                null
+            )
+        )
+        indexerClient.index(cv, DEFAULT_INDEX_NAME)
+
+        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
+
+        assertThat(actual).isEmpty()
+    }
+
+    @Test
+    fun kravOmAtCvSkalVæreUtfyltErOppfyltFordiHarYrkeserfaring() {
+        val cv = giveMeCvSomIkkeErUtfyltOgHarLangInaktivitet()
+        val anyYrkeserfaring = giveMeYrkeserfaring()
+        cv.addYrkeserfaring(anyYrkeserfaring)
+        indexerClient.index(cv, DEFAULT_INDEX_NAME)
+
+        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
+
+        assertThat(actual).hasSize(1)
+    }
+
+    @Test
+    fun kravOmAtCvSkalVæreUtfyltErOppfyltFordiHarUtdanning() {
+        val cv = giveMeCvSomIkkeErUtfyltOgHarLangInaktivitet()
+        val anyUtdanning = giveMeUtdanning()
+        cv.addUtdanning(anyUtdanning)
+        indexerClient.index(cv, DEFAULT_INDEX_NAME)
+
+        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
+
+        assertThat(actual).hasSize(1)
+    }
+
+    @Test
+    fun kravOmAtCvSkalVæreUtfyltErOppfyltFordiHarFørerkort() {
+        val cv = giveMeCvSomIkkeErUtfyltOgHarLangInaktivitet()
+        val anyFørerkort = giveMeFørerkort()
+        cv.addForerkort(anyFørerkort)
+        indexerClient.index(cv, DEFAULT_INDEX_NAME)
+
+        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
+
+        assertThat(actual).hasSize(1)
+    }
+
+    @Test
+    fun kravOmAtCvSkalVæreUtfyltErOppfyltFordiHarKurs() {
+        val cv = giveMeCvSomIkkeErUtfyltOgHarLangInaktivitet()
+        val anyKurs = giveMeKurs()
+        cv.addKurs(anyKurs)
+        indexerClient.index(cv, DEFAULT_INDEX_NAME)
+
+        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
+
+        assertThat(actual).hasSize(1)
+    }
+
+    @Test
+    fun kravOmAtCvSkalVæreUtfyltErOppfyltFordiHarFagdokumentasjon() {
+        val cv = giveMeCvSomIkkeErUtfyltOgHarLangInaktivitet()
+        val anyFagdokumentasjon = giveMeFagdokumentasjon()
+        cv.addFagdokumentasjon(asList(anyFagdokumentasjon))
+        indexerClient.index(cv, DEFAULT_INDEX_NAME)
+
+        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
+
+        assertThat(actual).hasSize(1)
+    }
+
+    @Test
+    fun kravOmAtCvSkalVæreUtfyltErOppfyltFordiHarAnnenErfaring() {
+        val cv = giveMeCvSomIkkeErUtfyltOgHarLangInaktivitet()
+        val anyAnnenErfaring = giveMeAnnenErfaring()
+        cv.addAnnenErfaring(asList(anyAnnenErfaring))
+        indexerClient.index(cv, DEFAULT_INDEX_NAME)
+
+        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
+
+        assertThat(actual).hasSize(1)
+    }
+
+    @Test
+    fun kravOmAtCvSkalVæreUtfyltErOppfyltFordiHarGodkjenninger() {
+        val cv = giveMeCvSomIkkeErUtfyltOgHarLangInaktivitet()
+        val anyGodkjenning = giveMeGodkjenning()
+        cv.addGodkjenninger(asList(anyGodkjenning))
+        indexerClient.index(cv, DEFAULT_INDEX_NAME)
+
+        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
+
+        assertThat(actual).hasSize(1)
+    }
+
+    @Test
+    fun søkUtenFilterForHullICvSkalReturnereBådeCvMedHullOgUtenHull() {
+        val cvUtenHull = giveMeEsCv(
+            "999",
+            EsPerioderMedInaktivitet(
+                toDate(LocalDate.now().minusDays(1)),
+                listOf(toDate(LocalDate.now().minusYears(18)))
+            )
+        )
+        indexerClient.index(cvUtenHull, DEFAULT_INDEX_NAME)
+
+        val actualMedFilterForHull = sokClient.veilederSok(søkekriterierHullICv).cver
+        val actualUtenFilterForHull = sokClient.veilederSok(SokekriterierVeiledere.med().bygg()).cver
+
+        assertThat(actualMedFilterForHull).hasSize(0)
+        assertThat(actualUtenFilterForHull).hasSize(1)
+    }
+
     private fun toDate(localDate: LocalDate): Date? {
         return Date(localDate.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli())
     }
 
-    private fun giveMeEsCv(aktorId: String, esPerioderMedInaktivitet: EsPerioderMedInaktivitet): EsCv? {
-        val esCv = EsCv(
+    private fun giveMeCvSomIkkeErUtfyltOgHarLangInaktivitet() = giveMeTomCv(
+        "1234",
+        EsPerioderMedInaktivitet(
+            null,
+            null
+        )
+    )
+
+    private fun giveMeEsCv(aktorId: String, esPerioderMedInaktivitet: EsPerioderMedInaktivitet): EsCv =
+        giveMeTomCv(aktorId, esPerioderMedInaktivitet).apply {
+            addForerkort(
+                listOf(
+                    EsForerkort(
+                        toDate(LocalDate.of(1996, 2, 1)),
+                        toDate(LocalDate.of(3050, 2, 1)),
+                        "V1.6145",
+                        "T - Traktor",
+                        null,
+                        ""
+                    )
+                )
+            )
+
+        }
+
+    private fun giveMeTomCv(aktorId: String, esPerioderMedInaktivitet: EsPerioderMedInaktivitet): EsCv =
+        EsCv(
             aktorId,
             "01016012345",
             "JENS",
@@ -182,8 +329,9 @@ class SøkEtterHullICvIT {
             false,
             "Viken",
             "Lier"
-        )
-        esCv.addPerioderMedInaktivitet(esPerioderMedInaktivitet)
-        return esCv
-    }
+        ).apply {
+            addPerioderMedInaktivitet(esPerioderMedInaktivitet)
+        }
+
+
 }
