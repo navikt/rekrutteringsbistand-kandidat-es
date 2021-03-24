@@ -240,6 +240,24 @@ class SøkEtterHullICvIT {
         assertThat(actual).hasSize(1)
     }
 
+    @Test
+    fun søkUtenFilterForHullICvSkalReturnereBådeCvMedHullOgUtenHull() {
+        val cvUtenHull = giveMeEsCv(
+            "999",
+            EsPerioderMedInaktivitet(
+                toDate(LocalDate.now().minusDays(1)),
+                listOf(toDate(LocalDate.now().minusYears(18)))
+            )
+        )
+        indexerClient.index(cvUtenHull, DEFAULT_INDEX_NAME)
+
+        val actualMedFilterForHull = sokClient.veilederSok(søkekriterierHullICv).cver
+        val actualUtenFilterForHull = sokClient.veilederSok(SokekriterierVeiledere.med().bygg()).cver
+
+        assertThat(actualMedFilterForHull).hasSize(0)
+        assertThat(actualUtenFilterForHull).hasSize(1)
+    }
+
     private fun toDate(localDate: LocalDate): Date? {
         return Date(localDate.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli())
     }
