@@ -913,11 +913,16 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
         rootQueryBuilder.must(
                 boolQuery()
-                        .must(harUtfyltCv)
+                        .must(
+                                nestedQuery(
+                                        "forerkort",
+                                        boolQuery().filter(
+                                                existsQuery("forerkort")
+                                        ), ScoreMode.Total)
+                        )
                         .must(boolQuery()
                                 .should(aldriVærtIAktivitet)
-                                .should(erInaktivOgHarHull))
-        );
+                                .should(erInaktivOgHarHull)));
     }
 
     private Sokeresultat toSokeresultat(SearchResponse searchResponse) {

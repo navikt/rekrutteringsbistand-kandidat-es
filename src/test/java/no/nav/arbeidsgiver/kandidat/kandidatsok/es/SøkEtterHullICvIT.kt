@@ -139,7 +139,7 @@ class SøkEtterHullICvIT {
     }
 
     @Test
-    fun harIkkeHullHvisAldriVærtIAktivitetMenTomCv() {
+    fun harIkkeHullHvisAldriVærtIAktivitetOgTomCv() {
         val cv = giveMeTomCv(
             "213548",
             EsPerioderMedInaktivitet(
