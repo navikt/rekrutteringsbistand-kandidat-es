@@ -2514,4 +2514,10 @@ public class EsCvObjectMother {
                 new Date(), 301, FALSE, null, null, null, null, FALSE, TRUE,
                 false, true, null, "0301", "H149390", false, null, null);
     }
+
+    public static EsYrkeserfaring giveMeYrkeserfaring() {
+        return new EsYrkeserfaring(fraIsoDato("2016-06-01"), fraIsoDato("2016-07-01"),
+                "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", Set.of("Lastebil- og trailersjåfør"), "Sjåfør kl. 2", "YRKE_ORGNR",
+                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+    }
 }

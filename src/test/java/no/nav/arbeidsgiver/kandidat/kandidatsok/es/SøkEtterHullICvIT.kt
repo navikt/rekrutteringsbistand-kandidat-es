@@ -1,5 +1,6 @@
 package no.nav.arbeidsgiver.kandidat.kandidatsok.es
 
+import no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es.EsCvObjectMother.giveMeYrkeserfaring
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsForerkort
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsPerioderMedInaktivitet
@@ -97,7 +98,7 @@ class SøkEtterHullICvIT {
         )
         indexerClient.bulkIndex(listOf(cv), DEFAULT_INDEX_NAME)
 
-        val actual = sokClient.veilederSok(SokekriterierVeiledere.med().bygg()).cver
+        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
 
         assertThat(actual).hasSize(1)
         assertThat(actual.first().aktorId).isEqualTo(cv!!.aktorId)
@@ -154,9 +155,59 @@ class SøkEtterHullICvIT {
         assertThat(actual).isEmpty()
     }
 
+    @Test
+    fun kravOmAtCvSkalVæreUtfyltErOppfyltFordiHarYrkeserfaring() {
+        val cv = giveMeCvSomIkkeErUtfyltOgHarLangInaktivitet()
+        val anyYrkeserfaring = giveMeYrkeserfaring()
+        cv.addYrkeserfaring(anyYrkeserfaring)
+        indexerClient.index(cv, DEFAULT_INDEX_NAME)
+
+        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
+
+        assertThat(actual).hasSize(1)
+    }
+
+    @Test
+    fun kravOmAtCvSkalVæreUtfyltErOppfyltFordiHarUtdanning() {
+
+    }
+
+    @Test
+    fun kravOmAtCvSkalVæreUtfyltErOppfyltFordiHarFørerkort() {
+
+    }
+
+    @Test
+    fun kravOmAtCvSkalVæreUtfyltErOppfyltFordiHarKurs() {
+
+    }
+
+    @Test
+    fun kravOmAtCvSkalVæreUtfyltErOppfyltFordiHarFagdokumentasjon() {
+
+    }
+
+    @Test
+    fun kravOmAtCvSkalVæreUtfyltErOppfyltFordiHarAnnenErfaring() {
+
+    }
+
+    @Test
+    fun kravOmAtCvSkalVæreUtfyltErOppfyltFordiHarGodkjenninger() {
+
+    }
+
     private fun toDate(localDate: LocalDate): Date? {
         return Date(localDate.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli())
     }
+
+    private fun giveMeCvSomIkkeErUtfyltOgHarLangInaktivitet() = giveMeTomCv(
+        "1234",
+        EsPerioderMedInaktivitet(
+            null,
+            null
+        )
+    )
 
     private fun giveMeEsCv(aktorId: String, esPerioderMedInaktivitet: EsPerioderMedInaktivitet): EsCv =
         giveMeTomCv(aktorId, esPerioderMedInaktivitet).apply {
