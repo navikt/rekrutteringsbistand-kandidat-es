@@ -1,6 +1,7 @@
 package no.nav.arbeidsgiver.kandidat.kandidatsok.es
 
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv
+import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsForerkort
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsPerioderMedInaktivitet
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.SokekriterierVeiledere
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchIntegrationTestExtension
@@ -111,6 +112,7 @@ class SøkEtterHullICvIT {
                 listOf(toDate(LocalDate.now().minusYears(1)))
             )
         )
+        assertThat(cv.forerkort).isNotEmpty
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
         val actual = sokClient.veilederSok(søkekriterierHullICv).cver
@@ -136,12 +138,45 @@ class SøkEtterHullICvIT {
         assertThat(actual.first().aktorId).isEqualTo(cv!!.aktorId)
     }
 
+    @Test
+    fun harIkkeHullHvisAldriVærtIAktivitetMenTomCv() {
+        val cv = giveMeTomCv(
+            "213548",
+            EsPerioderMedInaktivitet(
+                null,
+                null
+            )
+        )
+        indexerClient.index(cv, DEFAULT_INDEX_NAME)
+
+        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
+
+        assertThat(actual).isEmpty()
+    }
+
     private fun toDate(localDate: LocalDate): Date? {
         return Date(localDate.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli())
     }
 
-    private fun giveMeEsCv(aktorId: String, esPerioderMedInaktivitet: EsPerioderMedInaktivitet): EsCv? {
-        val esCv = EsCv(
+    private fun giveMeEsCv(aktorId: String, esPerioderMedInaktivitet: EsPerioderMedInaktivitet): EsCv =
+        giveMeTomCv(aktorId, esPerioderMedInaktivitet).apply {
+            addForerkort(
+                listOf(
+                    EsForerkort(
+                        toDate(LocalDate.of(1996, 2, 1)),
+                        toDate(LocalDate.of(3050, 2, 1)),
+                        "V1.6145",
+                        "T - Traktor",
+                        null,
+                        ""
+                    )
+                )
+            )
+
+        }
+
+    private fun giveMeTomCv(aktorId: String, esPerioderMedInaktivitet: EsPerioderMedInaktivitet): EsCv =
+        EsCv(
             aktorId,
             "01016012345",
             "JENS",
@@ -182,8 +217,9 @@ class SøkEtterHullICvIT {
             false,
             "Viken",
             "Lier"
-        )
-        esCv.addPerioderMedInaktivitet(esPerioderMedInaktivitet)
-        return esCv
-    }
+        ).apply {
+            addPerioderMedInaktivitet(esPerioderMedInaktivitet)
+        }
+
+
 }

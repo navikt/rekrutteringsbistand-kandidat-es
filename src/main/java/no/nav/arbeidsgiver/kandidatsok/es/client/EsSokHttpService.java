@@ -902,10 +902,21 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                                 )
                 );
 
+        BoolQueryBuilder harUtfyltCv = boolQuery()
+                .should(existsQuery("yrkeserfaring"))
+                .should(existsQuery("utdanning"))
+                .should(existsQuery("forerkort"))
+                .should(existsQuery("kursObj"))
+                .should(existsQuery("fagdokumentasjon"))
+                .should(existsQuery("annenerfaringObj"))
+                .should(existsQuery("godkjenninger"));
+
         rootQueryBuilder.must(
                 boolQuery()
-                        .should(aldriVærtIAktivitet)
-                        .should(erInaktivOgHarHull)
+                        .must(harUtfyltCv)
+                        .must(boolQuery()
+                                .should(aldriVærtIAktivitet)
+                                .should(erInaktivOgHarHull))
         );
     }
 
