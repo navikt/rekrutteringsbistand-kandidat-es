@@ -1,6 +1,6 @@
 package no.nav.arbeidsgiver.kandidat.kandidatsok.es
 
-import no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es.EsCvObjectMother.giveMeYrkeserfaring
+import no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es.EsCvObjectMother.*
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsForerkort
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsPerioderMedInaktivitet
@@ -17,6 +17,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.*
+import java.util.Arrays.asList
 
 @ExtendWith(ElasticSearchIntegrationTestExtension::class)
 class SøkEtterHullICvIT {
@@ -169,32 +170,74 @@ class SøkEtterHullICvIT {
 
     @Test
     fun kravOmAtCvSkalVæreUtfyltErOppfyltFordiHarUtdanning() {
+        val cv = giveMeCvSomIkkeErUtfyltOgHarLangInaktivitet()
+        val anyUtdanning = giveMeUtdanning()
+        cv.addUtdanning(anyUtdanning)
+        indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
+        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
+
+        assertThat(actual).hasSize(1)
     }
 
     @Test
     fun kravOmAtCvSkalVæreUtfyltErOppfyltFordiHarFørerkort() {
+        val cv = giveMeCvSomIkkeErUtfyltOgHarLangInaktivitet()
+        val anyFørerkort = giveMeFørerkort()
+        cv.addForerkort(anyFørerkort)
+        indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
+        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
+
+        assertThat(actual).hasSize(1)
     }
 
     @Test
     fun kravOmAtCvSkalVæreUtfyltErOppfyltFordiHarKurs() {
+        val cv = giveMeCvSomIkkeErUtfyltOgHarLangInaktivitet()
+        val anyKurs = giveMeKurs()
+        cv.addKurs(anyKurs)
+        indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
+        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
+
+        assertThat(actual).hasSize(1)
     }
 
     @Test
     fun kravOmAtCvSkalVæreUtfyltErOppfyltFordiHarFagdokumentasjon() {
+        val cv = giveMeCvSomIkkeErUtfyltOgHarLangInaktivitet()
+        val anyFagdokumentasjon = giveMeFagdokumentasjon()
+        cv.addFagdokumentasjon(asList(anyFagdokumentasjon))
+        indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
+        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
+
+        assertThat(actual).hasSize(1)
     }
 
     @Test
     fun kravOmAtCvSkalVæreUtfyltErOppfyltFordiHarAnnenErfaring() {
+        val cv = giveMeCvSomIkkeErUtfyltOgHarLangInaktivitet()
+        val anyAnnenErfaring = giveMeAnnenErfaring()
+        cv.addAnnenErfaring(asList(anyAnnenErfaring))
+        indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
+        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
+
+        assertThat(actual).hasSize(1)
     }
 
     @Test
     fun kravOmAtCvSkalVæreUtfyltErOppfyltFordiHarGodkjenninger() {
+        val cv = giveMeCvSomIkkeErUtfyltOgHarLangInaktivitet()
+        val anyGodkjenning = giveMeGodkjenning()
+        cv.addGodkjenninger(asList(anyGodkjenning))
+        indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
+        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
+
+        assertThat(actual).hasSize(1)
     }
 
     private fun toDate(localDate: LocalDate): Date? {

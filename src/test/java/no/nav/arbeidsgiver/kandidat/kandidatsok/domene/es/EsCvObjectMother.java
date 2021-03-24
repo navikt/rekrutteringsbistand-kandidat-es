@@ -2520,4 +2520,28 @@ public class EsCvObjectMother {
                 "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", Set.of("Lastebil- og trailersjåfør"), "Sjåfør kl. 2", "YRKE_ORGNR",
                 "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
     }
+
+    public static EsUtdanning giveMeUtdanning() {
+        return new EsUtdanning(fraIsoDato("1988-08-20"), fraIsoDato("1989-06-20"), "UiO", "838838", "Sosialantropologiske fag", "Sosialantropologi gr. fag");
+    }
+
+    public static EsForerkort giveMeFørerkort() {
+        return new EsForerkort(fraIsoDato("1994-08-01"), null, "V1.6050", "A - Tung motorsykkel", null, "");
+    }
+
+    public static EsKurs giveMeKurs() {
+        return new EsKurs(fraIsoDato("2012-12-01"), null, "Akseloppretting", "Easy-Laser", null, null, null);
+    }
+
+    public static EsFagdokumentasjon giveMeFagdokumentasjon() {
+        return new EsFagdokumentasjon("anyType", "anyTittel", "anyBeskrivelse");
+    }
+
+    public static EsAnnenErfaring giveMeAnnenErfaring() {
+        return new EsAnnenErfaring(fraIsoDato("2005-01-01"), fraIsoDato("2010-12-31"), "anyBeskrivelse");
+    }
+
+    public static EsGodkjenning giveMeGodkjenning() {
+        return new EsGodkjenning("anyTittel", "anyUtsteder", fraIsoDato("2020-06-01"), fraIsoDato("2050-01-01"), "anyKonseptId");
+    }
 }
