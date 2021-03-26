@@ -20,7 +20,6 @@
     </properties>
 
     <dependencies>
-
         <dependency>
             <groupId>no.nav.arbeid.pam</groupId>
             <artifactId>pam-ansettelseskodeverk</artifactId>
