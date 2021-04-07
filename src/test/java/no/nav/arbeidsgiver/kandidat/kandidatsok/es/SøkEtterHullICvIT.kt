@@ -275,6 +275,31 @@ class SøkEtterHullICvIT {
         assertThat(actual).isTrue
     }
 
+    @Test
+    fun haddeIkkeHullICv() {
+        val aktorId = "9846517"
+        val cvMedHull = giveMeEsCv(
+                aktorId,
+                EsPerioderMedInaktivitet(
+                        toDate(LocalDate.now()),
+                        emptyList()))
+
+        indexerClient.bulkIndex(listOf(cvMedHull), DEFAULT_INDEX_NAME)
+
+        val actual = sokClient.haddeHullICv(aktorId, LocalDate.now());
+
+        assertThat(actual).isFalse
+    }
+
+    @Test
+    fun vetIkkeOmPersonHarHullFordiPersonIkkeFinnesIEs() {
+        val aktorId = "0"
+
+        val actual = sokClient.haddeHullICv(aktorId, LocalDate.now());
+
+        assertThat(actual == null).isTrue
+    }
+
     private fun toDate(localDate: LocalDate): Date? {
         return Date(localDate.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli())
     }

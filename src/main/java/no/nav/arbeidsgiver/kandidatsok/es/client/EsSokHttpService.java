@@ -14,8 +14,10 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.filter.ParsedFilter;
 import org.elasticsearch.search.aggregations.bucket.nested.Nested;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms.Bucket;
@@ -408,12 +410,16 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 return null;
             } else {
                 // Hent ut tall fra aggregering
-                var tallFraAggregeringPåHull = Integer.valueOf(response.getAggregations().get("hull").getMetadata().get("doc_count").toString());
-                return tallFraAggregeringPåHull == 1;
+                var hullAggregation = response.getAggregations().get("hull");
+                if( hullAggregation instanceof  ParsedFilter) {
+                    var docCount = ((ParsedFilter) hullAggregation).getDocCount();
+                    return docCount > 0;
+                } else {
+                    throw new RuntimeException("Uventet type fra aggregation");
+                }
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new ElasticException(e);
         }
     }
 
