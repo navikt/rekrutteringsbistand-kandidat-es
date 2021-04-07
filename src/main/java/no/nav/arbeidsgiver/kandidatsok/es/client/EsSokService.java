@@ -41,5 +41,5 @@ public interface EsSokService {
 
     Optional<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> veilederSokPaaFnr(String fnr);
 
-    Boolean haddeHullICv(String aktorId, LocalDate dato);
+    Boolean harHullICv(String aktorId, LocalDate dato);
 }

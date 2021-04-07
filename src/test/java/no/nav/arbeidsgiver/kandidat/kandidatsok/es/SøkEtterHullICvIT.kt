@@ -259,7 +259,7 @@ class SøkEtterHullICvIT {
     }
 
     @Test
-    fun haddeHullICv() {
+    fun sjekkOmPersonHarHullICv() {
         val aktorId = "9846517"
         val tidspunkt = LocalDate.of(2018, 4, 7)
         val cvMedHull = giveMeEsCv(
@@ -271,13 +271,13 @@ class SøkEtterHullICvIT {
         )
         indexerClient.bulkIndex(listOf(cvMedHull), DEFAULT_INDEX_NAME)
 
-        val actual = sokClient.haddeHullICv(aktorId, tidspunkt);
+        val actual = sokClient.harHullICv(aktorId, tidspunkt);
 
         assertThat(actual).isTrue
     }
 
     @Test
-    fun haddeIkkeHullICv() {
+    fun sjekkOmPersonIkkeHarHullICv() {
         val aktorId = "9846517"
         val cvMedHull = giveMeEsCv(
                 aktorId,
@@ -287,16 +287,16 @@ class SøkEtterHullICvIT {
 
         indexerClient.bulkIndex(listOf(cvMedHull), DEFAULT_INDEX_NAME)
 
-        val actual = sokClient.haddeHullICv(aktorId, LocalDate.now());
+        val actual = sokClient.harHullICv(aktorId, LocalDate.now());
 
         assertThat(actual).isFalse
     }
 
     @Test
-    fun vetIkkeOmPersonHarHullFordiPersonIkkeFinnesIEs() {
+    fun sjekkAtViIkkevetOmPersonHarHullICvNårPersonIkkeFinnesIEs() {
         val aktorId = "0"
 
-        val actual = sokClient.haddeHullICv(aktorId, LocalDate.now());
+        val actual = sokClient.harHullICv(aktorId, LocalDate.now());
 
         assertThat(actual == null).isTrue
     }

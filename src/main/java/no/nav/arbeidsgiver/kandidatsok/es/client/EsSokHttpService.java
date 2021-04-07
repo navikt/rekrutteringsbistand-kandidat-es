@@ -387,7 +387,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     }
 
     @Override
-    public Boolean haddeHullICv(String aktorId, LocalDate tidspunkt) {
+    public Boolean harHullICv(String aktorId, LocalDate tidspunkt) {
         var hullICvBoolQuery = boolQuery();
         addFilterForHullICv(hullICvBoolQuery, tidspunkt); // MÅ LEGGE TIL DATO
         var hullICvAggregation = AggregationBuilders.filter("hull", hullICvBoolQuery);
@@ -404,19 +404,17 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
         try {
             var response = client.search(request, RequestOptions.DEFAULT);
-            var antallTreff = response.getInternalResponse().hits().getHits().length;
+            var harTreff = response.getInternalResponse().hits().getHits().length > 0;
 
-            if (antallTreff == 0) {
-                return null;
-            } else {
-                // Hent ut tall fra aggregering
+            if (harTreff) {
                 var hullAggregation = response.getAggregations().get("hull");
                 if( hullAggregation instanceof  ParsedFilter) {
-                    var docCount = ((ParsedFilter) hullAggregation).getDocCount();
-                    return docCount > 0;
+                    return ((ParsedFilter) hullAggregation).getDocCount() > 0;
                 } else {
                     throw new RuntimeException("Uventet type fra aggregation");
                 }
+            } else {
+                return null;
             }
         } catch (IOException e) {
             throw new ElasticException(e);
