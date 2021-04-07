@@ -14,8 +14,10 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.filter.ParsedFilter;
 import org.elasticsearch.search.aggregations.bucket.nested.Nested;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms.Bucket;
@@ -374,13 +376,48 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
             }
 
             if (sk.isHullICv()) {
-                addFilterForHullICv(queryBuilder);
+                addFilterForHullICv(queryBuilder, LocalDate.now());
             }
 
             return toSokeresultat(esExec(() -> search(UseCase.VEIL_SOK, queryBuilder, sk.fraIndex(),
                     sk.antallResultater(), sortQueryBuilder)));
         } catch (IOException ioe) {
             throw new ElasticException(ioe);
+        }
+    }
+
+    @Override
+    public Boolean harHullICv(String aktorId, LocalDate tidspunkt) {
+        var hullICvBoolQuery = boolQuery();
+        addFilterForHullICv(hullICvBoolQuery, tidspunkt); // MÅ LEGGE TIL DATO
+        var hullICvAggregation = AggregationBuilders.filter("hull", hullICvBoolQuery);
+
+        var aktorIdBoolQuery = boolQuery().must(QueryBuilders.termQuery("aktorId", aktorId));
+
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(aktorIdBoolQuery);
+        searchSourceBuilder.aggregation(hullICvAggregation);
+
+        var request = new SearchRequest();
+        request.indices(indexName);
+        request.source(searchSourceBuilder);
+
+        try {
+            var response = client.search(request, RequestOptions.DEFAULT);
+            var harTreff = response.getInternalResponse().hits().getHits().length > 0;
+
+            if (harTreff) {
+                var hullAggregation = response.getAggregations().get("hull");
+                if( hullAggregation instanceof  ParsedFilter) {
+                    return ((ParsedFilter) hullAggregation).getDocCount() > 0;
+                } else {
+                    throw new RuntimeException("Uventet type fra aggregation");
+                }
+            } else {
+                return null;
+            }
+        } catch (IOException e) {
+            throw new ElasticException(e);
         }
     }
 
@@ -880,7 +917,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
         }
     }
 
-    private void addFilterForHullICv(BoolQueryBuilder rootQueryBuilder) {
+    private void addFilterForHullICv(BoolQueryBuilder rootQueryBuilder, LocalDate tidspunkt) {
       /*
          Et hull i en CV er definert som en periode på 2 år eller med med inaktivitet i løpet av de siste 5 årene fra tidspunktet spørringen kjøres på.
          Hele algoritmen for å finne et hull er implementert delvis her i denne Elastic-search spørringen og delvis i
@@ -897,8 +934,8 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 .must(existsQuery("perioderMedInaktivitet.startdatoForInnevarendeInaktivePeriode"))
                 .must(
                         boolQuery()
-                                .should(rangeQuery("perioderMedInaktivitet.startdatoForInnevarendeInaktivePeriode").lte(LocalDate.now().minusYears(2)))
-                                .should(rangeQuery("perioderMedInaktivitet.sluttdatoerForInaktivePerioderPaToArEllerMer").gte(LocalDate.now().minusYears(3))
+                                .should(rangeQuery("perioderMedInaktivitet.startdatoForInnevarendeInaktivePeriode").lte(tidspunkt.minusYears(2)))
+                                .should(rangeQuery("perioderMedInaktivitet.sluttdatoerForInaktivePerioderPaToArEllerMer").gte(tidspunkt.minusYears(3))
                                 )
                 );
 
@@ -918,7 +955,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                                 .should(aldriVærtIAktivitet)
                                 .should(erInaktivOgHarHull)));
     }
-    
+
     private NestedQueryBuilder nestedExists(String felt) {
         return nestedQuery(
                 felt,
