@@ -376,7 +376,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
             }
 
             if (sk.isHullICv()) {
-                addFilterForHullICv(queryBuilder);
+                addFilterForHullICv(queryBuilder, LocalDate.now());
             }
 
             return toSokeresultat(esExec(() -> search(UseCase.VEIL_SOK, queryBuilder, sk.fraIndex(),
@@ -387,9 +387,9 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     }
 
     @Override
-    public Boolean haddeHullICv(String aktorId, LocalDate dato) {
+    public Boolean haddeHullICv(String aktorId, LocalDate tidspunkt) {
         var hullICvBoolQuery = boolQuery();
-        addFilterForHullICv(hullICvBoolQuery); // MÅ LEGGE TIL DATO
+        addFilterForHullICv(hullICvBoolQuery, tidspunkt); // MÅ LEGGE TIL DATO
         var hullICvAggregation = AggregationBuilders.filter("hull", hullICvBoolQuery);
 
         var aktorIdBoolQuery = boolQuery().must(QueryBuilders.termQuery("aktorId", aktorId));
@@ -919,7 +919,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
         }
     }
 
-    private void addFilterForHullICv(BoolQueryBuilder rootQueryBuilder) {
+    private void addFilterForHullICv(BoolQueryBuilder rootQueryBuilder, LocalDate tidspunkt) {
       /*
          Et hull i en CV er definert som en periode på 2 år eller med med inaktivitet i løpet av de siste 5 årene fra tidspunktet spørringen kjøres på.
          Hele algoritmen for å finne et hull er implementert delvis her i denne Elastic-search spørringen og delvis i
@@ -936,8 +936,8 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 .must(existsQuery("perioderMedInaktivitet.startdatoForInnevarendeInaktivePeriode"))
                 .must(
                         boolQuery()
-                                .should(rangeQuery("perioderMedInaktivitet.startdatoForInnevarendeInaktivePeriode").lte(LocalDate.now().minusYears(2)))
-                                .should(rangeQuery("perioderMedInaktivitet.sluttdatoerForInaktivePerioderPaToArEllerMer").gte(LocalDate.now().minusYears(3))
+                                .should(rangeQuery("perioderMedInaktivitet.startdatoForInnevarendeInaktivePeriode").lte(tidspunkt.minusYears(2)))
+                                .should(rangeQuery("perioderMedInaktivitet.sluttdatoerForInaktivePerioderPaToArEllerMer").gte(tidspunkt.minusYears(3))
                                 )
                 );
 

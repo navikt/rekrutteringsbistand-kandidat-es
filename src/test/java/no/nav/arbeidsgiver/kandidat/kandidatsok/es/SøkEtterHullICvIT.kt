@@ -261,16 +261,17 @@ class SøkEtterHullICvIT {
     @Test
     fun haddeHullICv() {
         val aktorId = "9846517"
+        val tidspunkt = LocalDate.of(2018, 4, 7)
         val cvMedHull = giveMeEsCv(
             aktorId,
             EsPerioderMedInaktivitet(
-                toDate(LocalDate.now().minusYears(2)),
-                listOf(toDate(LocalDate.now().minusYears(5)))
+                toDate(tidspunkt),
+                listOf(toDate(tidspunkt.minusYears(2)))
             )
         )
         indexerClient.bulkIndex(listOf(cvMedHull), DEFAULT_INDEX_NAME)
 
-        val actual = sokClient.haddeHullICv(aktorId, LocalDate.now());
+        val actual = sokClient.haddeHullICv(aktorId, tidspunkt);
 
         assertThat(actual).isTrue
     }
