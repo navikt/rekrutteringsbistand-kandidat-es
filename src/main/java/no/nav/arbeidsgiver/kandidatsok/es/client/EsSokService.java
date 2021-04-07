@@ -5,6 +5,7 @@ import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.Sokekriterier;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.SokekriterierVeiledere;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.Sokeresultat;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,4 +41,5 @@ public interface EsSokService {
 
     Optional<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> veilederSokPaaFnr(String fnr);
 
+    Boolean haddeHullICv(String aktorId, LocalDate dato);
 }

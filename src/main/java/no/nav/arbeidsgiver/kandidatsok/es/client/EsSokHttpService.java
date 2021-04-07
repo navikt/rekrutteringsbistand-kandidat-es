@@ -384,6 +384,39 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
         }
     }
 
+    @Override
+    public Boolean haddeHullICv(String aktorId, LocalDate dato) {
+        var hullICvBoolQuery = boolQuery();
+        addFilterForHullICv(hullICvBoolQuery); // MÅ LEGGE TIL DATO
+        var hullICvAggregation = AggregationBuilders.filter("hull", hullICvBoolQuery);
+
+        var aktorIdBoolQuery = boolQuery().must(QueryBuilders.termQuery("aktorId", aktorId));
+
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(aktorIdBoolQuery);
+        searchSourceBuilder.aggregation(hullICvAggregation);
+
+        var request = new SearchRequest();
+        request.indices(indexName);
+        request.source(searchSourceBuilder);
+
+        try {
+            var response = client.search(request, RequestOptions.DEFAULT);
+            var antallTreff = response.getInternalResponse().hits().getHits().length;
+
+            if (antallTreff == 0) {
+                return null;
+            } else {
+                // Hent ut tall fra aggregering
+                var tallFraAggregeringPåHull = Integer.valueOf(response.getAggregations().get("hull").getMetadata().get("doc_count").toString());
+                return tallFraAggregeringPåHull == 1;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private void addFilterForTilretteleggingsbehov(BoolQueryBuilder boolQueryBuilder, Boolean value) {
         boolQueryBuilder.filter(QueryBuilders.termQuery("tilretteleggingsbehov", value));
     }
@@ -918,7 +951,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                                 .should(aldriVærtIAktivitet)
                                 .should(erInaktivOgHarHull)));
     }
-    
+
     private NestedQueryBuilder nestedExists(String felt) {
         return nestedQuery(
                 felt,
