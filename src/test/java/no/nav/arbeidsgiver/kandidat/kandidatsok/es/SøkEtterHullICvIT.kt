@@ -27,7 +27,7 @@ class SøkEtterHullICvIT {
 
     private val indexerClient = ElasticSearchTestConfiguration.indexerCvService()
 
-    private val søkekriterierHullICv = SokekriterierVeiledere.med().hullICv(true).bygg()
+    private val søkekriterierHullICv = SokekriterierVeiledere.med().prioriterteMaalgrupper(listOf("hullICv")).bygg()
 
     private val minimumHullVarighetAntallÅr = 2L
 
@@ -280,10 +280,12 @@ class SøkEtterHullICvIT {
     fun sjekkOmPersonIkkeHarHullICv() {
         val aktorId = "9846517"
         val cvMedHull = giveMeEsCv(
-                aktorId,
-                EsPerioderMedInaktivitet(
-                        toDate(LocalDate.now()),
-                        emptyList()))
+            aktorId,
+            EsPerioderMedInaktivitet(
+                toDate(LocalDate.now()),
+                emptyList()
+            )
+        )
 
         indexerClient.bulkIndex(listOf(cvMedHull), DEFAULT_INDEX_NAME)
 
@@ -329,6 +331,7 @@ class SøkEtterHullICvIT {
             )
 
         }
+
 
     private fun giveMeTomCv(aktorId: String, esPerioderMedInaktivitet: EsPerioderMedInaktivitet): EsCv =
         EsCv(

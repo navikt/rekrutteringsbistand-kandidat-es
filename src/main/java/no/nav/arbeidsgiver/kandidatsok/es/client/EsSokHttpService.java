@@ -351,6 +351,14 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 addFodselsdatoToQuery(null, sk.antallAarTil(), queryBuilder);
             }
 
+            if(sk.prioriterteMaalgrupper().contains("senior")) {
+                addFodselsdatoToQuery(50, 1000, queryBuilder);
+            }
+
+            if(sk.prioriterteMaalgrupper().contains("ung")) {
+                addFodselsdatoToQuery(0, 30, queryBuilder);
+            }
+
             if (sk.isTilretteleggingsbehovSet()) {
                 addFilterForTilretteleggingsbehov(queryBuilder, sk.getTilretteleggingsbehov());
             }
@@ -379,7 +387,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 addFilterForSistEndret(sk.antallDagerSistEndret(), queryBuilder);
             }
 
-            if (sk.isHullICv()) {
+            if (sk.prioriterteMaalgrupper().contains("hullICv")) {
                 addFilterForHullICv(queryBuilder, LocalDate.now());
             }
 
@@ -597,9 +605,9 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
     private void addFodselsdatoToQuery(Integer antallAarFra, Integer antallAarTil, BoolQueryBuilder boolQueryBuilder) {
         if (antallAarFra != null && antallAarTil != null) {
-            boolQueryBuilder.must(rangeQuery("fodselsdato").gte("now-" + antallAarTil + "y/d").lte("now-" + antallAarFra + "y/d"));
+            boolQueryBuilder.must(rangeQuery("fodselsdato").gte("now-" + antallAarTil + "y/d").lte("now-" + (antallAarFra + 1) + "y/d"));
         } else if (antallAarFra != null) {
-            boolQueryBuilder.must(rangeQuery("fodselsdato").gte("now-200y/d").lte("now-" + antallAarFra + "y/d"));
+            boolQueryBuilder.must(rangeQuery("fodselsdato").gte("now-200y/d").lte("now-" + (antallAarFra + 1) + "y/d"));
         } else if (antallAarTil != null) {
             boolQueryBuilder.must(rangeQuery("fodselsdato").gte("now-" + antallAarTil + "y/d").lte("now"));
         } else {
