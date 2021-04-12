@@ -33,6 +33,7 @@ public class SokekriterierVeiledere {
     private Integer antallAarTil;
     private Integer antallDagerSistEndret;
     private Integer antallAarGammelYrkeserfaring;
+    private List<String> prioriterteMaalgrupper;
     private boolean hullICv;
 
     private boolean tomtSok = true;
@@ -180,6 +181,8 @@ public class SokekriterierVeiledere {
         return midlertidigUtilgjengelig;
     }
 
+    public List<String> prioriterteMaalgrupper() { return prioriterteMaalgrupper; }
+
     public Integer antallDagerSistEndret() {
         return antallDagerSistEndret;
     }
@@ -219,6 +222,7 @@ public class SokekriterierVeiledere {
         private List<String> veilTilretteleggingsbehov;
         private List<String> veilTilretteleggingsbehovUtelukkes;
         private List<String> midlertidigUtilgjengelig;
+        private List<String> prioriterteMaalgrupper;
         private Integer antallDagerSistEndret;
         private Integer antallAarGammelYrkeserfaring;
         private boolean hullICv = false;
@@ -271,6 +275,9 @@ public class SokekriterierVeiledere {
                     : Collections.unmodifiableList(new ArrayList<>(veilTilretteleggingsbehovUtelukkes));
             s.midlertidigUtilgjengelig = midlertidigUtilgjengelig == null ? Collections.emptyList()
                     : Collections.unmodifiableList(new ArrayList<>(midlertidigUtilgjengelig));
+            s.prioriterteMaalgrupper = prioriterteMaalgrupper == null ? Collections.emptyList()
+                    : Collections.unmodifiableList(new ArrayList<>(prioriterteMaalgrupper));
+
             s.antallAarGammelYrkeserfaring = antallAarGammelYrkeserfaring;
 
             s.fraIndex = fra;
@@ -434,6 +441,12 @@ public class SokekriterierVeiledere {
 
         public Builder midlertidigUtilgjengelig(List<String> midlertidigUtilgjengelig) {
             this.midlertidigUtilgjengelig = midlertidigUtilgjengelig;
+            this.tomtSok = false;
+            return this;
+        }
+
+        public Builder prioriterteMaalgrupper(List<String> prioriterteMaalgrupper) {
+            this.prioriterteMaalgrupper = prioriterteMaalgrupper;
             this.tomtSok = false;
             return this;
         }
