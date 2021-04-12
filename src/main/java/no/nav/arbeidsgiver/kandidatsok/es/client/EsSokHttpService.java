@@ -379,10 +379,6 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 addMidlertidigUtilgjengeligToQuery(queryBuilder, sk.midlertidigUtilgjengelig());
             }
 
-            if (isNotEmpty(sk.prioriterteMaalgrupper())) {
-                // todo, kan også ta inn hull hit
-            }
-
             if (sk.antallDagerSistEndret() != null) {
                 addFilterForSistEndret(sk.antallDagerSistEndret(), queryBuilder);
             }
