@@ -13,11 +13,14 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.time.Instant
 import java.time.LocalDate
-import java.time.ZoneOffset
+import java.time.LocalDate.*
+import java.time.ZoneId
 import java.util.*
 
 @ExtendWith(ElasticSearchIntegrationTestExtension::class)
 class SøkAlderPrioriterteMålgrupperCvIT {
+
+    private val anyAktorId = "100001000"
 
     private val sokClient =
         ElasticSearchTestConfiguration.esSokService(DEFAULT_INDEX_NAME)
@@ -36,11 +39,11 @@ class SøkAlderPrioriterteMålgrupperCvIT {
 
     @Test
     fun KandidatSomHarFyllt50årErSenior() {
-        val cv = giveMeEsCv("100001000", LocalDate.now().minusYears(50).minusDays(1))
+        val cv = giveMeEsCv(anyAktorId, now().minusYears(50).minusDays(1))
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
         val actual = sokClient.veilederSok(
-            SokekriterierVeiledere.med().prioriterteMaalgrupper(listOf(PrioritertMålgruppe.senior.name)).bygg()
+            SokekriterierVeiledere.med().prioriterteMaalgrupper(PrioritertMålgruppe.senior).bygg()
         ).cver
 
         assertThat(actual).hasSize(1)
@@ -48,23 +51,24 @@ class SøkAlderPrioriterteMålgrupperCvIT {
 
     @Test
     fun KandidatSomFyller50årErSenior() {
-        val cv = giveMeEsCv("100001000", LocalDate.now().minusYears(50))
+        val cv = giveMeEsCv(anyAktorId, now().minusYears(50))
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
         val actual = sokClient.veilederSok(
-            SokekriterierVeiledere.med().prioriterteMaalgrupper(listOf(PrioritertMålgruppe.senior.name)).bygg()
+            SokekriterierVeiledere.med().prioriterteMaalgrupper(PrioritertMålgruppe.senior).bygg()
         ).cver
 
         assertThat(actual).hasSize(1)
     }
 
     @Test
-    fun  KandidatUnder50årErIkkeSenior() {
-        val cv = giveMeEsCv("100001000", LocalDate.now().minusYears(50).plusDays(1))
+    fun KandidatUnder50årErIkkeSenior() {
+
+        val cv = giveMeEsCv(anyAktorId, now().minusYears(50).plusDays(1))
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
         val actual = sokClient.veilederSok(
-            SokekriterierVeiledere.med().prioriterteMaalgrupper(listOf(PrioritertMålgruppe.senior.name)).bygg()
+            SokekriterierVeiledere.med().prioriterteMaalgrupper(PrioritertMålgruppe.senior).bygg()
         ).cver
 
         assertThat(actual).hasSize(0)
@@ -72,11 +76,11 @@ class SøkAlderPrioriterteMålgrupperCvIT {
 
     @Test
     fun KandidatUnder30årErUng() {
-        val cv = giveMeEsCv("100001000", LocalDate.now().minusYears(30).plusDays(1))
+        val cv = giveMeEsCv(anyAktorId, now().minusYears(30).plusDays(1))
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
         val actual = sokClient.veilederSok(
-            SokekriterierVeiledere.med().prioriterteMaalgrupper(listOf(PrioritertMålgruppe.ung.name)).bygg()
+            SokekriterierVeiledere.med().prioriterteMaalgrupper(PrioritertMålgruppe.ung).bygg()
         ).cver
 
         assertThat(actual).hasSize(1)
@@ -84,11 +88,11 @@ class SøkAlderPrioriterteMålgrupperCvIT {
 
     @Test
     fun KandidatSomFyller30årErIkkeUng() {
-        val cv = giveMeEsCv("100001000", LocalDate.now().minusYears(30))
+        val cv = giveMeEsCv(anyAktorId, now().minusYears(30))
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
         val actual = sokClient.veilederSok(
-            SokekriterierVeiledere.med().prioriterteMaalgrupper(listOf(PrioritertMålgruppe.ung.name)).bygg()
+            SokekriterierVeiledere.med().prioriterteMaalgrupper(PrioritertMålgruppe.ung).bygg()
         ).cver
 
         assertThat(actual).hasSize(0)
@@ -96,11 +100,11 @@ class SøkAlderPrioriterteMålgrupperCvIT {
 
     @Test
     fun KandidatSomHarFyllt30årErIkkeUng() {
-        val cv = giveMeEsCv("100001000", LocalDate.now().minusYears(30).minusDays(1))
+        val cv = giveMeEsCv(anyAktorId, now().minusYears(30).minusDays(1))
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
         val actual = sokClient.veilederSok(
-            SokekriterierVeiledere.med().prioriterteMaalgrupper(listOf(PrioritertMålgruppe.ung.name)).bygg()
+            SokekriterierVeiledere.med().prioriterteMaalgrupper(PrioritertMålgruppe.ung).bygg()
         ).cver
 
         assertThat(actual).hasSize(0)
@@ -151,7 +155,7 @@ class SøkAlderPrioriterteMålgrupperCvIT {
     )
 
     private fun toDate(localDate: LocalDate): Date? {
-        return Date(localDate.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli())
+        return Date(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
     }
 
 

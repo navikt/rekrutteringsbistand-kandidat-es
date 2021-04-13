@@ -1,8 +1,14 @@
 package no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok;
 
+import no.nav.arbeidsgiver.kandidatsok.es.client.PrioritertMålgruppe;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 public class SokekriterierVeiledere {
     private String fritekst;
@@ -181,7 +187,9 @@ public class SokekriterierVeiledere {
         return midlertidigUtilgjengelig;
     }
 
-    public List<String> prioriterteMaalgrupper() { return prioriterteMaalgrupper; }
+    public List<String> prioriterteMaalgrupper() {
+        return prioriterteMaalgrupper;
+    }
 
     public Integer antallDagerSistEndret() {
         return antallDagerSistEndret;
@@ -194,7 +202,7 @@ public class SokekriterierVeiledere {
     public boolean isHullICv() {
         return hullICv;
     }
-    
+
     public static class Builder {
         private String fritekst;
         private List<String> yrkeJobbonsker;
@@ -445,8 +453,9 @@ public class SokekriterierVeiledere {
             return this;
         }
 
-        public Builder prioriterteMaalgrupper(List<String> prioriterteMaalgrupper) {
-            this.prioriterteMaalgrupper = prioriterteMaalgrupper;
+        public Builder prioriterteMaalgrupper(PrioritertMålgruppe... prioriterteMålgrupper) {
+            this.prioriterteMaalgrupper =
+                    Arrays.asList(prioriterteMålgrupper).stream().map(p -> p.getName()).collect(toList());
             this.tomtSok = false;
             return this;
         }

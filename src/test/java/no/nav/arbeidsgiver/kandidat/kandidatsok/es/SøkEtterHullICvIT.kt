@@ -28,7 +28,7 @@ class SøkEtterHullICvIT {
 
     private val indexerClient = ElasticSearchTestConfiguration.indexerCvService()
 
-    private val søkekriterierHullICv = SokekriterierVeiledere.med().prioriterteMaalgrupper(listOf(PrioritertMålgruppe.hullICv.name)).bygg()
+    private val søkekriterierHullICv = SokekriterierVeiledere.med().prioriterteMaalgrupper(PrioritertMålgruppe.hullICv).bygg()
 
     private val minimumHullVarighetAntallÅr = 2L
 

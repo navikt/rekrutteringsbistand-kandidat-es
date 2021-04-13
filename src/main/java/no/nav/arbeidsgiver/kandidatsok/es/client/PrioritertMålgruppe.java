@@ -5,9 +5,13 @@ public enum PrioritertMålgruppe {
     senior("senior"),
     ung("ung");
 
-    public final String name;
+    private  final String name;
 
     PrioritertMålgruppe(String name) {
         this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 }

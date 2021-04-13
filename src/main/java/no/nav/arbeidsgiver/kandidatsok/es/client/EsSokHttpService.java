@@ -611,11 +611,11 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     }
 
     private void addFodselsdatoSeniorToQuery(BoolQueryBuilder boolQueryBuilder) {
-            boolQueryBuilder.must(rangeQuery("fodselsdato").gte("now-200y/d").lt("now/d-50y+1d"));
+            boolQueryBuilder.must(rangeQuery("fodselsdato").gte("now-200y/d").lt("now/d-50y"));
     }
 
     private void addFodselsdatoUngToQuery(BoolQueryBuilder boolQueryBuilder) {
-        boolQueryBuilder.must(rangeQuery("fodselsdato").gte("now/d-30y+1d").lt("now"));
+        boolQueryBuilder.must(rangeQuery("fodselsdato").gte("now/d-30y").lt("now"));
     }
 
     private void addStillingstitlerToQuery(List<String> stillingstitler,
