@@ -351,11 +351,11 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
             }
 
             if(sk.prioriterteMaalgrupper().contains(PrioritertMålgruppe.senior.name())) {
-                addFodselsdatoToQuery(50, 1000, queryBuilder);
+                addFodselsdatoSeniorToQuery(queryBuilder);
             }
 
             if(sk.prioriterteMaalgrupper().contains(PrioritertMålgruppe.ung.name())) {
-                addFodselsdatoToQuery(0, 30, queryBuilder);
+                addFodselsdatoUngToQuery(queryBuilder);
             }
 
             if (sk.isTilretteleggingsbehovSet()) {
@@ -608,6 +608,14 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
         } else {
             //noop
         }
+    }
+
+    private void addFodselsdatoSeniorToQuery(BoolQueryBuilder boolQueryBuilder) {
+            boolQueryBuilder.must(rangeQuery("fodselsdato").gte("now-200y/d").lt("now-50y+1d/d"));
+    }
+
+    private void addFodselsdatoUngToQuery(BoolQueryBuilder boolQueryBuilder) {
+        boolQueryBuilder.must(rangeQuery("fodselsdato").gte("now-30y+1d/d").lt("now"));
     }
 
     private void addStillingstitlerToQuery(List<String> stillingstitler,
