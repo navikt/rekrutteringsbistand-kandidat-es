@@ -14,7 +14,6 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.filter.ParsedFilter;
@@ -601,9 +600,9 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
     private void addFodselsdatoToQuery(Integer antallAarFra, Integer antallAarTil, BoolQueryBuilder boolQueryBuilder) {
         if (antallAarFra != null && antallAarTil != null) {
-            boolQueryBuilder.must(rangeQuery("fodselsdato").gte("now-" + antallAarTil + "y/d").lte("now-" + (antallAarFra + 1) + "y/d"));
+            boolQueryBuilder.must(rangeQuery("fodselsdato").gte("now-" + antallAarTil + "y/d").lte("now-" + antallAarFra + "y/d"));
         } else if (antallAarFra != null) {
-            boolQueryBuilder.must(rangeQuery("fodselsdato").gte("now-200y/d").lte("now-" + (antallAarFra + 1) + "y/d"));
+            boolQueryBuilder.must(rangeQuery("fodselsdato").gte("now-200y/d").lte("now-" + antallAarFra + "y/d"));
         } else if (antallAarTil != null) {
             boolQueryBuilder.must(rangeQuery("fodselsdato").gte("now-" + antallAarTil + "y/d").lte("now"));
         } else {

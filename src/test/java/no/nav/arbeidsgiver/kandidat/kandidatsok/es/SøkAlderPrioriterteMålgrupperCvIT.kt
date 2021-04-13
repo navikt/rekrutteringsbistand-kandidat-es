@@ -36,6 +36,18 @@ class SøkAlderPrioriterteMålgrupperCvIT {
 
     @Test
     fun KandidatSomHarFyllt50årErSenior() {
+        val cv = giveMeEsCv("100001000", LocalDate.now().minusYears(50).minusDays(1))
+        indexerClient.index(cv, DEFAULT_INDEX_NAME)
+
+        val actual = sokClient.veilederSok(
+            SokekriterierVeiledere.med().prioriterteMaalgrupper(listOf(PrioritertMålgruppe.senior.name)).bygg()
+        ).cver
+
+        assertThat(actual).hasSize(1)
+    }
+
+    @Test
+    fun KandidatSomFyller50årErSenior() {
         val cv = giveMeEsCv("100001000", LocalDate.now().minusYears(50))
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
@@ -47,7 +59,7 @@ class SøkAlderPrioriterteMålgrupperCvIT {
     }
 
     @Test
-    fun KandidatUnder50årErIkkeSenior() {
+    fun  KandidatUnder50årErIkkeSenior() {
         val cv = giveMeEsCv("100001000", LocalDate.now().minusYears(50).plusDays(1))
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
@@ -71,8 +83,20 @@ class SøkAlderPrioriterteMålgrupperCvIT {
     }
 
     @Test
+    fun KandidatSomFyller30årErIkkeUng() {
+        val cv = giveMeEsCv("100001000", LocalDate.now().minusYears(30))
+        indexerClient.index(cv, DEFAULT_INDEX_NAME)
+
+        val actual = sokClient.veilederSok(
+            SokekriterierVeiledere.med().prioriterteMaalgrupper(listOf(PrioritertMålgruppe.ung.name)).bygg()
+        ).cver
+
+        assertThat(actual).hasSize(0)
+    }
+
+    @Test
     fun KandidatSomHarFyllt30årErIkkeUng() {
-        val cv = giveMeEsCv("100001000", LocalDate.now().minusYears(30).minusDays(1)) //Vil ikke ha fyllt samme dag siden test setter starttid til starten på dagen
+        val cv = giveMeEsCv("100001000", LocalDate.now().minusYears(30).minusDays(1))
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
         val actual = sokClient.veilederSok(
