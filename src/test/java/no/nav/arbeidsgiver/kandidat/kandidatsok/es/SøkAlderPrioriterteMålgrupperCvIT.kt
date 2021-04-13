@@ -5,6 +5,7 @@ import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.SokekriterierVeile
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchIntegrationTestExtension
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchTestConfiguration
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME
+import no.nav.arbeidsgiver.kandidatsok.es.client.PrioritertMålgruppe
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -23,10 +24,6 @@ class SøkAlderPrioriterteMålgrupperCvIT {
 
     private val indexerClient = ElasticSearchTestConfiguration.indexerCvService()
 
-    private val søkekriterierHullICv = SokekriterierVeiledere.med().prioriterteMaalgrupper(listOf("hullICv")).bygg()
-
-    private val minimumHullVarighetAntallÅr = 2L
-
     @BeforeEach
     fun before() {
         indexerClient.createIndex(DEFAULT_INDEX_NAME)
@@ -38,13 +35,14 @@ class SøkAlderPrioriterteMålgrupperCvIT {
     }
 
     @Test
-    fun KandidatOver50årErSenior() {
+    fun KandidatSomHarFyllt50årErSenior() {
         val cv = giveMeEsCv("100001000", LocalDate.now().minusYears(50))
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
         val actual = sokClient.veilederSok(
-            SokekriterierVeiledere.med().prioriterteMaalgrupper(listOf("senior")).bygg()
+            SokekriterierVeiledere.med().prioriterteMaalgrupper(listOf(PrioritertMålgruppe.senior.name)).bygg()
         ).cver
+
         assertThat(actual).hasSize(1)
     }
 
@@ -54,30 +52,33 @@ class SøkAlderPrioriterteMålgrupperCvIT {
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
         val actual = sokClient.veilederSok(
-            SokekriterierVeiledere.med().prioriterteMaalgrupper(listOf("senior")).bygg()
+            SokekriterierVeiledere.med().prioriterteMaalgrupper(listOf(PrioritertMålgruppe.senior.name)).bygg()
         ).cver
+
         assertThat(actual).hasSize(0)
     }
 
     @Test
-    fun KandidatUnder31årErJunior() {
-        val cv = giveMeEsCv("100001000", LocalDate.now().minusYears(31).plusDays(1))
+    fun KandidatUnder30årErUng() {
+        val cv = giveMeEsCv("100001000", LocalDate.now().minusYears(30).plusDays(1))
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
         val actual = sokClient.veilederSok(
-            SokekriterierVeiledere.med().prioriterteMaalgrupper(listOf("junior")).bygg()
+            SokekriterierVeiledere.med().prioriterteMaalgrupper(listOf(PrioritertMålgruppe.ung.name)).bygg()
         ).cver
+
         assertThat(actual).hasSize(1)
     }
 
     @Test
-    fun KandidatOver31årErIkkeJunior() {
-        val cv = giveMeEsCv("100001000", LocalDate.now().minusYears(31))
+    fun KandidatSomHarFyllt30årErIkkeUng() {
+        val cv = giveMeEsCv("100001000", LocalDate.now().minusYears(30).minusDays(1)) //Vil ikke ha fyllt samme dag siden test setter starttid til starten på dagen
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
         val actual = sokClient.veilederSok(
-            SokekriterierVeiledere.med().prioriterteMaalgrupper(listOf("ung")).bygg()
+            SokekriterierVeiledere.med().prioriterteMaalgrupper(listOf(PrioritertMålgruppe.ung.name)).bygg()
         ).cver
+
         assertThat(actual).hasSize(0)
     }
 

@@ -351,11 +351,11 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 addFodselsdatoToQuery(null, sk.antallAarTil(), queryBuilder);
             }
 
-            if(sk.prioriterteMaalgrupper().contains("senior")) {
+            if(sk.prioriterteMaalgrupper().contains(PrioritertMålgruppe.senior.name())) {
                 addFodselsdatoToQuery(50, 1000, queryBuilder);
             }
 
-            if(sk.prioriterteMaalgrupper().contains("ung")) {
+            if(sk.prioriterteMaalgrupper().contains(PrioritertMålgruppe.ung.name())) {
                 addFodselsdatoToQuery(0, 30, queryBuilder);
             }
 
@@ -383,7 +383,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 addFilterForSistEndret(sk.antallDagerSistEndret(), queryBuilder);
             }
 
-            if (sk.prioriterteMaalgrupper().contains("hullICv")) {
+            if (sk.prioriterteMaalgrupper().contains(PrioritertMålgruppe.hullICv.name())) {
                 addFilterForHullICv(queryBuilder, LocalDate.now());
             }
 

@@ -8,6 +8,7 @@ import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.SokekriterierVeile
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchIntegrationTestExtension
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchTestConfiguration
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME
+import no.nav.arbeidsgiver.kandidatsok.es.client.PrioritertMålgruppe
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -27,7 +28,7 @@ class SøkEtterHullICvIT {
 
     private val indexerClient = ElasticSearchTestConfiguration.indexerCvService()
 
-    private val søkekriterierHullICv = SokekriterierVeiledere.med().prioriterteMaalgrupper(listOf("hullICv")).bygg()
+    private val søkekriterierHullICv = SokekriterierVeiledere.med().prioriterteMaalgrupper(listOf(PrioritertMålgruppe.hullICv.name)).bygg()
 
     private val minimumHullVarighetAntallÅr = 2L
 
