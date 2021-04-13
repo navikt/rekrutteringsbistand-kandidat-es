@@ -14,7 +14,6 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.filter.ParsedFilter;
@@ -351,6 +350,14 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 addFodselsdatoToQuery(null, sk.antallAarTil(), queryBuilder);
             }
 
+            if(sk.prioriterteMaalgrupper().contains(PrioritertMålgruppe.senior.name())) {
+                addFodselsdatoSeniorToQuery(queryBuilder);
+            }
+
+            if(sk.prioriterteMaalgrupper().contains(PrioritertMålgruppe.ung.name())) {
+                addFodselsdatoUngToQuery(queryBuilder);
+            }
+
             if (sk.isTilretteleggingsbehovSet()) {
                 addFilterForTilretteleggingsbehov(queryBuilder, sk.getTilretteleggingsbehov());
             }
@@ -375,7 +382,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 addFilterForSistEndret(sk.antallDagerSistEndret(), queryBuilder);
             }
 
-            if (sk.isHullICv()) {
+            if (sk.prioriterteMaalgrupper().contains(PrioritertMålgruppe.hullICv.name())) {
                 addFilterForHullICv(queryBuilder, LocalDate.now());
             }
 
@@ -601,6 +608,14 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
         } else {
             //noop
         }
+    }
+
+    private void addFodselsdatoSeniorToQuery(BoolQueryBuilder boolQueryBuilder) {
+            boolQueryBuilder.must(rangeQuery("fodselsdato").gte("now-200y/d").lt("now/d-50y+1d"));
+    }
+
+    private void addFodselsdatoUngToQuery(BoolQueryBuilder boolQueryBuilder) {
+        boolQueryBuilder.must(rangeQuery("fodselsdato").gte("now/d-30y+1d").lt("now"));
     }
 
     private void addStillingstitlerToQuery(List<String> stillingstitler,

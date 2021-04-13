@@ -8,6 +8,7 @@ import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.SokekriterierVeile
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchIntegrationTestExtension
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchTestConfiguration
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME
+import no.nav.arbeidsgiver.kandidatsok.es.client.PrioritertMålgruppe
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -27,7 +28,7 @@ class SøkEtterHullICvIT {
 
     private val indexerClient = ElasticSearchTestConfiguration.indexerCvService()
 
-    private val søkekriterierHullICv = SokekriterierVeiledere.med().hullICv(true).bygg()
+    private val søkekriterierHullICv = SokekriterierVeiledere.med().prioriterteMaalgrupper(listOf(PrioritertMålgruppe.hullICv.name)).bygg()
 
     private val minimumHullVarighetAntallÅr = 2L
 
@@ -280,10 +281,12 @@ class SøkEtterHullICvIT {
     fun sjekkOmPersonIkkeHarHullICv() {
         val aktorId = "9846517"
         val cvMedHull = giveMeEsCv(
-                aktorId,
-                EsPerioderMedInaktivitet(
-                        toDate(LocalDate.now()),
-                        emptyList()))
+            aktorId,
+            EsPerioderMedInaktivitet(
+                toDate(LocalDate.now()),
+                emptyList()
+            )
+        )
 
         indexerClient.bulkIndex(listOf(cvMedHull), DEFAULT_INDEX_NAME)
 
@@ -329,6 +332,7 @@ class SøkEtterHullICvIT {
             )
 
         }
+
 
     private fun giveMeTomCv(aktorId: String, esPerioderMedInaktivitet: EsPerioderMedInaktivitet): EsCv =
         EsCv(
