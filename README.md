@@ -16,7 +16,7 @@ Du må installere [docker-compose](https://docs.docker.com/compose/install/#inst
 Docker-compose krever endring av Linuxkonfigurasjonen. Kjør følgende kommando som root:
 ```
 sysctl -w vm.max_map_count=262144
-```
+``` 
 
 For at innstillingen skal være permanent må du opprette filen 
 */etc/sysctl.d/01-increase_vm_max_map_count.conf*. Den skal inneholde linjen:
