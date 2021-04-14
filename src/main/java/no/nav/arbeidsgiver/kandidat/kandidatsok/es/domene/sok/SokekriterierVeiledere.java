@@ -228,7 +228,6 @@ public class SokekriterierVeiledere {
         private List<PrioritertMålgruppe> prioriterteMaalgrupper;
         private Integer antallDagerSistEndret;
         private Integer antallAarGammelYrkeserfaring;
-        private boolean hullICv = false;
         private boolean tomtSok = true;
 
         public SokekriterierVeiledere bygg() {
@@ -462,12 +461,6 @@ public class SokekriterierVeiledere {
 
         public Builder antallAarGammelYrkeserfaring(Integer antallAarGammelYrkeserfaring) {
             this.antallAarGammelYrkeserfaring = antallAarGammelYrkeserfaring;
-            return this;
-        }
-
-        public Builder hullICv(boolean hullICv) {
-            this.hullICv = hullICv;
-            this.tomtSok = false;
             return this;
         }
     }
