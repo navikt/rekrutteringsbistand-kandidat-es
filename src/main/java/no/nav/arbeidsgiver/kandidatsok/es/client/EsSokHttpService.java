@@ -342,14 +342,6 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 addOppstartKoderToQuery(sk.oppstartKoder(), queryBuilder);
             }
 
-            if (sk.isAntallAarFraSet() && sk.isAntallAarTilSet()) {
-                addFodselsdatoToQuery(sk.antallAarFra(), sk.antallAarTil(), queryBuilder);
-            } else if (sk.isAntallAarFraSet()) {
-                addFodselsdatoToQuery(sk.antallAarFra(), null, queryBuilder);
-            } else if (sk.isAntallAarTilSet()) {
-                addFodselsdatoToQuery(null, sk.antallAarTil(), queryBuilder);
-            }
-
             if (sk.isTilretteleggingsbehovSet()) {
                 addFilterForTilretteleggingsbehov(queryBuilder, sk.getTilretteleggingsbehov());
             }
@@ -378,29 +370,47 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 addFilterForHullICv(queryBuilder, LocalDate.now());
             }
 
-            if (sk.prioriterteMaalgrupper().contains(PrioritertMålgruppe.senior) || sk.prioriterteMaalgrupper().contains(PrioritertMålgruppe.ung )) {
-                addFilterForPrioriterteMålgrupperAlder(queryBuilder, sk.prioriterteMaalgrupper());
-            }
+            addFilterForAlder(queryBuilder, sk);
 
             return toSokeresultat(esExec(() -> search(UseCase.VEIL_SOK, queryBuilder, sk.fraIndex(),
                     sk.antallResultater(), sortQueryBuilder)));
+
         } catch (IOException ioe) {
             throw new ElasticException(ioe);
         }
     }
 
-    private void addFilterForPrioriterteMålgrupperAlder(BoolQueryBuilder rootQueryBuilder,  List<PrioritertMålgruppe> prioriterteMålgrupper) {
-        var målgruppeBuilder = new BoolQueryBuilder();
+    private void addFilterForAlder(BoolQueryBuilder rootQueryBuilder, SokekriterierVeiledere sk) {
 
-        if(prioriterteMålgrupper.contains(PrioritertMålgruppe.senior)) {
-            addFodselsdatoSeniorToQuery(målgruppeBuilder);
+
+        var alderPrioritertMålgruppeBuilder = new BoolQueryBuilder();
+        if (sk.prioriterteMaalgrupper().contains(PrioritertMålgruppe.senior)) {
+            addFodselsdatoSeniorToQuery(alderPrioritertMålgruppeBuilder);
+        }
+        if (sk.prioriterteMaalgrupper().contains(PrioritertMålgruppe.ung)) {
+            addFodselsdatoUngToQuery(alderPrioritertMålgruppeBuilder);
         }
 
-        if(prioriterteMålgrupper.contains(PrioritertMålgruppe.ung)) {
-            addFodselsdatoUngToQuery(målgruppeBuilder);
+        var alderFraTilBuilder = new BoolQueryBuilder();
+        if (sk.isAntallAarFraSet() && sk.isAntallAarTilSet()) {
+            addFodselsdatoToQuery(sk.antallAarFra(), sk.antallAarTil(), alderFraTilBuilder);
+        } else if (sk.isAntallAarFraSet()) {
+            addFodselsdatoToQuery(sk.antallAarFra(), null, alderFraTilBuilder);
+        } else if (sk.isAntallAarTilSet()) {
+            addFodselsdatoToQuery(null, sk.antallAarTil(), alderFraTilBuilder);
         }
 
-        rootQueryBuilder.must(målgruppeBuilder);
+        var alderBuilder = new BoolQueryBuilder();
+        if(alderFraTilBuilder.hasClauses()) {
+            alderBuilder.should(alderFraTilBuilder);
+        }
+        if(alderPrioritertMålgruppeBuilder.hasClauses()) {
+            alderBuilder.should(alderPrioritertMålgruppeBuilder);
+        }
+
+        if(alderBuilder.hasClauses()) {
+            rootQueryBuilder.must(alderBuilder);
+        }
 
     }
 
@@ -427,7 +437,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
             if (harTreff) {
                 var hullAggregation = response.getAggregations().get("hull");
-                if( hullAggregation instanceof  ParsedFilter) {
+                if (hullAggregation instanceof ParsedFilter) {
                     return ((ParsedFilter) hullAggregation).getDocCount() > 0;
                 } else {
                     throw new RuntimeException("Uventet type fra aggregation");
@@ -623,7 +633,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     }
 
     private void addFodselsdatoSeniorToQuery(BoolQueryBuilder boolQueryBuilder) {
-            boolQueryBuilder.should(rangeQuery("fodselsdato").gte("now-200y/d").lt("now/d-50y"));
+        boolQueryBuilder.should(rangeQuery("fodselsdato").gte("now-200y/d").lt("now/d-50y"));
     }
 
     private void addFodselsdatoUngToQuery(BoolQueryBuilder boolQueryBuilder) {

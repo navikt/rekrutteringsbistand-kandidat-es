@@ -21,6 +21,7 @@ import java.util.*
 class SøkAlderPrioriterteMålgrupperCvIT {
 
     private val anyAktorId = "100001000"
+    private val anyAktorId2 = "100001001"
 
     private val sokClient =
         ElasticSearchTestConfiguration.esSokService(DEFAULT_INDEX_NAME)
@@ -113,13 +114,14 @@ class SøkAlderPrioriterteMålgrupperCvIT {
     @Test
     fun kandidatSomErOver50OgKanidatSomErUnder30VisesOmBeggeKrysseneErAvkrysset() {
         val under30 = giveMeEsCv(anyAktorId, now().minusYears(20))
-        val over50 = giveMeEsCv(anyAktorId, now().minusYears(60))
-        indexerClient.bulkIndex(listOf(over50,under30), DEFAULT_INDEX_NAME)
+        // kandidatnr mappes til es _id og må være unikt for å unngå overskriving
+        val over50 = giveMeEsCv(anyAktorId2, now().minusYears(60)).apply { kandidatnr = "2" }
+        indexerClient.index(under30, DEFAULT_INDEX_NAME)
+        indexerClient.index(over50, DEFAULT_INDEX_NAME)
 
         val actual = sokClient.veilederSok(
             SokekriterierVeiledere.med()
-                .prioriterteMaalgrupper(PrioritertMålgruppe.ung)
-                .prioriterteMaalgrupper(PrioritertMålgruppe.senior)
+                .prioriterteMaalgrupper(PrioritertMålgruppe.ung, PrioritertMålgruppe.senior)
                 .bygg()
         ).cver
 
