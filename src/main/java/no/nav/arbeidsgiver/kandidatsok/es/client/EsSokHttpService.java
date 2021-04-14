@@ -350,14 +350,6 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 addFodselsdatoToQuery(null, sk.antallAarTil(), queryBuilder);
             }
 
-            if(sk.prioriterteMaalgrupper().contains(PrioritertMålgruppe.senior.name())) {
-                addFodselsdatoSeniorToQuery(queryBuilder);
-            }
-
-            if(sk.prioriterteMaalgrupper().contains(PrioritertMålgruppe.ung.name())) {
-                addFodselsdatoUngToQuery(queryBuilder);
-            }
-
             if (sk.isTilretteleggingsbehovSet()) {
                 addFilterForTilretteleggingsbehov(queryBuilder, sk.getTilretteleggingsbehov());
             }
@@ -382,9 +374,11 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 addFilterForSistEndret(sk.antallDagerSistEndret(), queryBuilder);
             }
 
-            if (sk.prioriterteMaalgrupper().contains(PrioritertMålgruppe.hullICv.name())) {
+            if (sk.prioriterteMaalgrupper().contains(PrioritertMålgruppe.hullICv)) {
                 addFilterForHullICv(queryBuilder, LocalDate.now());
             }
+
+            addFilterForPrioriterteMålgrupperAlder(queryBuilder, sk.prioriterteMaalgrupper());
 
             return toSokeresultat(esExec(() -> search(UseCase.VEIL_SOK, queryBuilder, sk.fraIndex(),
                     sk.antallResultater(), sortQueryBuilder)));
@@ -392,6 +386,22 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
             throw new ElasticException(ioe);
         }
     }
+
+    private void addFilterForPrioriterteMålgrupperAlder(BoolQueryBuilder rootQueryBuilder,  List<PrioritertMålgruppe> prioriterteMålgrupper) {
+        var målgruppeBuilder = new BoolQueryBuilder();
+
+        if(prioriterteMålgrupper.contains(PrioritertMålgruppe.senior)) {
+            addFodselsdatoSeniorToQuery(målgruppeBuilder);
+        }
+
+        if(prioriterteMålgrupper.contains(PrioritertMålgruppe.ung)) {
+            addFodselsdatoUngToQuery(målgruppeBuilder);
+        }
+
+        rootQueryBuilder.must(new BoolQueryBuilder().should(målgruppeBuilder));
+
+    }
+
 
     @Override
     public Boolean harHullICv(String aktorId, LocalDate tidspunkt) {

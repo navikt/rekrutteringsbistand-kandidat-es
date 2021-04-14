@@ -35,6 +35,7 @@ public class ElasticSearchIntegrationTestExtension implements BeforeAllCallback,
 
     @Override
     public void beforeAll(ExtensionContext extensionContext) throws Exception {
+
         if (dce != null) {
             return;
         }

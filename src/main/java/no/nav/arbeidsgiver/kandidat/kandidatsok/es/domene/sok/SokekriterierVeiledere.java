@@ -39,7 +39,7 @@ public class SokekriterierVeiledere {
     private Integer antallAarTil;
     private Integer antallDagerSistEndret;
     private Integer antallAarGammelYrkeserfaring;
-    private List<String> prioriterteMaalgrupper;
+    private List<PrioritertMålgruppe> prioriterteMaalgrupper;
     private boolean hullICv;
 
     private boolean tomtSok = true;
@@ -187,7 +187,7 @@ public class SokekriterierVeiledere {
         return midlertidigUtilgjengelig;
     }
 
-    public List<String> prioriterteMaalgrupper() {
+    public List<PrioritertMålgruppe> prioriterteMaalgrupper() {
         return prioriterteMaalgrupper;
     }
 
@@ -230,7 +230,7 @@ public class SokekriterierVeiledere {
         private List<String> veilTilretteleggingsbehov;
         private List<String> veilTilretteleggingsbehovUtelukkes;
         private List<String> midlertidigUtilgjengelig;
-        private List<String> prioriterteMaalgrupper;
+        private List<PrioritertMålgruppe> prioriterteMaalgrupper;
         private Integer antallDagerSistEndret;
         private Integer antallAarGammelYrkeserfaring;
         private boolean hullICv = false;
@@ -455,7 +455,7 @@ public class SokekriterierVeiledere {
 
         public Builder prioriterteMaalgrupper(PrioritertMålgruppe... prioriterteMålgrupper) {
             this.prioriterteMaalgrupper =
-                    Arrays.asList(prioriterteMålgrupper).stream().map(p -> p.getName()).collect(toList());
+                    Arrays.asList(prioriterteMålgrupper).stream().collect(toList());
             this.tomtSok = false;
             return this;
         }

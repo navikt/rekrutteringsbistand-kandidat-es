@@ -38,7 +38,7 @@ class SøkAlderPrioriterteMålgrupperCvIT {
     }
 
     @Test
-    fun KandidatSomHarFyllt50årErSenior() {
+    fun kandidatSomHarFyllt50årErSenior() {
         val cv = giveMeEsCv(anyAktorId, now().minusYears(50).minusDays(1))
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
@@ -50,7 +50,7 @@ class SøkAlderPrioriterteMålgrupperCvIT {
     }
 
     @Test
-    fun KandidatSomFyller50årErSenior() {
+    fun kandidatSomFyller50årErSenior() {
         val cv = giveMeEsCv(anyAktorId, now().minusYears(50))
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
@@ -62,7 +62,7 @@ class SøkAlderPrioriterteMålgrupperCvIT {
     }
 
     @Test
-    fun KandidatUnder50årErIkkeSenior() {
+    fun kandidatUnder50årErIkkeSenior() {
 
         val cv = giveMeEsCv(anyAktorId, now().minusYears(50).plusDays(1))
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
@@ -75,7 +75,7 @@ class SøkAlderPrioriterteMålgrupperCvIT {
     }
 
     @Test
-    fun KandidatUnder30årErUng() {
+    fun kandidatUnder30årErUng() {
         val cv = giveMeEsCv(anyAktorId, now().minusYears(30).plusDays(1))
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
@@ -87,7 +87,7 @@ class SøkAlderPrioriterteMålgrupperCvIT {
     }
 
     @Test
-    fun KandidatSomFyller30årErIkkeUng() {
+    fun kandidatSomFyller30årErIkkeUng() {
         val cv = giveMeEsCv(anyAktorId, now().minusYears(30))
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
@@ -99,7 +99,7 @@ class SøkAlderPrioriterteMålgrupperCvIT {
     }
 
     @Test
-    fun KandidatSomHarFyllt30årErIkkeUng() {
+    fun kandidatSomHarFyllt30årErIkkeUng() {
         val cv = giveMeEsCv(anyAktorId, now().minusYears(30).minusDays(1))
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
@@ -108,6 +108,22 @@ class SøkAlderPrioriterteMålgrupperCvIT {
         ).cver
 
         assertThat(actual).hasSize(0)
+    }
+
+    @Test
+    fun kandidatSomErOver50OgKanidatSomErUnder30VisesOmBeggeKrysseneErAvkrysset() {
+        val under30 = giveMeEsCv(anyAktorId, now().minusYears(20))
+        val over50 = giveMeEsCv(anyAktorId, now().minusYears(60))
+        indexerClient.bulkIndex(listOf(over50,under30), DEFAULT_INDEX_NAME)
+
+        val actual = sokClient.veilederSok(
+            SokekriterierVeiledere.med()
+                .prioriterteMaalgrupper(PrioritertMålgruppe.ung)
+                .prioriterteMaalgrupper(PrioritertMålgruppe.senior)
+                .bygg()
+        ).cver
+
+        assertThat(actual).hasSize(2)
     }
 
 
