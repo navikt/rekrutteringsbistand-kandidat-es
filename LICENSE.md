@@ -1,3 +1,4 @@
+
 # The MIT License
 
 Copyright 2018 NAV (Arbeids- og velferdsdirektoratet) - The Norwegian Labour and Welfare Administration

@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.time.Instant
 import java.time.LocalDate
-import java.time.LocalDate.*
+import java.time.LocalDate.now
 import java.time.ZoneId
 import java.util.*
 
@@ -155,7 +155,7 @@ class SøkAlderPrioriterteMålgrupperCvIT {
     )
 
     private fun toDate(localDate: LocalDate): Date? {
-        return Date(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
+        return Date(localDate.atStartOfDay().atZone(ZoneId.of("Europe/Oslo")).toInstant().toEpochMilli())
     }
 
 
