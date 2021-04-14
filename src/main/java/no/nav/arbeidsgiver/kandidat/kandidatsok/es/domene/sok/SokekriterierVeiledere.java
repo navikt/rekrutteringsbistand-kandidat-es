@@ -40,7 +40,6 @@ public class SokekriterierVeiledere {
     private Integer antallDagerSistEndret;
     private Integer antallAarGammelYrkeserfaring;
     private List<PrioritertMålgruppe> prioriterteMaalgrupper;
-    private boolean hullICv;
 
     private boolean tomtSok = true;
 
@@ -199,10 +198,6 @@ public class SokekriterierVeiledere {
         return antallAarGammelYrkeserfaring;
     }
 
-    public boolean isHullICv() {
-        return hullICv;
-    }
-
     public static class Builder {
         private String fritekst;
         private List<String> yrkeJobbonsker;
@@ -290,7 +285,6 @@ public class SokekriterierVeiledere {
 
             s.fraIndex = fra;
             s.antallResultater = antallResultater;
-            s.hullICv = hullICv;
             s.tomtSok = tomtSok;
 
             return s;
