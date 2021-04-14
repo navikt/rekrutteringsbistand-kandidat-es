@@ -378,7 +378,9 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 addFilterForHullICv(queryBuilder, LocalDate.now());
             }
 
-            addFilterForPrioriterteMålgrupperAlder(queryBuilder, sk.prioriterteMaalgrupper());
+            if (sk.prioriterteMaalgrupper().contains(PrioritertMålgruppe.senior) || sk.prioriterteMaalgrupper().contains(PrioritertMålgruppe.ung )) {
+                addFilterForPrioriterteMålgrupperAlder(queryBuilder, sk.prioriterteMaalgrupper());
+            }
 
             return toSokeresultat(esExec(() -> search(UseCase.VEIL_SOK, queryBuilder, sk.fraIndex(),
                     sk.antallResultater(), sortQueryBuilder)));
@@ -398,7 +400,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
             addFodselsdatoUngToQuery(målgruppeBuilder);
         }
 
-        rootQueryBuilder.must(new BoolQueryBuilder().should(målgruppeBuilder));
+        rootQueryBuilder.must(målgruppeBuilder);
 
     }
 
@@ -621,11 +623,11 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     }
 
     private void addFodselsdatoSeniorToQuery(BoolQueryBuilder boolQueryBuilder) {
-            boolQueryBuilder.must(rangeQuery("fodselsdato").gte("now-200y/d").lt("now/d-50y"));
+            boolQueryBuilder.should(rangeQuery("fodselsdato").gte("now-200y/d").lt("now/d-50y"));
     }
 
     private void addFodselsdatoUngToQuery(BoolQueryBuilder boolQueryBuilder) {
-        boolQueryBuilder.must(rangeQuery("fodselsdato").gte("now/d-30y").lt("now"));
+        boolQueryBuilder.should(rangeQuery("fodselsdato").gte("now/d-30y").lt("now"));
     }
 
     private void addStillingstitlerToQuery(List<String> stillingstitler,
