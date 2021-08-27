@@ -25,9 +25,8 @@ public class EsKurs {
     public EsKurs() {
     }
 
-    public EsKurs(Date fraDato, String tittel, String arrangor, String omfangEnhet,
-                  Integer omfangVerdi) {
-        this(fraDato, null, tittel, arrangor, omfangEnhet, omfangVerdi, "");
+    public EsKurs(String tittel, String arrangor, String omfangEnhet, Integer omfangVerdi, Date fullførtDato) {
+        this(null, fullførtDato, tittel, arrangor, omfangEnhet, omfangVerdi, "");
     }
 
     public EsKurs(Date fraDato, Date tilDato, String tittel, String arrangor, String omfangEnhet,
