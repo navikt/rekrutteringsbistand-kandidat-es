@@ -9,7 +9,7 @@
 
 	<logger name="org.springframework.data.elasticsearch.core.ElasticsearchTemplate" level="trace" />
 
-	<logger name="no.nav" level="debug" />
+	<logger name="no.nav" level="info" />
 	<logger name="no.nav.arbeid.kandidatsok.es.client" level="info" />
 
 	<root level="info">
