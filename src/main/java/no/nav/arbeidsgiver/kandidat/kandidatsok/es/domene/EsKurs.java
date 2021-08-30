@@ -8,6 +8,10 @@ import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EsKurs {
 
+    /**
+     * @deprecated Et kurs har bare en dato, som er tildato. Fradato skal ikke lenger være i bruk
+     */
+    @Deprecated
     private Date fraDato;
 
     private Date tilDato;
@@ -20,27 +24,32 @@ public class EsKurs {
 
     private Integer omfangVerdi;
 
+    /**
+     * @deprecated Kandidat for sletting ettersom den ikke er i bruk
+     */
+    @Deprecated
     private String beskrivelse;
 
+    /**
+     * Default-konstruktør behøves fordi Jackson trenger den
+     */
     public EsKurs() {
     }
 
-    public EsKurs(Date fraDato, String tittel, String arrangor, String omfangEnhet,
-                  Integer omfangVerdi) {
-        this(fraDato, null, tittel, arrangor, omfangEnhet, omfangVerdi, "");
-    }
-
-    public EsKurs(Date fraDato, Date tilDato, String tittel, String arrangor, String omfangEnhet,
-                  Integer omfangVerdi, String beskrivelse) {
-        this.fraDato = fraDato;
-        this.tilDato = tilDato;
+    public EsKurs(String tittel, String arrangor, String omfangEnhet, Integer omfangVerdi, Date fullførtDato) {
+        this.fraDato = null;
+        this.tilDato = fullførtDato;
         this.tittel = tittel;
         this.arrangor = arrangor;
         this.omfangEnhet = omfangEnhet;
         this.omfangVerdi = omfangVerdi;
-        this.beskrivelse = beskrivelse;
+        this.beskrivelse = "";
     }
 
+    /**
+     * @deprecated Et kurs har bare en dato, som er tildato. Fradato skal ikke lenger være i bruk
+     */
+    @Deprecated
     public Date getFraDato() {
         return fraDato;
     }
@@ -65,6 +74,10 @@ public class EsKurs {
         return omfangVerdi;
     }
 
+    /**
+     * @deprecated Kandidat for sletting ettersom den ikke er i bruk
+     */
+    @Deprecated
     public String getBeskrivelse() {
         return beskrivelse;
     }

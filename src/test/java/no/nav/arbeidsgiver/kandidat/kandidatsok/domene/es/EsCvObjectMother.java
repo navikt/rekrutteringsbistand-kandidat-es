@@ -2,6 +2,7 @@ package no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es;
 
 import no.nav.arbeid.pam.kodeverk.ansettelse.*;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.*;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +22,7 @@ public class EsCvObjectMother {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     static String nteAktorId(int n) {
-        return String.valueOf(900000000000L + n * 1000);
+        return String.valueOf(900000000000L + n * 1000L);
     }
 
     private static Date fraIsoDato(String string) {
@@ -148,14 +149,11 @@ public class EsCvObjectMother {
         sprakListe.add(sprak1);
         sprakListe.add(sprak2);
 
-        EsKurs kurs1 = new EsKurs(fraIsoDato("2012-12-01"), null, "Akseloppretting", "Easy-Laser", null,
-                null, null);
+        EsKurs kurs1 = esKurs1();
 
-        EsKurs kurs2 = new EsKurs(fraIsoDato("2015-06-01"), null, "Varme arbeider Sertifikat",
-                "Norsk brannvernforening", "ÅR", 5, null);
+        EsKurs kurs2 = esKurs2();
 
-        EsKurs kurs3 = new EsKurs(fraIsoDato("2016-02-01"), null, "Flensarbeid for Norsk Olje og Gass",
-                "Torqlite Europa a/s", "ÅR", 4, null);
+        EsKurs kurs3 = esKurs3();
 
 
         ArrayList<EsKurs> kursListe = new ArrayList<>();
@@ -244,6 +242,35 @@ public class EsCvObjectMother {
         esCv.addArbeidstidJobbonsker(arbeidstidJobbonskerList);
 
         return esCv;
+    }
+
+    @NotNull
+    private static EsKurs esKurs1() {
+        return new EsKurs("Akseloppretting", "Easy-Laser", null,
+                null, fraIsoDato("2012-12-01"));
+    }
+
+    @NotNull
+    private static EsKurs esKurs2() {
+        return new EsKurs("Varme arbeider Sertifikat",
+                "Norsk brannvernforening", "ÅR", 5, fraIsoDato("2015-06-01"));
+    }
+
+    @NotNull
+    private static EsKurs esKurs3() {
+        return new EsKurs("Flensarbeid for Norsk Olje og Gass",
+                "Torqlite Europa a/s", "ÅR", 4, fraIsoDato("2016-02-01"));
+    }
+
+    @NotNull
+    private static EsKurs esKurs4() {
+        return new EsKurs("Varme arbeider EsSertifikat",
+                "Norsk brannvernforening", "ÅR", 5, fraIsoDato("2015-06-01"));
+    }
+
+    @NotNull
+    private static EsKurs esKurs5() {
+        return new EsKurs("Spring Boot", "Spring-folkene", "ÅR", 5, fraIsoDato("2015-06-01"));
     }
 
 
@@ -344,14 +371,11 @@ public class EsCvObjectMother {
         ArrayList<EsSprak> sprakListe = new ArrayList<>();
         sprakListe.add(sprak);
 
-        EsKurs kurs1 = new EsKurs(fraIsoDato("2012-12-01"), null, "Akseloppretting", "Easy-Laser", null,
-                null, null);
+        EsKurs kurs1 = esKurs1();
 
-        EsKurs kurs2 = new EsKurs(fraIsoDato("2015-06-01"), null, "Varme arbeider EsSertifikat",
-                "Norsk brannvernforening", "ÅR", 5, null);
+        EsKurs kurs2 = esKurs4();
 
-        EsKurs kurs3 = new EsKurs(fraIsoDato("2016-02-01"), null, "Flensarbeid for Norsk Olje og Gass",
-                "Torqlite Europa a/s", "ÅR", 4, null);
+        EsKurs kurs3 = esKurs3();
 
 
         ArrayList<EsKurs> kursListe = new ArrayList<>();
@@ -534,14 +558,11 @@ public class EsCvObjectMother {
         ArrayList<EsSprak> sprakListe = new ArrayList<>();
         sprakListe.add(sprak);
 
-        EsKurs kurs1 = new EsKurs(fraIsoDato("2012-12-01"), null, "Akseloppretting", "Easy-Laser", null,
-                null, null);
+        EsKurs kurs1 = esKurs1();
 
-        EsKurs kurs2 = new EsKurs(fraIsoDato("2015-06-01"), null, "Varme arbeider EsSertifikat",
-                "Norsk brannvernforening", "ÅR", 5, null);
+        EsKurs kurs2 = esKurs4();
 
-        EsKurs kurs3 = new EsKurs(fraIsoDato("2016-02-01"), null, "Flensarbeid for Norsk Olje og Gass",
-                "Torqlite Europa a/s", "ÅR", 4, null);
+        EsKurs kurs3 = esKurs3();
 
 
         ArrayList<EsKurs> kursListe = new ArrayList<>();
@@ -731,14 +752,11 @@ public class EsCvObjectMother {
         ArrayList<EsSprak> sprakListe = new ArrayList<>();
         sprakListe.add(sprak);
 
-        EsKurs kurs1 = new EsKurs(fraIsoDato("2012-12-01"), null, "Akseloppretting", "Easy-Laser", null,
-                null, null);
+        EsKurs kurs1 = esKurs1();
 
-        EsKurs kurs2 = new EsKurs(fraIsoDato("2015-06-01"), null, "Varme arbeider EsSertifikat",
-                "Norsk brannvernforening", "ÅR", 5, null);
+        EsKurs kurs2 = esKurs4();
 
-        EsKurs kurs3 = new EsKurs(fraIsoDato("2016-02-01"), null, "Flensarbeid for Norsk Olje og Gass",
-                "Torqlite Europa a/s", "ÅR", 4, null);
+        EsKurs kurs3 = esKurs3();
 
 
         ArrayList<EsKurs> kursListe = new ArrayList<>();
@@ -921,14 +939,12 @@ public class EsCvObjectMother {
         ArrayList<EsSprak> sprakListe = new ArrayList<>();
         sprakListe.add(sprak);
 
-        EsKurs kurs1 = new EsKurs(fraIsoDato("2012-12-01"), null, "Akseloppretting", "Easy-Laser", null,
-                null, null);
+        EsKurs kurs1 = esKurs1();
 
         EsKurs kurs2 =
-                new EsKurs(fraIsoDato("2015-06-01"), null, "Spring Boot", "Spring-folkene", "ÅR", 5, null);
+                esKurs5();
 
-        EsKurs kurs3 = new EsKurs(fraIsoDato("2016-02-01"), null, "Flensarbeid for Norsk Olje og Gass",
-                "Torqlite Europa a/s", "ÅR", 4, null);
+        EsKurs kurs3 = esKurs3();
 
 
         ArrayList<EsKurs> kursListe = new ArrayList<>();
@@ -1100,14 +1116,12 @@ public class EsCvObjectMother {
         ArrayList<EsSprak> sprakListe = new ArrayList<>();
         sprakListe.add(sprak);
 
-        EsKurs kurs1 = new EsKurs(fraIsoDato("2012-12-01"), null, "Akseloppretting", "Easy-Laser", null,
-                null, null);
+        EsKurs kurs1 = esKurs1();
 
         EsKurs kurs2 =
-                new EsKurs(fraIsoDato("2015-06-01"), null, "Spring Boot", "Spring-folkene", "ÅR", 5, null);
+                esKurs5();
 
-        EsKurs kurs3 = new EsKurs(fraIsoDato("2016-02-01"), null, "Flensarbeid for Norsk Olje og Gass",
-                "Torqlite Europa a/s", "ÅR", 4, null);
+        EsKurs kurs3 = esKurs3();
 
 
         ArrayList<EsKurs> kursListe = new ArrayList<>();
@@ -1293,14 +1307,11 @@ public class EsCvObjectMother {
         sprakListe.add(sprak1);
         sprakListe.add(sprak2);
 
-        EsKurs kurs1 = new EsKurs(fraIsoDato("2012-12-01"), null, "Akseloppretting", "Easy-Laser", null,
-                null, null);
+        EsKurs kurs1 = esKurs1();
 
-        EsKurs kurs2 = new EsKurs(fraIsoDato("2015-06-01"), null, "Varme arbeider Sertifikat",
-                "Norsk brannvernforening", "ÅR", 5, null);
+        EsKurs kurs2 = esKurs2();
 
-        EsKurs kurs3 = new EsKurs(fraIsoDato("2016-02-01"), null, "Flensarbeid for Norsk Olje og Gass",
-                "Torqlite Europa a/s", "ÅR", 4, null);
+        EsKurs kurs3 = esKurs3();
 
 
         ArrayList<EsKurs> kursListe = new ArrayList<>();
@@ -1484,14 +1495,11 @@ public class EsCvObjectMother {
         sprakListe.add(sprak1);
         sprakListe.add(sprak2);
 
-        EsKurs kurs1 = new EsKurs(fraIsoDato("2012-12-01"), null, "Akseloppretting", "Easy-Laser", null,
-                null, null);
+        EsKurs kurs1 = esKurs1();
 
-        EsKurs kurs2 = new EsKurs(fraIsoDato("2015-06-01"), null, "Varme arbeider Sertifikat",
-                "Norsk brannvernforening", "ÅR", 5, null);
+        EsKurs kurs2 = esKurs2();
 
-        EsKurs kurs3 = new EsKurs(fraIsoDato("2016-02-01"), null, "Flensarbeid for Norsk Olje og Gass",
-                "Torqlite Europa a/s", "ÅR", 4, null);
+        EsKurs kurs3 = esKurs3();
 
 
         ArrayList<EsKurs> kursListe = new ArrayList<>();
@@ -1673,14 +1681,11 @@ public class EsCvObjectMother {
         sprakListe.add(sprak1);
         sprakListe.add(sprak2);
 
-        EsKurs kurs1 = new EsKurs(fraIsoDato("2012-12-01"), null, "Akseloppretting", "Easy-Laser", null,
-                null, null);
+        EsKurs kurs1 = esKurs1();
 
-        EsKurs kurs2 = new EsKurs(fraIsoDato("2015-06-01"), null, "Varme arbeider Sertifikat",
-                "Norsk brannvernforening", "ÅR", 5, null);
+        EsKurs kurs2 = esKurs2();
 
-        EsKurs kurs3 = new EsKurs(fraIsoDato("2016-02-01"), null, "Flensarbeid for Norsk Olje og Gass",
-                "Torqlite Europa a/s", "ÅR", 4, null);
+        EsKurs kurs3 = esKurs3();
 
 
         ArrayList<EsKurs> kursListe = new ArrayList<>();
@@ -1863,14 +1868,11 @@ public class EsCvObjectMother {
         sprakListe.add(sprak1);
         sprakListe.add(sprak2);
 
-        EsKurs kurs1 = new EsKurs(fraIsoDato("2012-12-01"), null, "Akseloppretting", "Easy-Laser", null,
-                null, null);
+        EsKurs kurs1 = esKurs1();
 
-        EsKurs kurs2 = new EsKurs(fraIsoDato("2015-06-01"), null, "Varme arbeider Sertifikat",
-                "Norsk brannvernforening", "ÅR", 5, null);
+        EsKurs kurs2 = esKurs2();
 
-        EsKurs kurs3 = new EsKurs(fraIsoDato("2016-02-01"), null, "Flensarbeid for Norsk Olje og Gass",
-                "Torqlite Europa a/s", "ÅR", 4, null);
+        EsKurs kurs3 = esKurs3();
 
 
         ArrayList<EsKurs> kursListe = new ArrayList<>();
@@ -2052,14 +2054,11 @@ public class EsCvObjectMother {
         sprakListe.add(sprak1);
         sprakListe.add(sprak2);
 
-        EsKurs kurs1 = new EsKurs(fraIsoDato("2012-12-01"), null, "Akseloppretting", "Easy-Laser", null,
-                null, null);
+        EsKurs kurs1 = esKurs1();
 
-        EsKurs kurs2 = new EsKurs(fraIsoDato("2015-06-01"), null, "Varme arbeider Sertifikat",
-                "Norsk brannvernforening", "ÅR", 5, null);
+        EsKurs kurs2 = esKurs2();
 
-        EsKurs kurs3 = new EsKurs(fraIsoDato("2016-02-01"), null, "Flensarbeid for Norsk Olje og Gass",
-                "Torqlite Europa a/s", "ÅR", 4, null);
+        EsKurs kurs3 = esKurs3();
 
 
         ArrayList<EsKurs> kursListe = new ArrayList<>();
@@ -2241,14 +2240,11 @@ public class EsCvObjectMother {
         sprakListe.add(sprak1);
         sprakListe.add(sprak2);
 
-        EsKurs kurs1 = new EsKurs(fraIsoDato("2012-12-01"), null, "Akseloppretting", "Easy-Laser", null,
-                null, null);
+        EsKurs kurs1 = esKurs1();
 
-        EsKurs kurs2 = new EsKurs(fraIsoDato("2015-06-01"), null, "Varme arbeider Sertifikat",
-                "Norsk brannvernforening", "ÅR", 5, null);
+        EsKurs kurs2 = esKurs2();
 
-        EsKurs kurs3 = new EsKurs(fraIsoDato("2016-02-01"), null, "Flensarbeid for Norsk Olje og Gass",
-                "Torqlite Europa a/s", "ÅR", 4, null);
+        EsKurs kurs3 = esKurs3();
 
 
         ArrayList<EsKurs> kursListe = new ArrayList<>();
@@ -2430,14 +2426,11 @@ public class EsCvObjectMother {
         sprakListe.add(sprak1);
         sprakListe.add(sprak2);
 
-        EsKurs kurs1 = new EsKurs(fraIsoDato("2012-12-01"), null, "Akseloppretting", "Easy-Laser", null,
-                null, null);
+        EsKurs kurs1 = esKurs1();
 
-        EsKurs kurs2 = new EsKurs(fraIsoDato("2015-06-01"), null, "Varme arbeider Sertifikat",
-                "Norsk brannvernforening", "ÅR", 5, null);
+        EsKurs kurs2 = esKurs2();
 
-        EsKurs kurs3 = new EsKurs(fraIsoDato("2016-02-01"), null, "Flensarbeid for Norsk Olje og Gass",
-                "Torqlite Europa a/s", "ÅR", 4, null);
+        EsKurs kurs3 = esKurs3();
 
 
         ArrayList<EsKurs> kursListe = new ArrayList<>();
@@ -2530,7 +2523,7 @@ public class EsCvObjectMother {
     }
 
     public static EsKurs giveMeKurs() {
-        return new EsKurs(fraIsoDato("2012-12-01"), null, "Akseloppretting", "Easy-Laser", null, null, null);
+        return esKurs1();
     }
 
     public static EsFagdokumentasjon giveMeFagdokumentasjon() {
