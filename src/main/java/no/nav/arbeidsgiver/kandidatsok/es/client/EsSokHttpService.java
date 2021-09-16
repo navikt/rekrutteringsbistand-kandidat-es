@@ -1265,5 +1265,4 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     private interface IOSupplier<T> {
         T get() throws IOException;
     }
-
 }
