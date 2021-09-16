@@ -28,6 +28,7 @@ vm.max_map_count=262144
 Nå kan du kjøre *mvn clean install*, som vil kjøre testene og bygge JAR.
 
 
+
 # Henvendelser
 
 ## For Nav-ansatte
