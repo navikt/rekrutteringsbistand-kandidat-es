@@ -26,6 +26,7 @@ import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.common.Strings;
+import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -196,6 +197,7 @@ public class EsIndexerHttpService implements EsIndexerService, AutoCloseable {
 
         DeleteByQueryRequest deleteByQueryRequest = new DeleteByQueryRequest(indexName);
         deleteByQueryRequest.setQuery(deleteQueryBuilder);
+        deleteByQueryRequest.setScroll(TimeValue.timeValueSeconds(20)); // prevent ES scroll context resource exhaustion during heavy reindexing
         deleteByQueryRequest.setRefresh(refreshPolicy != WriteRequest.RefreshPolicy.NONE);
 
         // TODO inspect response for failures ! If at least one failure, then fail the entire request.
