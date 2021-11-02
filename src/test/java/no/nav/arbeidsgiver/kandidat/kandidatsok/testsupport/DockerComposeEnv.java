@@ -342,7 +342,7 @@ public final class DockerComposeEnv implements AutoCloseable {
 
     private ProcessBuilder dockerCompose(String...composeCommandAndArgs) throws Exception {
         List<String> commandArgs = new ArrayList<>();
-        commandArgs.addAll(List.of(findDockerComposeExecutableName(), "--no-ansi", "--log-level", "ERROR"));
+        commandArgs.addAll(List.of(findDockerComposeExecutableName(), "--ansi", "never"));
         commandArgs.addAll(List.of("-f", composeFileAsPath(this.configFile).toString(), "-p", dockerComposeProjectName()));
         commandArgs.addAll(Arrays.asList(composeCommandAndArgs));
         ProcessBuilder pb = new ProcessBuilder(commandArgs);
