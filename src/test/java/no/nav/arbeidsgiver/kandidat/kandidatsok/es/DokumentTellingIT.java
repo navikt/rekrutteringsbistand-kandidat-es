@@ -46,8 +46,6 @@ public class DokumentTellingIT {
     @Test
     public void testDokumentTelling() {
         assertThat(esIndexerService.antallIndeksert(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME)).isEqualTo(12);
-        assertThat(esIndexerService.antallIndeksertSynligForArbeidsgiver(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME)).isEqualTo(6);
-        assertThat(esIndexerService.antallIndeksertSynligForVeileder(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME)).isEqualTo(7);
     }
 
 }

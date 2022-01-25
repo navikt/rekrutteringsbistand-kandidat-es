@@ -89,7 +89,7 @@ public class IndexCvIT {
 
     @Test
     public void testUtenSokekriterierReturnererAlleTestPersonerForArbeidsgivere() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med().bygg());
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
 
@@ -126,12 +126,9 @@ public class IndexCvIT {
 
     @Test
     public void testSokPaNorskeStoppordGirIkkeResultat() {
-        Sokeresultat sokeresultatYrke = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().stillingstitler(Collections.singletonList("og")).bygg());
-        Sokeresultat sokeresultatKomp = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().kompetanser(Collections.singletonList("og")).bygg());
-        Sokeresultat sokeresultatUtdanning = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().utdanninger(Collections.singletonList("og")).bygg());
+        Sokeresultat sokeresultatYrke = sokClient.veilederSok(SokekriterierVeiledere.med().stillingstitler(Collections.singletonList("og")).bygg());
+        Sokeresultat sokeresultatKomp = sokClient.veilederSok(SokekriterierVeiledere.med().kompetanser(Collections.singletonList("og")).bygg());
+        Sokeresultat sokeresultatUtdanning = sokClient.veilederSok(SokekriterierVeiledere.med().utdanninger(Collections.singletonList("og")).bygg());
         Sokeresultat sokeresultatFritekst =
                 sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("og").bygg());
 
@@ -148,8 +145,7 @@ public class IndexCvIT {
 
     @Test
     public void testSokMedFlereKriterierGirSvarMedAlleFelter() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().stillingstitler(Collections.singletonList("Butikkmedarbeider"))
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().stillingstitler(Collections.singletonList("Butikkmedarbeider"))
                         .kompetanser(Collections.singletonList("Hallovert"))
                         .utdanninger(Collections.singletonList("Bygg og anlegg")).bygg());
 
@@ -163,10 +159,9 @@ public class IndexCvIT {
 
     @Test
     public void testFlereInputYrkeGirFlereTreff() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .stillingstitler(Collections.singletonList("Industrimekaniker")).bygg());
-        Sokeresultat sokeresultat2 = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().stillingstitler(asList("Butikkmedarbeider", "Industrimekaniker")).bygg());
+        Sokeresultat sokeresultat2 = sokClient.veilederSok(SokekriterierVeiledere.med().stillingstitler(asList("Butikkmedarbeider", "Industrimekaniker")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver2 = sokeresultat2.getCver();
@@ -176,9 +171,9 @@ public class IndexCvIT {
 
     @Test
     public void testFlereInputKompetanseGirFlereTreff() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .kompetanser(Collections.singletonList("Programvareutvikler")).bygg());
-        Sokeresultat sokeresultat2 = sokClient.arbeidsgiverSok(Sokekriterier.med()
+        Sokeresultat sokeresultat2 = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .kompetanser(asList("Programvareutvikler", "Nyhetsanker")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
@@ -189,11 +184,11 @@ public class IndexCvIT {
 
     @Test
     public void testKompetanseSkalBrukeFraseMatchMedMulighetForNoeOmstokkingAvOrd() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .kompetanser(Collections.singletonList("Mekanisk arbeid generelt")).bygg());
-        Sokeresultat sokeresultat2 = sokClient.arbeidsgiverSok(Sokekriterier.med()
+        Sokeresultat sokeresultat2 = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .kompetanser(Collections.singletonList("Mekanisk generelt arbeid")).bygg());
-        Sokeresultat sokeresultat3 = sokClient.arbeidsgiverSok(Sokekriterier.med()
+        Sokeresultat sokeresultat3 = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .kompetanser(Collections.singletonList("arbeid generelt mekanisk")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
@@ -207,7 +202,7 @@ public class IndexCvIT {
 
     @Test
     public void testKompetanseFraseSkalIkkeMatchePaaTversAvUlikeKompetanserFlerverdi() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .kompetanser(Collections.singletonList("kranførerarbeid landtransport")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
@@ -217,9 +212,9 @@ public class IndexCvIT {
 
     @Test
     public void testFlereInputUtdanningGirMindreTreff() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .utdanninger(Collections.singletonList("Bygg og anlegg")).bygg());
-        Sokeresultat sokeresultat2 = sokClient.arbeidsgiverSok(Sokekriterier.med()
+        Sokeresultat sokeresultat2 = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .utdanninger(asList("Bygg og anlegg", "master i sikkerhet")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
@@ -230,7 +225,7 @@ public class IndexCvIT {
 
     @Test
     public void testForerkortKriterierGirTreffPaaForerkortSomErInkludertIKriteriet() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .forerkort(Collections.singletonList("B - Personbil"))
                 .bygg());
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
@@ -251,8 +246,7 @@ public class IndexCvIT {
 
     @Test
     public void testForerkortTraktorIkkeInkludertIAndreForerkort() {
-        Sokeresultat sokeresultatForerkort = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().forerkort(Collections.singletonList("T - Traktor")).bygg());
+        Sokeresultat sokeresultatForerkort = sokClient.veilederSok(SokekriterierVeiledere.med().forerkort(Collections.singletonList("T - Traktor")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultatForerkort.getCver();
         assertThat(cver)
@@ -265,8 +259,7 @@ public class IndexCvIT {
 
     @Test
     public void testForerkortSnoscooterIkkeInkludertIAndreForerkort() {
-        Sokeresultat sokeresultatForerkort = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().forerkort(Collections.singletonList("S - Snøscooter")).bygg());
+        Sokeresultat sokeresultatForerkort = sokClient.veilederSok(SokekriterierVeiledere.med().forerkort(Collections.singletonList("S - Snøscooter")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultatForerkort.getCver();
         assertThat(cver)
@@ -279,10 +272,8 @@ public class IndexCvIT {
 
     @Test
     public void testStemOrdSkalGiSammeResultat() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().stillingstitler(Collections.singletonList("Progger")).bygg());
-        Sokeresultat sokeresultatStemOrd = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().stillingstitler(Collections.singletonList("Progg")).bygg());
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().stillingstitler(Collections.singletonList("Progger")).bygg());
+        Sokeresultat sokeresultatStemOrd = sokClient.veilederSok(SokekriterierVeiledere.med().stillingstitler(Collections.singletonList("Progg")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cverStemOrd = sokeresultatStemOrd.getCver();
@@ -293,8 +284,7 @@ public class IndexCvIT {
 
     @Test
     public void testSamletKompetanseSkalIkkeGiResultatVedSokPaSprak() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().kompetanser(Collections.singletonList("Dansk")).bygg());
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().kompetanser(Collections.singletonList("Dansk")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
         assertThat(cver.size()).isEqualTo(0);
@@ -302,8 +292,7 @@ public class IndexCvIT {
 
     @Test
     public void testSokPaSprak() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().sprak(Collections.singletonList("Dansk")).bygg());
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().sprak(Collections.singletonList("Dansk")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
         no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv cv = cver.get(0);
@@ -315,7 +304,7 @@ public class IndexCvIT {
 
     @Test
     public void testSamletKompetanseSkalGiResultatVedSokPaSertifikater() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .kompetanser(Collections.singletonList("Truckførerbevis")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
@@ -328,8 +317,7 @@ public class IndexCvIT {
 
     @Test
     public void testSamletKompetanseSkalIkkeGiResultatVedSokPaForerkort() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().kompetanser(Collections.singletonList("T - Traktor")).bygg());
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().kompetanser(Collections.singletonList("T - Traktor")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
 
@@ -339,8 +327,7 @@ public class IndexCvIT {
     @Test
     @Disabled
     public void testSamletKompetanseSkalGiResultatVedSokPaKurs() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().kompetanser(Collections.singletonList("Spring Boot")).bygg());
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().kompetanser(Collections.singletonList("Spring Boot")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
         no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv cv = cver.get(0);
@@ -352,8 +339,7 @@ public class IndexCvIT {
 
     @Test
     public void testSamletKompetanseSkalGiResultatVedSokPaKompetanse() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().kompetanser(Collections.singletonList("Javautvikler")).bygg());
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().kompetanser(Collections.singletonList("Javautvikler")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
         no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv cv = cver.get(0);
@@ -365,10 +351,8 @@ public class IndexCvIT {
 
     @Test
     public void testSokPaFlereGeografiJobbonskerGirFlereResultat() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().geografiList(Collections.singletonList("NO12.1201")).bygg());
-        Sokeresultat sokeresultat2 = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().geografiList(asList("NO12.1201", "NO11.1103")).bygg());
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().geografiList(Collections.singletonList("NO12.1201")).bygg());
+        Sokeresultat sokeresultat2 = sokClient.veilederSok(SokekriterierVeiledere.med().geografiList(asList("NO12.1201", "NO11.1103")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver2 = sokeresultat2.getCver();
@@ -378,9 +362,8 @@ public class IndexCvIT {
 
     @Test
     public void testSokPaBostedGirBegrensendeResultat() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().geografiList(Collections.singletonList("NO12.1201")).bygg());
-        Sokeresultat sokeresultat2 = sokClient.arbeidsgiverSok(Sokekriterier.med()
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().geografiList(Collections.singletonList("NO12.1201")).bygg());
+        Sokeresultat sokeresultat2 = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .geografiList(asList("NO12.1201")).maaBoInnenforGeografi(true).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
@@ -391,9 +374,8 @@ public class IndexCvIT {
 
     @Test
     public void testSokPaBostedOgFylkeMed0SomPrefixSkalGiBegrensendeResultat() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().geografiList(Collections.singletonList("NO02")).bygg());
-        Sokeresultat sokeresultat2 = sokClient.arbeidsgiverSok(Sokekriterier.med()
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().geografiList(Collections.singletonList("NO02")).bygg());
+        Sokeresultat sokeresultat2 = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .geografiList(Collections.singletonList("NO02")).maaBoInnenforGeografi(true).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
@@ -406,8 +388,7 @@ public class IndexCvIT {
 
     @Test
     public void testPaTotalYrkeserfaringSkalGiKorrektResultat() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().totalYrkeserfaring(Collections.singletonList("37-75")).bygg());
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().totalYrkeserfaring(Collections.singletonList("37-75")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
         assertThat(cver.size()).isGreaterThan(0);
@@ -419,10 +400,8 @@ public class IndexCvIT {
 
     @Test
     public void sokPaFlereUtdanningsnivaSkalGiFlereResultat() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().utdanningsniva(Collections.singletonList("Master")).bygg());
-        Sokeresultat sokeresultat1 = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().utdanningsniva(asList("Master", "Videregaende")).bygg());
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().utdanningsniva(Collections.singletonList("Master")).bygg());
+        Sokeresultat sokeresultat1 = sokClient.veilederSok(SokekriterierVeiledere.med().utdanningsniva(asList("Master", "Videregaende")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver1 = sokeresultat1.getCver();
@@ -432,10 +411,8 @@ public class IndexCvIT {
 
     @Test
     public void sokPaIngenUtdanningSkalGiKorrektResultat() {
-        Sokeresultat sokeresultatIngen = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().utdanningsniva(Collections.singletonList("Ingen")).bygg());
-        Sokeresultat sokeresultatIngenOgGrunnskole = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().utdanningsniva(asList("Ingen", "Master")).bygg());
+        Sokeresultat sokeresultatIngen = sokClient.veilederSok(SokekriterierVeiledere.med().utdanningsniva(Collections.singletonList("Ingen")).bygg());
+        Sokeresultat sokeresultatIngenOgGrunnskole = sokClient.veilederSok(SokekriterierVeiledere.med().utdanningsniva(asList("Ingen", "Master")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cverIngen = sokeresultatIngen.getCver();
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cverIngenOgGrunnskole = sokeresultatIngenOgGrunnskole.getCver();
@@ -449,8 +426,7 @@ public class IndexCvIT {
 
     @Test
     public void sokPaaKommuneSkalGiJobbonsketreffPaaKommuneHeleNorge() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().geografiList(Collections.singletonList("NO19.1903")).bygg());
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().geografiList(Collections.singletonList("NO19.1903")).bygg());
 
         // 09568410230 giveMeEsCv4
         // 03050316895 giveMeEsCv5
@@ -465,8 +441,7 @@ public class IndexCvIT {
 
     @Test
     public void sokPaFylkeSkalGiTreffPaFylke() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().geografiList(Collections.singletonList("NO03")).bygg());
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().geografiList(Collections.singletonList("NO03")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
         List<String> fnrList = cver.stream().map(no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv::getKandidatnr).collect(Collectors.toList());
@@ -476,8 +451,7 @@ public class IndexCvIT {
 
     @Test
     public void sokPaFylkeSkalGiTreffPaKommune() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().geografiList(Collections.singletonList("NO12")).bygg());
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().geografiList(Collections.singletonList("NO12")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
         List<String> fnrList = cver.stream().map(no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv::getKandidatnr).collect(Collectors.toList());
@@ -490,8 +464,7 @@ public class IndexCvIT {
 
     @Test
     public void sokPaKommuneSkalGiTreffPaFylke() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().geografiList(Collections.singletonList("NO04.0403")).bygg());
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().geografiList(Collections.singletonList("NO04.0403")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
         List<String> fnrList = cver.stream().map(no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv::getKandidatnr).collect(Collectors.toList());
@@ -501,8 +474,7 @@ public class IndexCvIT {
 
     @Test
     public void sokPaKommuneSkalIkkeInkludereAndreKommuner() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().geografiList(Collections.singletonList("NO12.1201")).bygg());
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().geografiList(Collections.singletonList("NO12.1201")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
         List<String> fnrList = cver.stream().map(no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv::getKandidatnr).collect(Collectors.toList());
@@ -522,10 +494,10 @@ public class IndexCvIT {
         bulkEventer.forEach(e -> e.setKandidatnr(e.getKandidatnr() + 9999));
 
         int antallForBulkIndeksering =
-                sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
+                sokClient.veilederSok(SokekriterierVeiledere.med().bygg()).getCver().size();
         indexerClient.bulkIndex(bulkEventer, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
         int antallEtterIndeksering =
-                sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
+                sokClient.veilederSok(SokekriterierVeiledere.med().bygg()).getCver().size();
 
         Assertions.assertThat(antallEtterIndeksering - antallForBulkIndeksering)
                 .isEqualTo(bulkEventer.size());
@@ -533,7 +505,7 @@ public class IndexCvIT {
         // Reindekser
         indexerClient.bulkIndex(bulkEventer, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
         antallEtterIndeksering =
-                sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
+                sokClient.veilederSok(SokekriterierVeiledere.med().bygg()).getCver().size();
 
         Assertions.assertThat(antallEtterIndeksering - antallForBulkIndeksering)
                 .isEqualTo(bulkEventer.size());
@@ -545,10 +517,10 @@ public class IndexCvIT {
                 EsCvObjectMother.giveMeEsCv2().getKandidatnr());
 
         int antallForBulkSletting =
-                sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
+                sokClient.veilederSok(SokekriterierVeiledere.med().bygg()).getCver().size();
         indexerClient.bulkSlettKandidatnr(sletteIder, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
         int antallEtterSletting =
-                sokClient.arbeidsgiverSok(Sokekriterier.med().bygg()).getCver().size();
+                sokClient.veilederSok(SokekriterierVeiledere.med().bygg()).getCver().size();
 
         Assertions.assertThat(antallForBulkSletting - antallEtterSletting)
                 .isEqualTo(sletteIder.size());
@@ -556,7 +528,7 @@ public class IndexCvIT {
 
     @Test
     public void sokPaYrkeJobbonskerSkalGiKorrektResultat() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .yrkeJobbonsker(Collections.singletonList("Lastebilsjåfør")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
@@ -567,9 +539,9 @@ public class IndexCvIT {
 
     @Test
     public void sokPaFlereYrkeJobbonskerSkalGiUtvidendeResultat() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .yrkeJobbonsker(Collections.singletonList("Butikkmedarbeider")).bygg());
-        Sokeresultat sokeresultat1 = sokClient.arbeidsgiverSok(Sokekriterier.med()
+        Sokeresultat sokeresultat1 = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .yrkeJobbonsker(Arrays.asList("Butikkmedarbeider", "Ordfører")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
@@ -579,7 +551,7 @@ public class IndexCvIT {
 
     @Test
     public void skalAggregerePaaKompetanse() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .yrkeJobbonsker(Arrays.asList("Butikkmedarbeider", "Industrimekaniker", "Ordfører"))
                 .bygg());
 
@@ -591,7 +563,7 @@ public class IndexCvIT {
 
     @Test
     public void sokPaYrkeSkalGiResultatSortertPaNyestRelevantErfaring() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .yrkeJobbonsker(Arrays.asList("Butikkmedarbeider", "Industrimekaniker", "Ordfører"))
                 .bygg());
 
@@ -618,7 +590,7 @@ public class IndexCvIT {
         assertThat(typeaheadElement).isEqualTo(
                 "Truckførerbevis T1 Lavtløftende plukktruck, palletruck m/perm. førerplass");
 
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .kompetanser(Collections.singletonList(typeaheadElement)).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
@@ -641,12 +613,12 @@ public class IndexCvIT {
         List<String> kandidatnummer1 = asList(KANDIDATNUMMER1, KANDIDATNUMMER2, KANDIDATNUMMER3);
         List<String> kandidatnummer2 = asList(KANDIDATNUMMER3, KANDIDATNUMMER1, KANDIDATNUMMER2);
 
-        Sokeresultat resultat1 = sokClient.arbeidsgiverHentKandidater(kandidatnummer1);
+        Sokeresultat resultat1 = sokClient.veilederHentKandidater(kandidatnummer1);
         List<String> resultatkandidatnummer1 = resultat1.getCver().stream()
                 .map(no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv::getKandidatnr).collect(Collectors.toList());
         assertThat(resultatkandidatnummer1).isEqualTo(kandidatnummer1);
 
-        Sokeresultat resultat2 = sokClient.arbeidsgiverHentKandidater(kandidatnummer2);
+        Sokeresultat resultat2 = sokClient.veilederHentKandidater(kandidatnummer2);
         List<String> resultatkandidatnummer2 = resultat2.getCver().stream()
                 .map(no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv::getKandidatnr).collect(Collectors.toList());
         assertThat(resultatkandidatnummer2).isEqualTo(kandidatnummer2);
@@ -659,7 +631,7 @@ public class IndexCvIT {
         List<String> kandidatnummer =
                 asList(KANDIDATNUMMER1, "IKKEEKSISTERNDE_KANDIDATNUMMER", KANDIDATNUMMER2);
 
-        Sokeresultat resultat = sokClient.arbeidsgiverHentKandidater(kandidatnummer);
+        Sokeresultat resultat = sokClient.veilederHentKandidater(kandidatnummer);
         List<String> resultatkandidatnummer = resultat.getCver().stream()
                 .map(no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv::getKandidatnr).collect(Collectors.toList());
         assertThat(resultatkandidatnummer).isEqualTo(asList(KANDIDATNUMMER1, KANDIDATNUMMER2));
@@ -667,12 +639,11 @@ public class IndexCvIT {
 
     @Test
     public void sokMedIngenUtdanningSkalGiFlerResultaterSelvOmManSpesifisererUtdanning() {
-        Sokeresultat sokeresultatVideregaende = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().utdanningsniva(Collections.singletonList("Videregaende"))
+        Sokeresultat sokeresultatVideregaende = sokClient.veilederSok(SokekriterierVeiledere.med().utdanningsniva(Collections.singletonList("Videregaende"))
                         .utdanninger(Collections.singletonList("Bygg og anlegg")).bygg());
 
         Sokeresultat sokeresultatVideregaendeOgIngenUtdanning = sokClient
-                .arbeidsgiverSok(Sokekriterier.med().utdanningsniva(asList("Ingen", "Videregaende"))
+                .veilederSok(SokekriterierVeiledere.med().utdanningsniva(asList("Ingen", "Videregaende"))
                         .utdanninger(Collections.singletonList("Bygg og anlegg")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cverVideregaende = sokeresultatVideregaende.getCver();
@@ -683,8 +654,7 @@ public class IndexCvIT {
 
     @Test
     public void sokMedDoktorgradSkalIkkeGiResulatMedKandidaterUtenDoktorgrad() {
-        Sokeresultat sokeresultatDoktorgrad = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().utdanningsniva(Collections.singletonList("Doktorgrad")).bygg());
+        Sokeresultat sokeresultatDoktorgrad = sokClient.veilederSok(SokekriterierVeiledere.med().utdanningsniva(Collections.singletonList("Doktorgrad")).bygg());
 
         assertThat(sokeresultatDoktorgrad.getCver()).hasSize(1);
     }
@@ -692,22 +662,22 @@ public class IndexCvIT {
     @Test
     public void sokMedFraTilSkalReturnereRiktigAntallKandidater() {
         Sokeresultat sokeresultat =
-                sokClient.arbeidsgiverSok(Sokekriterier.med().antallResultater(1).bygg());
+                sokClient.veilederSok(SokekriterierVeiledere.med().antallResultater(1).bygg());
         assertThat(sokeresultat.getCver()).hasSize(1);
 
         // fra og med tredje posisjon
         // av totalt 6 i indexen
         Sokeresultat sokeresultat2 = sokClient
-                .arbeidsgiverSok(Sokekriterier.med().fraIndex(2).antallResultater(5).bygg());
+                .veilederSok(SokekriterierVeiledere.med().fraIndex(2).antallResultater(5).bygg());
         assertThat(sokeresultat2.getCver()).hasSize(4);
     }
 
     @Test
     public void sokPaaYrkeSkalIkkeGiTreffPaaLignendeYrker() {
-        Sokeresultat sokeresultatKonsulentData = sokClient.arbeidsgiverSok(Sokekriterier.med()
+        Sokeresultat sokeresultatKonsulentData = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .yrkeJobbonsker(Collections.singletonList("Konsulent (data)")).bygg());
 
-        Sokeresultat sokeresultatKonsulentBank = sokClient.arbeidsgiverSok(Sokekriterier.med()
+        Sokeresultat sokeresultatKonsulentBank = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .yrkeJobbonsker(Collections.singletonList("Konsulent (bank)")).bygg());
 
 
@@ -783,13 +753,13 @@ public class IndexCvIT {
 
     @Test
     public void arbeidsgiverHentEnKandidat() {
-        Optional<EsCv> esCv = sokClient.arbeidsgiverHent("1L");
+        Optional<EsCv> esCv = sokClient.veilederHent("1L");
         assertThat(esCv.get().getKandidatnr()).isEqualTo("1L");
     }
 
     @Test
     public void arbeidsgiverHentEnKandidatSomIkkeFinnes() {
-        Optional<EsCv> esCv = sokClient.arbeidsgiverHent("finnes-ikke");
+        Optional<EsCv> esCv = sokClient.veilederHent("finnes-ikke");
         assertThat(esCv).isNotPresent();
     }
 
@@ -818,14 +788,14 @@ public class IndexCvIT {
 
     @Test
     public void sokPaaKandidaterSkalInneholdeMinimumEnMedSattOppstart() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med().bygg());
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().bygg());
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> collect = sokeresultat.getCver().stream().filter(esCv -> Objects.nonNull(esCv.getOppstartKode())).collect(Collectors.toList());
         assertThat(collect).size().isGreaterThan(0);
     }
 
     @Test
     public void sokMedSynonymerIJobbonskerSkalGiTreff() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .yrkeJobbonsker(Collections.singletonList("Trailersjåffis")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
@@ -838,7 +808,7 @@ public class IndexCvIT {
 
     @Test
     public void sokMedSynonymerIYrkeserfaringSkalGiTreff() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .stillingstitler(Collections.singletonList("Javaguru")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
@@ -851,7 +821,7 @@ public class IndexCvIT {
 
     @Test
     public void sokMedTypeaheadForYrkeserfaringSkalGiTreffFordiTypeaheadFeltSkalLiggeISoketitler() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .stillingstitler(Collections.singletonList("Javautvikler")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
@@ -898,8 +868,7 @@ public class IndexCvIT {
 
     @Test
     public void sokMedSynonymerIKompetanseSkalGiTreff() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().kompetanser(Collections.singletonList("Java (8)")).bygg());
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().kompetanser(Collections.singletonList("Java (8)")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
         assertThat(cver.size()).isEqualTo(1);
@@ -911,7 +880,7 @@ public class IndexCvIT {
 
     @Test
     public void sokMedFritekstSkalFungereForArbeidsgivere() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med().fritekst("yrkeskarriere").bygg());
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("yrkeskarriere").bygg());
         assertThat(sokeresultat.getCver()).hasSize(1);
         assertThat(sokeresultat.getCver()).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
     }
@@ -1011,7 +980,7 @@ public class IndexCvIT {
         String komp =
                 "Truckførerbevis T1 Lavtløftende plukktruck, palletruck m/perm. førerplass";
 
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med()
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .kompetanser(Collections.singletonList(komp)).stillingstitler(Collections.singletonList("DENNEFINNESIKKE")).bygg());
 
         List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();

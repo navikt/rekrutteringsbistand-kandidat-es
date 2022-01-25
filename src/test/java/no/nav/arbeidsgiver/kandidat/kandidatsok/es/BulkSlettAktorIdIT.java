@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es.EsCvObjectMother;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es.KandidatsokTransformer;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv;
-import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.Sokekriterier;
+import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.SokekriterierVeiledere;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.Sokeresultat;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchTestConfiguration;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchIntegrationTestExtension;
@@ -66,7 +66,7 @@ public class BulkSlettAktorIdIT {
 
         assertEquals(2, indexerClient.bulkSlettAktorId(aktorIdSletteListe, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME));
 
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med().bygg());
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
 

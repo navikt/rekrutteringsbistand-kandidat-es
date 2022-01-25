@@ -29,10 +29,6 @@ public interface EsIndexerService {
 
     long antallIndeksert(String indexName);
 
-    long antallIndeksertSynligForVeileder(String indexName);
-
-    long antallIndeksertSynligForArbeidsgiver(String indexName);
-
     Collection<String> getTargetsForAlias(String alias, String indexPattern);
 
     boolean updateIndexAlias(String alias, String removeForIndexPattern, String addForIndexName);

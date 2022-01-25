@@ -300,16 +300,6 @@ public class EsIndexerHttpService implements EsIndexerService, AutoCloseable {
     }
 
     @Override
-    public long antallIndeksertSynligForVeileder(String indexName) {
-        return tellDokumenter("synligForVeilederSok:true", indexName);
-    }
-
-    @Override
-    public long antallIndeksertSynligForArbeidsgiver(String indexName) {
-        return tellDokumenter("synligForArbeidsgiverSok:true", indexName);
-    }
-
-    @Override
     public Collection<String> getTargetsForAlias(String alias, String indexPattern) {
         try {
             GetAliasesResponse aliases = client.indices().getAlias(new GetAliasesRequest(alias).indices(indexPattern), RequestOptions.DEFAULT);

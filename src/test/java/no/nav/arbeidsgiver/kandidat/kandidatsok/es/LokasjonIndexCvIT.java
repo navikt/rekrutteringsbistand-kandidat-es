@@ -3,6 +3,7 @@ package no.nav.arbeidsgiver.kandidat.kandidatsok.es;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es.EsCvObjectMother;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.Sokekriterier;
+import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.SokekriterierVeiledere;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.Sokeresultat;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchIntegrationTestExtension;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchTestConfiguration;
@@ -46,7 +47,7 @@ public class LokasjonIndexCvIT {
 
     @Test
     public void testUtenSokekriterierReturnererAlleKommuner() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med().bygg());
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver.size()).isEqualTo(5);
@@ -57,7 +58,7 @@ public class LokasjonIndexCvIT {
 
     @Test
     public void testUtenSokekriterierReturnererAlleFylker() {
-        Sokeresultat sokeresultat = sokClient.arbeidsgiverSok(Sokekriterier.med().bygg());
+        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver.size()).isEqualTo(5);

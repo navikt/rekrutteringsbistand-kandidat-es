@@ -71,8 +71,8 @@ public class NuskodeIT {
 
     @Test
     public void sokPaaKandidatKompetanseNuskodeEttSifferIngenUtdanning() {
-        Sokeresultat sokeresultatIngenUtdanning = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().utdanningsniva(Collections.singletonList("Ingen")).bygg());
+        Sokeresultat sokeresultatIngenUtdanning = sokClient.veilederSok(
+                SokekriterierVeiledere.med().utdanningsniva(Collections.singletonList("Ingen")).bygg());
 
         List <EsCv> cver = sokeresultatIngenUtdanning.getCver();
         assertThat(cver)
@@ -89,8 +89,8 @@ public class NuskodeIT {
 
     @Test
     public void sokPaaKandidatKompetanseNuskodeEttSifferDoktorgrad() {
-        Sokeresultat sokeresultatDoktorgrad = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().utdanningsniva(Collections.singletonList("Doktorgrad")).bygg());
+        Sokeresultat sokeresultatDoktorgrad = sokClient.veilederSok(
+                SokekriterierVeiledere.med().utdanningsniva(Collections.singletonList("Doktorgrad")).bygg());
 
         List <EsCv> cver = sokeresultatDoktorgrad.getCver();
         assertThat(cver)
@@ -105,8 +105,8 @@ public class NuskodeIT {
 
     @Test
     public void sokPaaKandidatKompetanseNuskodeEttSifferBachelor() {
-        Sokeresultat sokeresultatBachelor = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().utdanningsniva(Collections.singletonList("Bachelor")).bygg());
+        Sokeresultat sokeresultatBachelor = sokClient.veilederSok(
+                SokekriterierVeiledere.med().utdanningsniva(Collections.singletonList("Bachelor")).bygg());
 
         List <EsCv> cver = sokeresultatBachelor.getCver();
         assertThat(cver)
@@ -123,8 +123,8 @@ public class NuskodeIT {
 
     @Test
     public void sokPaaKandidatKompetanseNuskodeEttSifferBachelorogMaster() {
-        Sokeresultat sokeresultatBachelorOgMaster = sokClient.arbeidsgiverSok(
-                Sokekriterier.med().utdanningsniva(asList("Bachelor", "Master")).bygg());
+        Sokeresultat sokeresultatBachelorOgMaster = sokClient.veilederSok(
+                SokekriterierVeiledere.med().utdanningsniva(asList("Bachelor", "Master")).bygg());
 
         List <EsCv> cver = sokeresultatBachelorOgMaster.getCver();
         assertThat(cver)

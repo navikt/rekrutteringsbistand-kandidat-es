@@ -11,8 +11,6 @@ import java.util.Optional;
 
 public interface EsSokService {
 
-    Sokeresultat arbeidsgiverSok(Sokekriterier sokekriterier);
-
     Sokeresultat veilederSok(SokekriterierVeiledere sokekriterier);
 
     List<String> typeAheadKompetanse(String prefix);
@@ -29,13 +27,7 @@ public interface EsSokService {
 
     List<String> typeAheadNavkontor(String searchTerm);
 
-    Optional<EsCv> arbeidsgiverHent(String kandidatnr);
-
     Optional<EsCv> veilederHent(String kandidatnr);
-
-    Sokeresultat arbeidsgiverHentKandidater(List<String> kandidatnummer);
-
-    Sokeresultat arbeidsgiverHentKandidaterForVisning(List<String> kandidatnummer);
 
     Sokeresultat veilederHentKandidater(List<String> kandidatnummer);
 
