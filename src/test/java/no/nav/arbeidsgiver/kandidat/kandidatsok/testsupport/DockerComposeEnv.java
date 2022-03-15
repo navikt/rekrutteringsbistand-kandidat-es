@@ -292,7 +292,7 @@ public final class DockerComposeEnv implements AutoCloseable {
         log.info("Will try to run docker-compose command: " + String.join(" ", pb.command()));
         pb.start().onExit().thenAccept(process -> {
             if (process.exitValue() != 0) {
-                String msg = "docker-compose failed with status " + process.exitValue() + " See error message in the log file in dir [" + dockerComposeLogDir + "]";
+                String msg = "docker-compose failed with status " + process.exitValue() + ". See error message in the log file in the directory [" + dockerComposeLogDir + "]";
                 throw new RuntimeException(msg);
             }
         }).get(this.timeoutSeconds, TimeUnit.SECONDS);
