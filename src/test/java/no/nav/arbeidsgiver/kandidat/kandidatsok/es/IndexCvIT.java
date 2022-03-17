@@ -3,11 +3,7 @@ package no.nav.arbeidsgiver.kandidat.kandidatsok.es;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es.EsCvObjectMother;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es.KandidatsokTransformer;
-import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv;
-import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.Aggregering;
-import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsYrkeserfaring;
-import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.SokekriterierVeiledere;
-import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.Sokeresultat;
+import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.*;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchIntegrationTestExtension;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchTestConfiguration;
 import no.nav.arbeidsgiver.kandidatsok.es.client.EsIndexerService;
@@ -21,11 +17,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
 
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(ElasticSearchIntegrationTestExtension.class)
@@ -40,7 +40,7 @@ public class IndexCvIT {
 
     private final KandidatsokTransformer kandidatsokTransformer = new KandidatsokTransformer();
 
-    private static final List<EsCv> setupCver = List.of(
+    private static final List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv> setupCver = List.of(
             EsCvObjectMother.giveMeEsCv(),
             EsCvObjectMother.giveMeEsCv2(),
             EsCvObjectMother.giveMeEsCv3(),
@@ -54,10 +54,10 @@ public class IndexCvIT {
             EsCvObjectMother.giveMeCvFritattForKandidatsok()
     );
 
-    private static final List<String> setupKandidatnumre = setupCver.stream().map(EsCv::getKandidatnr).collect(toList());
+    private static final List<String> setupKandidatnumre = setupCver.stream().map(no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv::getKandidatnr).collect(toList());
 
-    private static List<String> kandidatnumre(List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver) {
-        return cver.stream().map(no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv::getKandidatnr).collect(toList());
+    private static List<String> kandidatnumre(List<EsCv> cver) {
+        return cver.stream().map(EsCv::getKandidatnr).collect(toList());
     }
 
     @BeforeEach
@@ -73,16 +73,16 @@ public class IndexCvIT {
 
     @Test
     public void skalIkkeFeileMedIllegalArgumentFraES() throws Exception {
-        EsCv cv1 = objectMapper.readValue(
+        no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv cv1 = objectMapper.readValue(
                 new InputStreamReader(getClass().getResourceAsStream("/utfordrende_cv1.json"),
-                        "ISO-8859-1"),
-                EsCv.class);
-        EsCv cv2 = objectMapper.readValue(
+                        ISO_8859_1),
+                no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv.class);
+        no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv cv2 = objectMapper.readValue(
                 new InputStreamReader(getClass().getResourceAsStream("/utfordrende_cv2.json"),
-                        "ISO-8859-1"),
-                EsCv.class);
+                        ISO_8859_1),
+                no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv.class);
 
-        List<EsCv> bulkEventer = asList(cv1, cv2);
+        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv> bulkEventer = asList(cv1, cv2);
 
         int antallIndeksert = indexerClient.bulkIndex(bulkEventer, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
         assertThat(antallIndeksert).isEqualTo(bulkEventer.size());
@@ -91,7 +91,7 @@ public class IndexCvIT {
     @Test
     @Disabled("Brukes til utforskende testing")
     public void skalLoggeFeilVedBulkIndeksereCVMedNullfelter() {
-        List<EsCv> bulkEventer =
+        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv> bulkEventer =
                 asList(EsCvObjectMother.giveMeEsCv(), EsCvObjectMother.giveMeEsCvMedFeil(),
                         EsCvObjectMother.giveMeEsCv2());
 
@@ -101,7 +101,7 @@ public class IndexCvIT {
 
     @Test
     public void testUtenSokekriterierReturnererAlleCver() {
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> actualCver = sokClient.veilederSok(SokekriterierVeiledere.med().bygg()).getCver();
+        List<EsCv> actualCver = sokClient.veilederSok(SokekriterierVeiledere.med().bygg()).getCver();
 
         assertThat(actualCver.size()).isEqualTo(setupCver.size());
         assertThat(kandidatnumre(actualCver)).containsExactlyInAnyOrderElementsOf(setupKandidatnumre);
@@ -111,7 +111,7 @@ public class IndexCvIT {
     public void testUtenSokekriterierReturnererIkkeJobbsForVeiledere() {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
 
         assertThat(cver.size()).isEqualTo(6);
         assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder(
@@ -125,8 +125,8 @@ public class IndexCvIT {
         Sokeresultat sokeresultat = sokClient.veilederSok(
                 SokekriterierVeiledere.med().fritekst("industrimekaniker javautvikler").bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver1 = sokeresultat1.getCver();
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver1 = sokeresultat1.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
 
         assertThat(cver1.size()).isLessThan(cver.size());
         assertThat(cver1.size()).isEqualTo(1);
@@ -141,10 +141,10 @@ public class IndexCvIT {
         Sokeresultat sokeresultatFritekst =
                 sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("og").bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cverYrke = sokeresultatYrke.getCver();
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cverKomp = sokeresultatKomp.getCver();
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cverUtdanning = sokeresultatUtdanning.getCver();
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cverFritekst = sokeresultatFritekst.getCver();
+        List<EsCv> cverYrke = sokeresultatYrke.getCver();
+        List<EsCv> cverKomp = sokeresultatKomp.getCver();
+        List<EsCv> cverUtdanning = sokeresultatUtdanning.getCver();
+        List<EsCv> cverFritekst = sokeresultatFritekst.getCver();
 
         assertThat(cverYrke.size()).isEqualTo(0);
         assertThat(cverKomp.size()).isEqualTo(0);
@@ -158,10 +158,10 @@ public class IndexCvIT {
                 .kompetanser(Collections.singletonList("Hallovert"))
                 .utdanninger(Collections.singletonList("Bygg og anlegg")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
 
         assertThat(cver.size()).isEqualTo(1);
-        no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv cv = cver.get(0);
+        EsCv cv = cver.get(0);
         assertThat(cv)
                 .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv4()));
     }
@@ -172,8 +172,8 @@ public class IndexCvIT {
                 .stillingstitler(Collections.singletonList("Industrimekaniker")).bygg());
         Sokeresultat sokeresultat2 = sokClient.veilederSok(SokekriterierVeiledere.med().stillingstitler(asList("Butikkmedarbeider", "Industrimekaniker")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver2 = sokeresultat2.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver2 = sokeresultat2.getCver();
 
         assertThat(cver2.size()).isGreaterThan(cver.size());
     }
@@ -185,8 +185,8 @@ public class IndexCvIT {
         Sokeresultat sokeresultat2 = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .kompetanser(asList("Programvareutvikler", "Nyhetsanker")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver2 = sokeresultat2.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver2 = sokeresultat2.getCver();
 
         assertThat(cver2.size()).isGreaterThan(cver.size());
     }
@@ -200,9 +200,9 @@ public class IndexCvIT {
         Sokeresultat sokeresultat3 = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .kompetanser(Collections.singletonList("arbeid generelt mekanisk")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver2 = sokeresultat2.getCver();
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver3 = sokeresultat3.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver2 = sokeresultat2.getCver();
+        List<EsCv> cver3 = sokeresultat3.getCver();
 
         assertThat(cver).isNotEmpty();
         assertThat(cver.size()).isEqualTo(cver2.size());
@@ -214,7 +214,7 @@ public class IndexCvIT {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .kompetanser(Collections.singletonList("kranførerarbeid landtransport")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
 
         assertThat(cver).isEmpty();
     }
@@ -226,8 +226,8 @@ public class IndexCvIT {
         Sokeresultat sokeresultat2 = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .utdanninger(asList("Bygg og anlegg", "master i sikkerhet")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver2 = sokeresultat2.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver2 = sokeresultat2.getCver();
 
         assertThat(cver.size()).isGreaterThan(cver2.size());
     }
@@ -237,7 +237,7 @@ public class IndexCvIT {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .forerkort(Collections.singletonList("B - Personbil"))
                 .bygg());
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
         Set<String> forerkort = new HashSet<>();
         cver.forEach(cv -> cv.getForerkort().forEach(f -> forerkort.add(f.getForerkortKodeKlasse())));
 
@@ -257,7 +257,7 @@ public class IndexCvIT {
     public void testForerkortTraktorIkkeInkludertIAndreForerkort() {
         Sokeresultat sokeresultatForerkort = sokClient.veilederSok(SokekriterierVeiledere.med().forerkort(Collections.singletonList("T - Traktor")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultatForerkort.getCver();
+        List<EsCv> cver = sokeresultatForerkort.getCver();
         assertThat(cver)
                 .doesNotContain(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv5()));
 
@@ -270,7 +270,7 @@ public class IndexCvIT {
     public void testForerkortSnoscooterIkkeInkludertIAndreForerkort() {
         Sokeresultat sokeresultatForerkort = sokClient.veilederSok(SokekriterierVeiledere.med().forerkort(Collections.singletonList("S - Snøscooter")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultatForerkort.getCver();
+        List<EsCv> cver = sokeresultatForerkort.getCver();
         assertThat(cver)
                 .doesNotContain(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv5()));
 
@@ -284,8 +284,8 @@ public class IndexCvIT {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().stillingstitler(Collections.singletonList("Progger")).bygg());
         Sokeresultat sokeresultatStemOrd = sokClient.veilederSok(SokekriterierVeiledere.med().stillingstitler(Collections.singletonList("Progg")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cverStemOrd = sokeresultatStemOrd.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cverStemOrd = sokeresultatStemOrd.getCver();
 
         assertThat(cver.size()).isEqualTo(cverStemOrd.size());
         assertThat(cver.get(0)).isEqualTo(cverStemOrd.get(0));
@@ -295,7 +295,7 @@ public class IndexCvIT {
     public void testSamletKompetanseSkalIkkeGiResultatVedSokPaSprak() {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().kompetanser(Collections.singletonList("Dansk")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver.size()).isEqualTo(0);
     }
 
@@ -303,8 +303,8 @@ public class IndexCvIT {
     public void testSokPaSprak() {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().sprak(Collections.singletonList("Dansk")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
-        no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv cv = cver.get(0);
+        List<EsCv> cver = sokeresultat.getCver();
+        EsCv cv = cver.get(0);
 
         assertThat(cver.size()).isEqualTo(1);
         assertThat(cv)
@@ -316,8 +316,8 @@ public class IndexCvIT {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .kompetanser(Collections.singletonList("Truckførerbevis")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
-        no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv cv = cver.get(0);
+        List<EsCv> cver = sokeresultat.getCver();
+        EsCv cv = cver.get(0);
 
         assertThat(cver.size()).isEqualTo(1);
         assertThat(cv)
@@ -328,7 +328,7 @@ public class IndexCvIT {
     public void testSamletKompetanseSkalIkkeGiResultatVedSokPaForerkort() {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().kompetanser(Collections.singletonList("T - Traktor")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
 
         assertThat(cver.size()).isEqualTo(0);
     }
@@ -338,8 +338,8 @@ public class IndexCvIT {
     public void testSamletKompetanseSkalGiResultatVedSokPaKurs() {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().kompetanser(Collections.singletonList("Spring Boot")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
-        no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv cv = cver.get(0);
+        List<EsCv> cver = sokeresultat.getCver();
+        EsCv cv = cver.get(0);
 
         assertThat(cver.size()).isEqualTo(1);
         assertThat(cv)
@@ -350,8 +350,8 @@ public class IndexCvIT {
     public void testSamletKompetanseSkalGiResultatVedSokPaKompetanse() {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().kompetanser(Collections.singletonList("Javautvikler")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
-        no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv cv = cver.get(0);
+        List<EsCv> cver = sokeresultat.getCver();
+        EsCv cv = cver.get(0);
 
         assertThat(cver.size()).isEqualTo(1);
         assertThat(cv)
@@ -363,8 +363,8 @@ public class IndexCvIT {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().geografiList(Collections.singletonList("NO12.1201")).bygg());
         Sokeresultat sokeresultat2 = sokClient.veilederSok(SokekriterierVeiledere.med().geografiList(asList("NO12.1201", "NO11.1103")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver2 = sokeresultat2.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver2 = sokeresultat2.getCver();
 
         assertThat(cver2.size()).isGreaterThan(cver.size());
     }
@@ -375,8 +375,8 @@ public class IndexCvIT {
         Sokeresultat sokeresultat2 = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .geografiList(asList("NO12.1201")).maaBoInnenforGeografi(true).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver2 = sokeresultat2.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver2 = sokeresultat2.getCver();
 
         assertThat(cver.size()).isGreaterThan(cver2.size());
     }
@@ -387,8 +387,8 @@ public class IndexCvIT {
         Sokeresultat sokeresultat2 = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .geografiList(Collections.singletonList("NO02")).maaBoInnenforGeografi(true).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver2 = sokeresultat2.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver2 = sokeresultat2.getCver();
 
         assertThat(cver.size()).isGreaterThan(cver2.size());
         assertThat(cver2.size()).isEqualTo(1);
@@ -399,10 +399,10 @@ public class IndexCvIT {
     public void testPaTotalYrkeserfaringSkalGiKorrektResultat() {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().totalYrkeserfaring(Collections.singletonList("37-75")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver.size()).isGreaterThan(0);
 
-        no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv cv = cver.get(0);
+        EsCv cv = cver.get(0);
         assertThat(cv)
                 .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
     }
@@ -412,8 +412,8 @@ public class IndexCvIT {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().utdanningsniva(Collections.singletonList("Master")).bygg());
         Sokeresultat sokeresultat1 = sokClient.veilederSok(SokekriterierVeiledere.med().utdanningsniva(asList("Master", "Videregaende")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver1 = sokeresultat1.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver1 = sokeresultat1.getCver();
 
         assertThat(cver.size()).isLessThan(cver1.size());
     }
@@ -423,8 +423,8 @@ public class IndexCvIT {
         Sokeresultat sokeresultatIngen = sokClient.veilederSok(SokekriterierVeiledere.med().utdanningsniva(Collections.singletonList("Ingen")).bygg());
         Sokeresultat sokeresultatIngenOgGrunnskole = sokClient.veilederSok(SokekriterierVeiledere.med().utdanningsniva(asList("Ingen", "Master")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cverIngen = sokeresultatIngen.getCver();
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cverIngenOgGrunnskole = sokeresultatIngenOgGrunnskole.getCver();
+        List<EsCv> cverIngen = sokeresultatIngen.getCver();
+        List<EsCv> cverIngenOgGrunnskole = sokeresultatIngenOgGrunnskole.getCver();
 
         // assertThat(cverIngen).contains(kandidatsokTransformer
         // .transformer(transformer.transform(TempCvEventObjectMother.giveMeEsCv5())));
@@ -440,7 +440,7 @@ public class IndexCvIT {
         // 09568410230 giveMeEsCv4
         // 03050316895 giveMeEsCv5
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
 
         // 2 indekserte og synlige CV-er har geografi-ønsker i eksakt kommune eller hele Norge
         assertThat(cver.size()).isEqualTo(2);
@@ -452,8 +452,8 @@ public class IndexCvIT {
     public void sokPaFylkeSkalGiTreffPaFylke() {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().geografiList(Collections.singletonList("NO03")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
-        List<String> fnrList = cver.stream().map(no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv::getKandidatnr).collect(toList());
+        List<EsCv> cver = sokeresultat.getCver();
+        List<String> fnrList = cver.stream().map(EsCv::getKandidatnr).collect(toList());
 
         assertThat(fnrList).contains(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv()).getKandidatnr());
     }
@@ -462,8 +462,8 @@ public class IndexCvIT {
     public void sokPaFylkeSkalGiTreffPaKommune() {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().geografiList(Collections.singletonList("NO12")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
-        List<String> fnrList = cver.stream().map(no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv::getKandidatnr).collect(toList());
+        List<EsCv> cver = sokeresultat.getCver();
+        List<String> fnrList = cver.stream().map(EsCv::getKandidatnr).collect(toList());
 
         assertThat(cver.size()).isGreaterThanOrEqualTo(3);
         assertThat(fnrList).contains(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv3()).getKandidatnr());
@@ -475,8 +475,8 @@ public class IndexCvIT {
     public void sokPaKommuneSkalGiTreffPaFylke() {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().geografiList(Collections.singletonList("NO04.0403")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
-        List<String> fnrList = cver.stream().map(no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv::getKandidatnr).collect(toList());
+        List<EsCv> cver = sokeresultat.getCver();
+        List<String> fnrList = cver.stream().map(EsCv::getKandidatnr).collect(toList());
 
         assertThat(fnrList).contains(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv()).getKandidatnr());
     }
@@ -485,8 +485,8 @@ public class IndexCvIT {
     public void sokPaKommuneSkalIkkeInkludereAndreKommuner() {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().geografiList(Collections.singletonList("NO12.1201")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
-        List<String> fnrList = cver.stream().map(no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv::getKandidatnr).collect(toList());
+        List<EsCv> cver = sokeresultat.getCver();
+        List<String> fnrList = cver.stream().map(EsCv::getKandidatnr).collect(toList());
 
         assertThat(fnrList).doesNotContain(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv5()).getKandidatnr());
         assertThat(fnrList).doesNotContain(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv6()).getKandidatnr());
@@ -495,7 +495,7 @@ public class IndexCvIT {
 
     @Test
     public void skalBulkIndeksereCVerIdempotent() {
-        List<EsCv> bulkEventer =
+        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv> bulkEventer =
                 asList(EsCvObjectMother.giveMeEsCv(), EsCvObjectMother.giveMeEsCv2(),
                         EsCvObjectMother.giveMeEsCv3(), EsCvObjectMother.giveMeEsCv4(),
                         EsCvObjectMother.giveMeEsCv5());
@@ -540,8 +540,8 @@ public class IndexCvIT {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .yrkeJobbonsker(Collections.singletonList("Lastebilsjåfør")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
-        no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv cv = cver.get(0);
+        List<EsCv> cver = sokeresultat.getCver();
+        EsCv cv = cver.get(0);
         assertThat(cv)
                 .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv5()));
     }
@@ -553,8 +553,8 @@ public class IndexCvIT {
         Sokeresultat sokeresultat1 = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .yrkeJobbonsker(Arrays.asList("Butikkmedarbeider", "Ordfører")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver1 = sokeresultat1.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver1 = sokeresultat1.getCver();
         assertThat(cver.size()).isLessThan(cver1.size());
     }
 
@@ -576,11 +576,11 @@ public class IndexCvIT {
                 .yrkeJobbonsker(Arrays.asList("Butikkmedarbeider", "Industrimekaniker", "Ordfører"))
                 .bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
-        no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv cv1 = cver.get(0);
-        no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv cv2 = cver.get(1);
-        no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv cv3 = cver.get(2);
-        no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv cv4 = cver.get(3);
+        List<EsCv> cver = sokeresultat.getCver();
+        EsCv cv1 = cver.get(0);
+        EsCv cv2 = cver.get(1);
+        EsCv cv3 = cver.get(2);
+        EsCv cv4 = cver.get(3);
         assertThat(cv1)
                 .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv5()));
         assertThat(cv2)
@@ -602,9 +602,9 @@ public class IndexCvIT {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .kompetanser(Collections.singletonList(typeaheadElement)).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver.size()).isEqualTo(1);
-        no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv cv1 = cver.get(0);
+        EsCv cv1 = cver.get(0);
         assertThat(cv1)
                 .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv3()));
     }
@@ -624,12 +624,12 @@ public class IndexCvIT {
 
         Sokeresultat resultat1 = sokClient.veilederHentKandidater(kandidatnummer1);
         List<String> resultatkandidatnummer1 = resultat1.getCver().stream()
-                .map(no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv::getKandidatnr).collect(toList());
+                .map(EsCv::getKandidatnr).collect(toList());
         assertThat(resultatkandidatnummer1).isEqualTo(kandidatnummer1);
 
         Sokeresultat resultat2 = sokClient.veilederHentKandidater(kandidatnummer2);
         List<String> resultatkandidatnummer2 = resultat2.getCver().stream()
-                .map(no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv::getKandidatnr).collect(toList());
+                .map(EsCv::getKandidatnr).collect(toList());
         assertThat(resultatkandidatnummer2).isEqualTo(kandidatnummer2);
     }
 
@@ -642,7 +642,7 @@ public class IndexCvIT {
 
         Sokeresultat resultat = sokClient.veilederHentKandidater(kandidatnummer);
         List<String> resultatkandidatnummer = resultat.getCver().stream()
-                .map(no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv::getKandidatnr).collect(toList());
+                .map(EsCv::getKandidatnr).collect(toList());
         assertThat(resultatkandidatnummer).isEqualTo(asList(KANDIDATNUMMER1, KANDIDATNUMMER2));
     }
 
@@ -655,8 +655,8 @@ public class IndexCvIT {
                 .veilederSok(SokekriterierVeiledere.med().utdanningsniva(asList("Ingen", "Videregaende"))
                         .utdanninger(Collections.singletonList("Bygg og anlegg")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cverVideregaende = sokeresultatVideregaende.getCver();
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cverVideregaendeOgIngenUtdanning =
+        List<EsCv> cverVideregaende = sokeresultatVideregaende.getCver();
+        List<EsCv> cverVideregaendeOgIngenUtdanning =
                 sokeresultatVideregaendeOgIngenUtdanning.getCver();
         assertThat(cverVideregaende.size()).isLessThan(cverVideregaendeOgIngenUtdanning.size());
     }
@@ -690,13 +690,13 @@ public class IndexCvIT {
                 .yrkeJobbonsker(Collections.singletonList("Konsulent (bank)")).bygg());
 
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cverKonsulentData = sokeresultatKonsulentData.getCver();
+        List<EsCv> cverKonsulentData = sokeresultatKonsulentData.getCver();
         assertThat(cverKonsulentData.size()).isEqualTo(1);
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cverKonsulentBank = sokeresultatKonsulentBank.getCver();
+        List<EsCv> cverKonsulentBank = sokeresultatKonsulentBank.getCver();
         assertThat(cverKonsulentBank.size()).isEqualTo(1);
 
-        no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv cv1Data = cverKonsulentData.get(0);
-        no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv cv1Bank = cverKonsulentBank.get(0);
+        EsCv cv1Data = cverKonsulentData.get(0);
+        EsCv cv1Bank = cverKonsulentBank.get(0);
         assertThat(cv1Data)
                 .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv3()));
         assertThat(cv1Bank)
@@ -708,7 +708,7 @@ public class IndexCvIT {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .kvalifiseringsgruppeKoder(Collections.singletonList("IKVAL")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver).hasSize(1);
         assertThat(cver).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
     }
@@ -718,21 +718,21 @@ public class IndexCvIT {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .kvalifiseringsgruppeKoder(Arrays.asList("IKVAL", "IBATT")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver).hasSize(1);
         assertThat(cver).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
     }
 
     @Test
     public void sokPaFnrSkalGiKorrektResultat() {
-        Optional<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> optional = sokClient.veilederSokPaaFnr("04265983651");
+        Optional<EsCv> optional = sokClient.veilederSokPaaFnr("04265983651");
         assertThat(optional).isPresent();
         assertThat(optional.get()).isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv3()));
     }
 
     @Test
     public void sokPaIkkeEksisterendeFnrSkalGiEmpty() {
-        Optional<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> optional = sokClient.veilederSokPaaFnr("04265983622");
+        Optional<EsCv> optional = sokClient.veilederSokPaaFnr("04265983622");
         assertThat(optional).isNotPresent();
     }
 
@@ -750,25 +750,25 @@ public class IndexCvIT {
 
     @Test
     public void veilederHentEnKandidat() {
-        Optional<EsCv> esCv = sokClient.veilederHent("2L");
+        Optional<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv> esCv = sokClient.veilederHent("2L");
         assertThat(esCv.get().getKandidatnr()).isEqualTo("2L");
     }
 
     @Test
     public void veilederHentEnKandidatSomBareErSynligForAg() {
-        Optional<EsCv> esCv = sokClient.veilederHent("1L");
+        Optional<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv> esCv = sokClient.veilederHent("1L");
         assertThat(esCv).isNotPresent();
     }
 
     @Test
     public void arbeidsgiverHentEnKandidat() {
-        Optional<EsCv> esCv = sokClient.veilederHent("1L");
+        Optional<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv> esCv = sokClient.veilederHent("1L");
         assertThat(esCv.get().getKandidatnr()).isEqualTo("1L");
     }
 
     @Test
     public void arbeidsgiverHentEnKandidatSomIkkeFinnes() {
-        Optional<EsCv> esCv = sokClient.veilederHent("finnes-ikke");
+        Optional<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv> esCv = sokClient.veilederHent("finnes-ikke");
         assertThat(esCv).isNotPresent();
     }
 
@@ -798,7 +798,7 @@ public class IndexCvIT {
     @Test
     public void sokPaaKandidaterSkalInneholdeMinimumEnMedSattOppstart() {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().bygg());
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> collect = sokeresultat.getCver().stream().filter(esCv -> Objects.nonNull(esCv.getOppstartKode())).collect(toList());
+        List<EsCv> collect = sokeresultat.getCver().stream().filter(esCv -> Objects.nonNull(esCv.getOppstartKode())).collect(toList());
         assertThat(collect).size().isGreaterThan(0);
     }
 
@@ -807,9 +807,9 @@ public class IndexCvIT {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .yrkeJobbonsker(Collections.singletonList("Trailersjåffis")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver.size()).isEqualTo(1);
-        no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv cv = cver.get(0);
+        EsCv cv = cver.get(0);
         assertThat(cv)
                 .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv5()));
 
@@ -820,9 +820,9 @@ public class IndexCvIT {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .stillingstitler(Collections.singletonList("Javaguru")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver.size()).isEqualTo(1);
-        no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv cv = cver.get(0);
+        EsCv cv = cver.get(0);
         assertThat(cv)
                 .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
 
@@ -833,9 +833,9 @@ public class IndexCvIT {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .stillingstitler(Collections.singletonList("Javautvikler")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver.size()).isEqualTo(1);
-        no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv cv = cver.get(0);
+        EsCv cv = cver.get(0);
         assertThat(cv)
                 .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
 
@@ -853,7 +853,7 @@ public class IndexCvIT {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .stillingstitler(Collections.singletonList("Anleggsmaskinfører")).antallAarGammelYrkeserfaring(null).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver.size()).isEqualTo(2);
 
         assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder(
@@ -862,7 +862,7 @@ public class IndexCvIT {
         Sokeresultat sokeresultat2 = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .stillingstitler(Collections.singletonList("Anleggsmaskinfører")).antallAarGammelYrkeserfaring(10).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver2 = sokeresultat2.getCver();
+        List<EsCv> cver2 = sokeresultat2.getCver();
         assertThat(cver2.size()).isEqualTo(1);
 
         assertThat(cver2).extracting(Extractors.byName("kandidatnr")).containsExactly(
@@ -871,7 +871,7 @@ public class IndexCvIT {
         Sokeresultat sokeresultat3 = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .stillingstitler(Collections.singletonList("Anleggsmaskinfører")).antallAarGammelYrkeserfaring(5).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver3 = sokeresultat3.getCver();
+        List<EsCv> cver3 = sokeresultat3.getCver();
         assertThat(cver3.size()).isEqualTo(0);
     }
 
@@ -879,10 +879,10 @@ public class IndexCvIT {
     public void sokMedSynonymerIKompetanseSkalGiTreff() {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().kompetanser(Collections.singletonList("Java (8)")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver.size()).isEqualTo(1);
 
-        no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv cv = cver.get(0);
+        EsCv cv = cver.get(0);
         assertThat(cv)
                 .isEqualTo(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
     }
@@ -927,7 +927,7 @@ public class IndexCvIT {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .navkontor(Collections.singletonList("0316 NAV Gamle Oslo")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver).hasSize(1);
         assertThat(cver).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
     }
@@ -937,7 +937,7 @@ public class IndexCvIT {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .navkontor(Arrays.asList("0316 NAV Gamle Oslo", "NAV Noe annet")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver).hasSize(1);
         assertThat(cver).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
     }
@@ -947,7 +947,7 @@ public class IndexCvIT {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .antallAarFra(39).antallAarTil(40).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver.size()).isGreaterThanOrEqualTo(1);
         assertThat(cver).contains(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
         assertThat(cver).doesNotContain(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv()));
@@ -958,7 +958,7 @@ public class IndexCvIT {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .antallAarFra(39).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver.size()).isGreaterThanOrEqualTo(1);
         assertThat(cver).contains(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
         assertThat(cver).doesNotContain(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv()));
@@ -969,7 +969,7 @@ public class IndexCvIT {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .antallAarTil(40).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver.size()).isGreaterThanOrEqualTo(1);
         assertThat(cver).contains(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
         assertThat(cver).doesNotContain(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv()));
@@ -980,7 +980,7 @@ public class IndexCvIT {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .antallAarFra(10).antallAarTil(38).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver).doesNotContain(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
     }
 
@@ -992,7 +992,7 @@ public class IndexCvIT {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
                 .kompetanser(Collections.singletonList(komp)).stillingstitler(Collections.singletonList("DENNEFINNESIKKE")).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver.size()).isEqualTo(0);
 
     }
@@ -1001,7 +1001,7 @@ public class IndexCvIT {
     public void sokMedTilretteleggingsbehovSkalGiKorrektTreff() {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().tilretteleggingsbehov(true).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
 
         assertThat(cver.size()).isEqualTo(3);
         assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder(
@@ -1015,7 +1015,7 @@ public class IndexCvIT {
                         .med().veilTilretteleggingsbehov(Collections.singletonList("Kat1_Kode"))
                         .bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
 
         assertThat(cver.size()).isEqualTo(2);
         assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder(
@@ -1029,7 +1029,7 @@ public class IndexCvIT {
                         .med().veilTilretteleggingsbehov(Arrays.asList("Kat1_Kode", "Kat_Eksistererikke_Kode"))
                         .bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
 
         assertThat(cver.size()).isEqualTo(2);
         assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder(
@@ -1043,7 +1043,7 @@ public class IndexCvIT {
                         .med().veilTilretteleggingsbehov(Arrays.asList("Kat1_Kode", "Kat_Eksistererikke_Kode"))
                         .permittert(Boolean.TRUE).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
 
         assertThat(cver.size()).isEqualTo(1);
         assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder(
@@ -1057,7 +1057,7 @@ public class IndexCvIT {
                         .med().veilTilretteleggingsbehovUtelukkes(Collections.singletonList("Kat1_Kode"))
                         .bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
 
         assertThat(cver.size()).isEqualTo(4);
         assertThat(cver).extracting(Extractors.byName("kandidatnr")).doesNotContain(
@@ -1071,7 +1071,7 @@ public class IndexCvIT {
                         .med().veilTilretteleggingsbehovUtelukkes(Arrays.asList("Kat1_Kode", "Kat_Eksistererikke_Kode"))
                         .bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
 
         assertThat(cver.size()).isEqualTo(4);
         assertThat(cver).extracting(Extractors.byName("kandidatnr")).doesNotContain(
@@ -1085,7 +1085,7 @@ public class IndexCvIT {
                         .med().veilTilretteleggingsbehovUtelukkes(Arrays.asList("Kat1_Kode", "Kat_Eksistererikke_Kode"))
                         .permittert(Boolean.FALSE).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
 
         assertThat(cver.size()).isEqualTo(3);
         assertThat(cver).extracting(Extractors.byName("kandidatnr")).doesNotContain(
@@ -1099,7 +1099,7 @@ public class IndexCvIT {
                         .med().veilTilretteleggingsbehovUtelukkes(Arrays.asList("Kat1_Kode", "Kat_Eksistererikke_Kode"))
                         .permittert(Boolean.TRUE).bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
 
         assertThat(cver.size()).isEqualTo(1);
         assertThat(cver).extracting(Extractors.byName("kandidatnr")).doesNotContain(
@@ -1115,7 +1115,7 @@ public class IndexCvIT {
                         .med().antallDagerSistEndret(7)
                         .bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
 
         assertThat(cver.size()).isEqualTo(2);
         assertThat(cver).extracting(Extractors.byName("kandidatnr")).contains(
@@ -1128,7 +1128,7 @@ public class IndexCvIT {
                         .med().antallDagerSistEndret(15)
                         .bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver2 = sokeresultat2.getCver();
+        List<EsCv> cver2 = sokeresultat2.getCver();
 
         assertThat(cver2.size()).isEqualTo(6);
         assertThat(cver2).extracting(Extractors.byName("kandidatnr")).contains(
@@ -1142,7 +1142,7 @@ public class IndexCvIT {
                         .med().midlertidigUtilgjengelig(Collections.singletonList("tilgjengelig"))
                         .bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
 
         assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder("2L", "6L", "11L");
     }
@@ -1154,7 +1154,7 @@ public class IndexCvIT {
                         .med().midlertidigUtilgjengelig(Collections.singletonList("tilgjengeliginnen1uke"))
                         .bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactly("4L");
     }
 
@@ -1165,7 +1165,7 @@ public class IndexCvIT {
                         .med().midlertidigUtilgjengelig(Collections.singletonList("midlertidigutilgjengelig"))
                         .bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder("3L", "5L");
     }
 
@@ -1176,7 +1176,7 @@ public class IndexCvIT {
                         .med().midlertidigUtilgjengelig(Collections.emptyList())
                         .bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder("2L", "6L", "11L", "4L", "5L", "3L");
 
         Sokeresultat sokeresultat2 =
@@ -1184,7 +1184,7 @@ public class IndexCvIT {
                         .med().midlertidigUtilgjengelig(Arrays.asList("tilgjengelig", "midlertidigutilgjengelig", "tilgjengeliginnen1uke"))
                         .bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver2 = sokeresultat2.getCver();
+        List<EsCv> cver2 = sokeresultat2.getCver();
         assertThat(cver2).containsExactlyInAnyOrderElementsOf(cver);
     }
 
@@ -1195,7 +1195,7 @@ public class IndexCvIT {
                         .med().midlertidigUtilgjengelig(Arrays.asList("midlertidigutilgjengelig", "tilgjengeliginnen1uke"))
                         .bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder("3L", "4L", "5L");
     }
 
@@ -1206,19 +1206,25 @@ public class IndexCvIT {
                         .med().midlertidigUtilgjengelig(Arrays.asList("midlertidigutilgjengelig", "tilgjengelig"))
                         .bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder("2L", "3L", "11L", "6L", "5L");
     }
 
+
     @Test
     public void sokMedTilgjengeligOgTilgjengeligEnUkeSkalGiKorrektTreff() {
-        Sokeresultat sokeresultat =
-                sokClient.veilederSok(SokekriterierVeiledere
-                        .med().midlertidigUtilgjengelig(Arrays.asList("tilgjengelig", "tilgjengeliginnen1uke"))
-                        .bygg());
+        SokekriterierVeiledere sokekriterier = SokekriterierVeiledere
+                .med().midlertidigUtilgjengelig(asList("tilgjengelig", "tilgjengeliginnen1uke"))
+                .bygg();
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
-        assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder("2L", "11L", "4L", "6L");
+        List<EsCv> cver = sokClient.veilederSok(sokekriterier).getCver();
+        assertThat(cver.size()).isGreaterThan(1);
+        Map<String, List<String>> kandidatnrTilTilretteleggingsbehov = cver.stream().collect(Collectors.toMap(EsCv::getKandidatnr, EsCv::getVeilTilretteleggingsbehov));
+        kandidatnrTilTilretteleggingsbehov.forEach((kandidatnr, behov) -> {
+            String msg = "Feil innhold i tilretteleggingsbehov for kandidatnr " + kandidatnr + ": " + behov;
+            assertTrue(behov.isEmpty() || behov.contains("tilgjengeliginnen1uke"), msg);
+            assertFalse(behov.contains("midlertidigutilgjengelig") || behov.contains("permittert"), msg);
+        });
     }
 
     @Test
@@ -1229,7 +1235,7 @@ public class IndexCvIT {
                         .permittert(true)
                         .bygg());
 
-        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokeresultat.getCver();
         assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder("3L", "5L");
     }
 
