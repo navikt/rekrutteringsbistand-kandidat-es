@@ -15,6 +15,9 @@ import java.util.*;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
+import static no.nav.arbeidsgiver.kandidat.kandidatsok.KatKode.*;
+import static no.nav.arbeidsgiver.kandidat.kandidatsok.Tilgjengelighet.midlertidigUtilgjengelig;
+import static no.nav.arbeidsgiver.kandidat.kandidatsok.Tilgjengelighet.tilgjengeligInnen1Uke;
 
 public class EsCvObjectMother {
 
@@ -421,24 +424,13 @@ public class EsCvObjectMother {
         EsOmfangJobbonsker EsHeltidDeltidJobbonsker =
                 new EsOmfangJobbonsker("HeltidDeltidKode", "HeltidDeltidKode Tekst");
 
-        ArrayList<EsOmfangJobbonsker> EsHeltidDeltidJobbonskerListe = new ArrayList<>();
-        EsHeltidDeltidJobbonskerListe.add(EsHeltidDeltidJobbonsker);
-
         EsAnsettelsesformJobbonsker EsAnsettelsesforholdJobbonsker =
                 new EsAnsettelsesformJobbonsker("Ansettelsesforhold Kode",
                         "Ansettelsesforhold Kode tekst");
 
-        ArrayList<EsAnsettelsesformJobbonsker> EsAnsettelsesforholdJobbonskerListe =
-                new ArrayList<>();
-        EsAnsettelsesforholdJobbonskerListe.add(EsAnsettelsesforholdJobbonsker);
-
         EsArbeidstidsordningJobbonsker EsArbeidstidsordningJobbonsker =
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
-
-        ArrayList<EsArbeidstidsordningJobbonsker> EsArbeidstidsordningJobbonskerListe =
-                new ArrayList<>();
-        EsArbeidstidsordningJobbonskerListe.add(EsArbeidstidsordningJobbonsker);
 
         EsCv esCv = new EsCv(nteAktorId(2), "05236984567", "KARI", "NORDMANN", fodselsdatoForAlder(39), false, "PARBS",
                 "unnasluntrer2@mailinator.com", "(+47) 22334455", "12345678", "NO", "2L",
@@ -608,31 +600,20 @@ public class EsCvObjectMother {
         EsOmfangJobbonsker EsHeltidDeltidJobbonsker =
                 new EsOmfangJobbonsker("HeltidDeltidKode", "HeltidDeltidKode Tekst");
 
-        ArrayList<EsOmfangJobbonsker> EsHeltidDeltidJobbonskerListe = new ArrayList<>();
-        EsHeltidDeltidJobbonskerListe.add(EsHeltidDeltidJobbonsker);
-
         EsAnsettelsesformJobbonsker EsAnsettelsesforholdJobbonsker =
                 new EsAnsettelsesformJobbonsker("Ansettelsesforhold Kode",
                         "Ansettelsesforhold Kode tekst");
-
-        ArrayList<EsAnsettelsesformJobbonsker> EsAnsettelsesforholdJobbonskerListe =
-                new ArrayList<>();
-        EsAnsettelsesforholdJobbonskerListe.add(EsAnsettelsesforholdJobbonsker);
 
         EsArbeidstidsordningJobbonsker EsArbeidstidsordningJobbonsker =
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
 
-        ArrayList<EsArbeidstidsordningJobbonsker> EsArbeidstidsordningJobbonskerListe =
-                new ArrayList<>();
-        EsArbeidstidsordningJobbonskerListe.add(EsArbeidstidsordningJobbonsker);
-
         ArrayList<String> esVeilTilretteleggingsbehovListe =
                 new ArrayList<>();
-        esVeilTilretteleggingsbehovListe.add("Kat2_Kode");
-        esVeilTilretteleggingsbehovListe.add("Kat3_Kode");
+        esVeilTilretteleggingsbehovListe.add(Kat2_Kode);
+        esVeilTilretteleggingsbehovListe.add(Kat3_Kode);
         esVeilTilretteleggingsbehovListe.add("permittert");
-        esVeilTilretteleggingsbehovListe.add("midlertidigutilgjengelig");
+        esVeilTilretteleggingsbehovListe.add(midlertidigUtilgjengelig);
 
         EsCv esCv = new EsCv(nteAktorId(3), "04265983651", "HANS", "NORDMANN", fraIsoDato("1955-11-04"), false, "RARBS",
                 "alltidmed@mailinator.com", "(+47) 22334455", "12345678", "NO", "3L",
@@ -801,30 +782,19 @@ public class EsCvObjectMother {
         EsOmfangJobbonsker EsHeltidDeltidJobbonsker =
                 new EsOmfangJobbonsker("HeltidDeltidKode", "HeltidDeltidKode Tekst");
 
-        ArrayList<EsOmfangJobbonsker> EsHeltidDeltidJobbonskerListe = new ArrayList<>();
-        EsHeltidDeltidJobbonskerListe.add(EsHeltidDeltidJobbonsker);
-
         EsAnsettelsesformJobbonsker EsAnsettelsesforholdJobbonsker =
                 new EsAnsettelsesformJobbonsker("Ansettelsesforhold Kode",
                         "Ansettelsesforhold Kode tekst");
-
-        ArrayList<EsAnsettelsesformJobbonsker> EsAnsettelsesforholdJobbonskerListe =
-                new ArrayList<>();
-        EsAnsettelsesforholdJobbonskerListe.add(EsAnsettelsesforholdJobbonsker);
 
         EsArbeidstidsordningJobbonsker EsArbeidstidsordningJobbonsker =
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
 
-        ArrayList<EsArbeidstidsordningJobbonsker> EsArbeidstidsordningJobbonskerListe =
-                new ArrayList<>();
-        EsArbeidstidsordningJobbonskerListe.add(EsArbeidstidsordningJobbonsker);
-
         ArrayList<String> esVeilTilretteleggingsbehovListe =
                 new ArrayList<>();
-        esVeilTilretteleggingsbehovListe.add("Kat1_Kode");
-        esVeilTilretteleggingsbehovListe.add("Kat3_Kode");
-        esVeilTilretteleggingsbehovListe.add("tilgjengeliginnen1uke");
+        esVeilTilretteleggingsbehovListe.add(Kat1_Kode);
+        esVeilTilretteleggingsbehovListe.add(Kat3_Kode);
+        esVeilTilretteleggingsbehovListe.add(tilgjengeligInnen1Uke);
 
         EsCv esCv = new EsCv(nteAktorId(4), "09568410230", "HANNE", "NORDMANN", fraIsoDato("2002-06-04"), false, "ARBS",
                 "erjegmed@mailinator.com", "(+47) 22334455", "12345678", "NO", "4L", "",
@@ -993,31 +963,20 @@ public class EsCvObjectMother {
         EsOmfangJobbonsker EsHeltidDeltidJobbonsker =
                 new EsOmfangJobbonsker("HeltidDeltidKode", "HeltidDeltidKode Tekst");
 
-        ArrayList<EsOmfangJobbonsker> EsHeltidDeltidJobbonskerListe = new ArrayList<>();
-        EsHeltidDeltidJobbonskerListe.add(EsHeltidDeltidJobbonsker);
-
         EsAnsettelsesformJobbonsker EsAnsettelsesforholdJobbonsker =
                 new EsAnsettelsesformJobbonsker("Ansettelsesforhold Kode",
                         "Ansettelsesforhold Kode tekst");
-
-        ArrayList<EsAnsettelsesformJobbonsker> EsAnsettelsesforholdJobbonskerListe =
-                new ArrayList<>();
-        EsAnsettelsesforholdJobbonskerListe.add(EsAnsettelsesforholdJobbonsker);
 
         EsArbeidstidsordningJobbonsker EsArbeidstidsordningJobbonsker =
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
 
-        ArrayList<EsArbeidstidsordningJobbonsker> EsArbeidstidsordningJobbonskerListe =
-                new ArrayList<>();
-        EsArbeidstidsordningJobbonskerListe.add(EsArbeidstidsordningJobbonsker);
-
         ArrayList<String> esVeilTilretteleggingsbehovListe =
                 new ArrayList<>();
-        esVeilTilretteleggingsbehovListe.add("Kat1_Kode");
-        esVeilTilretteleggingsbehovListe.add("Kat2_Kode");
+        esVeilTilretteleggingsbehovListe.add(Kat1_Kode);
+        esVeilTilretteleggingsbehovListe.add(Kat2_Kode);
         esVeilTilretteleggingsbehovListe.add("permittert");
-        esVeilTilretteleggingsbehovListe.add("midlertidigutilgjengelig");
+        esVeilTilretteleggingsbehovListe.add(midlertidigUtilgjengelig);
 
         EsCv esCv = new EsCv(nteAktorId(5), "03050316895", "BOB", "NORDMANN", fraIsoDato("1964-09-01"), false, "ARBS",
                 "bobob@mailinator.com", "(+47) 22334455", "12345678", "NO", "5L", "", "J",
@@ -1163,24 +1122,13 @@ public class EsCvObjectMother {
         EsOmfangJobbonsker EsHeltidDeltidJobbonsker =
                 new EsOmfangJobbonsker("HeltidDeltidKode", "HeltidDeltidKode Tekst");
 
-        ArrayList<EsOmfangJobbonsker> EsHeltidDeltidJobbonskerListe = new ArrayList<>();
-        EsHeltidDeltidJobbonskerListe.add(EsHeltidDeltidJobbonsker);
-
         EsAnsettelsesformJobbonsker EsAnsettelsesforholdJobbonsker =
                 new EsAnsettelsesformJobbonsker("Ansettelsesforhold Kode",
                         "Ansettelsesforhold Kode tekst");
 
-        ArrayList<EsAnsettelsesformJobbonsker> EsAnsettelsesforholdJobbonskerListe =
-                new ArrayList<>();
-        EsAnsettelsesforholdJobbonskerListe.add(EsAnsettelsesforholdJobbonsker);
-
         EsArbeidstidsordningJobbonsker EsArbeidstidsordningJobbonsker =
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
-
-        ArrayList<EsArbeidstidsordningJobbonsker> EsArbeidstidsordningJobbonskerListe =
-                new ArrayList<>();
-        EsArbeidstidsordningJobbonskerListe.add(EsArbeidstidsordningJobbonsker);
 
         EsCv esCv = new EsCv(nteAktorId(5), "03050316895", "BOB", "NORDMANN", fraIsoDato("1964-09-01"), false, "ARBS",
                 "bobob@mailinator.com", "(+47) 22334455", "12345678", "NO", "5L", "", "J",
@@ -1346,23 +1294,12 @@ public class EsCvObjectMother {
         EsOmfangJobbonsker heltidDeltidJobbonsker =
                 new EsOmfangJobbonsker("HeltidDeltidKode", "HeltidDeltidKode Tekst");
 
-        ArrayList<EsOmfangJobbonsker> heltidDeltidJobbonskerListe = new ArrayList<>();
-        heltidDeltidJobbonskerListe.add(heltidDeltidJobbonsker);
-
         EsAnsettelsesformJobbonsker ansettelsesforholdJobbonsker = new EsAnsettelsesformJobbonsker(
                 "Ansettelsesforhold Kode", "Ansettelsesforhold Kode tekst");
-
-        ArrayList<EsAnsettelsesformJobbonsker> ansettelsesforholdJobbonskerListe =
-                new ArrayList<>();
-        ansettelsesforholdJobbonskerListe.add(ansettelsesforholdJobbonsker);
 
         EsArbeidstidsordningJobbonsker arbeidstidsordningJobbonsker =
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
-
-        ArrayList<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonskerListe =
-                new ArrayList<>();
-        arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
         EsCv esCv = new EsCv(nteAktorId(1), "02016012345", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
                 "unnasluntrer@mailinator.com", "(+47) 22334455", "12345678", "NO", "1L",
@@ -1534,22 +1471,12 @@ public class EsCvObjectMother {
         EsOmfangJobbonsker esOmfangJobbonsker =
                 new EsOmfangJobbonsker(Omfang.HELTID.name(), Omfang.HELTID.defaultTekst());
 
-        List<EsOmfangJobbonsker> omfangJobbonskerList = new ArrayList<>();
-        omfangJobbonskerList.add(esOmfangJobbonsker);
-
         EsAnsettelsesformJobbonsker ansettelsesformJobbonsker = new EsAnsettelsesformJobbonsker(
                 Ansettelsesform.FAST.name(), Ansettelsesform.FAST.defaultTekst());
-
-        List<EsAnsettelsesformJobbonsker> ansettelsesformJobbonskerList = new ArrayList<>();
-        ansettelsesformJobbonskerList.add(ansettelsesformJobbonsker);
 
         EsArbeidstidsordningJobbonsker arbeidstidsordningJobbonsker =
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
-
-        ArrayList<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonskerListe =
-                new ArrayList<>();
-        arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
         EsCv esCv = new EsCv(nteAktorId(6), "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "6L",
@@ -1720,22 +1647,12 @@ public class EsCvObjectMother {
         EsOmfangJobbonsker esOmfangJobbonsker =
                 new EsOmfangJobbonsker(Omfang.HELTID.name(), Omfang.HELTID.defaultTekst());
 
-        List<EsOmfangJobbonsker> omfangJobbonskerList = new ArrayList<>();
-        omfangJobbonskerList.add(esOmfangJobbonsker);
-
         EsAnsettelsesformJobbonsker ansettelsesformJobbonsker = new EsAnsettelsesformJobbonsker(
                 Ansettelsesform.FAST.name(), Ansettelsesform.FAST.defaultTekst());
-
-        List<EsAnsettelsesformJobbonsker> ansettelsesformJobbonskerList = new ArrayList<>();
-        ansettelsesformJobbonskerList.add(ansettelsesformJobbonsker);
 
         EsArbeidstidsordningJobbonsker arbeidstidsordningJobbonsker =
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
-
-        ArrayList<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonskerListe =
-                new ArrayList<>();
-        arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
         EsCv esCv = new EsCv(nteAktorId(7), "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "7L",
@@ -1907,22 +1824,12 @@ public class EsCvObjectMother {
         EsOmfangJobbonsker esOmfangJobbonsker =
                 new EsOmfangJobbonsker(Omfang.HELTID.name(), Omfang.HELTID.defaultTekst());
 
-        List<EsOmfangJobbonsker> omfangJobbonskerList = new ArrayList<>();
-        omfangJobbonskerList.add(esOmfangJobbonsker);
-
         EsAnsettelsesformJobbonsker ansettelsesformJobbonsker = new EsAnsettelsesformJobbonsker(
                 Ansettelsesform.FAST.name(), Ansettelsesform.FAST.defaultTekst());
-
-        List<EsAnsettelsesformJobbonsker> ansettelsesformJobbonskerList = new ArrayList<>();
-        ansettelsesformJobbonskerList.add(ansettelsesformJobbonsker);
 
         EsArbeidstidsordningJobbonsker arbeidstidsordningJobbonsker =
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
-
-        ArrayList<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonskerListe =
-                new ArrayList<>();
-        arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
         EsCv esCv = new EsCv(nteAktorId(8), "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "8L",
@@ -2093,22 +2000,12 @@ public class EsCvObjectMother {
         EsOmfangJobbonsker esOmfangJobbonsker =
                 new EsOmfangJobbonsker(Omfang.HELTID.name(), Omfang.HELTID.defaultTekst());
 
-        List<EsOmfangJobbonsker> omfangJobbonskerList = new ArrayList<>();
-        omfangJobbonskerList.add(esOmfangJobbonsker);
-
         EsAnsettelsesformJobbonsker ansettelsesformJobbonsker = new EsAnsettelsesformJobbonsker(
                 Ansettelsesform.FAST.name(), Ansettelsesform.FAST.defaultTekst());
-
-        List<EsAnsettelsesformJobbonsker> ansettelsesformJobbonskerList = new ArrayList<>();
-        ansettelsesformJobbonskerList.add(ansettelsesformJobbonsker);
 
         EsArbeidstidsordningJobbonsker arbeidstidsordningJobbonsker =
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
-
-        ArrayList<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonskerListe =
-                new ArrayList<>();
-        arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
         EsCv esCv = new EsCv(nteAktorId(9), "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "9L",
@@ -2279,22 +2176,12 @@ public class EsCvObjectMother {
         EsOmfangJobbonsker esOmfangJobbonsker =
                 new EsOmfangJobbonsker(Omfang.HELTID.name(), Omfang.HELTID.defaultTekst());
 
-        List<EsOmfangJobbonsker> omfangJobbonskerList = new ArrayList<>();
-        omfangJobbonskerList.add(esOmfangJobbonsker);
-
         EsAnsettelsesformJobbonsker ansettelsesformJobbonsker = new EsAnsettelsesformJobbonsker(
                 Ansettelsesform.FAST.name(), Ansettelsesform.FAST.defaultTekst());
-
-        List<EsAnsettelsesformJobbonsker> ansettelsesformJobbonskerList = new ArrayList<>();
-        ansettelsesformJobbonskerList.add(ansettelsesformJobbonsker);
 
         EsArbeidstidsordningJobbonsker arbeidstidsordningJobbonsker =
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
-
-        ArrayList<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonskerListe =
-                new ArrayList<>();
-        arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
         EsCv esCv = new EsCv(nteAktorId(10), "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "10L",
@@ -2465,22 +2352,12 @@ public class EsCvObjectMother {
         EsOmfangJobbonsker esOmfangJobbonsker =
                 new EsOmfangJobbonsker(Omfang.HELTID.name(), Omfang.HELTID.defaultTekst());
 
-        List<EsOmfangJobbonsker> omfangJobbonskerList = new ArrayList<>();
-        omfangJobbonskerList.add(esOmfangJobbonsker);
-
         EsAnsettelsesformJobbonsker ansettelsesformJobbonsker = new EsAnsettelsesformJobbonsker(
                 Ansettelsesform.FAST.name(), Ansettelsesform.FAST.defaultTekst());
-
-        List<EsAnsettelsesformJobbonsker> ansettelsesformJobbonskerList = new ArrayList<>();
-        ansettelsesformJobbonskerList.add(ansettelsesformJobbonsker);
 
         EsArbeidstidsordningJobbonsker arbeidstidsordningJobbonsker =
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
-
-        ArrayList<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonskerListe =
-                new ArrayList<>();
-        arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
         EsCv esCv = new EsCv(nteAktorId(11), "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "11L",

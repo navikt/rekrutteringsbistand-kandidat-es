@@ -24,6 +24,7 @@ import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
+import static no.nav.arbeidsgiver.kandidat.kandidatsok.KatKode.Kat1_Kode;
 import static no.nav.arbeidsgiver.kandidat.kandidatsok.Tilgjengelighet.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -60,6 +61,14 @@ public class IndexCvIT {
     private static List<String> kandidatnumre(List<EsCv> cver) {
         return cver.stream().map(EsCv::getKandidatnr).collect(toList());
     }
+
+    /**
+     * @return Map hvor nøkkel er CV-ens kandidatdnummer og verdi er innholdet i CV-ens property tilrettelggigngsbehov.
+     */
+    private Map<String, List<String>> tilretteleggingsbehov(List<EsCv> cver) {
+        return cver.stream().collect(Collectors.toMap(EsCv::getKandidatnr, EsCv::getVeilTilretteleggingsbehov));
+    }
+
 
     @BeforeEach
     public void before() {
@@ -1013,7 +1022,7 @@ public class IndexCvIT {
     public void sokMedVeilTilretteleggingsbehovSkalGiKorrektTreff() {
         Sokeresultat sokeresultat =
                 sokClient.veilederSok(SokekriterierVeiledere
-                        .med().veilTilretteleggingsbehov(Collections.singletonList("Kat1_Kode"))
+                        .med().veilTilretteleggingsbehov(Collections.singletonList(Kat1_Kode))
                         .bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
@@ -1027,7 +1036,7 @@ public class IndexCvIT {
     public void sokMedKunEnRiktigVeilTilretteleggingsbehovSkalGiKorrektTreff() {
         Sokeresultat sokeresultat =
                 sokClient.veilederSok(SokekriterierVeiledere
-                        .med().veilTilretteleggingsbehov(Arrays.asList("Kat1_Kode", "Kat_Eksistererikke_Kode"))
+                        .med().veilTilretteleggingsbehov(Arrays.asList(Kat1_Kode, "Kat_Eksistererikke_Kode"))
                         .bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
@@ -1041,7 +1050,7 @@ public class IndexCvIT {
     public void sokMedVeilTilretteleggingsbehovOgPermittertSkalGiKorrektTreff() {
         Sokeresultat sokeresultat =
                 sokClient.veilederSok(SokekriterierVeiledere
-                        .med().veilTilretteleggingsbehov(Arrays.asList("Kat1_Kode", "Kat_Eksistererikke_Kode"))
+                        .med().veilTilretteleggingsbehov(Arrays.asList(Kat1_Kode, "Kat_Eksistererikke_Kode"))
                         .permittert(Boolean.TRUE).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
@@ -1053,23 +1062,24 @@ public class IndexCvIT {
 
     @Test
     public void sokMedVeilTilretteleggingsbehovUtelukketSkalGiKorrektTreff() {
-        Sokeresultat sokeresultat =
-                sokClient.veilederSok(SokekriterierVeiledere
-                        .med().veilTilretteleggingsbehovUtelukkes(Collections.singletonList("Kat1_Kode"))
-                        .bygg());
+        SokekriterierVeiledere sokekriterier = SokekriterierVeiledere
+                .med().veilTilretteleggingsbehovUtelukkes(List.of(Kat1_Kode))
+                .bygg();
 
-        List<EsCv> cver = sokeresultat.getCver();
-
-        assertThat(cver.size()).isEqualTo(4);
-        assertThat(cver).extracting(Extractors.byName("kandidatnr")).doesNotContain(
-                "4L", "5L");
+        List<EsCv> cver = sokClient.veilederSok(sokekriterier).getCver();
+        Map<String, List<String>> fraKandidatnrTilBehov = tilretteleggingsbehov(cver);
+        assertThat(cver.size()).isGreaterThan(0);
+        fraKandidatnrTilBehov.forEach((kandidatnr, behov) -> {
+            String msg = "Feil innhold i tilretteleggingsbehov for kandidatnr " + kandidatnr + ": " + behov;
+            assertFalse(behov.contains(Kat1_Kode), msg);
+        });
     }
 
     @Test
     public void sokMedKunEnRiktigVeilTilretteleggingsbehovUtelukketSkalGiKorrektTreff() {
         Sokeresultat sokeresultat =
                 sokClient.veilederSok(SokekriterierVeiledere
-                        .med().veilTilretteleggingsbehovUtelukkes(Arrays.asList("Kat1_Kode", "Kat_Eksistererikke_Kode"))
+                        .med().veilTilretteleggingsbehovUtelukkes(Arrays.asList(Kat1_Kode, "Kat_Eksistererikke_Kode"))
                         .bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
@@ -1083,7 +1093,7 @@ public class IndexCvIT {
     public void sokMedVeilTilretteleggingsbehovUtelukketOgIkkePermittertSkalGiKorrektTreff() {
         Sokeresultat sokeresultat =
                 sokClient.veilederSok(SokekriterierVeiledere
-                        .med().veilTilretteleggingsbehovUtelukkes(Arrays.asList("Kat1_Kode", "Kat_Eksistererikke_Kode"))
+                        .med().veilTilretteleggingsbehovUtelukkes(Arrays.asList(Kat1_Kode, "Kat_Eksistererikke_Kode"))
                         .permittert(Boolean.FALSE).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
@@ -1097,7 +1107,7 @@ public class IndexCvIT {
     public void sokMedVeilTilretteleggingsbehovUtelukketOgPermittertSkalGiKorrektTreff() {
         Sokeresultat sokeresultat =
                 sokClient.veilederSok(SokekriterierVeiledere
-                        .med().veilTilretteleggingsbehovUtelukkes(Arrays.asList("Kat1_Kode", "Kat_Eksistererikke_Kode"))
+                        .med().veilTilretteleggingsbehovUtelukkes(Arrays.asList(Kat1_Kode, "Kat_Eksistererikke_Kode"))
                         .permittert(Boolean.TRUE).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
@@ -1204,8 +1214,8 @@ public class IndexCvIT {
         List<EsCv> cver = sokClient.veilederSok(sokekriterier).getCver();
 
         assertThat(cver.size()).isGreaterThan(1);
-        Map<String, List<String>> kandidatnrTilTilretteleggingsbehov = cver.stream().collect(Collectors.toMap(EsCv::getKandidatnr, EsCv::getVeilTilretteleggingsbehov));
-        kandidatnrTilTilretteleggingsbehov.forEach((kandidatnr, behov) -> {
+        Map<String, List<String>> fraKandidatnrTilBehov = tilretteleggingsbehov(cver);
+        fraKandidatnrTilBehov.forEach((kandidatnr, behov) -> {
             String msg = "Feil innhold i tilretteleggingsbehov for kandidatnr " + kandidatnr + ": " + behov;
             assertTrue(behov.isEmpty() || behov.contains(midlertidigUtilgjengelig), msg);
             assertFalse(behov.contains(tilgjengeligInnen1Uke), msg);
@@ -1220,8 +1230,8 @@ public class IndexCvIT {
         List<EsCv> cver = sokClient.veilederSok(sokekriterier).getCver();
 
         assertThat(cver.size()).isGreaterThan(1);
-        Map<String, List<String>> kandidatnrTilTilretteleggingsbehov = cver.stream().collect(Collectors.toMap(EsCv::getKandidatnr, EsCv::getVeilTilretteleggingsbehov));
-        kandidatnrTilTilretteleggingsbehov.forEach((kandidatnr, behov) -> {
+        Map<String, List<String>> fraKandidatnrTilBehov = tilretteleggingsbehov(cver);
+        fraKandidatnrTilBehov.forEach((kandidatnr, behov) -> {
             String msg = "Feil innhold i tilretteleggingsbehov for kandidatnr " + kandidatnr + ": " + behov;
             assertTrue(behov.isEmpty() || behov.contains(tilgjengeligInnen1Uke), msg);
             assertFalse(behov.contains(midlertidigUtilgjengelig));
