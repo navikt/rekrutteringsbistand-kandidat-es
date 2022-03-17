@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -1201,29 +1200,33 @@ public class IndexCvIT {
 
     @Test
     public void sokMedMidlertidigUtilgjengeligOgTilgjengeligSkalGiKorrektTreff() {
-        Sokeresultat sokeresultat =
-                sokClient.veilederSok(SokekriterierVeiledere
-                        .med().midlertidigUtilgjengelig(Arrays.asList("midlertidigutilgjengelig", "tilgjengelig"))
-                        .bygg());
+        SokekriterierVeiledere sokekriterier = SokekriterierVeiledere
+                .med().midlertidigUtilgjengelig(asList("tilgjengelig", "midlertidigutilgjengelig"))
+                .bygg();
+        List<EsCv> cver = sokClient.veilederSok(sokekriterier).getCver();
 
-        List<EsCv> cver = sokeresultat.getCver();
-        assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder("2L", "3L", "11L", "6L", "5L");
+        assertThat(cver.size()).isGreaterThan(1);
+        Map<String, List<String>> kandidatnrTilTilretteleggingsbehov = cver.stream().collect(Collectors.toMap(EsCv::getKandidatnr, EsCv::getVeilTilretteleggingsbehov));
+        kandidatnrTilTilretteleggingsbehov.forEach((kandidatnr, behov) -> {
+            String msg = "Feil innhold i tilretteleggingsbehov for kandidatnr " + kandidatnr + ": " + behov;
+            assertTrue(behov.isEmpty() || behov.contains("midlertidigutilgjengelig"), msg);
+            assertFalse(behov.contains("tilgjengeliginnen1uke"), msg);
+        });
     }
-
 
     @Test
     public void sokMedTilgjengeligOgTilgjengeligEnUkeSkalGiKorrektTreff() {
         SokekriterierVeiledere sokekriterier = SokekriterierVeiledere
                 .med().midlertidigUtilgjengelig(asList("tilgjengelig", "tilgjengeliginnen1uke"))
                 .bygg();
-
         List<EsCv> cver = sokClient.veilederSok(sokekriterier).getCver();
+
         assertThat(cver.size()).isGreaterThan(1);
         Map<String, List<String>> kandidatnrTilTilretteleggingsbehov = cver.stream().collect(Collectors.toMap(EsCv::getKandidatnr, EsCv::getVeilTilretteleggingsbehov));
         kandidatnrTilTilretteleggingsbehov.forEach((kandidatnr, behov) -> {
             String msg = "Feil innhold i tilretteleggingsbehov for kandidatnr " + kandidatnr + ": " + behov;
             assertTrue(behov.isEmpty() || behov.contains("tilgjengeliginnen1uke"), msg);
-            assertFalse(behov.contains("midlertidigutilgjengelig") || behov.contains("permittert"), msg);
+            assertFalse(behov.contains("midlertidigutilgjengelig"));
         });
     }
 
