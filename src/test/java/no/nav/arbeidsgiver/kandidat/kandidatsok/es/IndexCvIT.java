@@ -22,7 +22,9 @@ import java.util.stream.Collectors;
 
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
+import static no.nav.arbeidsgiver.kandidat.kandidatsok.Tilgjengelighet.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -1138,7 +1140,7 @@ public class IndexCvIT {
     public void sokMedTilgjengeligFilterSkalSkalGiKorrektTreff() {
         Sokeresultat sokeresultat =
                 sokClient.veilederSok(SokekriterierVeiledere
-                        .med().midlertidigUtilgjengelig(Collections.singletonList("tilgjengelig"))
+                        .med().midlertidigUtilgjengelig(Collections.singletonList(tilgjengelig))
                         .bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
@@ -1150,7 +1152,7 @@ public class IndexCvIT {
     public void sokMedMidlertidigUtilgjengeligEnUkeSkalGiKorrektTreff() {
         Sokeresultat sokeresultat =
                 sokClient.veilederSok(SokekriterierVeiledere
-                        .med().midlertidigUtilgjengelig(Collections.singletonList("tilgjengeliginnen1uke"))
+                        .med().midlertidigUtilgjengelig(Collections.singletonList(tilgjengeligInnen1Uke))
                         .bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
@@ -1161,7 +1163,7 @@ public class IndexCvIT {
     public void sokMedMidlertidigUtilgjengeligSkalGiKorrektTreff() {
         Sokeresultat sokeresultat =
                 sokClient.veilederSok(SokekriterierVeiledere
-                        .med().midlertidigUtilgjengelig(Collections.singletonList("midlertidigutilgjengelig"))
+                        .med().midlertidigUtilgjengelig(Collections.singletonList(midlertidigUtilgjengelig))
                         .bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
@@ -1170,28 +1172,24 @@ public class IndexCvIT {
 
     @Test
     public void sokMedIngenEllerAlleMidlertidigTilgjengeligFilterSkalGiAlleKandidater() {
-        Sokeresultat sokeresultat =
-                sokClient.veilederSok(SokekriterierVeiledere
-                        .med().midlertidigUtilgjengelig(Collections.emptyList())
-                        .bygg());
+        SokekriterierVeiledere ingen = SokekriterierVeiledere.med().midlertidigUtilgjengelig(emptyList()).bygg();
+        SokekriterierVeiledere alle = SokekriterierVeiledere.med().midlertidigUtilgjengelig(asList(tilgjengelig, midlertidigUtilgjengelig, tilgjengeligInnen1Uke)).bygg();
 
-        List<EsCv> cver = sokeresultat.getCver();
-        assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder("2L", "6L", "11L", "4L", "5L", "3L");
+        List<EsCv> cver = sokClient.veilederSok(ingen).getCver();
+        assertThat(cver.size()).isEqualTo(setupCver.size());
+        assertThat(setupKandidatnumre).containsExactlyInAnyOrderElementsOf(kandidatnumre(cver));
 
-        Sokeresultat sokeresultat2 =
-                sokClient.veilederSok(SokekriterierVeiledere
-                        .med().midlertidigUtilgjengelig(Arrays.asList("tilgjengelig", "midlertidigutilgjengelig", "tilgjengeliginnen1uke"))
-                        .bygg());
+        cver = sokClient.veilederSok(alle).getCver();
+        assertThat(cver.size()).isEqualTo(setupCver.size());
+        assertThat(setupKandidatnumre).containsExactlyInAnyOrderElementsOf(kandidatnumre(cver));
 
-        List<EsCv> cver2 = sokeresultat2.getCver();
-        assertThat(cver2).containsExactlyInAnyOrderElementsOf(cver);
     }
 
     @Test
     public void sokMedMidlertidigUtilgjengeligOgMidlertidigUtilgjengeligEnUkeSkalGiKorrektTreff() {
         Sokeresultat sokeresultat =
                 sokClient.veilederSok(SokekriterierVeiledere
-                        .med().midlertidigUtilgjengelig(Arrays.asList("midlertidigutilgjengelig", "tilgjengeliginnen1uke"))
+                        .med().midlertidigUtilgjengelig(Arrays.asList(midlertidigUtilgjengelig, tilgjengeligInnen1Uke))
                         .bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
@@ -1201,7 +1199,7 @@ public class IndexCvIT {
     @Test
     public void sokMedMidlertidigUtilgjengeligOgTilgjengeligSkalGiKorrektTreff() {
         SokekriterierVeiledere sokekriterier = SokekriterierVeiledere
-                .med().midlertidigUtilgjengelig(asList("tilgjengelig", "midlertidigutilgjengelig"))
+                .med().midlertidigUtilgjengelig(asList(tilgjengelig, midlertidigUtilgjengelig))
                 .bygg();
         List<EsCv> cver = sokClient.veilederSok(sokekriterier).getCver();
 
@@ -1209,15 +1207,15 @@ public class IndexCvIT {
         Map<String, List<String>> kandidatnrTilTilretteleggingsbehov = cver.stream().collect(Collectors.toMap(EsCv::getKandidatnr, EsCv::getVeilTilretteleggingsbehov));
         kandidatnrTilTilretteleggingsbehov.forEach((kandidatnr, behov) -> {
             String msg = "Feil innhold i tilretteleggingsbehov for kandidatnr " + kandidatnr + ": " + behov;
-            assertTrue(behov.isEmpty() || behov.contains("midlertidigutilgjengelig"), msg);
-            assertFalse(behov.contains("tilgjengeliginnen1uke"), msg);
+            assertTrue(behov.isEmpty() || behov.contains(midlertidigUtilgjengelig), msg);
+            assertFalse(behov.contains(tilgjengeligInnen1Uke), msg);
         });
     }
 
     @Test
     public void sokMedTilgjengeligOgTilgjengeligEnUkeSkalGiKorrektTreff() {
         SokekriterierVeiledere sokekriterier = SokekriterierVeiledere
-                .med().midlertidigUtilgjengelig(asList("tilgjengelig", "tilgjengeliginnen1uke"))
+                .med().midlertidigUtilgjengelig(asList(tilgjengelig, tilgjengeligInnen1Uke))
                 .bygg();
         List<EsCv> cver = sokClient.veilederSok(sokekriterier).getCver();
 
@@ -1225,8 +1223,8 @@ public class IndexCvIT {
         Map<String, List<String>> kandidatnrTilTilretteleggingsbehov = cver.stream().collect(Collectors.toMap(EsCv::getKandidatnr, EsCv::getVeilTilretteleggingsbehov));
         kandidatnrTilTilretteleggingsbehov.forEach((kandidatnr, behov) -> {
             String msg = "Feil innhold i tilretteleggingsbehov for kandidatnr " + kandidatnr + ": " + behov;
-            assertTrue(behov.isEmpty() || behov.contains("tilgjengeliginnen1uke"), msg);
-            assertFalse(behov.contains("midlertidigutilgjengelig"));
+            assertTrue(behov.isEmpty() || behov.contains(tilgjengeligInnen1Uke), msg);
+            assertFalse(behov.contains(midlertidigUtilgjengelig));
         });
     }
 
@@ -1234,7 +1232,7 @@ public class IndexCvIT {
     public void sokMedMidlertidigUtilgjengeligOgPermittertSkalGiKorrektTreff() {
         Sokeresultat sokeresultat =
                 sokClient.veilederSok(SokekriterierVeiledere
-                        .med().midlertidigUtilgjengelig(Collections.singletonList("midlertidigutilgjengelig"))
+                        .med().midlertidigUtilgjengelig(Collections.singletonList(midlertidigUtilgjengelig))
                         .permittert(true)
                         .bygg());
 
@@ -1246,7 +1244,7 @@ public class IndexCvIT {
     public void veilederSokSkalReturnereTilretteleggingsbehov() {
         Sokeresultat sokeresultat =
                 sokClient.veilederSok(SokekriterierVeiledere
-                        .med().midlertidigUtilgjengelig(Collections.singletonList("tilgjengeliginnen1uke"))
+                        .med().midlertidigUtilgjengelig(Collections.singletonList(tilgjengeligInnen1Uke))
                         .bygg());
 
         List<String> tilretteleggingbehov = sokeresultat.getCver().get(0).getVeilTilretteleggingsbehov();
