@@ -37,7 +37,7 @@ public class EsCvObjectMother {
         }
     }
 
-    private static Date antallDagerTilbakeFraNow(int antallDager) {
+    public static Date antallDagerTilbakeFraNow(int antallDager) {
         LocalDateTime then = LocalDateTime.now().minusDays(antallDager);
         return Date.from(then.atZone(ZoneId.systemDefault()).toInstant());
     }

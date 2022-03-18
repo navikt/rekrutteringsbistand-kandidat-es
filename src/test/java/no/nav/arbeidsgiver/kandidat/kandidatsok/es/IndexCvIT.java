@@ -26,6 +26,7 @@ import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static no.nav.arbeidsgiver.kandidat.kandidatsok.KatKode.Kat1_Kode;
 import static no.nav.arbeidsgiver.kandidat.kandidatsok.Tilgjengelighet.*;
+import static no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es.EsCvObjectMother.antallDagerTilbakeFraNow;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -130,17 +131,15 @@ public class IndexCvIT {
 
     @Test
     public void testFlereInputFritekstGirBredereResultat() {
-        Sokeresultat sokeresultat1 =
-                sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("javautvikler").bygg());
-        Sokeresultat sokeresultat = sokClient.veilederSok(
-                SokekriterierVeiledere.med().fritekst("industrimekaniker javautvikler").bygg());
+        SokekriterierVeiledere smaltSøk = SokekriterierVeiledere.med().fritekst("javautvikler").bygg();
+        SokekriterierVeiledere bredtSøk = SokekriterierVeiledere.med().fritekst("industrimekaniker javautvikler").bygg();
 
-        List<EsCv> cver1 = sokeresultat1.getCver();
-        List<EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cverSmaltSøk = sokClient.veilederSok(smaltSøk).getCver();
+        List<EsCv> cverBredtSøk = sokClient.veilederSok(bredtSøk).getCver();
 
-        assertThat(cver1.size()).isLessThan(cver.size());
-        assertThat(cver1.size()).isEqualTo(1);
-        assertThat(cver.size()).isEqualTo(4);
+        assertThat(cverSmaltSøk).isNotEmpty();
+        assertThat(cverBredtSøk).isNotEmpty();
+        assertThat(cverSmaltSøk.size()).isLessThan(cverBredtSøk.size());
     }
 
     @Test
@@ -383,7 +382,7 @@ public class IndexCvIT {
     public void testSokPaBostedGirBegrensendeResultat() {
         Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().geografiList(Collections.singletonList("NO12.1201")).bygg());
         Sokeresultat sokeresultat2 = sokClient.veilederSok(SokekriterierVeiledere.med()
-                .geografiList(asList("NO12.1201")).maaBoInnenforGeografi(true).bygg());
+                .geografiList(List.of("NO12.1201")).maaBoInnenforGeografi(true).bygg());
 
         List<EsCv> cver = sokeresultat.getCver();
         List<EsCv> cver2 = sokeresultat2.getCver();
@@ -765,12 +764,6 @@ public class IndexCvIT {
     }
 
     @Test
-    public void veilederHentEnKandidatSomBareErSynligForAg() {
-        Optional<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv> esCv = sokClient.veilederHent("1L");
-        assertThat(esCv).isNotPresent();
-    }
-
-    @Test
     public void arbeidsgiverHentEnKandidat() {
         Optional<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv> esCv = sokClient.veilederHent("1L");
         assertThat(esCv.get().getKandidatnr()).isEqualTo("1L");
@@ -1120,31 +1113,29 @@ public class IndexCvIT {
     }
 
     @Test
-    public void sokMedSistEndretFilterSkalGiKorrektTreff() {
-        Sokeresultat sokeresultat =
-                sokClient.veilederSok(SokekriterierVeiledere
-                        .med().antallDagerSistEndret(7)
-                        .bygg());
+    public void sokMedSistEndretFilter7Dager() {
+        final int periodeAntallDager = 7;
+        SokekriterierVeiledere søkekriterier = SokekriterierVeiledere.med().antallDagerSistEndret(periodeAntallDager).bygg();
+        final List<String> expectedKandidatnumre = setupCver.stream().filter(cv -> cv.getTidsstempel().after(antallDagerTilbakeFraNow(periodeAntallDager + 1))).map(cv -> cv.getKandidatnr()).collect(toList());
+        assertThat(expectedKandidatnumre).isNotEmpty();
 
-        List<EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokClient.veilederSok(søkekriterier).getCver();
 
-        assertThat(cver.size()).isEqualTo(2);
-        assertThat(cver).extracting(Extractors.byName("kandidatnr")).contains(
-                "3L", "2L");
-        assertThat(cver).extracting(Extractors.byName("kandidatnr")).doesNotContain(
-                "6L", "11L");
-
-        Sokeresultat sokeresultat2 =
-                sokClient.veilederSok(SokekriterierVeiledere
-                        .med().antallDagerSistEndret(15)
-                        .bygg());
-
-        List<EsCv> cver2 = sokeresultat2.getCver();
-
-        assertThat(cver2.size()).isEqualTo(6);
-        assertThat(cver2).extracting(Extractors.byName("kandidatnr")).contains(
-                "6L", "11L", "3L", "2L");
+        assertThat(kandidatnumre(cver)).containsExactlyInAnyOrderElementsOf(expectedKandidatnumre);
     }
+
+    @Test
+    public void sokMedSistEndretFilter15Dager() {
+        final int periodeAntallDager = 15;
+        SokekriterierVeiledere søkekriterier = SokekriterierVeiledere.med().antallDagerSistEndret(periodeAntallDager).bygg();
+        final List<String> expectedKandidatnumre = setupCver.stream().filter(cv -> cv.getTidsstempel().after(antallDagerTilbakeFraNow(periodeAntallDager + 1))).map(cv -> cv.getKandidatnr()).collect(toList());
+        assertThat(expectedKandidatnumre).isNotEmpty();
+
+        List<EsCv> cver = sokClient.veilederSok(søkekriterier).getCver();
+
+        assertThat(kandidatnumre(cver)).containsExactlyInAnyOrderElementsOf(expectedKandidatnumre);
+    }
+
 
     @Test
     public void sokMedTilgjengeligFilterSkalSkalGiKorrektTreff() {
