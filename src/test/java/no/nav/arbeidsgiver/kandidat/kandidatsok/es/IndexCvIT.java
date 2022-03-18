@@ -679,15 +679,15 @@ public class IndexCvIT {
 
     @Test
     public void sokMedFraTilSkalReturnereRiktigAntallKandidater() {
-        Sokeresultat sokeresultat =
-                sokClient.veilederSok(SokekriterierVeiledere.med().antallResultater(1).bygg());
-        assertThat(sokeresultat.getCver()).hasSize(1);
+        SokekriterierVeiledere antall1 = SokekriterierVeiledere.med().antallResultater(1).bygg();
+        List<EsCv> cver = sokClient.veilederSok(antall1).getCver();
+        assertThat(cver).hasSize(1);
 
-        // fra og med tredje posisjon
-        // av totalt 6 i indexen
-        Sokeresultat sokeresultat2 = sokClient
-                .veilederSok(SokekriterierVeiledere.med().fraIndex(2).antallResultater(5).bygg());
-        assertThat(sokeresultat2.getCver()).hasSize(4);
+        final int fraIndex = 2;
+        assertThat(setupCver.size()).isGreaterThan(fraIndex);
+        SokekriterierVeiledere flereEnnDetSomErIIndeksen = SokekriterierVeiledere.med().fraIndex(fraIndex).antallResultater(8888).bygg();
+        cver = sokClient.veilederSok(flereEnnDetSomErIIndeksen).getCver();
+        assertThat(cver).hasSize(setupCver.size() - fraIndex);
     }
 
     @Test
