@@ -1072,16 +1072,18 @@ public class IndexCvIT {
 
     @Test
     public void sokMedKunEnRiktigVeilTilretteleggingsbehovUtelukketSkalGiKorrektTreff() {
-        Sokeresultat sokeresultat =
-                sokClient.veilederSok(SokekriterierVeiledere
-                        .med().veilTilretteleggingsbehovUtelukkes(Arrays.asList(Kat1_Kode, "Kat_Eksistererikke_Kode"))
-                        .bygg());
+        final String skalUtelukkes = Kat1_Kode;
+        final String utelukkesIkkeeksisterende = "Kat_Eksistererikke_Kode";
+        SokekriterierVeiledere sokekriterier = SokekriterierVeiledere.med().veilTilretteleggingsbehovUtelukkes(asList(skalUtelukkes, utelukkesIkkeeksisterende)).bygg();
+        assertThat(setupCver).anyMatch(cv -> cv.getVeilTilretteleggingsbehov().contains(skalUtelukkes));
 
-        List<EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokClient.veilederSok(sokekriterier).getCver();
 
-        assertThat(cver.size()).isEqualTo(4);
-        assertThat(cver).extracting(Extractors.byName("kandidatnr")).doesNotContain(
-                "4L", "5L");
+        assertThat(cver).isNotEmpty();
+        assertThat(cver).allSatisfy(cv -> {
+            assertThat(cv.getVeilTilretteleggingsbehov()).doesNotContain(skalUtelukkes);
+            assertThat(cv.getVeilTilretteleggingsbehov()).doesNotContain(utelukkesIkkeeksisterende);
+        });
     }
 
     @Test
