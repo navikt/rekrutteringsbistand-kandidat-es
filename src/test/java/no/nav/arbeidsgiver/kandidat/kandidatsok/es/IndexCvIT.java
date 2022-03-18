@@ -117,18 +117,7 @@ public class IndexCvIT {
         assertThat(actualCver.size()).isEqualTo(setupCver.size());
         assertThat(kandidatnumre(actualCver)).containsExactlyInAnyOrderElementsOf(setupKandidatnumre);
     }
-
-    @Test
-    public void testUtenSokekriterierReturnererIkkeJobbsForVeiledere() {
-        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().bygg());
-
-        List<EsCv> cver = sokeresultat.getCver();
-
-        assertThat(cver.size()).isEqualTo(6);
-        assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder(
-                "11L", "6L", "5L", "4L", "3L", "2L");
-    }
-
+    
     @Test
     public void testFlereInputFritekstGirBredereResultat() {
         SokekriterierVeiledere smaltSøk = SokekriterierVeiledere.med().fritekst("javautvikler").bygg();
