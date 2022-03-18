@@ -714,12 +714,14 @@ public class IndexCvIT {
 
     @Test
     public void sokPaKvalifiseringsgruppekodeSkalGiKorrektResultat() {
-        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
-                .kvalifiseringsgruppeKoder(Collections.singletonList("IKVAL")).bygg());
+        final String kvalifiseringsgruppekode = "IKVAL";
+        SokekriterierVeiledere sokekriterier = SokekriterierVeiledere.med().kvalifiseringsgruppeKoder(List.of(kvalifiseringsgruppekode)).bygg();
 
-        List<EsCv> cver = sokeresultat.getCver();
-        assertThat(cver).hasSize(1);
-        assertThat(cver).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
+        List<EsCv> cver = sokClient.veilederSok(sokekriterier).getCver();
+
+        assertThat(cver).isNotEmpty();
+        String msg = "Kvalifiseringsgruppekode skal være " + kvalifiseringsgruppekode;
+        assertThat(cver).allMatch(cv -> cv.getKvalifiseringsgruppekode().equals("IKVAL"), msg);
     }
 
     @Test
