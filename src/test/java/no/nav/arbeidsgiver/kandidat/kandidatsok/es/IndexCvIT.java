@@ -27,6 +27,8 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static no.nav.arbeidsgiver.kandidat.kandidatsok.KatKode.Kat1_Kode;
+import static no.nav.arbeidsgiver.kandidat.kandidatsok.Kvalifiseringsgruppekode.ibatt;
+import static no.nav.arbeidsgiver.kandidat.kandidatsok.Kvalifiseringsgruppekode.ikval;
 import static no.nav.arbeidsgiver.kandidat.kandidatsok.Stillingstittel.anleggsmaskinfører;
 import static no.nav.arbeidsgiver.kandidat.kandidatsok.Tilgjengelighet.*;
 import static no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es.EsCvObjectMother.antallDagerTilbakeFraNow;
@@ -718,12 +720,17 @@ public class IndexCvIT {
 
     @Test
     public void sokPaToKvalifiseringsgruppekodeSkalIkkeInnsnevre() {
-        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
-                .kvalifiseringsgruppeKoder(Arrays.asList("IKVAL", "IBATT")).bygg());
 
-        List<EsCv> cver = sokeresultat.getCver();
-        assertThat(cver).hasSize(1);
-        assertThat(cver).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
+        SokekriterierVeiledere søkekriterier = SokekriterierVeiledere.med().kvalifiseringsgruppeKoder(asList(ikval, ibatt)).bygg();
+
+        List<EsCv> cver = sokClient.veilederSok(søkekriterier).getCver();
+
+        assertThat(cver).isNotEmpty();
+        System.out.println("AAA " + kandidatnumre(cver));
+        assertThat(cver).allMatch(cv -> {
+            String kode = cv.getKvalifiseringsgruppekode();
+            return ikval.equals(kode) || ibatt.equals(kode);
+        });
     }
 
     @Test

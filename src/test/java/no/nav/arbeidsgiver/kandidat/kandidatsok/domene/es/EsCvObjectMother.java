@@ -17,6 +17,7 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.emptyList;
 import static no.nav.arbeidsgiver.kandidat.kandidatsok.KatKode.*;
+import static no.nav.arbeidsgiver.kandidat.kandidatsok.Kvalifiseringsgruppekode.ikval;
 import static no.nav.arbeidsgiver.kandidat.kandidatsok.Stillingstittel.anleggsmaskinfører;
 import static no.nav.arbeidsgiver.kandidat.kandidatsok.Tilgjengelighet.midlertidigUtilgjengelig;
 import static no.nav.arbeidsgiver.kandidat.kandidatsok.Tilgjengelighet.tilgjengeligInnen1Uke;
@@ -234,7 +235,7 @@ public class EsCvObjectMother {
         EsCv esCv = new EsCv(nteAktorId(1), "01016012345", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "JOBBS",
                 "unnasluntrer@mailinator.com", "(+47) 22334455", "12345678", "NO", "1L",
                 "hererjeg", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 5001, false,
-                antallDagerTilbakeFraNow(0), 301, FALSE, null, "IKVAL", null, "0220 NAV Asker", FALSE, FALSE,
+                antallDagerTilbakeFraNow(0), 301, FALSE, null, ikval, null, "0220 NAV Asker", FALSE, FALSE,
                 true, false, "LEDIG_NAA", "5001", "H149390", false, "Viken", "Lier");
         esCv.addUtdanning(utdanningsListe);
         esCv.addYrkeserfaring(yrkeserfaringsListe);
@@ -444,7 +445,7 @@ public class EsCvObjectMother {
                 "unnasluntrer2@mailinator.com", "(+47) 22334455", "12345678", "NO", "2L",
                 "Dette er beskrivelsen av hva jeg har gjort i min yrkeskarriere",
                 "J", fraIsoDato("2016-05-30"), "Dinvei 2", "", "", "1337", "HUSKER IKKE", "NO", 301,
-                false, antallDagerTilbakeFraNow(1), 401, FALSE, null, "IKVAL", null, "0316 NAV Gamle Oslo", FALSE, FALSE,
+                false, antallDagerTilbakeFraNow(1), 401, FALSE, null, ikval, null, "0316 NAV Gamle Oslo", FALSE, FALSE,
                 true, true, null, "0401", "H149390", false, "Viken", "Lier");
         esCv.addUtdanning(utdanningListe);
         esCv.addYrkeserfaring(yrkeserfaringListe);
@@ -2194,7 +2195,7 @@ public class EsCvObjectMother {
         EsCv esCv = new EsCv(nteAktorId(10), "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "10L",
                 "", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
-                new Date(), 301, FALSE, null, "IKVAL", null, null, TRUE, FALSE,
+                new Date(), 301, FALSE, null, ikval, null, null, TRUE, FALSE,
                 false, false, null, "0301", "H149390", false, null, null);
         esCv.addUtdanning(utdanningsListe);
         esCv.addYrkeserfaring(yrkeserfaringsListe);
