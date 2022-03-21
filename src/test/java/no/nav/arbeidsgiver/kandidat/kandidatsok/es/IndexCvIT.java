@@ -17,14 +17,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.InputStreamReader;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static java.time.Instant.now;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static no.nav.arbeidsgiver.kandidat.kandidatsok.KatKode.Kat1_Kode;
+import static no.nav.arbeidsgiver.kandidat.kandidatsok.Stillingstittel.anleggsmaskinfører;
 import static no.nav.arbeidsgiver.kandidat.kandidatsok.Tilgjengelighet.*;
 import static no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es.EsCvObjectMother.antallDagerTilbakeFraNow;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -842,31 +845,50 @@ public class IndexCvIT {
                 )).isTrue();
     }
 
+    private static boolean harStillingstittelAnleggsmaskinfører(EsCv cv) {
+        return cv.getYrkeserfaring().stream().anyMatch(y -> anleggsmaskinfører.equals(y.getStillingstittel()));
+    }
+
+    private static Instant tildato(EsYrkeserfaring yrkeserfaring) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(yrkeserfaring.getFraDato());
+        c.add(Calendar.MONTH, yrkeserfaring.getYrkeserfaringManeder());
+        return c.toInstant();
+    }
+
+    private static Instant minus(Instant instant, int antallÅr) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(Date.from(instant));
+        c.add(Calendar.YEAR, -antallÅr);
+        return c.toInstant();
+    }
+
+    private static boolean yrkeserfaringAnleggsmaskinførerErNyereEnn10År(EsCv cv) {
+        return cv.getYrkeserfaring().stream().filter(y -> anleggsmaskinfører.equals(y.getStillingstittel())).anyMatch(y -> tildato(y).isAfter(minus(now(), 10)));
+    }
+
     @Test
     public void sokPaaStillingsTittelMedFilterPaaNyligeSkalGiTreff() {
-        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med()
-                .stillingstitler(Collections.singletonList("Anleggsmaskinfører")).antallAarGammelYrkeserfaring(null).bygg());
+        final SokekriterierVeiledere.Builder builder = SokekriterierVeiledere.med().stillingstitler(List.of(anleggsmaskinfører));
+        final SokekriterierVeiledere sokAlle = builder.antallAarGammelYrkeserfaring(null).bygg();
+        final SokekriterierVeiledere sokGamle = builder.antallAarGammelYrkeserfaring(10).bygg();
+        final SokekriterierVeiledere sokNye = builder.antallAarGammelYrkeserfaring(5).bygg();
 
-        List<EsCv> cver = sokeresultat.getCver();
-        assertThat(cver.size()).isEqualTo(2);
+        final List<EsCv> actualAlle = sokClient.veilederSok(sokAlle).getCver();
+        final List<EsCv> actualGamle = sokClient.veilederSok(sokGamle).getCver();
+        System.out.println("AAA actualGamle=" + kandidatnumre(actualGamle));
+        final List<EsCv> actualNye = sokClient.veilederSok(sokNye).getCver();
 
-        assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder(
-                "11L", "6L");
+        assertThat(actualAlle).isNotEmpty();
+        assertThat(actualAlle).allMatch(IndexCvIT::harStillingstittelAnleggsmaskinfører);
 
-        Sokeresultat sokeresultat2 = sokClient.veilederSok(SokekriterierVeiledere.med()
-                .stillingstitler(Collections.singletonList("Anleggsmaskinfører")).antallAarGammelYrkeserfaring(10).bygg());
+        assertThat(actualGamle).isNotEmpty();
+        assertThat(actualGamle.size()).isLessThan(actualAlle.size());
+        assertThat(actualGamle).allMatch(IndexCvIT::harStillingstittelAnleggsmaskinfører);
+        String predicateDescription = "Yrkeserfaring med yrkestittel " + anleggsmaskinfører + " skal være ferskere enn 10 år gameml";
+        assertThat(actualGamle).allMatch(IndexCvIT::yrkeserfaringAnleggsmaskinførerErNyereEnn10År, predicateDescription);
 
-        List<EsCv> cver2 = sokeresultat2.getCver();
-        assertThat(cver2.size()).isEqualTo(1);
-
-        assertThat(cver2).extracting(Extractors.byName("kandidatnr")).containsExactly(
-                "11L");
-
-        Sokeresultat sokeresultat3 = sokClient.veilederSok(SokekriterierVeiledere.med()
-                .stillingstitler(Collections.singletonList("Anleggsmaskinfører")).antallAarGammelYrkeserfaring(5).bygg());
-
-        List<EsCv> cver3 = sokeresultat3.getCver();
-        assertThat(cver3.size()).isEqualTo(0);
+        assertThat(actualNye).isEmpty();
     }
 
     @Test

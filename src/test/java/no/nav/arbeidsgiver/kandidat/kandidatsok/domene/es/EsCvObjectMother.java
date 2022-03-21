@@ -17,6 +17,7 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.emptyList;
 import static no.nav.arbeidsgiver.kandidat.kandidatsok.KatKode.*;
+import static no.nav.arbeidsgiver.kandidat.kandidatsok.Stillingstittel.anleggsmaskinfører;
 import static no.nav.arbeidsgiver.kandidat.kandidatsok.Tilgjengelighet.midlertidigUtilgjengelig;
 import static no.nav.arbeidsgiver.kandidat.kandidatsok.Tilgjengelighet.tilgjengeligInnen1Uke;
 
@@ -47,6 +48,12 @@ public class EsCvObjectMother {
         return Date.from(LocalDate.now().minusYears(alder).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
     }
 
+    private static Date nåMinusÅr(int antallÅr) {
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.YEAR, -antallÅr);
+        return c.getTime();
+    }
+
     public static EsCv giveMeEsCv() {
 
         EsUtdanning utdanning = new EsUtdanning(fraIsoDato("1988-08-20"), fraIsoDato("1989-06-20"), "Otta vgs. Otta",
@@ -63,12 +70,12 @@ public class EsCvObjectMother {
                 "Stentransport, Kragerø", "8341.01", "Anleggsmaskindrifter",
                 Set.of("Anleggsmaskindrifter", "Anleggsmaskinoperatør"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
-        EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(fraIsoDato("2003-01-01"), fraIsoDato("2013-02-01"),
-                "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
+        EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(nåMinusÅr(20), nåMinusÅr(9),
+                "AF-Pihl, Hammerfest", "8342.01", anleggsmaskinfører,
                 Set.of("Anleggsmaskindrifter"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(fraIsoDato("2003-04-01"), fraIsoDato("2003-05-01"),
-                "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
+                "O.K. Hagalia, Slependen", "8342.01", anleggsmaskinfører,
                 Set.of("Anleggsmaskindrifter"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(fraIsoDato("2005-08-01"), fraIsoDato("2005-09-01"),
@@ -1166,12 +1173,12 @@ public class EsCvObjectMother {
                 "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(fraIsoDato("2003-01-01"), fraIsoDato("2003-02-01"),
-                "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
-                Set.of("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
+                "AF-Pihl, Hammerfest", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(fraIsoDato("2003-04-01"), fraIsoDato("2003-05-01"),
-                "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
-                Set.of("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
+                "O.K. Hagalia, Slependen", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(fraIsoDato("2005-08-01"), fraIsoDato("2005-09-01"),
                 "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", Set.of("Industrimekaniker"), "Industrimekaniker",
@@ -1336,12 +1343,12 @@ public class EsCvObjectMother {
                 "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(fraIsoDato("2003-01-01"), fraIsoDato("2003-02-01"),
-                "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
-                Set.of("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
+                "AF-Pihl, Hammerfest", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(fraIsoDato("2003-04-01"), fraIsoDato("2003-05-01"),
-                "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
-                Set.of("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
+                "O.K. Hagalia, Slependen", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(fraIsoDato("2005-08-01"), fraIsoDato("2005-09-01"),
                 "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", Set.of("Industrimekaniker"), "Industrimekaniker",
@@ -1512,12 +1519,12 @@ public class EsCvObjectMother {
                 "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(fraIsoDato("2003-01-01"), fraIsoDato("2003-02-01"),
-                "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
-                Set.of("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
+                "AF-Pihl, Hammerfest", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(fraIsoDato("2003-04-01"), fraIsoDato("2003-05-01"),
-                "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
-                Set.of("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
+                "O.K. Hagalia, Slependen", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(fraIsoDato("2005-08-01"), fraIsoDato("2005-09-01"),
                 "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", Set.of("Industrimekaniker"), "Industrimekaniker",
@@ -1689,12 +1696,12 @@ public class EsCvObjectMother {
                 "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(fraIsoDato("2003-01-01"), fraIsoDato("2003-02-01"),
-                "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
-                Set.of("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
+                "AF-Pihl, Hammerfest", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(fraIsoDato("2003-04-01"), fraIsoDato("2003-05-01"),
-                "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
-                Set.of("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
+                "O.K. Hagalia, Slependen", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(fraIsoDato("2005-08-01"), fraIsoDato("2005-09-01"),
                 "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", Set.of("Industrimekaniker"), "Industrimekaniker",
@@ -1865,12 +1872,12 @@ public class EsCvObjectMother {
                 "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(fraIsoDato("2003-01-01"), fraIsoDato("2003-02-01"),
-                "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
-                Set.of("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
+                "AF-Pihl, Hammerfest", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(fraIsoDato("2003-04-01"), fraIsoDato("2003-05-01"),
-                "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
-                Set.of("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
+                "O.K. Hagalia, Slependen", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(fraIsoDato("2005-08-01"), fraIsoDato("2005-09-01"),
                 "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", Set.of("Industrimekaniker"), "Industrimekaniker",
@@ -2041,12 +2048,12 @@ public class EsCvObjectMother {
                 "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(fraIsoDato("2003-01-01"), fraIsoDato("2003-02-01"),
-                "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
-                Set.of("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
+                "AF-Pihl, Hammerfest", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(fraIsoDato("2003-04-01"), fraIsoDato("2003-05-01"),
-                "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
-                Set.of("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
+                "O.K. Hagalia, Slependen", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(fraIsoDato("2005-08-01"), fraIsoDato("2005-09-01"),
                 "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", Set.of("Industrimekaniker"), "Industrimekaniker",
@@ -2216,13 +2223,13 @@ public class EsCvObjectMother {
                 "Stentransport, Kragerø", "8341.01", "", Set.of(), "maskinkjører og maskintransport",
                 "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
-        EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(fraIsoDato("2003-01-01"), fraIsoDato("2013-02-01"),
-                "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
-                Set.of("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
+        EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(nåMinusÅr(11), nåMinusÅr(6),
+                "AF-Pihl, Hammerfest", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(fraIsoDato("2003-04-01"), fraIsoDato("2003-05-01"),
-                "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
-                Set.of("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
+                "O.K. Hagalia, Slependen", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(fraIsoDato("2005-08-01"), fraIsoDato("2005-09-01"),
                 "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", Set.of("Industrimekaniker"), "Industrimekaniker",
