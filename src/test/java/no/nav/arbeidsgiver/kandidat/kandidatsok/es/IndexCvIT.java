@@ -117,7 +117,7 @@ public class IndexCvIT {
         assertThat(actualCver.size()).isEqualTo(setupCver.size());
         assertThat(kandidatnumre(actualCver)).containsExactlyInAnyOrderElementsOf(setupKandidatnumre);
     }
-    
+
     @Test
     public void testFlereInputFritekstGirBredereResultat() {
         SokekriterierVeiledere smaltSøk = SokekriterierVeiledere.med().fritekst("javautvikler").bygg();
@@ -1077,16 +1077,19 @@ public class IndexCvIT {
 
     @Test
     public void sokMedVeilTilretteleggingsbehovUtelukketOgIkkePermittertSkalGiKorrektTreff() {
-        Sokeresultat sokeresultat =
-                sokClient.veilederSok(SokekriterierVeiledere
-                        .med().veilTilretteleggingsbehovUtelukkes(Arrays.asList(Kat1_Kode, "Kat_Eksistererikke_Kode"))
-                        .permittert(Boolean.FALSE).bygg());
+        SokekriterierVeiledere søkekriterier = SokekriterierVeiledere
+                .med().veilTilretteleggingsbehovUtelukkes(asList(Kat1_Kode, "Kat_Eksistererikke_Kode"))
+                .permittert(Boolean.FALSE).bygg();
 
-        List<EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokClient.veilederSok(søkekriterier).getCver();
 
-        assertThat(cver.size()).isEqualTo(3);
-        assertThat(cver).extracting(Extractors.byName("kandidatnr")).doesNotContain(
-                "3L", "4L", "5L");
+        assertThat(cver).isNotEmpty();
+        assertThat(cver).allSatisfy(cv -> {
+            List<String> behov = cv.getVeilTilretteleggingsbehov();
+            assertThat(behov).doesNotContain(Kat1_Kode);
+            assertThat(behov).doesNotContain("Kat_Eksistererikke_Kode");
+            assertThat(behov).doesNotContain("permittert");
+        });
     }
 
     @Test
