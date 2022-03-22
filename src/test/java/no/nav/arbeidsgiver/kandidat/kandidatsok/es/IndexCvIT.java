@@ -666,9 +666,16 @@ public class IndexCvIT {
 
     @Test
     public void sokMedDoktorgradSkalIkkeGiResulatMedKandidaterUtenDoktorgrad() {
-        Sokeresultat sokeresultatDoktorgrad = sokClient.veilederSok(SokekriterierVeiledere.med().utdanningsniva(Collections.singletonList("Doktorgrad")).bygg());
+        SokekriterierVeiledere søkekriterier = SokekriterierVeiledere.med().utdanningsniva(Collections.singletonList("Doktorgrad")).bygg();
 
-        assertThat(sokeresultatDoktorgrad.getCver()).hasSize(1);
+        List<EsCv> cver = sokClient.veilederSok(søkekriterier).getCver();
+
+        assertThat(cver).isNotEmpty();
+        cver.forEach(cv -> {
+            // Hvordan vet vi om en utdanning er en doktorgrad?
+            // Se metoden addUtdanningsnivaQuery i filen src/main/java/no/nav/arbeidsgiver/kandidatsok/es/client/EsSokHttpService.java
+            assertThat(cv.getUtdanning()).anyMatch(u -> u.getNusKode().startsWith("8"));
+        });
     }
 
     @Test

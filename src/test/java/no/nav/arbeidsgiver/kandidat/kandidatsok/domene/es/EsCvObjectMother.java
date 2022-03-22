@@ -462,11 +462,11 @@ public class EsCvObjectMother {
 
     public static EsCv giveMeEsCv3() {
 
-        EsUtdanning EsUtdanning = new EsUtdanning(fraIsoDato("1988-08-20"), fraIsoDato("1989-06-20"),
+        EsUtdanning esUtdanning = new EsUtdanning(fraIsoDato("1988-08-20"), fraIsoDato("1989-06-20"),
                 "Norges Naturvitenskapelige Universitet", "456375", "Sosiologi", "Sosiologi");
 
         ArrayList<EsUtdanning> utdanningListe = new ArrayList<>();
-        utdanningListe.add(EsUtdanning);
+        utdanningListe.add(esUtdanning);
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(fraIsoDato("2000-01-01"), fraIsoDato("2000-02-01"),
                 "Butikken i nærheten", "1010.01", "Butikkmedarbeider", Set.of("Butikkmedarbeider"), "Butikkmedarbeider i Førde",
                 "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
