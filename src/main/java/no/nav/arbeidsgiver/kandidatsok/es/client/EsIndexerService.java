@@ -15,7 +15,8 @@ public interface EsIndexerService {
 
     /**
      * Slett basert på aktør-id-er
-     * @param aktorId liste med aktør-id-er
+     *
+     * @param aktorId   liste med aktør-id-er
      * @param indexName navn på målindeks
      * @return antall dokumenter faktisk slettet fra ElasticSearch
      */
@@ -26,8 +27,6 @@ public interface EsIndexerService {
     void deleteIndex(String indexName);
 
     boolean doesIndexExist(String indexName);
-
-    long antallIndeksert(String indexName);
 
     Collection<String> getTargetsForAlias(String alias, String indexPattern);
 

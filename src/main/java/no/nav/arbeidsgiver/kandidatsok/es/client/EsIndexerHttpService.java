@@ -20,8 +20,6 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.support.WriteRequest;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.*;
-import org.elasticsearch.client.core.CountRequest;
-import org.elasticsearch.client.core.CountResponse;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
@@ -33,7 +31,6 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.DeleteByQueryRequest;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -159,7 +156,7 @@ public class EsIndexerHttpService implements EsIndexerService, AutoCloseable {
                 try {
                     if (bir.getFailure() != null) {
                         Optional<EsCv> cvMedFeil = esCver.stream().filter(
-                                esCv -> (esCv.getKandidatnr()).trim().equals(bir.getFailure().getId()))
+                                        esCv -> (esCv.getKandidatnr()).trim().equals(bir.getFailure().getId()))
                                 .findFirst();
 
                         LOGGER.warn("Feilet ved indeksering av CV {}: " + bir.getFailure().getMessage(),
@@ -202,7 +199,7 @@ public class EsIndexerHttpService implements EsIndexerService, AutoCloseable {
 
         // TODO inspect response for failures ! If at least one failure, then fail the entire request.
         BulkByScrollResponse bulkByScrollResponse = esExec(() -> client.deleteByQuery(deleteByQueryRequest, RequestOptions.DEFAULT), indexName);
-        return (int)bulkByScrollResponse.getDeleted();
+        return (int) bulkByScrollResponse.getDeleted();
     }
 
 
@@ -277,27 +274,6 @@ public class EsIndexerHttpService implements EsIndexerService, AutoCloseable {
         T get() throws IOException;
     }
 
-    @Override
-    public long antallIndeksert(String indexName) {
-        return tellDokumenter(null, indexName);
-    }
-
-    private long tellDokumenter(String query, String indexName) {
-        try {
-            CountRequest countReqest = new CountRequest(indexName);
-            if (query != null) {
-                countReqest.source(SearchSourceBuilder.searchSource()
-                        .query(QueryBuilders.queryStringQuery(query)));
-            }
-
-            CountResponse count = client.count(countReqest, RequestOptions.DEFAULT);
-            return count.getCount();
-        } catch (Exception e) {
-            LOGGER.warn("Greide ikke å hente ut antall dokumenter for indeks {}, spørring '{}': {}",
-                    indexName, query != null ? query : "<no query>", e.getMessage(), e);
-            return 0L;
-        }
-    }
 
     @Override
     public Collection<String> getTargetsForAlias(String alias, String indexPattern) {
