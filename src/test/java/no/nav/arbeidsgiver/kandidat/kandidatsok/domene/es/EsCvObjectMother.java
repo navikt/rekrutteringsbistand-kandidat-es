@@ -15,6 +15,12 @@ import java.util.*;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
+import static java.util.Collections.emptyList;
+import static no.nav.arbeidsgiver.kandidat.kandidatsok.KatKode.*;
+import static no.nav.arbeidsgiver.kandidat.kandidatsok.Kvalifiseringsgruppekode.ikval;
+import static no.nav.arbeidsgiver.kandidat.kandidatsok.Stillingstittel.anleggsmaskinfører;
+import static no.nav.arbeidsgiver.kandidat.kandidatsok.Tilgjengelighet.midlertidigUtilgjengelig;
+import static no.nav.arbeidsgiver.kandidat.kandidatsok.Tilgjengelighet.tilgjengeligInnen1Uke;
 
 public class EsCvObjectMother {
 
@@ -34,13 +40,19 @@ public class EsCvObjectMother {
         }
     }
 
-    private static Date antallDagerTilbakeFraNow(int antallDager) {
+    public static Date antallDagerTilbakeFraNow(int antallDager) {
         LocalDateTime then = LocalDateTime.now().minusDays(antallDager);
         return Date.from(then.atZone(ZoneId.systemDefault()).toInstant());
     }
 
     private static Date fodselsdatoForAlder(int alder) {
         return Date.from(LocalDate.now().minusYears(alder).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    private static Date nåMinusÅr(int antallÅr) {
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.YEAR, -antallÅr);
+        return c.getTime();
     }
 
     public static EsCv giveMeEsCv() {
@@ -57,27 +69,27 @@ public class EsCvObjectMother {
         utdanningsListe.add(utdanning1);
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(fraIsoDato("2000-01-01"), fraIsoDato("2000-01-10"),
                 "Stentransport, Kragerø", "8341.01", "Anleggsmaskindrifter",
-                Set.of("Anleggsmaskindrifter", "Anleggsmaskinoperatør"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                Set.of("Anleggsmaskindrifter", "Anleggsmaskinoperatør"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
-        EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(fraIsoDato("2003-01-01"), fraIsoDato("2013-02-01"),
-                "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
-                Collections.singleton("Anleggsmaskindrifter"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+        EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(nåMinusÅr(20), nåMinusÅr(9),
+                "AF-Pihl, Hammerfest", "8342.01", anleggsmaskinfører,
+                Set.of("Anleggsmaskindrifter"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(fraIsoDato("2003-04-01"), fraIsoDato("2003-05-01"),
-                "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
-                Set.of("Anleggsmaskindrifter"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "O.K. Hagalia, Slependen", "8342.01", anleggsmaskinfører,
+                Set.of("Anleggsmaskindrifter"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(fraIsoDato("2005-08-01"), fraIsoDato("2005-09-01"),
                 "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", Set.of("Industrimekaniker"), "Industrimekaniker",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring5 = new EsYrkeserfaring(fraIsoDato("2016-06-01"), fraIsoDato("2016-07-01"),
                 "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", Set.of("Lastebil- og trailersjåfør"), "Sjåfør kl. 2", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(fraIsoDato("2017-10-01"), fraIsoDato("2017-12-01"),
                 "NLI  Grenland", "7233.03", "Industrimekaniker", Set.of("Industrimekaniker"), "Industrimekaniker", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         ArrayList<EsYrkeserfaring> yrkeserfaringsListe = new ArrayList<>();
         yrkeserfaringsListe.add(yrkeserfaring1);
@@ -88,16 +100,16 @@ public class EsCvObjectMother {
         yrkeserfaringsListe.add(yrkeserfaring6);
 
         EsKompetanse kompetanse1 = new EsKompetanse(fraIsoDato("2016-03-14"), "3020813",
-                "Maskin- og kranførerarbeid", null, null, Collections.emptyList());
+                "Maskin- og kranførerarbeid", null, null, emptyList());
 
         EsKompetanse kompetanse2 = new EsKompetanse(fraIsoDato("2016-03-14"), "3281301",
-                "Mekanisk arbeid generelt", "Mekanisk arbeid generelt", null, Collections.emptyList());
+                "Mekanisk arbeid generelt", "Mekanisk arbeid generelt", null, emptyList());
 
         EsKompetanse kompetanse3 = new EsKompetanse(fraIsoDato("2016-03-14"), "506",
-                "Landtransport generelt", "Landtransport generelt", null, Collections.emptyList());
+                "Landtransport generelt", "Landtransport generelt", null, emptyList());
 
         EsKompetanse kompetanse4 = new EsKompetanse(fraIsoDato("2016-03-14"), "212", "Industri (bransje)",
-                "Mekanisk industri (bransje)", null, Collections.emptyList());
+                "Mekanisk industri (bransje)", null, emptyList());
 
         ArrayList<EsKompetanse> kompetanseList = new ArrayList<>();
         kompetanseList.add(kompetanse1);
@@ -180,7 +192,7 @@ public class EsCvObjectMother {
         geografiJobbonskerListe.add(geografiJobbonsker2);
 
         EsYrkeJobbonsker yrkeJobbonsker = new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode",
-                "Yrke jobb ønske Styrk beskrivelse", true, Collections.emptyList());
+                "Yrke jobb ønske Styrk beskrivelse", true, emptyList());
 
         ArrayList<EsYrkeJobbonsker> yrkeJobbonskerListe = new ArrayList<>();
         yrkeJobbonskerListe.add(yrkeJobbonsker);
@@ -223,7 +235,7 @@ public class EsCvObjectMother {
         EsCv esCv = new EsCv(nteAktorId(1), "01016012345", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "JOBBS",
                 "unnasluntrer@mailinator.com", "(+47) 22334455", "12345678", "NO", "1L",
                 "hererjeg", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 5001, false,
-                antallDagerTilbakeFraNow(0), 301, FALSE, null, "IKVAL", null, "0220 NAV Asker", FALSE, FALSE,
+                antallDagerTilbakeFraNow(0), 301, FALSE, null, ikval, null, "0220 NAV Asker", FALSE, FALSE,
                 true, false, "LEDIG_NAA", "5001", "H149390", false, "Viken", "Lier");
         esCv.addUtdanning(utdanningsListe);
         esCv.addYrkeserfaring(yrkeserfaringsListe);
@@ -283,24 +295,24 @@ public class EsCvObjectMother {
         ArrayList<EsUtdanning> utdanningListe = new ArrayList<>();
         utdanningListe.add(EsUtdanning);
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(fraIsoDato("2000-01-01"), fraIsoDato("2002-01-01"),
-                "Kodesentralen Vardø", "5746.07", "Programvareutvikler", Collections.singleton("Programvareutvikler"), "Fullstackutvikler",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "Kodesentralen Vardø", "5746.07", "Programvareutvikler", Set.of("Programvareutvikler"), "Fullstackutvikler",
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(fraIsoDato("2003-01-01"), fraIsoDato("2003-07-01"),
                 "Programvarefabrikken Førde", "5746.07", "Systemutvikler",
-                Set.of("Systemutvikler", "Java-utvikler"), "Utvikling av nytt kandidatsøk", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                Set.of("Systemutvikler", "Java-utvikler"), "Utvikling av nytt kandidatsøk", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(fraIsoDato("2003-04-01"), fraIsoDato("2003-05-01"),
                 "Tjenestetest Norge", "6859.02", "Systemtester",
-                Set.of("Systemtester"), "Automatiske tester av nytt kandidatsøk", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                Set.of("Systemtester"), "Automatiske tester av nytt kandidatsøk", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(fraIsoDato("2005-08-01"), fraIsoDato("2006-07-01"),
                 "lagerarbeiderne L. H.", "8659.03", "Lagermedarbeider", Set.of("Lagermedarbeider"), "Lagermedarbeider",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring5 = new EsYrkeserfaring(fraIsoDato("2016-06-01"), fraIsoDato("2017-04-01"),
                 "lagerarbeiderne L. H.", "8659.03", "Truckfører lager", Set.of("Truckfører lager"), "Stortruck", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring6 =
                 new EsYrkeserfaring(fraIsoDato("2017-10-01"), fraIsoDato("2019-09-26"), "Awesome coders AS", "5746.07",
@@ -315,16 +327,16 @@ public class EsCvObjectMother {
         yrkeserfaringListe.add(yrkeserfaring6);
 
         EsKompetanse kompetanse1 =
-                new EsKompetanse(fraIsoDato("2016-03-14"), "265478", "Javautvikler", null, null, Collections.emptyList());
+                new EsKompetanse(fraIsoDato("2016-03-14"), "265478", "Javautvikler", null, null, emptyList());
 
         EsKompetanse kompetanse2 = new EsKompetanse(fraIsoDato("2016-03-14"), "265478",
                 "Programvareutvikler", "Programvareutvikler", null, Arrays.asList("Javaprogrammerer", "Java (8)", "JDK"));
 
         EsKompetanse kompetanse3 = new EsKompetanse(fraIsoDato("2016-03-14"), "475136", "Lagermedarbeider",
-                "Lagermedarbeider", null, Collections.emptyList());
+                "Lagermedarbeider", null, emptyList());
 
         EsKompetanse kompetanse4 =
-                new EsKompetanse(fraIsoDato("2016-03-14"), "501", "Truckfører", "Truckfører", null, Collections.emptyList());
+                new EsKompetanse(fraIsoDato("2016-03-14"), "501", "Truckfører", "Truckfører", null, emptyList());
 
         ArrayList<EsKompetanse> kompetanseListe = new ArrayList<>();
         kompetanseListe.add(kompetanse1);
@@ -402,15 +414,15 @@ public class EsCvObjectMother {
         geografiJobbonskerListe.add(geografiJobbonsker2);
 
         EsYrkeJobbonsker yrkeJobbonsker =
-                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Javaprogrammerer", true, Collections.emptyList());
+                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Javaprogrammerer", true, emptyList());
 
         EsYrkeJobbonsker yrkeJobbonsker1 =
-                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Programvareutvikler", true, Collections.emptyList());
+                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Programvareutvikler", true, emptyList());
 
         EsYrkeJobbonsker yrkeJobbonsker2 =
-                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Bonde", true, Collections.emptyList());
+                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Bonde", true, emptyList());
         EsYrkeJobbonsker yrkeJobbonsker3 =
-                new EsYrkeJobbonsker("1010.01", "Butikkmedarbeider", true, Collections.emptyList());
+                new EsYrkeJobbonsker("1010.01", "Butikkmedarbeider", true, emptyList());
 
         ArrayList<EsYrkeJobbonsker> yrkeJobbonskerListe = new ArrayList<>();
         yrkeJobbonskerListe.add(yrkeJobbonsker);
@@ -421,30 +433,19 @@ public class EsCvObjectMother {
         EsOmfangJobbonsker EsHeltidDeltidJobbonsker =
                 new EsOmfangJobbonsker("HeltidDeltidKode", "HeltidDeltidKode Tekst");
 
-        ArrayList<EsOmfangJobbonsker> EsHeltidDeltidJobbonskerListe = new ArrayList<>();
-        EsHeltidDeltidJobbonskerListe.add(EsHeltidDeltidJobbonsker);
-
         EsAnsettelsesformJobbonsker EsAnsettelsesforholdJobbonsker =
                 new EsAnsettelsesformJobbonsker("Ansettelsesforhold Kode",
                         "Ansettelsesforhold Kode tekst");
-
-        ArrayList<EsAnsettelsesformJobbonsker> EsAnsettelsesforholdJobbonskerListe =
-                new ArrayList<>();
-        EsAnsettelsesforholdJobbonskerListe.add(EsAnsettelsesforholdJobbonsker);
 
         EsArbeidstidsordningJobbonsker EsArbeidstidsordningJobbonsker =
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
 
-        ArrayList<EsArbeidstidsordningJobbonsker> EsArbeidstidsordningJobbonskerListe =
-                new ArrayList<>();
-        EsArbeidstidsordningJobbonskerListe.add(EsArbeidstidsordningJobbonsker);
-
         EsCv esCv = new EsCv(nteAktorId(2), "05236984567", "KARI", "NORDMANN", fodselsdatoForAlder(39), false, "PARBS",
                 "unnasluntrer2@mailinator.com", "(+47) 22334455", "12345678", "NO", "2L",
                 "Dette er beskrivelsen av hva jeg har gjort i min yrkeskarriere",
                 "J", fraIsoDato("2016-05-30"), "Dinvei 2", "", "", "1337", "HUSKER IKKE", "NO", 301,
-                false, antallDagerTilbakeFraNow(1), 401, FALSE, null, "IKVAL", null, "0316 NAV Gamle Oslo", FALSE, FALSE,
+                false, antallDagerTilbakeFraNow(1), 401, FALSE, null, ikval, null, "0316 NAV Gamle Oslo", FALSE, FALSE,
                 true, true, null, "0401", "H149390", false, "Viken", "Lier");
         esCv.addUtdanning(utdanningListe);
         esCv.addYrkeserfaring(yrkeserfaringListe);
@@ -461,33 +462,33 @@ public class EsCvObjectMother {
 
     public static EsCv giveMeEsCv3() {
 
-        EsUtdanning EsUtdanning = new EsUtdanning(fraIsoDato("1988-08-20"), fraIsoDato("1989-06-20"),
+        EsUtdanning esUtdanning = new EsUtdanning(fraIsoDato("1988-08-20"), fraIsoDato("1989-06-20"),
                 "Norges Naturvitenskapelige Universitet", "456375", "Sosiologi", "Sosiologi");
 
         ArrayList<EsUtdanning> utdanningListe = new ArrayList<>();
-        utdanningListe.add(EsUtdanning);
+        utdanningListe.add(esUtdanning);
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(fraIsoDato("2000-01-01"), fraIsoDato("2000-02-01"),
                 "Butikken i nærheten", "1010.01", "Butikkmedarbeider", Set.of("Butikkmedarbeider"), "Butikkmedarbeider i Førde",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(fraIsoDato("2003-01-01"), fraIsoDato("2003-02-01"),
                 "Butikken i nærheten", "1010.01", "Butikkmedarbeider(dagligvarer)",
-                Set.of("Butikkmedarbeider(dagligvarer)", "Butikkmedarbeider"), "Butikkmedarbeider(dagligvarer)", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                Set.of("Butikkmedarbeider(dagligvarer)", "Butikkmedarbeider"), "Butikkmedarbeider(dagligvarer)", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(fraIsoDato("2003-04-01"), fraIsoDato("2003-05-01"),
                 "Butikken langt unna", "1010.01", "Butikkmedarbeider(trevare)",
-                Set.of("Butikkmedarbeider(trevare)"), "Butikkmedarbeider(trevare)", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                Set.of("Butikkmedarbeider(trevare)"), "Butikkmedarbeider(trevare)", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(fraIsoDato("2005-08-01"), fraIsoDato("2005-09-01"),
                 "Butikken", "4561.03", "Butikkmedarbeider(elektronikk)",
-                Set.of("Butikkmedarbeider(elektronikk)"), "Butikkmedarbeider(elektronikk)", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                Set.of("Butikkmedarbeider(elektronikk)"), "Butikkmedarbeider(elektronikk)", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring5 =
                 new EsYrkeserfaring(fraIsoDato("2016-06-01"), fraIsoDato("2016-07-01"), "Tvkanalen TV?", "5684.05",
-                        "Presentør", Set.of("Presentør"), "Presentør", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                        "Presentør", Set.of("Presentør"), "Presentør", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(fraIsoDato("2017-10-01"), null, "NLI  Grenland",
-                "5684.05", "Nyhetsanker", Set.of("Nyhetsanker"), "Nyhetsanker", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "5684.05", "Nyhetsanker", Set.of("Nyhetsanker"), "Nyhetsanker", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         ArrayList<EsYrkeserfaring> yrkeserfaringListe = new ArrayList<>();
         yrkeserfaringListe.add(yrkeserfaring1);
@@ -498,16 +499,16 @@ public class EsCvObjectMother {
         yrkeserfaringListe.add(yrkeserfaring6);
 
         EsKompetanse kompetanse1 =
-                new EsKompetanse(fraIsoDato("2016-03-14"), "152424", "Presentør", null, null, Collections.emptyList());
+                new EsKompetanse(fraIsoDato("2016-03-14"), "152424", "Presentør", null, null, emptyList());
 
         EsKompetanse kompetanse2 =
-                new EsKompetanse(fraIsoDato("2016-03-14"), "152424", "Nyhetsanker", "Nyhetsanker", null, Collections.emptyList());
+                new EsKompetanse(fraIsoDato("2016-03-14"), "152424", "Nyhetsanker", "Nyhetsanker", null, emptyList());
 
         EsKompetanse kompetanse3 = new EsKompetanse(fraIsoDato("2016-03-14"), "566895", "Butikkmedarbeider",
-                "Butikkmedarbeider", null, Collections.emptyList());
+                "Butikkmedarbeider", null, emptyList());
 
         EsKompetanse kompetanse4 = new EsKompetanse(fraIsoDato("2016-03-14"), "566895",
-                "Butikkmedarbeider(trevare)", "Butikkmedarbeider(trevare)", null, Collections.emptyList());
+                "Butikkmedarbeider(trevare)", "Butikkmedarbeider(trevare)", null, emptyList());
 
         ArrayList<EsKompetanse> kompetanseListe = new ArrayList<>();
         kompetanseListe.add(kompetanse1);
@@ -588,16 +589,16 @@ public class EsCvObjectMother {
         geografiJobbonskerListe.add(geografiJobbonsker1);
 
         EsYrkeJobbonsker yrkeJobbonsker =
-                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Ordfører", true, Collections.emptyList());
+                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Ordfører", true, emptyList());
 
         EsYrkeJobbonsker yrkeJobbonsker1 =
-                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Barnehageassistent", true, Collections.emptyList());
+                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Barnehageassistent", true, emptyList());
 
         EsYrkeJobbonsker yrkeJobbonsker2 =
-                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Tester", true, Collections.emptyList());
+                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Tester", true, emptyList());
 
         EsYrkeJobbonsker yrkeJobbonsker3 =
-                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Konsulent (data)", true, Collections.emptyList());
+                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Konsulent (data)", true, emptyList());
 
         ArrayList<EsYrkeJobbonsker> yrkeJobbonskerListe = new ArrayList<>();
         yrkeJobbonskerListe.add(yrkeJobbonsker);
@@ -608,31 +609,19 @@ public class EsCvObjectMother {
         EsOmfangJobbonsker EsHeltidDeltidJobbonsker =
                 new EsOmfangJobbonsker("HeltidDeltidKode", "HeltidDeltidKode Tekst");
 
-        ArrayList<EsOmfangJobbonsker> EsHeltidDeltidJobbonskerListe = new ArrayList<>();
-        EsHeltidDeltidJobbonskerListe.add(EsHeltidDeltidJobbonsker);
-
         EsAnsettelsesformJobbonsker EsAnsettelsesforholdJobbonsker =
                 new EsAnsettelsesformJobbonsker("Ansettelsesforhold Kode",
                         "Ansettelsesforhold Kode tekst");
-
-        ArrayList<EsAnsettelsesformJobbonsker> EsAnsettelsesforholdJobbonskerListe =
-                new ArrayList<>();
-        EsAnsettelsesforholdJobbonskerListe.add(EsAnsettelsesforholdJobbonsker);
 
         EsArbeidstidsordningJobbonsker EsArbeidstidsordningJobbonsker =
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
 
-        ArrayList<EsArbeidstidsordningJobbonsker> EsArbeidstidsordningJobbonskerListe =
-                new ArrayList<>();
-        EsArbeidstidsordningJobbonskerListe.add(EsArbeidstidsordningJobbonsker);
-
-        ArrayList<String> esVeilTilretteleggingsbehovListe =
-                new ArrayList<>();
-        esVeilTilretteleggingsbehovListe.add("Kat2_Kode");
-        esVeilTilretteleggingsbehovListe.add("Kat3_Kode");
+        ArrayList<String> esVeilTilretteleggingsbehovListe = new ArrayList<>();
+        esVeilTilretteleggingsbehovListe.add(Kat2_Kode);
+        esVeilTilretteleggingsbehovListe.add(Kat3_Kode);
         esVeilTilretteleggingsbehovListe.add("permittert");
-        esVeilTilretteleggingsbehovListe.add("midlertidigutilgjengelig");
+        esVeilTilretteleggingsbehovListe.add(midlertidigUtilgjengelig);
 
         EsCv esCv = new EsCv(nteAktorId(3), "04265983651", "HANS", "NORDMANN", fraIsoDato("1955-11-04"), false, "RARBS",
                 "alltidmed@mailinator.com", "(+47) 22334455", "12345678", "NO", "3L",
@@ -664,27 +653,27 @@ public class EsCvObjectMother {
         utdanningListe.add(EsUtdanning);
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(fraIsoDato("2000-01-01"), fraIsoDato("2002-01-01"),
                 "Jokah", "1010.01", "Butikkmedarbeider", Set.of("Butikkmedarbeider"), "Butikkmedarbeider", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(fraIsoDato("2003-01-01"), fraIsoDato("2003-04-01"),
                 "Nærbutikkern", "1010.01", "Butikkmedarbeider(klesbutikk)",
-                Set.of("Butikkmedarbeider(klesbutikk)"), "Butikkmedarbeider(klebutikk)", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                Set.of("Butikkmedarbeider(klesbutikk)"), "Butikkmedarbeider(klebutikk)", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring3 =
                 new EsYrkeserfaring(fraIsoDato("2003-04-01"), fraIsoDato("2003-07-01"), "Tv tv tv", "5684.05",
-                        "Nyhetspresentør", Set.of("Nyhetspresentør"), "Nyhetspresentør", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                        "Nyhetspresentør", Set.of("Nyhetspresentør"), "Nyhetspresentør", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring4 =
                 new EsYrkeserfaring(fraIsoDato("2005-08-01"), fraIsoDato("2016-07-01"), "Vard Group,avd.Brevik",
-                        "5684.05", "Hallovert", Set.of("Hallovert"), "Hallovert", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                        "5684.05", "Hallovert", Set.of("Hallovert"), "Hallovert", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring5 =
                 new EsYrkeserfaring(fraIsoDato("2016-06-01"), fraIsoDato("2017-04-01"), "DN teater", "5124.46",
-                        "Skuespiller", Set.of("Skuespiller"), "Skuespiller", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                        "Skuespiller", Set.of("Skuespiller"), "Skuespiller", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(fraIsoDato("2017-10-01"), null,
                 "Dukketeateret Rena", "5124.46", "Skuespiller(dukketeater)",
-                Set.of("Skuespiller(dukketeater)"), "Skuespiller(dukketeater)", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                Set.of("Skuespiller(dukketeater)"), "Skuespiller(dukketeater)", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         ArrayList<EsYrkeserfaring> yrkeserfaringListe = new ArrayList<>();
         yrkeserfaringListe.add(yrkeserfaring1);
@@ -695,16 +684,16 @@ public class EsCvObjectMother {
         yrkeserfaringListe.add(yrkeserfaring6);
 
         EsKompetanse kompetanse1 =
-                new EsKompetanse(fraIsoDato("2016-03-14"), "152424", "Hallovert", null, null, Collections.emptyList());
+                new EsKompetanse(fraIsoDato("2016-03-14"), "152424", "Hallovert", null, null, emptyList());
 
         EsKompetanse kompetanse2 = new EsKompetanse(fraIsoDato("2016-03-14"), "566895", "Butikkmedarbeider",
-                "Butikkmedarbeider", null, Collections.emptyList());
+                "Butikkmedarbeider", null, emptyList());
 
         EsKompetanse kompetanse3 = new EsKompetanse(fraIsoDato("2016-03-14"), "564646",
-                "Butikkmedarbeider(klesbutikk)", "Butikkmedarbeider(klesbutikk)", null, Collections.emptyList());
+                "Butikkmedarbeider(klesbutikk)", "Butikkmedarbeider(klesbutikk)", null, emptyList());
 
         EsKompetanse kompetanse4 =
-                new EsKompetanse(fraIsoDato("2016-03-14"), "506", "Skuespiller", "Skuespiller", null, Collections.emptyList());
+                new EsKompetanse(fraIsoDato("2016-03-14"), "506", "Skuespiller", "Skuespiller", null, emptyList());
 
         ArrayList<EsKompetanse> kompetanseListe = new ArrayList<>();
         kompetanseListe.add(kompetanse1);
@@ -789,10 +778,10 @@ public class EsCvObjectMother {
         geografiJobbonskerListe.add(geografiJobbonsker4);
 
         EsYrkeJobbonsker yrkeJobbonsker =
-                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Butikkmedarbeider", true, Collections.emptyList());
+                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Butikkmedarbeider", true, emptyList());
 
         EsYrkeJobbonsker yrkeJobbonsker1 =
-                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Butikkmedarbeider", true, Collections.emptyList());
+                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Butikkmedarbeider", true, emptyList());
 
         ArrayList<EsYrkeJobbonsker> yrkeJobbonskerListe = new ArrayList<>();
         yrkeJobbonskerListe.add(yrkeJobbonsker);
@@ -801,30 +790,18 @@ public class EsCvObjectMother {
         EsOmfangJobbonsker EsHeltidDeltidJobbonsker =
                 new EsOmfangJobbonsker("HeltidDeltidKode", "HeltidDeltidKode Tekst");
 
-        ArrayList<EsOmfangJobbonsker> EsHeltidDeltidJobbonskerListe = new ArrayList<>();
-        EsHeltidDeltidJobbonskerListe.add(EsHeltidDeltidJobbonsker);
-
         EsAnsettelsesformJobbonsker EsAnsettelsesforholdJobbonsker =
                 new EsAnsettelsesformJobbonsker("Ansettelsesforhold Kode",
                         "Ansettelsesforhold Kode tekst");
-
-        ArrayList<EsAnsettelsesformJobbonsker> EsAnsettelsesforholdJobbonskerListe =
-                new ArrayList<>();
-        EsAnsettelsesforholdJobbonskerListe.add(EsAnsettelsesforholdJobbonsker);
 
         EsArbeidstidsordningJobbonsker EsArbeidstidsordningJobbonsker =
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
 
-        ArrayList<EsArbeidstidsordningJobbonsker> EsArbeidstidsordningJobbonskerListe =
-                new ArrayList<>();
-        EsArbeidstidsordningJobbonskerListe.add(EsArbeidstidsordningJobbonsker);
-
-        ArrayList<String> esVeilTilretteleggingsbehovListe =
-                new ArrayList<>();
-        esVeilTilretteleggingsbehovListe.add("Kat1_Kode");
-        esVeilTilretteleggingsbehovListe.add("Kat3_Kode");
-        esVeilTilretteleggingsbehovListe.add("tilgjengeliginnen1uke");
+        ArrayList<String> esVeilTilretteleggingsbehovListe = new ArrayList<>();
+        esVeilTilretteleggingsbehovListe.add(Kat1_Kode);
+        esVeilTilretteleggingsbehovListe.add(Kat3_Kode);
+        esVeilTilretteleggingsbehovListe.add(tilgjengeligInnen1Uke);
 
         EsCv esCv = new EsCv(nteAktorId(4), "09568410230", "HANNE", "NORDMANN", fraIsoDato("2002-06-04"), false, "ARBS",
                 "erjegmed@mailinator.com", "(+47) 22334455", "12345678", "NO", "4L", "",
@@ -851,15 +828,15 @@ public class EsCvObjectMother {
 
 
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(fraIsoDato("2000-01-01"), fraIsoDato("2000-02-01"),
-                "Bankhvelvet BBL", "4865.75", "Bankhvelvoperatør", Collections.singleton("Bankhvelvoperatør"), "Bankhvelvoperatør",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "Bankhvelvet BBL", "4865.75", "Bankhvelvoperatør", Set.of("Bankhvelvoperatør"), "Bankhvelvoperatør",
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring2 =
                 new EsYrkeserfaring(fraIsoDato("2003-01-01"), fraIsoDato("2003-02-01"), "Proggehula", "5746.07",
-                        "Progger", Set.of("Progger"), "Progger", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                        "Progger", Set.of("Progger"), "Progger", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(fraIsoDato("2003-04-01"), fraIsoDato("2003-05-01"),
-                "Test a.a.s", "6859.02", "Tester", Set.of("Tester"), "Tester", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "Test a.a.s", "6859.02", "Tester", Set.of("Tester"), "Tester", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring4 =
                 new EsYrkeserfaring(fraIsoDato("2005-08-01"), fraIsoDato("2005-09-01"), "K.O. kranservice", "8342.01",
@@ -867,11 +844,11 @@ public class EsCvObjectMother {
 
         EsYrkeserfaring yrkeserfaring5 = new EsYrkeserfaring(fraIsoDato("2016-06-01"), fraIsoDato("2016-06-02"),
                 "Lang transport A.S.", "8332.03", "Lastebil- \"Lastebil- og trailersjåførog trailersjåfør", Set.of("Lastebil- \"Lastebil- og trailersjåførog trailersjåfør"), "Sjåfør kl. 3",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(fraIsoDato("2017-10-01"), fraIsoDato(null),
                 "Mekken mekk", "7233.03", "Industrimekaniker", Set.of("Industrimekaniker"), "Industrimekaniker", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         ArrayList<EsYrkeserfaring> yrkeserfaringListe = new ArrayList<>();
         yrkeserfaringListe.add(yrkeserfaring1);
@@ -882,16 +859,16 @@ public class EsCvObjectMother {
         yrkeserfaringListe.add(yrkeserfaring6);
 
         EsKompetanse kompetanse1 = new EsKompetanse(fraIsoDato("2016-03-14"), "3020813",
-                "Maskin- og kranførerarbeid(type 2 kran)", null, null, Collections.emptyList());
+                "Maskin- og kranførerarbeid(type 2 kran)", null, null, emptyList());
 
         EsKompetanse kompetanse2 = new EsKompetanse(fraIsoDato("2016-03-14"), "3281301",
-                "Mekanisk arbeid spesielt", "Mekanisk arbeid spesielt", null, Collections.emptyList());
+                "Mekanisk arbeid spesielt", "Mekanisk arbeid spesielt", null, emptyList());
 
         EsKompetanse kompetanse3 = new EsKompetanse(fraIsoDato("2016-03-14"), "3220201",
-                "Landtransport generelt", "Landtransport generelt", null, Collections.emptyList());
+                "Landtransport generelt", "Landtransport generelt", null, emptyList());
 
         EsKompetanse kompetanse4 = new EsKompetanse(fraIsoDato("2016-03-14"), "212", "Industri (bransje)",
-                "Mekanisk industri (bransje)", null, Collections.emptyList());
+                "Mekanisk industri (bransje)", null, emptyList());
 
         ArrayList<EsKompetanse> kompetanseListe = new ArrayList<>();
         kompetanseListe.add(kompetanse1);
@@ -973,16 +950,16 @@ public class EsCvObjectMother {
         geografiJobbonskerListe.add(geografiJobbonsker3);
 
         EsYrkeJobbonsker yrkeJobbonsker =
-                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Industrimekaniker", true, Collections.emptyList());
+                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Industrimekaniker", true, emptyList());
 
         EsYrkeJobbonsker yrkeJobbonsker1 =
                 new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Lastebilsjåfør", true, Collections.singletonList("Trailersjåffis"));
 
         EsYrkeJobbonsker yrkeJobbonsker2 =
-                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Butikkmedarbeider", true, Collections.emptyList());
+                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Butikkmedarbeider", true, emptyList());
 
         EsYrkeJobbonsker yrkeJobbonsker3 =
-                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Konsulent (bank)", true, Collections.emptyList());
+                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Konsulent (bank)", true, emptyList());
 
         ArrayList<EsYrkeJobbonsker> yrkeJobbonskerListe = new ArrayList<>();
         yrkeJobbonskerListe.add(yrkeJobbonsker);
@@ -993,31 +970,20 @@ public class EsCvObjectMother {
         EsOmfangJobbonsker EsHeltidDeltidJobbonsker =
                 new EsOmfangJobbonsker("HeltidDeltidKode", "HeltidDeltidKode Tekst");
 
-        ArrayList<EsOmfangJobbonsker> EsHeltidDeltidJobbonskerListe = new ArrayList<>();
-        EsHeltidDeltidJobbonskerListe.add(EsHeltidDeltidJobbonsker);
-
         EsAnsettelsesformJobbonsker EsAnsettelsesforholdJobbonsker =
                 new EsAnsettelsesformJobbonsker("Ansettelsesforhold Kode",
                         "Ansettelsesforhold Kode tekst");
-
-        ArrayList<EsAnsettelsesformJobbonsker> EsAnsettelsesforholdJobbonskerListe =
-                new ArrayList<>();
-        EsAnsettelsesforholdJobbonskerListe.add(EsAnsettelsesforholdJobbonsker);
 
         EsArbeidstidsordningJobbonsker EsArbeidstidsordningJobbonsker =
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
 
-        ArrayList<EsArbeidstidsordningJobbonsker> EsArbeidstidsordningJobbonskerListe =
-                new ArrayList<>();
-        EsArbeidstidsordningJobbonskerListe.add(EsArbeidstidsordningJobbonsker);
-
         ArrayList<String> esVeilTilretteleggingsbehovListe =
                 new ArrayList<>();
-        esVeilTilretteleggingsbehovListe.add("Kat1_Kode");
-        esVeilTilretteleggingsbehovListe.add("Kat2_Kode");
+        esVeilTilretteleggingsbehovListe.add(Kat1_Kode);
+        esVeilTilretteleggingsbehovListe.add(Kat2_Kode);
         esVeilTilretteleggingsbehovListe.add("permittert");
-        esVeilTilretteleggingsbehovListe.add("midlertidigutilgjengelig");
+        esVeilTilretteleggingsbehovListe.add(midlertidigUtilgjengelig);
 
         EsCv esCv = new EsCv(nteAktorId(5), "03050316895", "BOB", "NORDMANN", fraIsoDato("1964-09-01"), false, "ARBS",
                 "bobob@mailinator.com", "(+47) 22334455", "12345678", "NO", "5L", "", "J",
@@ -1044,27 +1010,27 @@ public class EsCvObjectMother {
 
 
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(fraIsoDato("2000-01-01"), fraIsoDato("2000-02-01"),
-                "Bankhvelvet BBL", "4865.75", "Bankhvelvoperatør", Collections.singleton("Bankhvelvoperatør"), "Bankhvelvoperatør",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "Bankhvelvet BBL", "4865.75", "Bankhvelvoperatør", Set.of("Bankhvelvoperatør"), "Bankhvelvoperatør",
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring2 =
                 new EsYrkeserfaring(fraIsoDato("2003-01-01"), fraIsoDato("2003-02-01"), "Proggehula", "5746.07",
-                        "Progger", Collections.singleton("Progger"), "Progger", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                        "Progger", Set.of("Progger"), "Progger", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(fraIsoDato("2003-04-01"), fraIsoDato("2003-05-01"),
-                "Test a.a.s", "6859.02", "Tester", Collections.singleton("Tester"), "Tester", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "Test a.a.s", "6859.02", "Tester", Set.of("Tester"), "Tester", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring4 =
                 new EsYrkeserfaring(fraIsoDato("2005-08-01"), fraIsoDato("2005-09-01"), "K.O. kranservice", "8342.01",
-                        "Kranoperatør", Collections.singleton("Kranoperatør"), "Kranoperatør", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                        "Kranoperatør", Set.of("Kranoperatør"), "Kranoperatør", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring5 = new EsYrkeserfaring(fraIsoDato("2016-06-01"), fraIsoDato("2016-06-02"),
-                "Lang transport A.S.", "8332.03", "Lastebil- og trailersjåfør", Collections.singleton("Lastebil- og trailersjåfør"), "Sjåfør kl. 3",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "Lang transport A.S.", "8332.03", "Lastebil- og trailersjåfør", Set.of("Lastebil- og trailersjåfør"), "Sjåfør kl. 3",
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(fraIsoDato("2017-10-01"), fraIsoDato("2017-11-01"),
-                "Mekken mekk", "7233.03", "Industrimekaniker", Collections.singleton("Industrimekaniker"), "Industrimekaniker", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "Mekken mekk", "7233.03", "Industrimekaniker", Set.of("Industrimekaniker"), "Industrimekaniker", "YRKE_ORGNR",
+                "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         ArrayList<EsYrkeserfaring> yrkeserfaringListe = new ArrayList<>();
         yrkeserfaringListe.add(yrkeserfaring1);
@@ -1147,13 +1113,13 @@ public class EsCvObjectMother {
         geografiJobbonskerListe.add(geografiJobbonsker2);
 
         EsYrkeJobbonsker yrkeJobbonsker =
-                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Industrimekaniker", true, Collections.emptyList());
+                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Industrimekaniker", true, emptyList());
 
         EsYrkeJobbonsker yrkeJobbonsker1 =
-                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Lastebilsjåfør", true, Collections.emptyList());
+                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Lastebilsjåfør", true, emptyList());
 
         EsYrkeJobbonsker yrkeJobbonsker2 =
-                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Butikkmedarbeider", true, Collections.emptyList());
+                new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode", "Butikkmedarbeider", true, emptyList());
 
         ArrayList<EsYrkeJobbonsker> yrkeJobbonskerListe = new ArrayList<>();
         yrkeJobbonskerListe.add(yrkeJobbonsker);
@@ -1163,24 +1129,13 @@ public class EsCvObjectMother {
         EsOmfangJobbonsker EsHeltidDeltidJobbonsker =
                 new EsOmfangJobbonsker("HeltidDeltidKode", "HeltidDeltidKode Tekst");
 
-        ArrayList<EsOmfangJobbonsker> EsHeltidDeltidJobbonskerListe = new ArrayList<>();
-        EsHeltidDeltidJobbonskerListe.add(EsHeltidDeltidJobbonsker);
-
         EsAnsettelsesformJobbonsker EsAnsettelsesforholdJobbonsker =
                 new EsAnsettelsesformJobbonsker("Ansettelsesforhold Kode",
                         "Ansettelsesforhold Kode tekst");
 
-        ArrayList<EsAnsettelsesformJobbonsker> EsAnsettelsesforholdJobbonskerListe =
-                new ArrayList<>();
-        EsAnsettelsesforholdJobbonskerListe.add(EsAnsettelsesforholdJobbonsker);
-
         EsArbeidstidsordningJobbonsker EsArbeidstidsordningJobbonsker =
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
-
-        ArrayList<EsArbeidstidsordningJobbonsker> EsArbeidstidsordningJobbonskerListe =
-                new ArrayList<>();
-        EsArbeidstidsordningJobbonskerListe.add(EsArbeidstidsordningJobbonsker);
 
         EsCv esCv = new EsCv(nteAktorId(5), "03050316895", "BOB", "NORDMANN", fraIsoDato("1964-09-01"), false, "ARBS",
                 "bobob@mailinator.com", "(+47) 22334455", "12345678", "NO", "5L", "", "J",
@@ -1214,27 +1169,27 @@ public class EsCvObjectMother {
         utdanningsListe.add(utdanning2);
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(fraIsoDato("2000-01-01"), fraIsoDato("2000-01-10"),
                 "Stentransport, Kragerø", "8341.01", "", Set.of(), "maskinkjører og maskintransport",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(fraIsoDato("2003-01-01"), fraIsoDato("2003-02-01"),
-                "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
-                Collections.singleton("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "AF-Pihl, Hammerfest", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(fraIsoDato("2003-04-01"), fraIsoDato("2003-05-01"),
-                "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
-                Collections.singleton("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "O.K. Hagalia, Slependen", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(fraIsoDato("2005-08-01"), fraIsoDato("2005-09-01"),
-                "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", Collections.singleton("Industrimekaniker"), "Industrimekaniker",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", Set.of("Industrimekaniker"), "Industrimekaniker",
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring5 = new EsYrkeserfaring(fraIsoDato("2016-06-01"), fraIsoDato("2016-07-01"),
-                "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", Collections.singleton("Lastebil- og trailersjåfør"), "Sjåfør kl. 2", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", Set.of("Lastebil- og trailersjåfør"), "Sjåfør kl. 2", "YRKE_ORGNR",
+                "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(fraIsoDato("2017-10-01"), fraIsoDato("2017-12-01"),
-                "NLI  Grenland", "7233.03", "Industrimekaniker", Collections.singleton("Industrimekaniker"), "Industrimekaniker", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "NLI  Grenland", "7233.03", "Industrimekaniker", Set.of("Industrimekaniker"), "Industrimekaniker", "YRKE_ORGNR",
+                "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         ArrayList<EsYrkeserfaring> yrkeserfaringsListe = new ArrayList<>();
         yrkeserfaringsListe.add(yrkeserfaring1);
@@ -1245,16 +1200,16 @@ public class EsCvObjectMother {
         yrkeserfaringsListe.add(yrkeserfaring6);
 
         EsKompetanse kompetanse1 = new EsKompetanse(fraIsoDato("2016-03-14"), "3020813",
-                "Maskin- og kranførerarbeid", null, null, Collections.emptyList());
+                "Maskin- og kranførerarbeid", null, null, emptyList());
 
         EsKompetanse kompetanse2 = new EsKompetanse(fraIsoDato("2016-03-14"), "3281301",
-                "Mekanisk arbeid generelt", "Mekanisk arbeid generelt", null, Collections.emptyList());
+                "Mekanisk arbeid generelt", "Mekanisk arbeid generelt", null, emptyList());
 
         EsKompetanse kompetanse3 = new EsKompetanse(fraIsoDato("2016-03-14"), "506",
-                "Landtransport generelt", "Landtransport generelt", null, Collections.emptyList());
+                "Landtransport generelt", "Landtransport generelt", null, emptyList());
 
         EsKompetanse kompetanse4 = new EsKompetanse(fraIsoDato("2016-03-14"), "212", "Industri (bransje)",
-                "Mekanisk industri (bransje)", null, Collections.emptyList());
+                "Mekanisk industri (bransje)", null, emptyList());
 
         ArrayList<EsKompetanse> kompetanseList = new ArrayList<>();
         kompetanseList.add(kompetanse1);
@@ -1338,7 +1293,7 @@ public class EsCvObjectMother {
         geografiJobbonskerListe.add(geografiJobbonsker2);
 
         EsYrkeJobbonsker yrkeJobbonsker = new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode",
-                "Yrke jobb ønske Styrk beskrivelse", true, Collections.emptyList());
+                "Yrke jobb ønske Styrk beskrivelse", true, emptyList());
 
         ArrayList<EsYrkeJobbonsker> yrkeJobbonskerListe = new ArrayList<>();
         yrkeJobbonskerListe.add(yrkeJobbonsker);
@@ -1346,23 +1301,12 @@ public class EsCvObjectMother {
         EsOmfangJobbonsker heltidDeltidJobbonsker =
                 new EsOmfangJobbonsker("HeltidDeltidKode", "HeltidDeltidKode Tekst");
 
-        ArrayList<EsOmfangJobbonsker> heltidDeltidJobbonskerListe = new ArrayList<>();
-        heltidDeltidJobbonskerListe.add(heltidDeltidJobbonsker);
-
         EsAnsettelsesformJobbonsker ansettelsesforholdJobbonsker = new EsAnsettelsesformJobbonsker(
                 "Ansettelsesforhold Kode", "Ansettelsesforhold Kode tekst");
-
-        ArrayList<EsAnsettelsesformJobbonsker> ansettelsesforholdJobbonskerListe =
-                new ArrayList<>();
-        ansettelsesforholdJobbonskerListe.add(ansettelsesforholdJobbonsker);
 
         EsArbeidstidsordningJobbonsker arbeidstidsordningJobbonsker =
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
-
-        ArrayList<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonskerListe =
-                new ArrayList<>();
-        arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
         EsCv esCv = new EsCv(nteAktorId(1), "02016012345", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
                 "unnasluntrer@mailinator.com", "(+47) 22334455", "12345678", "NO", "1L",
@@ -1395,27 +1339,27 @@ public class EsCvObjectMother {
 
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(fraIsoDato("2000-01-01"), fraIsoDato("2000-01-10"),
                 "Stentransport, Kragerø", "8341.01", "", Set.of(), "maskinkjører og maskintransport",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(fraIsoDato("2003-01-01"), fraIsoDato("2003-02-01"),
-                "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
-                Collections.singleton("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "AF-Pihl, Hammerfest", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(fraIsoDato("2003-04-01"), fraIsoDato("2003-05-01"),
-                "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
-                Collections.singleton("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "O.K. Hagalia, Slependen", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(fraIsoDato("2005-08-01"), fraIsoDato("2005-09-01"),
-                "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", Collections.singleton("Industrimekaniker"), "Industrimekaniker",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", Set.of("Industrimekaniker"), "Industrimekaniker",
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring5 = new EsYrkeserfaring(fraIsoDato("2016-06-01"), fraIsoDato("2016-07-01"),
-                "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", Collections.singleton("Lastebil- og trailersjåfør"), "Sjåfør kl. 2", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", Set.of("Lastebil- og trailersjåfør"), "Sjåfør kl. 2", "YRKE_ORGNR",
+                "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(fraIsoDato("2017-10-01"), fraIsoDato("2017-12-01"),
-                "NLI  Grenland", "7233.03", "Industrimekaniker", Collections.singleton("Industrimekaniker"), "Industrimekaniker", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "NLI  Grenland", "7233.03", "Industrimekaniker", Set.of("Industrimekaniker"), "Industrimekaniker", "YRKE_ORGNR",
+                "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         ArrayList<EsYrkeserfaring> yrkeserfaringsListe = new ArrayList<>();
         yrkeserfaringsListe.add(yrkeserfaring1);
@@ -1426,16 +1370,16 @@ public class EsCvObjectMother {
         yrkeserfaringsListe.add(yrkeserfaring6);
 
         EsKompetanse kompetanse1 = new EsKompetanse(fraIsoDato("2016-03-14"), "3020813",
-                "Maskin- og kranførerarbeid", null, null, Collections.emptyList());
+                "Maskin- og kranførerarbeid", null, null, emptyList());
 
         EsKompetanse kompetanse2 = new EsKompetanse(fraIsoDato("2016-03-14"), "3281301",
-                "Mekanisk arbeid generelt", "Mekanisk arbeid generelt", null, Collections.emptyList());
+                "Mekanisk arbeid generelt", "Mekanisk arbeid generelt", null, emptyList());
 
         EsKompetanse kompetanse3 = new EsKompetanse(fraIsoDato("2016-03-14"), "506",
-                "Landtransport generelt", "Landtransport generelt", null, Collections.emptyList());
+                "Landtransport generelt", "Landtransport generelt", null, emptyList());
 
         EsKompetanse kompetanse4 = new EsKompetanse(fraIsoDato("2016-03-14"), "212", "Industri (bransje)",
-                "Mekanisk industri (bransje)", null, Collections.emptyList());
+                "Mekanisk industri (bransje)", null, emptyList());
 
         ArrayList<EsKompetanse> kompetanseList = new ArrayList<>();
         kompetanseList.add(kompetanse1);
@@ -1526,7 +1470,7 @@ public class EsCvObjectMother {
         geografiJobbonskerListe.add(geografiJobbonsker2);
 
         EsYrkeJobbonsker yrkeJobbonsker = new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode",
-                "Yrke jobb ønske Styrk beskrivelse", true, Collections.emptyList());
+                "Yrke jobb ønske Styrk beskrivelse", true, emptyList());
 
         ArrayList<EsYrkeJobbonsker> yrkeJobbonskerListe = new ArrayList<>();
         yrkeJobbonskerListe.add(yrkeJobbonsker);
@@ -1534,22 +1478,12 @@ public class EsCvObjectMother {
         EsOmfangJobbonsker esOmfangJobbonsker =
                 new EsOmfangJobbonsker(Omfang.HELTID.name(), Omfang.HELTID.defaultTekst());
 
-        List<EsOmfangJobbonsker> omfangJobbonskerList = new ArrayList<>();
-        omfangJobbonskerList.add(esOmfangJobbonsker);
-
         EsAnsettelsesformJobbonsker ansettelsesformJobbonsker = new EsAnsettelsesformJobbonsker(
                 Ansettelsesform.FAST.name(), Ansettelsesform.FAST.defaultTekst());
-
-        List<EsAnsettelsesformJobbonsker> ansettelsesformJobbonskerList = new ArrayList<>();
-        ansettelsesformJobbonskerList.add(ansettelsesformJobbonsker);
 
         EsArbeidstidsordningJobbonsker arbeidstidsordningJobbonsker =
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
-
-        ArrayList<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonskerListe =
-                new ArrayList<>();
-        arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
         EsCv esCv = new EsCv(nteAktorId(6), "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "6L",
@@ -1581,27 +1515,27 @@ public class EsCvObjectMother {
 
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(fraIsoDato("2000-01-01"), fraIsoDato("2000-01-10"),
                 "Stentransport, Kragerø", "8341.01", "", Set.of(), "maskinkjører og maskintransport",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(fraIsoDato("2003-01-01"), fraIsoDato("2003-02-01"),
-                "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
-                Collections.singleton("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "AF-Pihl, Hammerfest", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(fraIsoDato("2003-04-01"), fraIsoDato("2003-05-01"),
-                "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
-                Collections.singleton("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "O.K. Hagalia, Slependen", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(fraIsoDato("2005-08-01"), fraIsoDato("2005-09-01"),
-                "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", Collections.singleton("Industrimekaniker"), "Industrimekaniker",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", Set.of("Industrimekaniker"), "Industrimekaniker",
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring5 = new EsYrkeserfaring(fraIsoDato("2016-06-01"), fraIsoDato("2016-07-01"),
-                "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", Collections.singleton("Lastebil- og trailersjåfør"), "Sjåfør kl. 2", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", Set.of("Lastebil- og trailersjåfør"), "Sjåfør kl. 2", "YRKE_ORGNR",
+                "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(fraIsoDato("2017-10-01"), fraIsoDato("2017-12-01"),
-                "NLI  Grenland", "7233.03", "Industrimekaniker", Collections.singleton("Industrimekaniker"), "Industrimekaniker", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "NLI  Grenland", "7233.03", "Industrimekaniker", Set.of("Industrimekaniker"), "Industrimekaniker", "YRKE_ORGNR",
+                "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         ArrayList<EsYrkeserfaring> yrkeserfaringsListe = new ArrayList<>();
         yrkeserfaringsListe.add(yrkeserfaring1);
@@ -1612,16 +1546,16 @@ public class EsCvObjectMother {
         yrkeserfaringsListe.add(yrkeserfaring6);
 
         EsKompetanse kompetanse1 = new EsKompetanse(fraIsoDato("2016-03-14"), "3020813",
-                "Maskin- og kranførerarbeid", null, null, Collections.emptyList());
+                "Maskin- og kranførerarbeid", null, null, emptyList());
 
         EsKompetanse kompetanse2 = new EsKompetanse(fraIsoDato("2016-03-14"), "3281301",
-                "Mekanisk arbeid generelt", "Mekanisk arbeid generelt", null, Collections.emptyList());
+                "Mekanisk arbeid generelt", "Mekanisk arbeid generelt", null, emptyList());
 
         EsKompetanse kompetanse3 = new EsKompetanse(fraIsoDato("2016-03-14"), "506",
-                "Landtransport generelt", "Landtransport generelt", null, Collections.emptyList());
+                "Landtransport generelt", "Landtransport generelt", null, emptyList());
 
         EsKompetanse kompetanse4 = new EsKompetanse(fraIsoDato("2016-03-14"), "212", "Industri (bransje)",
-                "Mekanisk industri (bransje)", null, Collections.emptyList());
+                "Mekanisk industri (bransje)", null, emptyList());
 
         ArrayList<EsKompetanse> kompetanseList = new ArrayList<>();
         kompetanseList.add(kompetanse1);
@@ -1712,7 +1646,7 @@ public class EsCvObjectMother {
         geografiJobbonskerListe.add(geografiJobbonsker2);
 
         EsYrkeJobbonsker yrkeJobbonsker = new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode",
-                "Yrke jobb ønske Styrk beskrivelse", true, Collections.emptyList());
+                "Yrke jobb ønske Styrk beskrivelse", true, emptyList());
 
         ArrayList<EsYrkeJobbonsker> yrkeJobbonskerListe = new ArrayList<>();
         yrkeJobbonskerListe.add(yrkeJobbonsker);
@@ -1720,22 +1654,12 @@ public class EsCvObjectMother {
         EsOmfangJobbonsker esOmfangJobbonsker =
                 new EsOmfangJobbonsker(Omfang.HELTID.name(), Omfang.HELTID.defaultTekst());
 
-        List<EsOmfangJobbonsker> omfangJobbonskerList = new ArrayList<>();
-        omfangJobbonskerList.add(esOmfangJobbonsker);
-
         EsAnsettelsesformJobbonsker ansettelsesformJobbonsker = new EsAnsettelsesformJobbonsker(
                 Ansettelsesform.FAST.name(), Ansettelsesform.FAST.defaultTekst());
-
-        List<EsAnsettelsesformJobbonsker> ansettelsesformJobbonskerList = new ArrayList<>();
-        ansettelsesformJobbonskerList.add(ansettelsesformJobbonsker);
 
         EsArbeidstidsordningJobbonsker arbeidstidsordningJobbonsker =
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
-
-        ArrayList<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonskerListe =
-                new ArrayList<>();
-        arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
         EsCv esCv = new EsCv(nteAktorId(7), "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "7L",
@@ -1768,27 +1692,27 @@ public class EsCvObjectMother {
 
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(fraIsoDato("2000-01-01"), fraIsoDato("2000-01-10"),
                 "Stentransport, Kragerø", "8341.01", "", Set.of(), "maskinkjører og maskintransport",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(fraIsoDato("2003-01-01"), fraIsoDato("2003-02-01"),
-                "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
-                Collections.singleton("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "AF-Pihl, Hammerfest", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(fraIsoDato("2003-04-01"), fraIsoDato("2003-05-01"),
-                "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
-                Collections.singleton("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "O.K. Hagalia, Slependen", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(fraIsoDato("2005-08-01"), fraIsoDato("2005-09-01"),
-                "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", Collections.singleton("Industrimekaniker"), "Industrimekaniker",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", Set.of("Industrimekaniker"), "Industrimekaniker",
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring5 = new EsYrkeserfaring(fraIsoDato("2016-06-01"), fraIsoDato("2016-07-01"),
-                "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", Collections.singleton("Lastebil- og trailersjåfør"), "Sjåfør kl. 2", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", Set.of("Lastebil- og trailersjåfør"), "Sjåfør kl. 2", "YRKE_ORGNR",
+                "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(fraIsoDato("2017-10-01"), fraIsoDato("2017-12-01"),
-                "NLI  Grenland", "7233.03", "Industrimekaniker", Collections.singleton("Industrimekaniker"), "Industrimekaniker", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "NLI  Grenland", "7233.03", "Industrimekaniker", Set.of("Industrimekaniker"), "Industrimekaniker", "YRKE_ORGNR",
+                "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         ArrayList<EsYrkeserfaring> yrkeserfaringsListe = new ArrayList<>();
         yrkeserfaringsListe.add(yrkeserfaring1);
@@ -1799,16 +1723,16 @@ public class EsCvObjectMother {
         yrkeserfaringsListe.add(yrkeserfaring6);
 
         EsKompetanse kompetanse1 = new EsKompetanse(fraIsoDato("2016-03-14"), "3020813",
-                "Maskin- og kranførerarbeid", null, null, Collections.emptyList());
+                "Maskin- og kranførerarbeid", null, null, emptyList());
 
         EsKompetanse kompetanse2 = new EsKompetanse(fraIsoDato("2016-03-14"), "3281301",
-                "Mekanisk arbeid generelt", "Mekanisk arbeid generelt", null, Collections.emptyList());
+                "Mekanisk arbeid generelt", "Mekanisk arbeid generelt", null, emptyList());
 
         EsKompetanse kompetanse3 = new EsKompetanse(fraIsoDato("2016-03-14"), "506",
-                "Landtransport generelt", "Landtransport generelt", null, Collections.emptyList());
+                "Landtransport generelt", "Landtransport generelt", null, emptyList());
 
         EsKompetanse kompetanse4 = new EsKompetanse(fraIsoDato("2016-03-14"), "212", "Industri (bransje)",
-                "Mekanisk industri (bransje)", null, Collections.emptyList());
+                "Mekanisk industri (bransje)", null, emptyList());
 
         ArrayList<EsKompetanse> kompetanseList = new ArrayList<>();
         kompetanseList.add(kompetanse1);
@@ -1899,7 +1823,7 @@ public class EsCvObjectMother {
         geografiJobbonskerListe.add(geografiJobbonsker2);
 
         EsYrkeJobbonsker yrkeJobbonsker = new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode",
-                "Yrke jobb ønske Styrk beskrivelse", true, Collections.emptyList());
+                "Yrke jobb ønske Styrk beskrivelse", true, emptyList());
 
         ArrayList<EsYrkeJobbonsker> yrkeJobbonskerListe = new ArrayList<>();
         yrkeJobbonskerListe.add(yrkeJobbonsker);
@@ -1907,22 +1831,12 @@ public class EsCvObjectMother {
         EsOmfangJobbonsker esOmfangJobbonsker =
                 new EsOmfangJobbonsker(Omfang.HELTID.name(), Omfang.HELTID.defaultTekst());
 
-        List<EsOmfangJobbonsker> omfangJobbonskerList = new ArrayList<>();
-        omfangJobbonskerList.add(esOmfangJobbonsker);
-
         EsAnsettelsesformJobbonsker ansettelsesformJobbonsker = new EsAnsettelsesformJobbonsker(
                 Ansettelsesform.FAST.name(), Ansettelsesform.FAST.defaultTekst());
-
-        List<EsAnsettelsesformJobbonsker> ansettelsesformJobbonskerList = new ArrayList<>();
-        ansettelsesformJobbonskerList.add(ansettelsesformJobbonsker);
 
         EsArbeidstidsordningJobbonsker arbeidstidsordningJobbonsker =
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
-
-        ArrayList<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonskerListe =
-                new ArrayList<>();
-        arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
         EsCv esCv = new EsCv(nteAktorId(8), "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "8L",
@@ -1954,27 +1868,27 @@ public class EsCvObjectMother {
 
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(fraIsoDato("2000-01-01"), fraIsoDato("2000-01-10"),
                 "Stentransport, Kragerø", "8341.01", "", Set.of(), "maskinkjører og maskintransport",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(fraIsoDato("2003-01-01"), fraIsoDato("2003-02-01"),
-                "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
-                Collections.singleton("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "AF-Pihl, Hammerfest", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(fraIsoDato("2003-04-01"), fraIsoDato("2003-05-01"),
-                "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
-                Collections.singleton("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "O.K. Hagalia, Slependen", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(fraIsoDato("2005-08-01"), fraIsoDato("2005-09-01"),
-                "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", Collections.singleton("Industrimekaniker"), "Industrimekaniker",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", Set.of("Industrimekaniker"), "Industrimekaniker",
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring5 = new EsYrkeserfaring(fraIsoDato("2016-06-01"), fraIsoDato("2016-07-01"),
-                "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", Collections.singleton("Lastebil- og trailersjåfør"), "Sjåfør kl. 2", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", Set.of("Lastebil- og trailersjåfør"), "Sjåfør kl. 2", "YRKE_ORGNR",
+                "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(fraIsoDato("2017-10-01"), fraIsoDato("2017-12-01"),
-                "NLI  Grenland", "7233.03", "Industrimekaniker", Collections.singleton("Industri'mekaniker"), "Industrimekaniker", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "NLI  Grenland", "7233.03", "Industrimekaniker", Set.of("Industri'mekaniker"), "Industrimekaniker", "YRKE_ORGNR",
+                "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         ArrayList<EsYrkeserfaring> yrkeserfaringsListe = new ArrayList<>();
         yrkeserfaringsListe.add(yrkeserfaring1);
@@ -1985,16 +1899,16 @@ public class EsCvObjectMother {
         yrkeserfaringsListe.add(yrkeserfaring6);
 
         EsKompetanse kompetanse1 = new EsKompetanse(fraIsoDato("2016-03-14"), "3020813",
-                "Maskin- og kranførerarbeid", null, null, Collections.emptyList());
+                "Maskin- og kranførerarbeid", null, null, emptyList());
 
         EsKompetanse kompetanse2 = new EsKompetanse(fraIsoDato("2016-03-14"), "3281301",
-                "Mekanisk arbeid generelt", "Mekanisk arbeid generelt", null, Collections.emptyList());
+                "Mekanisk arbeid generelt", "Mekanisk arbeid generelt", null, emptyList());
 
         EsKompetanse kompetanse3 = new EsKompetanse(fraIsoDato("2016-03-14"), "506",
-                "Landtransport generelt", "Landtransport generelt", null, Collections.emptyList());
+                "Landtransport generelt", "Landtransport generelt", null, emptyList());
 
         EsKompetanse kompetanse4 = new EsKompetanse(fraIsoDato("2016-03-14"), "212", "Industri (bransje)",
-                "Mekanisk industri (bransje)", null, Collections.emptyList());
+                "Mekanisk industri (bransje)", null, emptyList());
 
         ArrayList<EsKompetanse> kompetanseList = new ArrayList<>();
         kompetanseList.add(kompetanse1);
@@ -2085,7 +1999,7 @@ public class EsCvObjectMother {
         geografiJobbonskerListe.add(geografiJobbonsker2);
 
         EsYrkeJobbonsker yrkeJobbonsker = new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode",
-                "Yrke jobb ønske Styrk beskrivelse", true, Collections.emptyList());
+                "Yrke jobb ønske Styrk beskrivelse", true, emptyList());
 
         ArrayList<EsYrkeJobbonsker> yrkeJobbonskerListe = new ArrayList<>();
         yrkeJobbonskerListe.add(yrkeJobbonsker);
@@ -2093,22 +2007,12 @@ public class EsCvObjectMother {
         EsOmfangJobbonsker esOmfangJobbonsker =
                 new EsOmfangJobbonsker(Omfang.HELTID.name(), Omfang.HELTID.defaultTekst());
 
-        List<EsOmfangJobbonsker> omfangJobbonskerList = new ArrayList<>();
-        omfangJobbonskerList.add(esOmfangJobbonsker);
-
         EsAnsettelsesformJobbonsker ansettelsesformJobbonsker = new EsAnsettelsesformJobbonsker(
                 Ansettelsesform.FAST.name(), Ansettelsesform.FAST.defaultTekst());
-
-        List<EsAnsettelsesformJobbonsker> ansettelsesformJobbonskerList = new ArrayList<>();
-        ansettelsesformJobbonskerList.add(ansettelsesformJobbonsker);
 
         EsArbeidstidsordningJobbonsker arbeidstidsordningJobbonsker =
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
-
-        ArrayList<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonskerListe =
-                new ArrayList<>();
-        arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
         EsCv esCv = new EsCv(nteAktorId(9), "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "9L",
@@ -2140,27 +2044,27 @@ public class EsCvObjectMother {
 
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(fraIsoDato("2000-01-01"), fraIsoDato("2000-01-10"),
                 "Stentransport, Kragerø", "8341.01", "", Set.of(), "maskinkjører og maskintransport",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(fraIsoDato("2003-01-01"), fraIsoDato("2003-02-01"),
-                "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
-                Collections.singleton("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "AF-Pihl, Hammerfest", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(fraIsoDato("2003-04-01"), fraIsoDato("2003-05-01"),
-                "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
-                Collections.singleton("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "O.K. Hagalia, Slependen", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(fraIsoDato("2005-08-01"), fraIsoDato("2005-09-01"),
-                "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", Collections.singleton("Industrimekaniker"), "Industrimekaniker",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", Set.of("Industrimekaniker"), "Industrimekaniker",
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring5 = new EsYrkeserfaring(fraIsoDato("2016-06-01"), fraIsoDato("2016-07-01"),
-                "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", Collections.singleton("Lastebil- og trailersjåfør"), "Sjåfør kl. 2", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", Set.of("Lastebil- og trailersjåfør"), "Sjåfør kl. 2", "YRKE_ORGNR",
+                "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(fraIsoDato("2017-10-01"), fraIsoDato("2017-12-01"),
-                "NLI  Grenland", "7233.03", "Industrimekaniker", Collections.singleton("Industrimekaniker"), "Industrimekaniker", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "NLI  Grenland", "7233.03", "Industrimekaniker", Set.of("Industrimekaniker"), "Industrimekaniker", "YRKE_ORGNR",
+                "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         ArrayList<EsYrkeserfaring> yrkeserfaringsListe = new ArrayList<>();
         yrkeserfaringsListe.add(yrkeserfaring1);
@@ -2171,16 +2075,16 @@ public class EsCvObjectMother {
         yrkeserfaringsListe.add(yrkeserfaring6);
 
         EsKompetanse kompetanse1 = new EsKompetanse(fraIsoDato("2016-03-14"), "3020813",
-                "Maskin- og kranførerarbeid", null, null, Collections.emptyList());
+                "Maskin- og kranførerarbeid", null, null, emptyList());
 
         EsKompetanse kompetanse2 = new EsKompetanse(fraIsoDato("2016-03-14"), "3281301",
-                "Mekanisk arbeid generelt", "Mekanisk arbeid generelt", null, Collections.emptyList());
+                "Mekanisk arbeid generelt", "Mekanisk arbeid generelt", null, emptyList());
 
         EsKompetanse kompetanse3 = new EsKompetanse(fraIsoDato("2016-03-14"), "506",
-                "Landtransport generelt", "Landtransport generelt", null, Collections.emptyList());
+                "Landtransport generelt", "Landtransport generelt", null, emptyList());
 
         EsKompetanse kompetanse4 = new EsKompetanse(fraIsoDato("2016-03-14"), "212", "Industri (bransje)",
-                "Mekanisk industri (bransje)", null, Collections.emptyList());
+                "Mekanisk industri (bransje)", null, emptyList());
 
         ArrayList<EsKompetanse> kompetanseList = new ArrayList<>();
         kompetanseList.add(kompetanse1);
@@ -2271,7 +2175,7 @@ public class EsCvObjectMother {
         geografiJobbonskerListe.add(geografiJobbonsker2);
 
         EsYrkeJobbonsker yrkeJobbonsker = new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode",
-                "Yrke jobb ønske Styrk beskrivelse", true, Collections.emptyList());
+                "Yrke jobb ønske Styrk beskrivelse", true, emptyList());
 
         ArrayList<EsYrkeJobbonsker> yrkeJobbonskerListe = new ArrayList<>();
         yrkeJobbonskerListe.add(yrkeJobbonsker);
@@ -2279,27 +2183,17 @@ public class EsCvObjectMother {
         EsOmfangJobbonsker esOmfangJobbonsker =
                 new EsOmfangJobbonsker(Omfang.HELTID.name(), Omfang.HELTID.defaultTekst());
 
-        List<EsOmfangJobbonsker> omfangJobbonskerList = new ArrayList<>();
-        omfangJobbonskerList.add(esOmfangJobbonsker);
-
         EsAnsettelsesformJobbonsker ansettelsesformJobbonsker = new EsAnsettelsesformJobbonsker(
                 Ansettelsesform.FAST.name(), Ansettelsesform.FAST.defaultTekst());
-
-        List<EsAnsettelsesformJobbonsker> ansettelsesformJobbonskerList = new ArrayList<>();
-        ansettelsesformJobbonskerList.add(ansettelsesformJobbonsker);
 
         EsArbeidstidsordningJobbonsker arbeidstidsordningJobbonsker =
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
 
-        ArrayList<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonskerListe =
-                new ArrayList<>();
-        arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
-
         EsCv esCv = new EsCv(nteAktorId(10), "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "10L",
                 "", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
-                new Date(), 301, FALSE, null, "IKVAL", null, null, TRUE, FALSE,
+                new Date(), 301, FALSE, null, ikval, null, null, TRUE, FALSE,
                 false, false, null, "0301", "H149390", false, null, null);
         esCv.addUtdanning(utdanningsListe);
         esCv.addYrkeserfaring(yrkeserfaringsListe);
@@ -2326,27 +2220,27 @@ public class EsCvObjectMother {
 
         EsYrkeserfaring yrkeserfaring1 = new EsYrkeserfaring(fraIsoDato("2000-01-01"), fraIsoDato("2000-01-10"),
                 "Stentransport, Kragerø", "8341.01", "", Set.of(), "maskinkjører og maskintransport",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
-        EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(fraIsoDato("2003-01-01"), fraIsoDato("2013-02-01"),
-                "AF-Pihl, Hammerfest", "8342.01", "Anleggsmaskinfører",
-                Set.of("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+        EsYrkeserfaring yrkeserfaring2 = new EsYrkeserfaring(nåMinusÅr(11), nåMinusÅr(6),
+                "AF-Pihl, Hammerfest", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring3 = new EsYrkeserfaring(fraIsoDato("2003-04-01"), fraIsoDato("2003-05-01"),
-                "O.K. Hagalia, Slependen", "8342.01", "Anleggsmaskinfører",
-                Collections.singleton("Anleggsmaskinfører"), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "O.K. Hagalia, Slependen", "8342.01", anleggsmaskinfører,
+                Set.of(anleggsmaskinfører), "maskinkjører og maskintransport", "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring4 = new EsYrkeserfaring(fraIsoDato("2005-08-01"), fraIsoDato("2005-09-01"),
-                "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", Collections.singleton("Industrimekaniker"), "Industrimekaniker",
-                "YRKE_ORGNR", "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "Vard Group,avd.Brevik", "7233.03", "Industrimekaniker", Set.of("Industrimekaniker"), "Industrimekaniker",
+                "YRKE_ORGNR", "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring5 = new EsYrkeserfaring(fraIsoDato("2016-06-01"), fraIsoDato("2016-07-01"),
                 "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", Set.of("Lastebil- og trailersjåfør"), "Sjåfør kl. 2", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         EsYrkeserfaring yrkeserfaring6 = new EsYrkeserfaring(fraIsoDato("2017-10-01"), fraIsoDato("2017-12-01"),
-                "NLI  Grenland", "7233.03", "Industrimekaniker", Collections.singleton("Industrimekaniker"), "Industrimekaniker", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "NLI  Grenland", "7233.03", "Industrimekaniker", Set.of("Industrimekaniker"), "Industrimekaniker", "YRKE_ORGNR",
+                "YRKE_NACEKODE", false, emptyList(), "Oslo");
 
         ArrayList<EsYrkeserfaring> yrkeserfaringsListe = new ArrayList<>();
         yrkeserfaringsListe.add(yrkeserfaring1);
@@ -2357,16 +2251,16 @@ public class EsCvObjectMother {
         yrkeserfaringsListe.add(yrkeserfaring6);
 
         EsKompetanse kompetanse1 = new EsKompetanse(fraIsoDato("2016-03-14"), "3020813",
-                "Maskin- og kranførerarbeid", null, null, Collections.emptyList());
+                "Maskin- og kranførerarbeid", null, null, emptyList());
 
         EsKompetanse kompetanse2 = new EsKompetanse(fraIsoDato("2016-03-14"), "3281301",
-                "Mekanisk arbeid generelt", "Mekanisk arbeid generelt", null, Collections.emptyList());
+                "Mekanisk arbeid generelt", "Mekanisk arbeid generelt", null, emptyList());
 
         EsKompetanse kompetanse3 = new EsKompetanse(fraIsoDato("2016-03-14"), "506",
-                "Landtransport generelt", "Landtransport generelt", null, Collections.emptyList());
+                "Landtransport generelt", "Landtransport generelt", null, emptyList());
 
         EsKompetanse kompetanse4 = new EsKompetanse(fraIsoDato("2016-03-14"), "212", "Industri (bransje)",
-                "Mekanisk industri (bransje)", null, Collections.emptyList());
+                "Mekanisk industri (bransje)", null, emptyList());
 
         ArrayList<EsKompetanse> kompetanseList = new ArrayList<>();
         kompetanseList.add(kompetanse1);
@@ -2457,7 +2351,7 @@ public class EsCvObjectMother {
         geografiJobbonskerListe.add(geografiJobbonsker2);
 
         EsYrkeJobbonsker yrkeJobbonsker = new EsYrkeJobbonsker("Yrke jobb ønskeStyrk Kode",
-                "Yrke jobb ønske Styrk beskrivelse", true, Collections.emptyList());
+                "Yrke jobb ønske Styrk beskrivelse", true, emptyList());
 
         ArrayList<EsYrkeJobbonsker> yrkeJobbonskerListe = new ArrayList<>();
         yrkeJobbonskerListe.add(yrkeJobbonsker);
@@ -2465,22 +2359,12 @@ public class EsCvObjectMother {
         EsOmfangJobbonsker esOmfangJobbonsker =
                 new EsOmfangJobbonsker(Omfang.HELTID.name(), Omfang.HELTID.defaultTekst());
 
-        List<EsOmfangJobbonsker> omfangJobbonskerList = new ArrayList<>();
-        omfangJobbonskerList.add(esOmfangJobbonsker);
-
         EsAnsettelsesformJobbonsker ansettelsesformJobbonsker = new EsAnsettelsesformJobbonsker(
                 Ansettelsesform.FAST.name(), Ansettelsesform.FAST.defaultTekst());
-
-        List<EsAnsettelsesformJobbonsker> ansettelsesformJobbonskerList = new ArrayList<>();
-        ansettelsesformJobbonskerList.add(ansettelsesformJobbonsker);
 
         EsArbeidstidsordningJobbonsker arbeidstidsordningJobbonsker =
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
-
-        ArrayList<EsArbeidstidsordningJobbonsker> arbeidstidsordningJobbonskerListe =
-                new ArrayList<>();
-        arbeidstidsordningJobbonskerListe.add(arbeidstidsordningJobbonsker);
 
         EsCv esCv = new EsCv(nteAktorId(11), "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "11L",
@@ -2511,7 +2395,7 @@ public class EsCvObjectMother {
     public static EsYrkeserfaring giveMeYrkeserfaring() {
         return new EsYrkeserfaring(fraIsoDato("2016-06-01"), fraIsoDato("2016-07-01"),
                 "MTM anlegg", "8332.03", "Lastebil- og trailersjåfør", Set.of("Lastebil- og trailersjåfør"), "Sjåfør kl. 2", "YRKE_ORGNR",
-                "YRKE_NACEKODE", false, Collections.emptyList(), "Oslo");
+                "YRKE_NACEKODE", false, emptyList(), "Oslo");
     }
 
     public static EsUtdanning giveMeUtdanning() {
