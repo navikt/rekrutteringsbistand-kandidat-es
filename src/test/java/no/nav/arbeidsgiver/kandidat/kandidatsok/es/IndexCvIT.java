@@ -1164,14 +1164,14 @@ public class IndexCvIT {
 
     @Test
     public void sokMedTilgjengeligFilterSkalSkalGiKorrektTreff() {
-        Sokeresultat sokeresultat =
-                sokClient.veilederSok(SokekriterierVeiledere
-                        .med().midlertidigUtilgjengelig(Collections.singletonList(tilgjengelig))
-                        .bygg());
+        SokekriterierVeiledere søkekriterier = SokekriterierVeiledere.med().midlertidigUtilgjengelig(List.of(tilgjengelig)).bygg();
 
-        List<EsCv> cver = sokeresultat.getCver();
+        List<EsCv> cver = sokClient.veilederSok(søkekriterier).getCver();
 
-        assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder("2L", "6L", "11L");
+        assertThat(cver).isNotEmpty();
+        cver.forEach(cv -> {
+            assertThat(cv.getVeilTilretteleggingsbehov()).doesNotContain(midlertidigUtilgjengelig, tilgjengeligInnen1Uke);
+        });
     }
 
     @Test

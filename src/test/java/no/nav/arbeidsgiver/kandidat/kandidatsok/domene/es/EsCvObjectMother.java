@@ -617,8 +617,7 @@ public class EsCvObjectMother {
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
 
-        ArrayList<String> esVeilTilretteleggingsbehovListe =
-                new ArrayList<>();
+        ArrayList<String> esVeilTilretteleggingsbehovListe = new ArrayList<>();
         esVeilTilretteleggingsbehovListe.add(Kat2_Kode);
         esVeilTilretteleggingsbehovListe.add(Kat3_Kode);
         esVeilTilretteleggingsbehovListe.add("permittert");
@@ -799,8 +798,7 @@ public class EsCvObjectMother {
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
 
-        ArrayList<String> esVeilTilretteleggingsbehovListe =
-                new ArrayList<>();
+        ArrayList<String> esVeilTilretteleggingsbehovListe = new ArrayList<>();
         esVeilTilretteleggingsbehovListe.add(Kat1_Kode);
         esVeilTilretteleggingsbehovListe.add(Kat3_Kode);
         esVeilTilretteleggingsbehovListe.add(tilgjengeligInnen1Uke);
