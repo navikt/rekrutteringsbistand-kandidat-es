@@ -7,7 +7,7 @@
     <groupId>no.nav.arbeidsgiver</groupId>
     <artifactId>rekrutteringsbistand-kandidat-es</artifactId>
     <packaging>jar</packaging>
-    <version>3.1</version>
+    <version>3.2-SNAPSHOT</version>
 
     <name>rekrutteringsbistand-kandidat-es</name>
     <description>Indeksering av kandidater i Elasticsearch og grensesnitt for å utføre søk</description>
