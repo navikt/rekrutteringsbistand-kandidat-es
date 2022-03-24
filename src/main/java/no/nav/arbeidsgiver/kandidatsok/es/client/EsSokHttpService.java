@@ -183,7 +183,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
             SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
             LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
-            LOGGER.info("Søketid: {}", searchResponse.getTook());
+            LOGGER.debug("Søketid: {}", searchResponse.getTook());
             LOGGER.debug("Totalt antall treff: " + searchResponse.getHits().getTotalHits());
             List<EsCv> cver = toCvList(searchResponse);
             if (cver.size() > 1) {
@@ -1005,7 +1005,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
         SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
         LOGGER.debug("SEARCHRESPONSE: " + searchResponse);
-        LOGGER.info("Søketid: {}", searchResponse.getTook());
+        LOGGER.debug("Søketid: {}", searchResponse.getTook());
         return searchResponse;
     }
 
