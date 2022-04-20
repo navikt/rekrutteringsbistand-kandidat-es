@@ -5,31 +5,31 @@ import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.search.TotalHits;
 import org.apache.lucene.search.join.ScoreMode;
-import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.action.get.GetRequest;
-import org.elasticsearch.action.get.GetResponse;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.index.query.*;
-import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.Aggregations;
-import org.elasticsearch.search.aggregations.bucket.filter.ParsedFilter;
-import org.elasticsearch.search.aggregations.bucket.nested.Nested;
-import org.elasticsearch.search.aggregations.bucket.terms.Terms;
-import org.elasticsearch.search.aggregations.bucket.terms.Terms.Bucket;
-import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.search.sort.FieldSortBuilder;
-import org.elasticsearch.search.sort.NestedSortBuilder;
-import org.elasticsearch.search.sort.SortMode;
-import org.elasticsearch.search.sort.SortOrder;
-import org.elasticsearch.search.suggest.SuggestBuilder;
-import org.elasticsearch.search.suggest.SuggestBuilders;
-import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
-import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
+import org.opensearch.OpenSearchStatusException;
+import org.opensearch.action.get.GetRequest;
+import org.opensearch.action.get.GetResponse;
+import org.opensearch.action.search.SearchRequest;
+import org.opensearch.action.search.SearchResponse;
+import org.opensearch.client.RequestOptions;
+import org.opensearch.client.RestHighLevelClient;
+import org.opensearch.index.query.*;
+import org.opensearch.search.SearchHit;
+import org.opensearch.search.aggregations.AggregationBuilders;
+import org.opensearch.search.aggregations.Aggregations;
+import org.opensearch.search.aggregations.bucket.filter.ParsedFilter;
+import org.opensearch.search.aggregations.bucket.nested.Nested;
+import org.opensearch.search.aggregations.bucket.terms.Terms;
+import org.opensearch.search.aggregations.bucket.terms.Terms.Bucket;
+import org.opensearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
+import org.opensearch.search.builder.SearchSourceBuilder;
+import org.opensearch.search.sort.FieldSortBuilder;
+import org.opensearch.search.sort.NestedSortBuilder;
+import org.opensearch.search.sort.SortMode;
+import org.opensearch.search.sort.SortOrder;
+import org.opensearch.search.suggest.SuggestBuilder;
+import org.opensearch.search.suggest.SuggestBuilders;
+import org.opensearch.search.suggest.completion.CompletionSuggestion;
+import org.opensearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +41,7 @@ import java.util.stream.StreamSupport;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.opensearch.index.query.QueryBuilders.*;
 
 public class EsSokHttpService implements EsSokService, AutoCloseable {
 
@@ -965,8 +965,8 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
     private List<? extends Bucket> getBucketsForInnerAggregation(Aggregations aggregations,
                                                                  String aggregationName) {
-        if (aggregations.get(aggregationName) instanceof org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms) {
-            return ((org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms) aggregations.get(aggregationName)).getBuckets();
+        if (aggregations.get(aggregationName) instanceof org.opensearch.search.aggregations.bucket.terms.ParsedStringTerms) {
+            return ((org.opensearch.search.aggregations.bucket.terms.ParsedStringTerms) aggregations.get(aggregationName)).getBuckets();
         }
         return ((Terms) ((Nested) aggregations.get(aggregationName)).getAggregations()
                 .get("nested")).getBuckets();
@@ -1039,7 +1039,7 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
     private <T> T esExec(IOSupplier<T> fun) throws IOException {
         try {
             return fun.get();
-        } catch (ElasticsearchStatusException e) {
+        } catch (OpenSearchStatusException e) {
             if (e.status().getStatus() == 404
                     && e.getMessage().contains("index_not_found_exception")) {
                 LOGGER.info(

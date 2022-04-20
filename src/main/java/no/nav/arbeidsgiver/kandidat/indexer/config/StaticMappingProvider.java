@@ -1,8 +1,8 @@
 package no.nav.arbeidsgiver.kandidat.indexer.config;
 
-import org.elasticsearch.common.xcontent.NamedXContentRegistry;
-import org.elasticsearch.common.xcontent.XContentParser;
-import org.elasticsearch.common.xcontent.XContentType;
+import org.opensearch.common.xcontent.NamedXContentRegistry;
+import org.opensearch.common.xcontent.XContentParser;
+import org.opensearch.common.xcontent.XContentType;
 
 import java.io.IOException;
 import java.util.Map;

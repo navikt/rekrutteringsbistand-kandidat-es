@@ -7,30 +7,30 @@ import no.nav.arbeidsgiver.kandidat.indexer.config.StaticMappingProvider;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.exception.ApplicationException;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.exception.OperationalException;
-import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
-import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest.AliasActions;
-import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
-import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
-import org.elasticsearch.action.bulk.BulkItemResponse;
-import org.elasticsearch.action.bulk.BulkRequest;
-import org.elasticsearch.action.bulk.BulkResponse;
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.action.support.WriteRequest;
-import org.elasticsearch.action.support.master.AcknowledgedResponse;
-import org.elasticsearch.client.*;
-import org.elasticsearch.client.indices.CreateIndexRequest;
-import org.elasticsearch.client.indices.CreateIndexResponse;
-import org.elasticsearch.client.indices.GetIndexRequest;
-import org.elasticsearch.common.Strings;
-import org.elasticsearch.common.unit.TimeValue;
-import org.elasticsearch.common.xcontent.XContentFactory;
-import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.reindex.BulkByScrollResponse;
-import org.elasticsearch.index.reindex.DeleteByQueryRequest;
+import org.opensearch.OpenSearchStatusException;
+import org.opensearch.action.admin.indices.alias.IndicesAliasesRequest;
+import org.opensearch.action.admin.indices.alias.IndicesAliasesRequest.AliasActions;
+import org.opensearch.action.admin.indices.alias.get.GetAliasesRequest;
+import org.opensearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.opensearch.action.bulk.BulkItemResponse;
+import org.opensearch.action.bulk.BulkRequest;
+import org.opensearch.action.bulk.BulkResponse;
+import org.opensearch.action.index.IndexRequest;
+import org.opensearch.action.index.IndexResponse;
+import org.opensearch.action.support.WriteRequest;
+import org.opensearch.action.support.master.AcknowledgedResponse;
+import org.opensearch.client.*;
+import org.opensearch.client.indices.CreateIndexRequest;
+import org.opensearch.client.indices.CreateIndexResponse;
+import org.opensearch.client.indices.GetIndexRequest;
+import org.opensearch.common.Strings;
+import org.opensearch.common.unit.TimeValue;
+import org.opensearch.common.xcontent.XContentFactory;
+import org.opensearch.common.xcontent.XContentType;
+import org.opensearch.index.query.BoolQueryBuilder;
+import org.opensearch.index.query.QueryBuilders;
+import org.opensearch.index.reindex.BulkByScrollResponse;
+import org.opensearch.index.reindex.DeleteByQueryRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -252,7 +252,7 @@ public class EsIndexerHttpService implements EsIndexerService, AutoCloseable {
         try {
             try {
                 return fun.get();
-            } catch (ElasticsearchStatusException ese) {
+            } catch (OpenSearchStatusException ese) {
                 if (ese.status().getStatus() == 404
                         && ese.getMessage().contains("index_not_found_exception")) {
                     LOGGER.info(
