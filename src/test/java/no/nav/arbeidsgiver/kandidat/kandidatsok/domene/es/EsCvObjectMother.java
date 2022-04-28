@@ -19,8 +19,6 @@ import static java.util.Collections.emptyList;
 import static no.nav.arbeidsgiver.kandidat.kandidatsok.KatKode.*;
 import static no.nav.arbeidsgiver.kandidat.kandidatsok.Kvalifiseringsgruppekode.ikval;
 import static no.nav.arbeidsgiver.kandidat.kandidatsok.Stillingstittel.anleggsmaskinfører;
-import static no.nav.arbeidsgiver.kandidat.kandidatsok.Tilgjengelighet.midlertidigUtilgjengelig;
-import static no.nav.arbeidsgiver.kandidat.kandidatsok.Tilgjengelighet.tilgjengeligInnen1Uke;
 
 public class EsCvObjectMother {
 
@@ -621,7 +619,6 @@ public class EsCvObjectMother {
         esVeilTilretteleggingsbehovListe.add(Kat2_Kode);
         esVeilTilretteleggingsbehovListe.add(Kat3_Kode);
         esVeilTilretteleggingsbehovListe.add("permittert");
-        esVeilTilretteleggingsbehovListe.add(midlertidigUtilgjengelig);
 
         EsCv esCv = new EsCv(nteAktorId(3), "04265983651", "HANS", "NORDMANN", fraIsoDato("1955-11-04"), false, "RARBS",
                 "alltidmed@mailinator.com", "(+47) 22334455", "12345678", "NO", "3L",
@@ -801,7 +798,6 @@ public class EsCvObjectMother {
         ArrayList<String> esVeilTilretteleggingsbehovListe = new ArrayList<>();
         esVeilTilretteleggingsbehovListe.add(Kat1_Kode);
         esVeilTilretteleggingsbehovListe.add(Kat3_Kode);
-        esVeilTilretteleggingsbehovListe.add(tilgjengeligInnen1Uke);
 
         EsCv esCv = new EsCv(nteAktorId(4), "09568410230", "HANNE", "NORDMANN", fraIsoDato("2002-06-04"), false, "ARBS",
                 "erjegmed@mailinator.com", "(+47) 22334455", "12345678", "NO", "4L", "",
@@ -983,7 +979,6 @@ public class EsCvObjectMother {
         esVeilTilretteleggingsbehovListe.add(Kat1_Kode);
         esVeilTilretteleggingsbehovListe.add(Kat2_Kode);
         esVeilTilretteleggingsbehovListe.add("permittert");
-        esVeilTilretteleggingsbehovListe.add(midlertidigUtilgjengelig);
 
         EsCv esCv = new EsCv(nteAktorId(5), "03050316895", "BOB", "NORDMANN", fraIsoDato("1964-09-01"), false, "ARBS",
                 "bobob@mailinator.com", "(+47) 22334455", "12345678", "NO", "5L", "", "J",

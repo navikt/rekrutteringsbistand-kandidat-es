@@ -24,13 +24,11 @@ import java.util.stream.Collectors;
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static java.time.Instant.now;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static no.nav.arbeidsgiver.kandidat.kandidatsok.KatKode.Kat1_Kode;
 import static no.nav.arbeidsgiver.kandidat.kandidatsok.Kvalifiseringsgruppekode.ibatt;
 import static no.nav.arbeidsgiver.kandidat.kandidatsok.Kvalifiseringsgruppekode.ikval;
 import static no.nav.arbeidsgiver.kandidat.kandidatsok.Stillingstittel.anleggsmaskinfører;
-import static no.nav.arbeidsgiver.kandidat.kandidatsok.Tilgjengelighet.*;
 import static no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es.EsCvObjectMother.antallDagerTilbakeFraNow;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -1166,122 +1164,5 @@ public class IndexCvIT {
         List<EsCv> cver = sokClient.veilederSok(søkekriterier).getCver();
 
         assertThat(kandidatnumre(cver)).containsExactlyInAnyOrderElementsOf(expectedKandidatnumre);
-    }
-
-
-    @Test
-    public void sokMedTilgjengeligFilterSkalSkalGiKorrektTreff() {
-        SokekriterierVeiledere søkekriterier = SokekriterierVeiledere.med().midlertidigUtilgjengelig(List.of(tilgjengelig)).bygg();
-
-        List<EsCv> cver = sokClient.veilederSok(søkekriterier).getCver();
-
-        assertThat(cver).isNotEmpty();
-        cver.forEach(cv -> {
-            assertThat(cv.getVeilTilretteleggingsbehov()).doesNotContain(midlertidigUtilgjengelig, tilgjengeligInnen1Uke);
-        });
-    }
-
-    @Test
-    public void sokMedMidlertidigUtilgjengeligEnUkeSkalGiKorrektTreff() {
-        Sokeresultat sokeresultat =
-                sokClient.veilederSok(SokekriterierVeiledere
-                        .med().midlertidigUtilgjengelig(Collections.singletonList(tilgjengeligInnen1Uke))
-                        .bygg());
-
-        List<EsCv> cver = sokeresultat.getCver();
-        assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactly("4L");
-    }
-
-    @Test
-    public void sokMedMidlertidigUtilgjengeligSkalGiKorrektTreff() {
-        Sokeresultat sokeresultat =
-                sokClient.veilederSok(SokekriterierVeiledere
-                        .med().midlertidigUtilgjengelig(Collections.singletonList(midlertidigUtilgjengelig))
-                        .bygg());
-
-        List<EsCv> cver = sokeresultat.getCver();
-        assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder("3L", "5L");
-    }
-
-    @Test
-    public void sokMedIngenEllerAlleMidlertidigTilgjengeligFilterSkalGiAlleKandidater() {
-        SokekriterierVeiledere ingen = SokekriterierVeiledere.med().midlertidigUtilgjengelig(emptyList()).bygg();
-        SokekriterierVeiledere alle = SokekriterierVeiledere.med().midlertidigUtilgjengelig(asList(tilgjengelig, midlertidigUtilgjengelig, tilgjengeligInnen1Uke)).bygg();
-
-        List<EsCv> cver = sokClient.veilederSok(ingen).getCver();
-        assertThat(cver.size()).isEqualTo(setupCver.size());
-        assertThat(setupKandidatnumre).containsExactlyInAnyOrderElementsOf(kandidatnumre(cver));
-
-        cver = sokClient.veilederSok(alle).getCver();
-        assertThat(cver.size()).isEqualTo(setupCver.size());
-        assertThat(setupKandidatnumre).containsExactlyInAnyOrderElementsOf(kandidatnumre(cver));
-
-    }
-
-    @Test
-    public void sokMedMidlertidigUtilgjengeligOgMidlertidigUtilgjengeligEnUkeSkalGiKorrektTreff() {
-        Sokeresultat sokeresultat =
-                sokClient.veilederSok(SokekriterierVeiledere
-                        .med().midlertidigUtilgjengelig(Arrays.asList(midlertidigUtilgjengelig, tilgjengeligInnen1Uke))
-                        .bygg());
-
-        List<EsCv> cver = sokeresultat.getCver();
-        assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder("3L", "4L", "5L");
-    }
-
-    @Test
-    public void sokMedMidlertidigUtilgjengeligOgTilgjengeligSkalGiKorrektTreff() {
-        SokekriterierVeiledere sokekriterier = SokekriterierVeiledere
-                .med().midlertidigUtilgjengelig(asList(tilgjengelig, midlertidigUtilgjengelig))
-                .bygg();
-        List<EsCv> cver = sokClient.veilederSok(sokekriterier).getCver();
-
-        assertThat(cver.size()).isGreaterThan(1);
-        Map<String, List<String>> fraKandidatnrTilBehov = tilretteleggingsbehov(cver);
-        fraKandidatnrTilBehov.forEach((kandidatnr, behov) -> {
-            String msg = "Feil innhold i tilretteleggingsbehov for kandidatnr " + kandidatnr + ": " + behov;
-            assertTrue(behov.isEmpty() || behov.contains(midlertidigUtilgjengelig), msg);
-            assertFalse(behov.contains(tilgjengeligInnen1Uke), msg);
-        });
-    }
-
-    @Test
-    public void sokMedTilgjengeligOgTilgjengeligEnUkeSkalGiKorrektTreff() {
-        SokekriterierVeiledere sokekriterier = SokekriterierVeiledere
-                .med().midlertidigUtilgjengelig(asList(tilgjengelig, tilgjengeligInnen1Uke))
-                .bygg();
-        List<EsCv> cver = sokClient.veilederSok(sokekriterier).getCver();
-
-        assertThat(cver.size()).isGreaterThan(1);
-        Map<String, List<String>> fraKandidatnrTilBehov = tilretteleggingsbehov(cver);
-        fraKandidatnrTilBehov.forEach((kandidatnr, behov) -> {
-            String msg = "Feil innhold i tilretteleggingsbehov for kandidatnr " + kandidatnr + ": " + behov;
-            assertTrue(behov.isEmpty() || behov.contains(tilgjengeligInnen1Uke), msg);
-            assertFalse(behov.contains(midlertidigUtilgjengelig));
-        });
-    }
-
-    @Test
-    public void sokMedMidlertidigUtilgjengeligOgPermittertSkalGiKorrektTreff() {
-        Sokeresultat sokeresultat =
-                sokClient.veilederSok(SokekriterierVeiledere
-                        .med().midlertidigUtilgjengelig(Collections.singletonList(midlertidigUtilgjengelig))
-                        .permittert(true)
-                        .bygg());
-
-        List<EsCv> cver = sokeresultat.getCver();
-        assertThat(cver).extracting(Extractors.byName("kandidatnr")).containsExactlyInAnyOrder("3L", "5L");
-    }
-
-    @Test
-    public void veilederSokSkalReturnereTilretteleggingsbehov() {
-        Sokeresultat sokeresultat =
-                sokClient.veilederSok(SokekriterierVeiledere
-                        .med().midlertidigUtilgjengelig(Collections.singletonList(tilgjengeligInnen1Uke))
-                        .bygg());
-
-        List<String> tilretteleggingbehov = sokeresultat.getCver().get(0).getVeilTilretteleggingsbehov();
-        assertThat(tilretteleggingbehov).isNotEmpty();
-        assertThat(tilretteleggingbehov).containsExactlyInAnyOrderElementsOf(EsCvObjectMother.giveMeEsCv4().getVeilTilretteleggingsbehov());
     }
 }
