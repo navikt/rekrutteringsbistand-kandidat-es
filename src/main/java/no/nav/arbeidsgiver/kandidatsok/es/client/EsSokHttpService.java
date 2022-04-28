@@ -296,10 +296,6 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
                 addVeilTilretteleggingsbehovUtelukkesToQuery(sk.veilTilretteleggingsbehovUtelukkes(), queryBuilder);
             }
 
-            if (isNotEmpty(sk.midlertidigUtilgjengelig())) {
-                addMidlertidigUtilgjengeligToQuery(queryBuilder, sk.midlertidigUtilgjengelig());
-            }
-
             if (sk.antallDagerSistEndret() != null) {
                 addFilterForSistEndret(sk.antallDagerSistEndret(), queryBuilder);
             }
@@ -390,28 +386,6 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
 
     private void addFilterForTilretteleggingsbehov(BoolQueryBuilder boolQueryBuilder, Boolean value) {
         boolQueryBuilder.filter(QueryBuilders.termQuery("tilretteleggingsbehov", value));
-    }
-
-    private void addMidlertidigUtilgjengeligToQuery(BoolQueryBuilder queryBuilder, List<String> midlertidigUtilgjengelig) {
-        String tilgjengelig = "tilgjengelig";
-        String tilgjengeligInnen1uke = "tilgjengeliginnen1uke";
-        String midlertidigutilgjengelig = "midlertidigutilgjengelig";
-
-        BoolQueryBuilder innerQuery = boolQuery().minimumShouldMatch(1);
-        queryBuilder.must(innerQuery);
-
-        if (midlertidigUtilgjengelig.contains(tilgjengelig)) {
-            innerQuery.should(boolQuery()
-                    .mustNot(QueryBuilders.termsQuery("veilTilretteleggingsbehov.keyword", midlertidigutilgjengelig, tilgjengeligInnen1uke)));
-        }
-
-        if (midlertidigUtilgjengelig.contains(midlertidigutilgjengelig)) {
-            innerQuery.should(QueryBuilders.termQuery("veilTilretteleggingsbehov.keyword", midlertidigutilgjengelig));
-        }
-
-        if (midlertidigUtilgjengelig.contains(tilgjengeligInnen1uke)) {
-            innerQuery.should(QueryBuilders.termQuery("veilTilretteleggingsbehov.keyword", tilgjengeligInnen1uke));
-        }
     }
 
     private void addFilterForPermittert(BoolQueryBuilder queryBuilder, boolean inkluder) {
