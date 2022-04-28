@@ -1165,14 +1165,4 @@ public class IndexCvIT {
 
         assertThat(kandidatnumre(cver)).containsExactlyInAnyOrderElementsOf(expectedKandidatnumre);
     }
-
-    @Test
-    public void veilederSokSkalReturnereTilretteleggingsbehov() {
-        Sokeresultat sokeresultat =
-                sokClient.veilederSok(SokekriterierVeiledere.med().bygg());
-
-        List<String> tilretteleggingbehov = sokeresultat.getCver().get(0).getVeilTilretteleggingsbehov();
-        assertThat(tilretteleggingbehov).isNotEmpty();
-        assertThat(tilretteleggingbehov).containsExactlyInAnyOrderElementsOf(EsCvObjectMother.giveMeEsCv4().getVeilTilretteleggingsbehov());
-    }
 }
