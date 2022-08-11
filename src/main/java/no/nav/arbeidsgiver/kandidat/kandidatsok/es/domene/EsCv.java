@@ -183,6 +183,7 @@ public class EsCv {
             String frKode,
             String kvalifiseringsgruppekode,
             String hovedmaalkode,
+            String navkontor,
             String orgenhet,
 
             Boolean fritattKandidatsok,

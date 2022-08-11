@@ -366,6 +366,7 @@ class SøkEtterHullICvIT {
             "IKVAL",
             null,
             "0220 NAV Asker",
+            "0220",
             false,
             false,
             true,

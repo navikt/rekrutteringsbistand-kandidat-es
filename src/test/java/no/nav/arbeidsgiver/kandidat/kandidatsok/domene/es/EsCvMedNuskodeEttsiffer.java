@@ -40,7 +40,7 @@ public class EsCvMedNuskodeEttsiffer {
                 "unnasluntrer2@mailinator.com", "(+47) 22334455", "12345678", "NO", "13L",
                 "Dette er beskrivelsen av hva jeg har gjort i min yrkeskarriere",
                 "J", d("2016-05-30"), "Dinvei 2", "", "", "2222", "HUSKER IKKE", "NO", 301,
-                false, new Date(), 401, FALSE, null, "IKVAL", null, "NAV Gamle Oslo", FALSE, FALSE,
+                false, new Date(), 401, FALSE, null, "IKVAL", null, "NAV Gamle Oslo", "0100", FALSE, FALSE,
                 true, true, null, "0401", "H149390", false, "Lier", "Viken");
 
         esCv.addUtdanning(utdanningsListe);
@@ -64,7 +64,7 @@ public class EsCvMedNuskodeEttsiffer {
                 "unnasluntrer2@mailinator.com", "(+47) 22334455", "12345678", "NO", "14L",
                 "Dette er beskrivelsen av hva jeg har gjort i min yrkeskarriere",
                 "J", d("2016-05-30"), "Dinvei 2", "", "", "1122", "USIKKER", "NO", 301,
-                false, new Date(), 401, FALSE, null, "IKVAL", null, "NAV Gamle Oslo", FALSE, FALSE,
+                false, new Date(), 401, FALSE, null, "IKVAL", null, "NAV Gamle Oslo", "0100", FALSE, FALSE,
                 true, true, null, "0401", "H149390", false, "Lier", "Viken");
 
         esCv.addUtdanning(utdanningsListe);
@@ -90,7 +90,7 @@ public class EsCvMedNuskodeEttsiffer {
                 "unnasluntrer2@mailinator.com", "(+47) 22334455", "12345678", "NO", "15L",
                 "Dette er beskrivelsen av hva jeg har gjort i min yrkeskarriere",
                 "J", d("2016-05-30"), "Dinvei 2", "", "", "1111", "HUSKER IKKE", "NO", 301,
-                false, new Date(), 401, FALSE, null, "IKVAL", null, "NAV Gamle Oslo", FALSE, FALSE,
+                false, new Date(), 401, FALSE, null, "IKVAL", null, "NAV Gamle Oslo", "0100", FALSE, FALSE,
                 true, true, null, "0401", "H149390", false, "Lier", "Viken");
 
         esCv.addUtdanning(utdanningsListe);
@@ -112,7 +112,7 @@ public class EsCvMedNuskodeEttsiffer {
                 "unnasluntrer2@mailinator.com", "(+47) 22334455", "12345678", "NO", "16L",
                 "Dette er beskrivelsen av hva jeg har gjort i min yrkeskarriere",
                 "J", d("2016-05-30"), "Veien 2", "", "", "1111", "OSLO", "NO", 301,
-                false, new Date(), 401, FALSE, null, "IKVAL", null, "NAV Gamle Oslo", FALSE, FALSE,
+                false, new Date(), 401, FALSE, null, "IKVAL", null, "NAV Gamle Oslo", "0100", FALSE, FALSE,
                 true, true, null, "0401", "H149390", false, "Lier", "Viken");
 
         esCv.addUtdanning(utdanningsListe);
