@@ -231,7 +231,7 @@ public class EsCv {
         this.kvalifiseringsgruppekode = kvalifiseringsgruppekode;
         this.hovedmaalkode = hovedmaalkode;
         this.orgenhet = orgenhet;
-        this.navkontor = orgenhet;
+        this.navkontor = navkontor;
         this.fritattKandidatsok = fritattKandidatsok;
         this.fritattAgKandidatsok = fritattAgKandidatsok;
         this.synligForArbeidsgiverSok = synligForArbeidsgiverSok;
