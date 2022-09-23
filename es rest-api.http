@@ -1,5 +1,17 @@
 GET {{url}}
 Accept: application/json
+Content-Type: application/json
 Authorization: Basic toi-r {{passord}}
+
+{
+  "query": {
+    "term": {
+      "aktorId": {
+        "value": "2629766500686"
+      }
+    }
+  }
+}
+
 
 ###
