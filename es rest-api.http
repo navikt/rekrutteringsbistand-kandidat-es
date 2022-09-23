@@ -1,0 +1,5 @@
+GET {{url}}
+Accept: application/json
+Authorization: Basic toi-r {{passord}}
+
+###
