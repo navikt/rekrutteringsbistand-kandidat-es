@@ -335,14 +335,14 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
         }
 
         var alderBuilder = new BoolQueryBuilder();
-        if(alderFraTilBuilder.hasClauses()) {
+        if (alderFraTilBuilder.hasClauses()) {
             alderBuilder.should(alderFraTilBuilder);
         }
-        if(alderPrioritertMålgruppeBuilder.hasClauses()) {
+        if (alderPrioritertMålgruppeBuilder.hasClauses()) {
             alderBuilder.should(alderPrioritertMålgruppeBuilder);
         }
 
-        if(alderBuilder.hasClauses()) {
+        if (alderBuilder.hasClauses()) {
             rootQueryBuilder.must(alderBuilder);
         }
 
@@ -850,9 +850,10 @@ public class EsSokHttpService implements EsSokService, AutoCloseable {
       /*
          Et hull i en CV er definert som en periode på 2 år eller med med inaktivitet i løpet av de siste 5 årene fra tidspunktet spørringen kjøres på.
          Hele algoritmen for å finne et hull er implementert delvis her i denne Elastic-search spørringen og delvis i
-         applikasjonen rekrutteringsbistand-kandidat-indekser: Sistnevnte har ansvar for 1) å finne de periodene med inaktivitet
-         som har lang nok varighet til å kunne være et hull, og 2) å lagre dem i Elsticsearch-indeksen, slik at de kan søkes i med denne spørringen.
-         Grensen på 2 år er hadrkodet både her og i appen rekrutteringsbistand-kandidat-indekser. Grensen på 5 år er hardkodet bare her.
+         applikasjonen toi-hull-i-cv og rekrutteringsbistand-kandidat-indekser: toi-hull-i.cv har ansvar for å finne de periodene med inaktivitet
+         som har lang nok varighet til å kunne være et hull. rekrutteringsbistand-kandidat-indekser har ansvar for å lagre dem i Elsticsearch-indeksen,
+         slik at de kan søkes i med denne spørringen.
+         Grensen på 2 år er hardkodet både her og i appen toi-hull-i-cv. Grensen på 5 år er hardkodet bare her.
     */
 
         BoolQueryBuilder aldriVærtIAktivitet = boolQuery()
