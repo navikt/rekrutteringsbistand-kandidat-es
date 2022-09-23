@@ -15,3 +15,244 @@ Authorization: Basic toi-r {{passord}}
 
 
 ###
+
+GET {{url}}
+Accept: application/json
+Content-Type: application/json
+Authorization: Basic toi-r {{passord}}
+
+{
+  "query": {
+    "bool": {
+      "must_not": [
+        {
+          "exists": {
+            "field": "perioderMedInaktivitet.startdatoForInnevarendeInaktivePeriode"
+          }
+        },
+        {
+          "exists": {
+            "field": "perioderMedInaktivitet.sluttdatoerForInaktivePerioderPaToArEllerMer"
+          }
+        }
+      ]
+    }
+  }
+}
+
+
+###
+
+GET {{url}}
+Accept: application/json
+Content-Type: application/json
+Authorization: Basic toi-r {{passord}}
+
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "aktorId": {
+              "value": "2629766500686",
+              "boost": 1.0
+            }
+          }
+        }
+      ],
+      "adjust_pure_negative": true,
+      "boost": 1.0
+    }
+  },
+  "aggregations": {
+    "hull": {
+      "filter": {
+        "bool": {
+          "must": [
+            {
+              "bool": {
+                "must": [
+                  {
+                    "bool": {
+                      "should": [
+                        {
+                          "nested": {
+                            "query": {
+                              "bool": {
+                                "filter": [
+                                  {
+                                    "exists": {
+                                      "field": "yrkeserfaring",
+                                      "boost": 1.0
+                                    }
+                                  }
+                                ],
+                                "adjust_pure_negative": true,
+                                "boost": 1.0
+                              }
+                            },
+                            "path": "yrkeserfaring",
+                            "ignore_unmapped": false,
+                            "score_mode": "sum",
+                            "boost": 1.0
+                          }
+                        },
+                        {
+                          "nested": {
+                            "query": {
+                              "bool": {
+                                "filter": [
+                                  {
+                                    "exists": {
+                                      "field": "utdanning",
+                                      "boost": 1.0
+                                    }
+                                  }
+                                ],
+                                "adjust_pure_negative": true,
+                                "boost": 1.0
+                              }
+                            },
+                            "path": "utdanning",
+                            "ignore_unmapped": false,
+                            "score_mode": "sum",
+                            "boost": 1.0
+                          }
+                        },
+                        {
+                          "nested": {
+                            "query": {
+                              "bool": {
+                                "filter": [
+                                  {
+                                    "exists": {
+                                      "field": "forerkort",
+                                      "boost": 1.0
+                                    }
+                                  }
+                                ],
+                                "adjust_pure_negative": true,
+                                "boost": 1.0
+                              }
+                            },
+                            "path": "forerkort",
+                            "ignore_unmapped": false,
+                            "score_mode": "sum",
+                            "boost": 1.0
+                          }
+                        },
+                        {
+                          "exists": {
+                            "field": "kursObj",
+                            "boost": 1.0
+                          }
+                        },
+                        {
+                          "exists": {
+                            "field": "fagdokumentasjon",
+                            "boost": 1.0
+                          }
+                        },
+                        {
+                          "exists": {
+                            "field": "annenerfaringObj",
+                            "boost": 1.0
+                          }
+                        },
+                        {
+                          "exists": {
+                            "field": "godkjenninger",
+                            "boost": 1.0
+                          }
+                        }
+                      ],
+                      "adjust_pure_negative": true,
+                      "boost": 1.0
+                    }
+                  },
+                  {
+                    "bool": {
+                      "should": [
+                        {
+                          "bool": {
+                            "must_not": [
+                              {
+                                "exists": {
+                                  "field": "perioderMedInaktivitet.startdatoForInnevarendeInaktivePeriode",
+                                  "boost": 1.0
+                                }
+                              },
+                              {
+                                "exists": {
+                                  "field": "perioderMedInaktivitet.sluttdatoerForInaktivePerioderPaToArEllerMer",
+                                  "boost": 1.0
+                                }
+                              }
+                            ],
+                            "adjust_pure_negative": true,
+                            "boost": 1.0
+                          }
+                        },
+                        {
+                          "bool": {
+                            "must": [
+                              {
+                                "exists": {
+                                  "field": "perioderMedInaktivitet.startdatoForInnevarendeInaktivePeriode",
+                                  "boost": 1.0
+                                }
+                              },
+                              {
+                                "bool": {
+                                  "should": [
+                                    {
+                                      "range": {
+                                        "perioderMedInaktivitet.startdatoForInnevarendeInaktivePeriode": {
+                                          "from": null,
+                                          "to": "2016-04-07",
+                                          "include_lower": true,
+                                          "include_upper": true,
+                                          "boost": 1.0
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "range": {
+                                        "perioderMedInaktivitet.sluttdatoerForInaktivePerioderPaToArEllerMer": {
+                                          "from": "2015-04-07",
+                                          "to": null,
+                                          "include_lower": true,
+                                          "include_upper": true,
+                                          "boost": 1.0
+                                        }
+                                      }
+                                    }
+                                  ],
+                                  "adjust_pure_negative": true,
+                                  "boost": 1.0
+                                }
+                              }
+                            ],
+                            "adjust_pure_negative": true,
+                            "boost": 1.0
+                          }
+                        }
+                      ],
+                      "adjust_pure_negative": true,
+                      "boost": 1.0
+                    }
+                  }
+                ],
+                "adjust_pure_negative": true,
+                "boost": 1.0
+              }
+            }
+          ],
+          "adjust_pure_negative": true,
+          "boost": 1.0
+        }
+      }
+    }
+  }
+}
