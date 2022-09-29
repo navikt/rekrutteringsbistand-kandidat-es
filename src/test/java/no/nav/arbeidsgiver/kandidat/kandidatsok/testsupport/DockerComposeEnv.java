@@ -4,8 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.net.ServerSocketFactory;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
 import java.nio.file.Path;
 import java.util.*;
@@ -14,17 +13,16 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.lang.ProcessBuilder.Redirect.appendTo;
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.joining;
 
 /**
  * Support class for invoking docker-compose and waiting for services, typically to be used in tests.
  * <p>
- * Copied from: https://raw.githubusercontent.com/navikt/kafka-sandbox/d68a3dfa16c1ece3625dc85de71409ea502a6c8c/src/test/java/no/nav/kafka/sandbox/DockerComposeEnv.java
+ * Copied from: https://raw.githubusercontent.com/navikt/kafka-sandbox/ce746f1bce9e32c465ab343bfe009efb249e2176/clients/src/test/java/no/nav/kafka/sandbox/DockerComposeEnv.java
  */
 public final class DockerComposeEnv implements AutoCloseable {
 
@@ -40,7 +38,7 @@ public final class DockerComposeEnv implements AutoCloseable {
     public static class Builder {
         private final String config;
         private String logdir = null;
-        private final Map<String, String> env = new HashMap<>();
+        private final Map<String,String> env = new HashMap<>();
         private final List<Supplier<Boolean>> readyTests = new ArrayList<>();
         private int lastAutoPort = 39999;
         private int dockerComposeTimeoutSeconds = 1800;
@@ -51,7 +49,6 @@ public final class DockerComposeEnv implements AutoCloseable {
 
         /**
          * Add low level ready-test that checks if a single TCP port can be connected to.
-         *
          * @param host
          * @param port
          * @return this builder
@@ -71,12 +68,11 @@ public final class DockerComposeEnv implements AutoCloseable {
         /**
          * Same as {@link #readyWhenPortIsOpen(String, int)}, but uses a previously configured env variable
          * as the port, which can be a variable set with  {@link #addAutoPortVariable(String)}.
-         *
-         * @param host         typically "localhost"
+         * @param host typically "localhost"
          * @param portVariable name of env variable
-         * @return this builder
-         * @throws NullPointerException  if env variable is not previously configured
+         * @throws NullPointerException if env variable is not previously configured
          * @throws NumberFormatException if env variable is not parseable as an integer
+         * @return this builder
          */
         public Builder readyWhenPortIsOpen(String host, String portVariable) {
             final int port = Integer.parseInt(env.get(portVariable));
@@ -85,7 +81,6 @@ public final class DockerComposeEnv implements AutoCloseable {
 
         /**
          * Add ready when an http-GET to a URL yields status code 2xx.
-         *
          * @param url
          * @return this builder
          */
@@ -96,7 +91,7 @@ public final class DockerComposeEnv implements AutoCloseable {
             this.readyTests.add(() -> {
                 HttpURLConnection httpConnection = null;
                 try {
-                    httpConnection = (HttpURLConnection) new URL(url).openConnection();
+                    httpConnection = (HttpURLConnection)new URL(url).openConnection();
                     httpConnection.setConnectTimeout(1000);
                     httpConnection.setReadTimeout(2000);
                     final int responseCode = httpConnection.getResponseCode();
@@ -113,8 +108,7 @@ public final class DockerComposeEnv implements AutoCloseable {
                         if (httpConnection != null) {
                             httpConnection.getInputStream().close();
                         }
-                    } catch (IOException io) {
-                    }
+                    } catch (IOException io) {}
                 }
             });
             return this;
@@ -122,7 +116,6 @@ public final class DockerComposeEnv implements AutoCloseable {
 
         /**
          * Add test which is ready when an http-GET to a URL yields status code 2xx.
-         *
          * @param urlTemplate the URL, where "{VALUE}" is replaced by the value of a an env-variable, which
          *                    must be previously set and can be an auto-port-variable.
          * @param envVariable variable to use
@@ -156,9 +149,8 @@ public final class DockerComposeEnv implements AutoCloseable {
         /**
          * Add environment variable to export to docker-compose process.
          * <p>The value of this variable can later be retrieved with {@link #getEnvVariable(String)}</p>
-         *
          * @param variable name, not null
-         * @param value    value
+         * @param value value
          * @return the builder
          */
         public Builder addEnvVariable(String variable, Object value) {
@@ -168,7 +160,6 @@ public final class DockerComposeEnv implements AutoCloseable {
 
         /**
          * Get value of a previously set variable, which can be an auto-port-variable.
-         *
          * @param variable
          * @return
          */
@@ -179,7 +170,6 @@ public final class DockerComposeEnv implements AutoCloseable {
         /**
          * Expose an environment variable having a random (currently) free port number as value.
          * <p>The value of this variable can later be retrieved with {@link #getEnvVariable(String)}</p>
-         *
          * @param portVariable an environment variable name
          * @return this builder
          */
@@ -197,11 +187,10 @@ public final class DockerComposeEnv implements AutoCloseable {
          * <p>The ready-test-supplier be called potentially multiple times at some interval and should
          * supply {@code true} when a service is ready.</p>
          * <p>By default, a ready-test which simply waits 5 seconds is used.</p>
-         *
          * @param readyTestSupplier a function which accepts this build as argument and returns a new ready-test supplier
          * @return this builder
          */
-        public Builder withCustomReadyTest(Function<Builder, Supplier<Boolean>> readyTestSupplier) {
+        public Builder withCustomReadyTest(Function<Builder,Supplier<Boolean>> readyTestSupplier) {
             Supplier<Boolean> readyTest = readyTestSupplier.apply(this);
             if (readyTest != null) {
                 this.readyTests.add(readyTest);
@@ -212,7 +201,6 @@ public final class DockerComposeEnv implements AutoCloseable {
         /**
          * Set a directory where docker-compose stdout/stderr logs will be stored.
          * <p>Default is nothing, and no logs are kept.</p>
-         *
          * @param directoryPath
          * @return this builder
          */
@@ -225,7 +213,6 @@ public final class DockerComposeEnv implements AutoCloseable {
          * Set wait limit in seconds for docker-compose to finish bringing up containers. This time may involve
          * Docker downloading images from the internet, take that into account.
          * <p>Default value: {@code 1800} seconds</p>
-         *
          * @return this builder
          */
         public Builder dockerComposeTimeout(int timeoutSeconds) {
@@ -236,7 +223,6 @@ public final class DockerComposeEnv implements AutoCloseable {
         /**
          * Bring up configured env. This call will block for some amount of time to invoke docker-compose, and then
          * to wait using any set ready-test.
-         *
          * @return a hopefully ready-to-use docker-compose environment
          */
         public DockerComposeEnv up() throws Exception {
@@ -249,7 +235,6 @@ public final class DockerComposeEnv implements AutoCloseable {
 
     /**
      * Get a builder for a docker-compose test environment.
-     *
      * @param dockerComposeConfigFile
      * @return
      */
@@ -260,10 +245,10 @@ public final class DockerComposeEnv implements AutoCloseable {
     private final Path dockerComposeLogDir;
     private final String configFile;
     private final long timeoutSeconds;
-    private final Map<String, String> env;
+    private final Map<String,String> env;
     private final List<Supplier<Boolean>> readyTests;
 
-    private DockerComposeEnv(String configFile, long timeoutSeconds, String logdir, Map<String, String> env, List<Supplier<Boolean>> readyTests) {
+    private DockerComposeEnv(String configFile, long timeoutSeconds, String logdir, Map<String,String> env, List<Supplier<Boolean>> readyTests) {
         if (logdir != null) {
             File dir = new File(logdir);
             if (!dir.isDirectory() || !dir.canWrite()) {
@@ -288,28 +273,25 @@ public final class DockerComposeEnv implements AutoCloseable {
      */
     private DockerComposeEnv up() throws Exception {
         log.info("Bringing up local docker-compose environment, max wait={} seconds, env={}", this.timeoutSeconds, this.env);
-        ProcessBuilder pb = dockerCompose("up", "-d");
-        log.info("Will try to run docker-compose command: " + String.join(" ", pb.command()));
-        pb.start().onExit().thenAccept(process -> {
+        dockerCompose("up", "-d").start().onExit().thenAccept(process -> {
             if (process.exitValue() != 0) {
-                String msg = "docker-compose failed with status " + process.exitValue() + ". See error message in the log file in the directory [" + dockerComposeLogDir + "]";
-                throw new RuntimeException(msg);
+                throw new RuntimeException("docker-compose failed with status " + process.exitValue());
             }
         }).get(this.timeoutSeconds, TimeUnit.SECONDS);
 
         log.info("Waiting for {} ready-test(s) to complete ..", readyTests.size());
         List<CompletableFuture<Void>> allReadyTestsComplete = readyTests.stream().map(
-                test -> CompletableFuture.runAsync(() -> {
+                test -> CompletableFuture.runAsync(()-> {
                             int count = 0;
-                            while (!test.get() && count++ < 100) {
+                            while (!test.get() && count++ < 300) {
                                 try {
                                     Thread.sleep(1000);
                                 } catch (InterruptedException ie) {
                                     throw new RuntimeException("Interrupted while waiting for ready-test");
                                 }
                             }
-                            if (count > 100) {
-                                throw new RuntimeException("Ready-test failed");
+                            if (count >= 300) {
+                                throw new RuntimeException("Ready-test give up after 300 attempts");
                             }
                         }
                 )).collect(Collectors.toList());
@@ -329,7 +311,6 @@ public final class DockerComposeEnv implements AutoCloseable {
 
     /**
      * Return value of a registered environment variable.
-     *
      * @param variable the variable
      * @return the value, or {@code null} if unknown
      */
@@ -339,7 +320,6 @@ public final class DockerComposeEnv implements AutoCloseable {
 
     /**
      * Take down local docker environment using docker-compose.
-     *
      * @throws Exception when something bad happens, in which case you will have to clean up manually.
      */
     public void down() throws Exception {
@@ -347,30 +327,94 @@ public final class DockerComposeEnv implements AutoCloseable {
         dockerCompose("down", "--volumes").start().onExit().get(120, TimeUnit.SECONDS);
     }
 
+    static class DockerComposeExecutable {
+        public final String executable;
+        public final String version;
+
+        public DockerComposeExecutable(String executable, String version) {
+            this.executable = Objects.requireNonNull(executable);
+            this.version = Objects.requireNonNull(version);
+        }
+
+        public List<String> executableAndDefaultArgs() {
+            return compareVersions(version, "1.29") < 0 ?
+                    List.of(executable, "--no-ansi") :
+                    List.of(executable, "--ansi", "never"); // docker-compose v1.29 or newer.
+        }
+
+        private static int compareVersions(String v1, String v2) {
+            List<Integer> v1Components = Arrays.stream(v1.split("\\."))
+                    .map(n -> Integer.parseInt(n)).collect(Collectors.toList());
+            List<Integer> v2Components = Arrays.stream(v2.split("\\."))
+                    .map(n -> Integer.parseInt(n)).collect(Collectors.toList());
+
+            final int maxLength = Math.max(v1Components.size(), v2Components.size());
+            for (int i=0; i<maxLength; i++) {
+                Integer number1 = i < v1Components.size() ? v1Components.get(i) : 0;
+                Integer number2 = i < v2Components.size() ? v2Components.get(i) : 0;
+                if (number1 != number2) {
+                    return number1.compareTo(number2);
+                }
+            }
+            return 0;
+        }
+    }
+
+    private static DockerComposeExecutable findExecutable() {
+        for (final String executable : new String[] {
+                "/usr/bin/docker-compose",
+                "/usr/local/bin/docker-compose",
+                "/usr/local/sbin/docker-compose",
+                "docker-compose",
+                "docker-compose.exe"}) {
+            try {
+                Process process = new ProcessBuilder(executable, "--version")
+                        .redirectError(ProcessBuilder.Redirect.DISCARD)
+                        .start();
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                final String firstLineOutput = reader.readLine();
+                while (reader.readLine() != null); // Consume and discard rest of process output
+                reader.close();
+
+                if (process.onExit().get().exitValue() == 0 && firstLineOutput != null) {
+                    Matcher matcher = Pattern.compile("version v?([0-9.]+)").matcher(firstLineOutput);
+                    if (! matcher.find()) {
+                        continue;
+                    }
+                    final String version = matcher.group(1);
+                    return new DockerComposeExecutable(executable, version);
+                }
+            } catch (Exception e) {
+            }
+        }
+        throw new IllegalStateException("Could not find or execute docker-compose command on operating system");
+    }
+
     /**
      * Test if docker-compose can be executed
-     *
      * @return {@code true} on success
      */
     public static boolean dockerComposeAvailable() {
         try {
-            findDockerComposeExecutableName();
+            findExecutable();
             return true;
         } catch (Exception e) {
             return false;
         }
     }
 
-    private ProcessBuilder dockerCompose(String... composeCommandAndArgs) throws Exception {
-        List<String> commandArgs = new ArrayList<>();
-        commandArgs.add(findDockerComposeExecutableName());
-        commandArgs.addAll(List.of("-f", composeFileAsPath(this.configFile).toString(), "-p", dockerComposeProjectName()));
-        commandArgs.addAll(asList(composeCommandAndArgs));
+    private ProcessBuilder dockerCompose(String...composeCommandAndArgs) {
+        DockerComposeExecutable dcExec = findExecutable();
+        log.debug("docker compose command is {}, version {}", dcExec.executable, dcExec.version);
+        List<String> commandArgs = new ArrayList<>(dcExec.executableAndDefaultArgs());
+        commandArgs.addAll(List.of("-f", Path.of(this.configFile).toString()));
+        commandArgs.addAll(Arrays.asList(composeCommandAndArgs));
         ProcessBuilder pb = new ProcessBuilder(commandArgs);
-        this.env.forEach((k, v) -> {
+        this.env.forEach((k,v) -> {
             pb.environment().put(k, v);
         });
-        if (this.dockerComposeLogDir != null) {
+        if (this.dockerComposeLogDir != null){
             pb.redirectOutput(appendTo(this.dockerComposeLogDir.resolve("DockerComposeEnv-" + obtainPid() + "-stdout.log").toFile()));
             pb.redirectError(appendTo(this.dockerComposeLogDir.resolve("DockerComposeEnv-" + obtainPid() + "-stderr.log").toFile()));
         } else {
@@ -385,36 +429,19 @@ public final class DockerComposeEnv implements AutoCloseable {
         return "DockerComposeEnv-test-" + obtainPid();
     }
 
-    private static Path composeFileAsPath(String filePath) {
-        return Path.of(filePath);
-    }
-
-    private static String findDockerComposeExecutableName() {
-        for (String executable : List.of("/usr/bin/docker-compose", "/usr/local/bin/docker-compose", "/usr/local/sbin/docker-compose",
-                "docker-compose", "docker-compose.exe")) {
-            try {
-                if (new ProcessBuilder(executable, "--version").start().onExit().get().exitValue() == 0) {
-                    return executable;
-                }
-            } catch (Exception io) {
-            }
-        }
-        throw new IllegalStateException("Could not find or execute docker-compose command on operating system");
-    }
-
     private static long obtainPid() {
         return ProcessHandle.current().pid();
     }
 
     private static int chooseFreePort(int higherThan) {
-        int next = Math.min(65535, higherThan + 1 + (int) (Math.random() * 100));
+        int next = Math.min(65535, higherThan + 1 + (int)(Math.random()*100));
         do {
             try (ServerSocket s = ServerSocketFactory.getDefault().createServerSocket(
                     next, 1, InetAddress.getLocalHost())) {
                 return s.getLocalPort();
             } catch (IOException e) {
             }
-        } while ((next += (int) (Math.random() * 100)) <= 65535);
+        } while ((next += (int)(Math.random()*100)) <= 65535);
         throw new IllegalStateException("Unable to find free network port on localhost");
     }
 
