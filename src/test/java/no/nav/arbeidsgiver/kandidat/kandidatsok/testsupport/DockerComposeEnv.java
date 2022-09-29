@@ -21,6 +21,8 @@ import static java.lang.ProcessBuilder.Redirect.appendTo;
 
 /**
  * Support class for invoking docker-compose and waiting for services, typically to be used in tests.
+ * <p>
+ * Copied from: https://raw.githubusercontent.com/navikt/kafka-sandbox/ce746f1bce9e32c465ab343bfe009efb249e2176/clients/src/test/java/no/nav/kafka/sandbox/DockerComposeEnv.java
  */
 public final class DockerComposeEnv implements AutoCloseable {
 
