@@ -31,6 +31,7 @@ import org.opensearch.index.query.BoolQueryBuilder;
 import org.opensearch.index.query.QueryBuilders;
 import org.opensearch.index.reindex.BulkByScrollResponse;
 import org.opensearch.index.reindex.DeleteByQueryRequest;
+import org.opensearch.rest.RestStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -148,9 +149,9 @@ public class EsIndexerHttpService implements EsIndexerService, AutoCloseable {
         if (bulkResponse.hasFailures()) {
             long antallFeil = 0;
             for (BulkItemResponse bir : bulkResponse.getItems()) {
-                if (bir.getFailure() != null && bir.getFailure().getType().equals("unavailable_shards_exception")) {
+                if (bir.getFailure().getStatus() == RestStatus.SERVICE_UNAVAILABLE) {
                     LOGGER.warn("Kaster OperationalException for å trigge retry grunnet feil mot ES: {}", bulkResponse.buildFailureMessage());
-                    throw new OperationalException("Unavailable shards i kandidatsok ES", bir.getFailure().getCause());
+                    throw new OperationalException("Unavailable service i kandidatsok ES", bir.getFailure().getCause());
                 }
                 antallFeil += bir.isFailed() ? 1 : 0;
                 try {
