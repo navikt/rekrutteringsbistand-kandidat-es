@@ -53,27 +53,27 @@ public class BulkSlettAktorIdIT {
         return cver.stream().map(EsCv::getAktorId).collect(toList());
     }
 
-//    @Test
-//    public void sjekkAtSlettingByAktorIdFungerer() {
-//        // Given
-//        final SokekriterierVeiledere ingenSøkekriterier = SokekriterierVeiledere.med().bygg();
-//        List<EsCv> cverFørSletting = sokClient.veilederSok(ingenSøkekriterier).getCver();
-//        List<String> aktorIderFørSletting = aktorIder(cverFørSletting);
-//        final List<String> aktorIdSkalSlettes = List.of(
-//                EsCvObjectMother.giveMeEsCv().getAktorId(),
-//                EsCvObjectMother.giveMeEsCv2().getAktorId());
-//        assertThat(cverFørSletting.size()).isGreaterThan(aktorIdSkalSlettes.size());
-//        assertThat(aktorIderFørSletting).containsAll(aktorIdSkalSlettes);
-//
-//        // When
-//        assertThat(indexerClient.bulkSlettAktorId(aktorIdSkalSlettes, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME)).isEqualTo(2);
-//
-//        // Then
-//        List<EsCv> cverEtterSletting = sokClient.veilederSok(ingenSøkekriterier).getCver();
-//        assertThat(cverEtterSletting.size()).isEqualTo(cverFørSletting.size() - aktorIdSkalSlettes.size());
-//        List<String> aktorIderEtterSletting = aktorIder(cverEtterSletting);
-//        assertThat(aktorIderEtterSletting).doesNotContainAnyElementsOf(aktorIdSkalSlettes);
-//    }
+    @Test
+    public void sjekkAtSlettingByAktorIdFungerer() {
+        // Given
+        final SokekriterierVeiledere ingenSøkekriterier = SokekriterierVeiledere.med().bygg();
+        List<EsCv> cverFørSletting = sokClient.veilederSok(ingenSøkekriterier).getCver();
+        List<String> aktorIderFørSletting = aktorIder(cverFørSletting);
+        final List<String> aktorIdSkalSlettes = List.of(
+                EsCvObjectMother.giveMeEsCv().getAktorId(),
+                EsCvObjectMother.giveMeEsCv2().getAktorId());
+        assertThat(cverFørSletting.size()).isGreaterThan(aktorIdSkalSlettes.size());
+        assertThat(aktorIderFørSletting).containsAll(aktorIdSkalSlettes);
+
+        // When
+        assertThat(indexerClient.bulkSlettAktorId(aktorIdSkalSlettes, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME)).isEqualTo(2);
+
+        // Then
+        List<EsCv> cverEtterSletting = sokClient.veilederSok(ingenSøkekriterier).getCver();
+        assertThat(cverEtterSletting.size()).isEqualTo(cverFørSletting.size() - aktorIdSkalSlettes.size());
+        List<String> aktorIderEtterSletting = aktorIder(cverEtterSletting);
+        assertThat(aktorIderEtterSletting).doesNotContainAnyElementsOf(aktorIdSkalSlettes);
+    }
 
     @Test
     public void sjekkAtSlettingAvIkkeEksisterendeAktorIdGir0() {
