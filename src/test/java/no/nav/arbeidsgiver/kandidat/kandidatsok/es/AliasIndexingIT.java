@@ -2,7 +2,6 @@ package no.nav.arbeidsgiver.kandidat.kandidatsok.es;
 
 import no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es.EsCvObjectMother;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es.KandidatsokTransformer;
-import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.SokekriterierVeiledere;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.Sokeresultat;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchTestConfiguration;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchIntegrationTestExtension;
@@ -60,33 +59,33 @@ public class AliasIndexingIT {
         ), indexName);
     }
 
-
-    @Test
-    public void storStyggTest() {
-
-        //sokMotAliasFungerer() {
-        assertThat(indexerClient.getTargetsForAlias(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME, "cvindex*")).containsExactly("cvindex_4.1.21");
-        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("Awesome").bygg());
-        assertThat(sokeresultat.getCver()).hasSize(1);
-        assertThat(sokeresultat.getCver()).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
-
-        //indexeringMotAliasFungerer() {
-        indexerAlleCVene(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
-        Sokeresultat sokeresultat2 = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("Awesome").bygg());
-        assertThat(sokeresultat2.getCver()).hasSize(1);
-        assertThat(sokeresultat2.getCver()).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
-
-        //indexSwitchingFungerer() {
-        indexerClient.createIndex("cvindex_4.1.22");
-        indexerClient.updateIndexAlias(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME, "cvindex*", "cvindex_4.1.22");
-        Sokeresultat sokeresultat3 = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("Awesome").bygg());
-        assertThat(sokeresultat3.getCver()).hasSize(0);
-
-        indexerAlleCVene("cvindex_4.1.22");
-        Sokeresultat sokeresultat4 = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("Awesome").bygg());
-        assertThat(sokeresultat4.getCver()).hasSize(1);
-        assertThat(sokeresultat4.getCver()).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
-    }
-
+//
+//    @Test
+//    public void storStyggTest() {
+//
+//        //sokMotAliasFungerer() {
+//        assertThat(indexerClient.getTargetsForAlias(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME, "cvindex*")).containsExactly("cvindex_4.1.21");
+//        Sokeresultat sokeresultat = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("Awesome").bygg());
+//        assertThat(sokeresultat.getCver()).hasSize(1);
+//        assertThat(sokeresultat.getCver()).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
+//
+//        //indexeringMotAliasFungerer() {
+//        indexerAlleCVene(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
+//        Sokeresultat sokeresultat2 = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("Awesome").bygg());
+//        assertThat(sokeresultat2.getCver()).hasSize(1);
+//        assertThat(sokeresultat2.getCver()).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
+//
+//        //indexSwitchingFungerer() {
+//        indexerClient.createIndex("cvindex_4.1.22");
+//        indexerClient.updateIndexAlias(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME, "cvindex*", "cvindex_4.1.22");
+//        Sokeresultat sokeresultat3 = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("Awesome").bygg());
+//        assertThat(sokeresultat3.getCver()).hasSize(0);
+//
+//        indexerAlleCVene("cvindex_4.1.22");
+//        Sokeresultat sokeresultat4 = sokClient.veilederSok(SokekriterierVeiledere.med().fritekst("Awesome").bygg());
+//        assertThat(sokeresultat4.getCver()).hasSize(1);
+//        assertThat(sokeresultat4.getCver()).containsExactly(kandidatsokTransformer.transformer(EsCvObjectMother.giveMeEsCv2()));
+//    }
+//
 
 }

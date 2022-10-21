@@ -1,8 +1,6 @@
 package no.nav.arbeidsgiver.kandidatsok.es.client;
 
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv;
-import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.Sokekriterier;
-import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.SokekriterierVeiledere;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.Sokeresultat;
 
 import java.time.LocalDate;
@@ -10,8 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EsSokService {
-
-    Sokeresultat veilederSok(SokekriterierVeiledere sokekriterier);
 
     List<String> typeAheadKompetanse(String prefix);
 
