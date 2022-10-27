@@ -61,7 +61,7 @@ public class BulkSlettAktorIdIT {
         assertThat(sokClient.veilederHent(cverSomSkalSlettes.get(0).getKandidatnr())).isPresent();
         assertThat(sokClient.veilederHent(cverSomSkalSlettes.get(1).getKandidatnr())).isPresent();
 
-        final List<String> aktørIderHvisCverSkalSlettes = cverSomSkalSlettes.stream().map(cv -> cv.getKandidatnr()).collect(toList());
+        final List<String> aktørIderHvisCverSkalSlettes = cverSomSkalSlettes.stream().map(EsCv::getAktorId).collect(toList());
         assertThat(indexerClient.bulkSlettAktorId(aktørIderHvisCverSkalSlettes, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME)).isEqualTo(2);
 
         assertThat(sokClient.veilederHent(cverSomSkalSlettes.get(0).getKandidatnr())).isEmpty();
