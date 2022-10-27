@@ -6,6 +6,7 @@ import no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es.KandidatsokTransformer
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.*;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchIntegrationTestExtension;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchTestConfiguration;
+import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.TestSøkKlient;
 import no.nav.arbeidsgiver.kandidatsok.es.client.EsIndexerService;
 import no.nav.arbeidsgiver.kandidatsok.es.client.EsSokService;
 import org.junit.jupiter.api.AfterEach;
@@ -35,6 +36,8 @@ public class IndexCvIT {
     private final ObjectMapper objectMapper = ElasticSearchTestConfiguration.objectMapper();
 
     private final KandidatsokTransformer kandidatsokTransformer = new KandidatsokTransformer();
+
+    private final TestSøkKlient testSøkKlient = new TestSøkKlient();
 
     private static final List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv> indekserteCver = List.of(
             EsCvObjectMother.giveMeEsCv(),
@@ -88,33 +91,27 @@ public class IndexCvIT {
         bulkEventer.forEach(e -> e.setKandidatnr(e.getKandidatnr() + 9998));
         indexerClient.bulkIndex(bulkEventer, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
     }
-//
-//    @Test
-//    public void skalBulkIndeksereCVerIdempotent() {
-//        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv> bulkEventer =
-//                asList(EsCvObjectMother.giveMeEsCv(), EsCvObjectMother.giveMeEsCv2(),
-//                        EsCvObjectMother.giveMeEsCv3(), EsCvObjectMother.giveMeEsCv4(),
-//                        EsCvObjectMother.giveMeEsCv5());
-//
-//        bulkEventer.forEach(e -> e.setKandidatnr(e.getKandidatnr() + 9999));
-//
-//        int antallForBulkIndeksering =
-//                sokClient.veilederSok(SokekriterierVeiledere.med().bygg()).getCver().size();
-//        indexerClient.bulkIndex(bulkEventer, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
-//        int antallEtterIndeksering =
-//                sokClient.veilederSok(SokekriterierVeiledere.med().bygg()).getCver().size();
-//
-//        Assertions.assertThat(antallEtterIndeksering - antallForBulkIndeksering)
-//                .isEqualTo(bulkEventer.size());
-//
-//        // Reindekser
-//        indexerClient.bulkIndex(bulkEventer, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
-//        antallEtterIndeksering =
-//                sokClient.veilederSok(SokekriterierVeiledere.med().bygg()).getCver().size();
-//
-//        Assertions.assertThat(antallEtterIndeksering - antallForBulkIndeksering)
-//                .isEqualTo(bulkEventer.size());
-//    }
+
+    @Test
+    public void skalBulkIndeksereCVerIdempotent() {
+        List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv> bulkEventer =
+                asList(EsCvObjectMother.giveMeEsCv(), EsCvObjectMother.giveMeEsCv2(),
+                        EsCvObjectMother.giveMeEsCv3(), EsCvObjectMother.giveMeEsCv4(),
+                        EsCvObjectMother.giveMeEsCv5());
+
+        bulkEventer.forEach(e -> e.setKandidatnr(e.getKandidatnr() + 9999));
+
+        // Bulkindekser
+        var antallFørBulkIndeksering = testSøkKlient.antallKandidater(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
+        indexerClient.bulkIndex(bulkEventer, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
+        var antallEtterBulkIndeksering = testSøkKlient.antallKandidater(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
+        assertThat(antallEtterBulkIndeksering - antallFørBulkIndeksering).isEqualTo(bulkEventer.size());
+
+        // Bulkindekser samme eventer på nytt
+        indexerClient.bulkIndex(bulkEventer, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
+        antallEtterBulkIndeksering = testSøkKlient.antallKandidater(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
+        assertThat(antallEtterBulkIndeksering - antallFørBulkIndeksering).isEqualTo(bulkEventer.size());
+    }
 
     @Test
     public void skalBulkSletteCVer() {
