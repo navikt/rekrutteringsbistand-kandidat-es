@@ -9,20 +9,6 @@ import java.util.Optional;
 
 public interface EsSokService {
 
-    List<String> typeAheadKompetanse(String prefix);
-
-    List<String> typeAheadUtdanning(String prefix);
-
-    List<String> typeaheadYrkeserfaring(String prefix);
-
-    List<String> typeAheadGeografi(String prefix);
-
-    List<String> typeAheadYrkeJobbonsker(String prefix);
-
-    List<String> typeAheadSprak(String prefix);
-
-    List<String> typeAheadNavkontor(String searchTerm);
-
     Optional<EsCv> veilederHent(String kandidatnr);
 
     Sokeresultat veilederHentKandidater(List<String> kandidatnummer);

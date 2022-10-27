@@ -8,7 +8,6 @@ import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchIntegra
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchTestConfiguration;
 import no.nav.arbeidsgiver.kandidatsok.es.client.EsIndexerService;
 import no.nav.arbeidsgiver.kandidatsok.es.client.EsSokService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -229,35 +228,5 @@ public class IndexCvIT {
 
     private static boolean yrkeserfaringAnleggsmaskinførerErNyereEnn10År(EsCv cv) {
         return cv.getYrkeserfaring().stream().filter(y -> anleggsmaskinfører.equals(y.getStillingstittel())).anyMatch(y -> tildato(y).isAfter(minus(now(), 10)));
-    }
-
-
-
-    @Test
-    public void typeaheadPaaNavkontorFungerer() {
-        List<String> typeAheadNavkontor = sokClient.typeAheadNavkontor("Gamle O");
-        assertThat(typeAheadNavkontor).hasSize(1);
-        assertThat(typeAheadNavkontor).containsExactly("0316 NAV Gamle Oslo");
-    }
-
-    @Test
-    public void typeaheadPaaNavkontorSkalHaandtereFlereValg() {
-        List<String> typeAheadNavkontor = sokClient.typeAheadNavkontor("NAV");
-        assertThat(typeAheadNavkontor).hasSize(4);
-        assertThat(typeAheadNavkontor).containsExactlyInAnyOrder("0316 NAV Gamle Oslo", "0220 NAV Asker", "0602 NAV Drammen", "0215 NAV Drøbak");
-    }
-
-    @Test
-    public void typeaheadPaaNavkontorSkalVaereCaseInsensitive() {
-        List<String> typeAheadNavkontor = sokClient.typeAheadNavkontor("asker");
-        assertThat(typeAheadNavkontor).hasSize(1);
-        assertThat(typeAheadNavkontor).containsExactly("0220 NAV Asker");
-    }
-
-    @Test
-    public void typeaheadPaaNavkontorSkalGiFlereValg() {
-        List<String> typeAheadNavkontor = sokClient.typeAheadNavkontor("dr");
-        assertThat(typeAheadNavkontor).hasSize(2);
-        assertThat(typeAheadNavkontor).containsExactlyInAnyOrder("0602 NAV Drammen", "0215 NAV Drøbak");
     }
 }
