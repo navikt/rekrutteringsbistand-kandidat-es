@@ -55,18 +55,17 @@ public class BulkSlettAktorIdIT {
 
     @Test
     public void sjekkAtSlettingByAktorIdFungerer() {
-        List<String> aktorIderFørSletting = aktorIder(alleIndekserteCver);
-        final List<String> aktørIderMedCverSomSkalSlettes = List.of(
-                alleIndekserteCver.get(0).getAktorId(),
-                alleIndekserteCver.get(1).getAktorId());
-        assertThat(aktorIderFørSletting).containsAll(aktørIderMedCverSomSkalSlettes);
-        assertThat(sokClient.veilederHent(aktørIderMedCverSomSkalSlettes.get(0))).isPresent();
-        assertThat(sokClient.veilederHent(aktørIderMedCverSomSkalSlettes.get(1))).isPresent();
+        final List<EsCv> cverSomSkalSlettes = List.of(
+                alleIndekserteCver.get(0),
+                alleIndekserteCver.get(1));
+        assertThat(sokClient.veilederHent(cverSomSkalSlettes.get(0).getKandidatnr())).isPresent();
+        assertThat(sokClient.veilederHent(cverSomSkalSlettes.get(1).getKandidatnr())).isPresent();
 
-        assertThat(indexerClient.bulkSlettAktorId(aktørIderMedCverSomSkalSlettes, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME)).isEqualTo(2);
+        final List<String> aktørIderHvisCverSkalSlettes = cverSomSkalSlettes.stream().map(cv -> cv.getKandidatnr()).collect(toList());
+        assertThat(indexerClient.bulkSlettAktorId(aktørIderHvisCverSkalSlettes, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME)).isEqualTo(2);
 
-        assertThat(sokClient.veilederHent(aktørIderMedCverSomSkalSlettes.get(0))).isNotPresent();
-        assertThat(sokClient.veilederHent(aktørIderMedCverSomSkalSlettes.get(1))).isNotPresent();
+        assertThat(sokClient.veilederHent(cverSomSkalSlettes.get(0).getKandidatnr())).isEmpty();
+        assertThat(sokClient.veilederHent(cverSomSkalSlettes.get(0).getKandidatnr())).isEmpty();
     }
 
     @Test
