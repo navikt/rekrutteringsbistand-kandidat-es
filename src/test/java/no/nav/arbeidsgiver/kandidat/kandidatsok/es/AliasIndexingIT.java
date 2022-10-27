@@ -72,7 +72,7 @@ public class AliasIndexingIT {
         indexerClient.createIndex("cvindex_4.1.22");
         indexerClient.updateIndexAlias(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME, "cvindex*", "cvindex_4.1.22");
         Optional<EsCv> enAnnenCv = sokClient.veilederHent(alleIndekserteCver.get(1).getKandidatnr());
-        assertThat(enAnnenCv).isPresent();
+        assertThat(enAnnenCv).isEmpty();
 
         indexerAlleCVene("cvindex_4.1.22");
         Optional<EsCv> enTredjeCv = sokClient.veilederHent(alleIndekserteCver.get(2).getKandidatnr());
