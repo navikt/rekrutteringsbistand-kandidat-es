@@ -6,7 +6,6 @@ import no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es.KandidatsokTransformer
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.*;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchIntegrationTestExtension;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchTestConfiguration;
-import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.TestSøkKlient;
 import no.nav.arbeidsgiver.kandidatsok.es.client.EsIndexerService;
 import no.nav.arbeidsgiver.kandidatsok.es.client.EsSokService;
 import org.junit.jupiter.api.AfterEach;
@@ -14,7 +13,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
+import org.opensearch.client.RequestOptions;
+import org.opensearch.client.core.CountRequest;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.Instant;
 import java.util.*;
@@ -36,8 +37,6 @@ public class IndexCvIT {
     private final ObjectMapper objectMapper = ElasticSearchTestConfiguration.objectMapper();
 
     private final KandidatsokTransformer kandidatsokTransformer = new KandidatsokTransformer();
-
-    private final TestSøkKlient testSøkKlient = new TestSøkKlient();
 
     private static final List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv> indekserteCver = List.of(
             EsCvObjectMother.giveMeEsCv(),
@@ -102,14 +101,14 @@ public class IndexCvIT {
         bulkEventer.forEach(e -> e.setKandidatnr(e.getKandidatnr() + 9999));
 
         // Bulkindekser
-        var antallFørBulkIndeksering = testSøkKlient.antallKandidater(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
+        var antallFørBulkIndeksering = hentAntallIndekserteKandidater();
         indexerClient.bulkIndex(bulkEventer, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
-        var antallEtterBulkIndeksering = testSøkKlient.antallKandidater(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
+        var antallEtterBulkIndeksering = hentAntallIndekserteKandidater();
         assertThat(antallEtterBulkIndeksering - antallFørBulkIndeksering).isEqualTo(bulkEventer.size());
 
         // Bulkindekser samme eventer på nytt
         indexerClient.bulkIndex(bulkEventer, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
-        antallEtterBulkIndeksering = testSøkKlient.antallKandidater(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
+        antallEtterBulkIndeksering = hentAntallIndekserteKandidater();
         assertThat(antallEtterBulkIndeksering - antallFørBulkIndeksering).isEqualTo(bulkEventer.size());
     }
 
@@ -200,15 +199,6 @@ public class IndexCvIT {
         Optional<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv> esCv = sokClient.veilederHent("finnes-ikke");
         assertThat(esCv).isNotPresent();
     }
-
-
-
-
-
-    private static boolean harStillingstittelAnleggsmaskinfører(EsCv cv) {
-        return cv.getYrkeserfaring().stream().anyMatch(y -> anleggsmaskinfører.equals(y.getStillingstittel()));
-    }
-
     private static Instant tildato(EsYrkeserfaring yrkeserfaring) {
         Calendar c = Calendar.getInstance();
         c.setTime(yrkeserfaring.getFraDato());
@@ -225,5 +215,17 @@ public class IndexCvIT {
 
     private static boolean yrkeserfaringAnleggsmaskinførerErNyereEnn10År(EsCv cv) {
         return cv.getYrkeserfaring().stream().filter(y -> anleggsmaskinfører.equals(y.getStillingstittel())).anyMatch(y -> tildato(y).isAfter(minus(now(), 10)));
+    }
+
+    private int hentAntallIndekserteKandidater() {
+        var highLevelClient = ElasticSearchTestConfiguration.restHighLevelClient();
+        var countRequest = new CountRequest();
+        countRequest.indices(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
+
+        try {
+            return (int) highLevelClient.count(countRequest, RequestOptions.DEFAULT).getCount();
+        } catch (IOException e) {
+            throw new RuntimeException("Feil ved henting av antall indekserte kandidater i test", e);
+        }
     }
 }
