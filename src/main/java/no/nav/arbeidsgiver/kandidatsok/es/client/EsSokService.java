@@ -1,8 +1,6 @@
 package no.nav.arbeidsgiver.kandidatsok.es.client;
 
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv;
-import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.Sokekriterier;
-import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.SokekriterierVeiledere;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.Sokeresultat;
 
 import java.time.LocalDate;
@@ -10,22 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EsSokService {
-
-    Sokeresultat veilederSok(SokekriterierVeiledere sokekriterier);
-
-    List<String> typeAheadKompetanse(String prefix);
-
-    List<String> typeAheadUtdanning(String prefix);
-
-    List<String> typeaheadYrkeserfaring(String prefix);
-
-    List<String> typeAheadGeografi(String prefix);
-
-    List<String> typeAheadYrkeJobbonsker(String prefix);
-
-    List<String> typeAheadSprak(String prefix);
-
-    List<String> typeAheadNavkontor(String searchTerm);
 
     Optional<EsCv> veilederHent(String kandidatnr);
 

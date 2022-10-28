@@ -4,11 +4,9 @@ import no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es.EsCvObjectMother.*
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsForerkort
 import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsPerioderMedInaktivitet
-import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.SokekriterierVeiledere
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchIntegrationTestExtension
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchTestConfiguration
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME
-import no.nav.arbeidsgiver.kandidatsok.es.client.PrioritertMålgruppe
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -21,14 +19,12 @@ import java.util.*
 import java.util.Arrays.asList
 
 @ExtendWith(ElasticSearchIntegrationTestExtension::class)
-class SøkEtterHullICvIT {
+class HullICvIT {
 
     private val sokClient =
         ElasticSearchTestConfiguration.esSokService(DEFAULT_INDEX_NAME)
 
     private val indexerClient = ElasticSearchTestConfiguration.indexerCvService()
-
-    private val søkekriterierHullICv = SokekriterierVeiledere.med().prioriterteMaalgrupper(PrioritertMålgruppe.hullICv).bygg()
 
     private val minimumHullVarighetAntallÅr = 2L
 
@@ -53,8 +49,7 @@ class SøkEtterHullICvIT {
         )
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
-        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
-        assertThat(actual).hasSize(0)
+        assertThat(sokClient.harHullICv(cv.aktorId, LocalDate.now())).isFalse
     }
 
     @Test
@@ -67,10 +62,8 @@ class SøkEtterHullICvIT {
             )
         )
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
-
-        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
-
-        assertThat(actual).hasSize(0)
+        
+        assertThat(sokClient.harHullICv(cv.aktorId, LocalDate.now())).isFalse
     }
 
     @Test
@@ -84,9 +77,7 @@ class SøkEtterHullICvIT {
         )
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
-        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
-
-        assertThat(actual).hasSize(0)
+        assertThat(sokClient.harHullICv(cv.aktorId, LocalDate.now())).isFalse
     }
 
     @Test
@@ -100,10 +91,7 @@ class SøkEtterHullICvIT {
         )
         indexerClient.bulkIndex(listOf(cv), DEFAULT_INDEX_NAME)
 
-        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
-
-        assertThat(actual).hasSize(1)
-        assertThat(actual.first().aktorId).isEqualTo(cv!!.aktorId)
+        assertThat(sokClient.harHullICv(cv.aktorId, LocalDate.now())).isTrue
     }
 
     @Test
@@ -118,10 +106,7 @@ class SøkEtterHullICvIT {
         assertThat(cv.forerkort).isNotEmpty
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
-        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
-
-        assertThat(actual).hasSize(1)
-        assertThat(actual.first().aktorId).isEqualTo(cv!!.aktorId)
+        assertThat(sokClient.harHullICv(cv.aktorId, LocalDate.now())).isTrue
     }
 
     @Test
@@ -135,10 +120,7 @@ class SøkEtterHullICvIT {
         )
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
-        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
-
-        assertThat(actual).hasSize(1)
-        assertThat(actual.first().aktorId).isEqualTo(cv!!.aktorId)
+        assertThat(sokClient.harHullICv(cv.aktorId, LocalDate.now())).isTrue
     }
 
     @Test
@@ -152,9 +134,7 @@ class SøkEtterHullICvIT {
         )
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
-        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
-
-        assertThat(actual).isEmpty()
+        assertThat(sokClient.harHullICv(cv.aktorId, LocalDate.now())).isFalse
     }
 
     @Test
@@ -164,9 +144,7 @@ class SøkEtterHullICvIT {
         cv.addYrkeserfaring(anyYrkeserfaring)
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
-        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
-
-        assertThat(actual).hasSize(1)
+        assertThat(sokClient.harHullICv(cv.aktorId, LocalDate.now())).isTrue
     }
 
     @Test
@@ -176,9 +154,7 @@ class SøkEtterHullICvIT {
         cv.addUtdanning(anyUtdanning)
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
-        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
-
-        assertThat(actual).hasSize(1)
+        assertThat(sokClient.harHullICv(cv.aktorId, LocalDate.now())).isTrue
     }
 
     @Test
@@ -188,9 +164,7 @@ class SøkEtterHullICvIT {
         cv.addForerkort(anyFørerkort)
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
-        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
-
-        assertThat(actual).hasSize(1)
+        assertThat(sokClient.harHullICv(cv.aktorId, LocalDate.now())).isTrue
     }
 
     @Test
@@ -199,10 +173,8 @@ class SøkEtterHullICvIT {
         val anyKurs = giveMeKurs()
         cv.addKurs(anyKurs)
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
-
-        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
-
-        assertThat(actual).hasSize(1)
+        
+        assertThat(sokClient.harHullICv(cv.aktorId, LocalDate.now())).isTrue
     }
 
     @Test
@@ -211,10 +183,8 @@ class SøkEtterHullICvIT {
         val anyFagdokumentasjon = giveMeFagdokumentasjon()
         cv.addFagdokumentasjon(asList(anyFagdokumentasjon))
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
-
-        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
-
-        assertThat(actual).hasSize(1)
+        
+        assertThat(sokClient.harHullICv(cv.aktorId, LocalDate.now())).isTrue
     }
 
     @Test
@@ -224,9 +194,7 @@ class SøkEtterHullICvIT {
         cv.addAnnenErfaring(asList(anyAnnenErfaring))
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
 
-        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
-
-        assertThat(actual).hasSize(1)
+        assertThat(sokClient.harHullICv(cv.aktorId, LocalDate.now())).isTrue
     }
 
     @Test
@@ -235,28 +203,8 @@ class SøkEtterHullICvIT {
         val anyGodkjenning = giveMeGodkjenning()
         cv.addGodkjenninger(asList(anyGodkjenning))
         indexerClient.index(cv, DEFAULT_INDEX_NAME)
-
-        val actual = sokClient.veilederSok(søkekriterierHullICv).cver
-
-        assertThat(actual).hasSize(1)
-    }
-
-    @Test
-    fun søkUtenFilterForHullICvSkalReturnereBådeCvMedHullOgUtenHull() {
-        val cvUtenHull = giveMeEsCv(
-            "999",
-            EsPerioderMedInaktivitet(
-                toDate(LocalDate.now().minusDays(1)),
-                listOf(toDate(LocalDate.now().minusYears(18)))
-            )
-        )
-        indexerClient.index(cvUtenHull, DEFAULT_INDEX_NAME)
-
-        val actualMedFilterForHull = sokClient.veilederSok(søkekriterierHullICv).cver
-        val actualUtenFilterForHull = sokClient.veilederSok(SokekriterierVeiledere.med().bygg()).cver
-
-        assertThat(actualMedFilterForHull).hasSize(0)
-        assertThat(actualUtenFilterForHull).hasSize(1)
+        
+        assertThat(sokClient.harHullICv(cv.aktorId, LocalDate.now())).isTrue
     }
 
     @Test
@@ -380,6 +328,4 @@ class SøkEtterHullICvIT {
         ).apply {
             addPerioderMedInaktivitet(esPerioderMedInaktivitet)
         }
-
-
 }

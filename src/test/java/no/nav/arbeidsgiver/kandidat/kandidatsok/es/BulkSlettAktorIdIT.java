@@ -1,8 +1,7 @@
 package no.nav.arbeidsgiver.kandidat.kandidatsok.es;
 
 import no.nav.arbeidsgiver.kandidat.kandidatsok.domene.es.EsCvObjectMother;
-import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.EsCv;
-import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.sok.SokekriterierVeiledere;
+import no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchIntegrationTestExtension;
 import no.nav.arbeidsgiver.kandidat.kandidatsok.testsupport.ElasticSearchTestConfiguration;
 import no.nav.arbeidsgiver.kandidatsok.es.client.EsIndexerService;
@@ -26,23 +25,23 @@ public class BulkSlettAktorIdIT {
 
     private final EsIndexerService indexerClient = ElasticSearchTestConfiguration.indexerCvService();
 
+    private final List<no.nav.arbeidsgiver.kandidat.kandidatsok.es.domene.EsCv> alleIndekserteCver = List.of(
+            EsCvObjectMother.giveMeEsCv(),
+            EsCvObjectMother.giveMeEsCv2(),
+            EsCvObjectMother.giveMeEsCv3(),
+            EsCvObjectMother.giveMeEsCv4(),
+            EsCvObjectMother.giveMeEsCv5(),
+            EsCvObjectMother.giveMeEsCv6(),
+            EsCvObjectMother.giveMeCvForDoedPerson(),
+            EsCvObjectMother.giveMeCvForKode6(),
+            EsCvObjectMother.giveMeCvForKode7(),
+            EsCvObjectMother.giveMeCvFritattForAgKandidatsok(),
+            EsCvObjectMother.giveMeCvFritattForKandidatsok());
+
     @BeforeEach
     public void before() {
         indexerClient.createIndex(ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
-
-        indexerClient.bulkIndex(List.of(
-                EsCvObjectMother.giveMeEsCv(),
-                EsCvObjectMother.giveMeEsCv2(),
-                EsCvObjectMother.giveMeEsCv3(),
-                EsCvObjectMother.giveMeEsCv4(),
-                EsCvObjectMother.giveMeEsCv5(),
-                EsCvObjectMother.giveMeEsCv6(),
-                EsCvObjectMother.giveMeCvForDoedPerson(),
-                EsCvObjectMother.giveMeCvForKode6(),
-                EsCvObjectMother.giveMeCvForKode7(),
-                EsCvObjectMother.giveMeCvFritattForAgKandidatsok(),
-                EsCvObjectMother.giveMeCvFritattForKandidatsok()
-        ), ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
+        indexerClient.bulkIndex(alleIndekserteCver, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME);
     }
 
     @AfterEach
@@ -56,24 +55,17 @@ public class BulkSlettAktorIdIT {
 
     @Test
     public void sjekkAtSlettingByAktorIdFungerer() {
-        // Given
-        final SokekriterierVeiledere ingenSøkekriterier = SokekriterierVeiledere.med().bygg();
-        List<EsCv> cverFørSletting = sokClient.veilederSok(ingenSøkekriterier).getCver();
-        List<String> aktorIderFørSletting = aktorIder(cverFørSletting);
-        final List<String> aktorIdSkalSlettes = List.of(
-                EsCvObjectMother.giveMeEsCv().getAktorId(),
-                EsCvObjectMother.giveMeEsCv2().getAktorId());
-        assertThat(cverFørSletting.size()).isGreaterThan(aktorIdSkalSlettes.size());
-        assertThat(aktorIderFørSletting).containsAll(aktorIdSkalSlettes);
+        final List<EsCv> cverSomSkalSlettes = List.of(
+                alleIndekserteCver.get(0),
+                alleIndekserteCver.get(1));
+        assertThat(sokClient.veilederHent(cverSomSkalSlettes.get(0).getKandidatnr())).isPresent();
+        assertThat(sokClient.veilederHent(cverSomSkalSlettes.get(1).getKandidatnr())).isPresent();
 
-        // When
-        assertThat(indexerClient.bulkSlettAktorId(aktorIdSkalSlettes, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME)).isEqualTo(2);
+        final List<String> aktørIderHvisCverSkalSlettes = cverSomSkalSlettes.stream().map(EsCv::getAktorId).collect(toList());
+        assertThat(indexerClient.bulkSlettAktorId(aktørIderHvisCverSkalSlettes, ElasticSearchTestConfiguration.DEFAULT_INDEX_NAME)).isEqualTo(2);
 
-        // Then
-        List<EsCv> cverEtterSletting = sokClient.veilederSok(ingenSøkekriterier).getCver();
-        assertThat(cverEtterSletting.size()).isEqualTo(cverFørSletting.size() - aktorIdSkalSlettes.size());
-        List<String> aktorIderEtterSletting = aktorIder(cverEtterSletting);
-        assertThat(aktorIderEtterSletting).doesNotContainAnyElementsOf(aktorIdSkalSlettes);
+        assertThat(sokClient.veilederHent(cverSomSkalSlettes.get(0).getKandidatnr())).isEmpty();
+        assertThat(sokClient.veilederHent(cverSomSkalSlettes.get(0).getKandidatnr())).isEmpty();
     }
 
     @Test
