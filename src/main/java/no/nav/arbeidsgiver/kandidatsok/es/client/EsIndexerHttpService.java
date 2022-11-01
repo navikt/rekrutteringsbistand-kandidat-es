@@ -131,6 +131,9 @@ public class EsIndexerHttpService implements EsIndexerService, AutoCloseable {
 
                 bulkRequest.add(ir);
             }
+            if (bulkRequest.requests().isEmpty()) {
+                return 0;
+            }
         } catch (Exception e) {
             LOGGER.error(
                     "Greide ikke å serialisere CV til JSON for å bygge opp bulk-indekseringsrequest: {}. Kandidatnr: {}",
