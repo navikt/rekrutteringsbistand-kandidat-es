@@ -24,7 +24,7 @@ jobs:
       run: mvn -B clean install
 
   snyk-monitor:
-    name: Monitor dependencies with Snyk
+    name: Monitor dependencies with Snyk.
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
