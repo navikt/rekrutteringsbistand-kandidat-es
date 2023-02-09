@@ -13,7 +13,7 @@ public class KandidatsokTransformer {
         return new EsCv(cv.getAktorId(), cv.getFodselsnummer(), cv.getFornavn(), cv.getEtternavn(), cv.getFodselsdato(),
                 cv.getFodselsdatoErDnr(), cv.getPoststed(), cv.getEpostadresse(), cv.getTelefon(), cv.getMobiltelefon(),
                 cv.getFormidlingsgruppekode(), cv.getKandidatnr(), cv.getTotalLengdeYrkeserfaring(),
-                cv.getKvalifiseringsgruppekode(), transformerUtdListe(cv.getUtdanning()),
+                cv.getKvalifiseringsgruppekode(), cv.getHovedmaalkode(), transformerUtdListe(cv.getUtdanning()),
                 transformerYrkeListe(cv.getYrkeserfaring()), cv.getOppstartKode(), cv.getForerkort(),
                 cv.getKommuneNavn(), cv.getFylkeNavn(), cv.getVeilTilretteleggingsbehov());
     }

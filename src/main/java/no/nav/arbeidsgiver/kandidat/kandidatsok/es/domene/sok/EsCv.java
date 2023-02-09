@@ -36,6 +36,8 @@ public class EsCv {
 
     private String kvalifiseringsgruppekode;
 
+    private String hovedmaalkode;
+
     private List<EsUtdanning> utdanning = new ArrayList<>();
 
     private List<EsYrkeserfaring> yrkeserfaring = new ArrayList<>();
@@ -58,7 +60,7 @@ public class EsCv {
     public EsCv(String aktorId, String fodselsnummer, String fornavn, String etternavn, Date fodselsdato, Boolean fodselsdatoErDnr,
                 String poststed, String epostadresse, String telefon, String mobiltelefon,
                 String formidlingsgruppekode, String kandidatnr,
-                int totalLengdeYrkeserfaring, String kvalifiseringsgruppekode, List<EsUtdanning> utdanning,
+                int totalLengdeYrkeserfaring, String kvalifiseringsgruppekode, String hovedmaalkode, List<EsUtdanning> utdanning,
                 List<EsYrkeserfaring> yrkeserfaring, String oppstart, List<EsForerkort> forerkort, String kommuneNavn, String fylkeNavn, List<String> veilTilretteleggingsbehov) {
         this.aktorId = aktorId;
         this.fodselsnummer = fodselsnummer;
@@ -74,6 +76,7 @@ public class EsCv {
         this.kandidatnr = kandidatnr;
         this.totalLengdeYrkeserfaring = totalLengdeYrkeserfaring;
         this.kvalifiseringsgruppekode = kvalifiseringsgruppekode;
+        this.hovedmaalkode = hovedmaalkode;
         this.utdanning = utdanning;
         this.yrkeserfaring = yrkeserfaring;
         this.oppstartKode = oppstart;
@@ -140,6 +143,10 @@ public class EsCv {
 
     public String getKvalifiseringsgruppekode() {
         return kvalifiseringsgruppekode;
+    }
+
+    public String getHovedmaalkode() {
+        return hovedmaalkode;
     }
 
     public String getKandidatnr() {
@@ -216,6 +223,7 @@ public class EsCv {
                 Objects.equals(formidlingsgruppekode, esCv.formidlingsgruppekode) &&
                 Objects.equals(kandidatnr, esCv.kandidatnr) &&
                 Objects.equals(kvalifiseringsgruppekode, esCv.kvalifiseringsgruppekode) &&
+                Objects.equals(hovedmaalkode, esCv.hovedmaalkode) &&
                 Objects.equals(utdanning, esCv.utdanning) &&
                 Objects.equals(yrkeserfaring, esCv.yrkeserfaring) &&
                 Objects.equals(oppstartKode, esCv.oppstartKode) &&
@@ -230,7 +238,7 @@ public class EsCv {
                 aktorId, fodselsnummer, fornavn, etternavn, fodselsdato, fodselsdatoErDnr, poststed,
                 epostadresse, telefon, mobiltelefon,
                 formidlingsgruppekode, kandidatnr, totalLengdeYrkeserfaring,
-                kvalifiseringsgruppekode, utdanning, yrkeserfaring, oppstartKode, kommuneNavn, fylkeNavn,
+                kvalifiseringsgruppekode, hovedmaalkode, utdanning, yrkeserfaring, oppstartKode, kommuneNavn, fylkeNavn,
                 veilTilretteleggingsbehov
         );
     }
@@ -252,6 +260,7 @@ public class EsCv {
                 ", arenaKandidatnr='" + kandidatnr + '\'' +
                 ", totalLengdeYrkeserfaring=" + totalLengdeYrkeserfaring +
                 ", kvalifiseringsgruppekode='" + kvalifiseringsgruppekode + '\'' +
+                ", hovedmaalkode='" + hovedmaalkode + '\'' +
                 ", utdanning=" + utdanning +
                 ", yrkeserfaring=" + yrkeserfaring +
                 ", score=" + score +
