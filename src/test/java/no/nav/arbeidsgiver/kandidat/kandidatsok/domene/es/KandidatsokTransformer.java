@@ -15,7 +15,7 @@ public class KandidatsokTransformer {
                 cv.getFormidlingsgruppekode(), cv.getKandidatnr(), cv.getTotalLengdeYrkeserfaring(),
                 cv.getKvalifiseringsgruppekode(), cv.getHovedmaalkode(), transformerUtdListe(cv.getUtdanning()),
                 transformerYrkeListe(cv.getYrkeserfaring()), cv.getOppstartKode(), cv.getForerkort(),
-                cv.getKommuneNavn(), cv.getFylkeNavn(), cv.getVeilTilretteleggingsbehov());
+                cv.getKommuneNavn(), cv.getFylkeNavn());
     }
 
     private List<EsYrkeserfaring> transformerYrkeListe(

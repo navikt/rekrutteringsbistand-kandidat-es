@@ -322,7 +322,6 @@ class HullICvIT {
             "LEDIG_NAA",
             "5001",
             "H149390",
-            false,
             "Viken",
             "Lier"
         ).apply {
