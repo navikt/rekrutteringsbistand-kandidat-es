@@ -617,15 +617,6 @@
     "veileder": {
       "type": "keyword"
     },
-    "inkluderingsbehov": {
-      "type": "boolean"
-    },
-    "tilretteleggingsbehov": {
-      "type": "boolean"
-    },
-    "veilTilretteleggingsbehovObj": {
-      "type": "keyword"
-    },
     "perioderMedInaktivitet": {
       "properties": {
         "startdatoForInnevarendeInaktivePeriode": {

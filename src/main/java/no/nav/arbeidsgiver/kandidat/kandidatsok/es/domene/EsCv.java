@@ -135,12 +135,6 @@ public class EsCv {
 
     private String veileder;
 
-    private boolean inkluderingsbehov;
-
-    private boolean tilretteleggingsbehov;
-
-    private List<String> veilTilretteleggingsbehovObj = new ArrayList<>();
-
     private List<EsGodkjenning> godkjenninger = new ArrayList<>();
 
     private EsPerioderMedInaktivitet perioderMedInaktivitet;
@@ -194,7 +188,6 @@ public class EsCv {
 
             String kommunenummerstring,
             String veileder,
-            boolean tilretteleggingsbehov,
             String fylkeNavn,
             String kommuneNavn
     ) {
@@ -239,8 +232,6 @@ public class EsCv {
         this.oppstartKode = oppstartKode;
         this.kommunenummerstring = kommunenummerstring;
         this.veileder = veileder == null ? null : veileder.toLowerCase();
-        this.inkluderingsbehov = tilretteleggingsbehov;
-        this.tilretteleggingsbehov = tilretteleggingsbehov;
         this.fylkeNavn = fylkeNavn;
         this.kommuneNavn = kommuneNavn;
     }
@@ -395,10 +386,6 @@ public class EsCv {
 
     private void addSamletKompetanse(Collection<EsSamletKompetanse> samletKompetanseListe) {
         this.samletKompetanseObj.addAll(samletKompetanseListe);
-    }
-
-    public void addVeilTilretteleggingsbehov(Collection<String> veilTilretteleggingsbehov) {
-        this.veilTilretteleggingsbehovObj.addAll(veilTilretteleggingsbehov);
     }
 
     // gettere
@@ -655,18 +642,6 @@ public class EsCv {
         return this.oppstartKode;
     }
 
-    public boolean getInkluderingsbehov() {
-        return inkluderingsbehov;
-    }
-
-    public boolean getTilretteleggingsbehov() {
-        return tilretteleggingsbehov;
-    }
-
-    public List<String> getVeilTilretteleggingsbehov() {
-        return veilTilretteleggingsbehovObj;
-    }
-
     public List<EsGodkjenning> getGodkjenninger() {
         return godkjenninger;
     }
@@ -686,12 +661,12 @@ public class EsCv {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EsCv esCv = (EsCv) o;
-        return harKontaktinformasjon == esCv.harKontaktinformasjon && totalLengdeYrkeserfaring == esCv.totalLengdeYrkeserfaring && inkluderingsbehov == esCv.inkluderingsbehov && tilretteleggingsbehov == esCv.tilretteleggingsbehov && Objects.equals(fritekst, esCv.fritekst) && Objects.equals(aktorId, esCv.aktorId) && Objects.equals(fodselsnummer, esCv.fodselsnummer) && Objects.equals(fornavn, esCv.fornavn) && Objects.equals(etternavn, esCv.etternavn) && Objects.equals(fodselsdato, esCv.fodselsdato) && Objects.equals(fodselsdatoErDnr, esCv.fodselsdatoErDnr) && Objects.equals(formidlingsgruppekode, esCv.formidlingsgruppekode) && Objects.equals(epostadresse, esCv.epostadresse) && Objects.equals(mobiltelefon, esCv.mobiltelefon) && Objects.equals(telefon, esCv.telefon) && Objects.equals(statsborgerskap, esCv.statsborgerskap) && Objects.equals(kandidatnr, esCv.kandidatnr) && Objects.equals(arenaKandidatnr, esCv.arenaKandidatnr) && Objects.equals(beskrivelse, esCv.beskrivelse) && Objects.equals(samtykkeStatus, esCv.samtykkeStatus) && Objects.equals(samtykkeDato, esCv.samtykkeDato) && Objects.equals(adresselinje1, esCv.adresselinje1) && Objects.equals(adresselinje2, esCv.adresselinje2) && Objects.equals(adresselinje3, esCv.adresselinje3) && Objects.equals(postnummer, esCv.postnummer) && Objects.equals(poststed, esCv.poststed) && Objects.equals(landkode, esCv.landkode) && Objects.equals(kommunenummer, esCv.kommunenummer) && Objects.equals(kommunenummerkw, esCv.kommunenummerkw) && Objects.equals(kommunenummerstring, esCv.kommunenummerstring) && Objects.equals(fylkeNavn, esCv.fylkeNavn) && Objects.equals(kommuneNavn, esCv.kommuneNavn) && Objects.equals(disponererBil, esCv.disponererBil) && Objects.equals(tidsstempel, esCv.tidsstempel) && Objects.equals(doed, esCv.doed) && Objects.equals(frKode, esCv.frKode) && Objects.equals(kvalifiseringsgruppekode, esCv.kvalifiseringsgruppekode) && Objects.equals(hovedmaalkode, esCv.hovedmaalkode) && Objects.equals(orgenhet, esCv.orgenhet) && Objects.equals(navkontor, esCv.navkontor) && Objects.equals(fritattKandidatsok, esCv.fritattKandidatsok) && Objects.equals(fritattAgKandidatsok, esCv.fritattAgKandidatsok) && Objects.equals(utdanning, esCv.utdanning) && Objects.equals(fagdokumentasjon, esCv.fagdokumentasjon) && Objects.equals(yrkeserfaring, esCv.yrkeserfaring) && Objects.equals(kompetanseObj, esCv.kompetanseObj) && Objects.equals(annenerfaringObj, esCv.annenerfaringObj) && Objects.equals(sertifikatObj, esCv.sertifikatObj) && Objects.equals(forerkort, esCv.forerkort) && Objects.equals(sprak, esCv.sprak) && Objects.equals(kursObj, esCv.kursObj) && Objects.equals(vervObj, esCv.vervObj) && Objects.equals(geografiJobbonsker, esCv.geografiJobbonsker) && Objects.equals(yrkeJobbonskerObj, esCv.yrkeJobbonskerObj) && Objects.equals(omfangJobbonskerObj, esCv.omfangJobbonskerObj) && Objects.equals(ansettelsesformJobbonskerObj, esCv.ansettelsesformJobbonskerObj) && Objects.equals(arbeidstidsordningJobbonskerObj, esCv.arbeidstidsordningJobbonskerObj) && Objects.equals(arbeidsdagerJobbonskerObj, esCv.arbeidsdagerJobbonskerObj) && Objects.equals(arbeidstidJobbonskerObj, esCv.arbeidstidJobbonskerObj) && Objects.equals(samletKompetanseObj, esCv.samletKompetanseObj) && Objects.equals(synligForArbeidsgiverSok, esCv.synligForArbeidsgiverSok) && Objects.equals(synligForVeilederSok, esCv.synligForVeilederSok) && Objects.equals(oppstartKode, esCv.oppstartKode) && Objects.equals(veileder, esCv.veileder) && Objects.equals(veilTilretteleggingsbehovObj, esCv.veilTilretteleggingsbehovObj) && Objects.equals(godkjenninger, esCv.godkjenninger) && Objects.equals(perioderMedInaktivitet, esCv.perioderMedInaktivitet);
+        return harKontaktinformasjon == esCv.harKontaktinformasjon && totalLengdeYrkeserfaring == esCv.totalLengdeYrkeserfaring && Objects.equals(fritekst, esCv.fritekst) && Objects.equals(aktorId, esCv.aktorId) && Objects.equals(fodselsnummer, esCv.fodselsnummer) && Objects.equals(fornavn, esCv.fornavn) && Objects.equals(etternavn, esCv.etternavn) && Objects.equals(fodselsdato, esCv.fodselsdato) && Objects.equals(fodselsdatoErDnr, esCv.fodselsdatoErDnr) && Objects.equals(formidlingsgruppekode, esCv.formidlingsgruppekode) && Objects.equals(epostadresse, esCv.epostadresse) && Objects.equals(mobiltelefon, esCv.mobiltelefon) && Objects.equals(telefon, esCv.telefon) && Objects.equals(statsborgerskap, esCv.statsborgerskap) && Objects.equals(kandidatnr, esCv.kandidatnr) && Objects.equals(arenaKandidatnr, esCv.arenaKandidatnr) && Objects.equals(beskrivelse, esCv.beskrivelse) && Objects.equals(samtykkeStatus, esCv.samtykkeStatus) && Objects.equals(samtykkeDato, esCv.samtykkeDato) && Objects.equals(adresselinje1, esCv.adresselinje1) && Objects.equals(adresselinje2, esCv.adresselinje2) && Objects.equals(adresselinje3, esCv.adresselinje3) && Objects.equals(postnummer, esCv.postnummer) && Objects.equals(poststed, esCv.poststed) && Objects.equals(landkode, esCv.landkode) && Objects.equals(kommunenummer, esCv.kommunenummer) && Objects.equals(kommunenummerkw, esCv.kommunenummerkw) && Objects.equals(kommunenummerstring, esCv.kommunenummerstring) && Objects.equals(fylkeNavn, esCv.fylkeNavn) && Objects.equals(kommuneNavn, esCv.kommuneNavn) && Objects.equals(disponererBil, esCv.disponererBil) && Objects.equals(tidsstempel, esCv.tidsstempel) && Objects.equals(doed, esCv.doed) && Objects.equals(frKode, esCv.frKode) && Objects.equals(kvalifiseringsgruppekode, esCv.kvalifiseringsgruppekode) && Objects.equals(hovedmaalkode, esCv.hovedmaalkode) && Objects.equals(orgenhet, esCv.orgenhet) && Objects.equals(navkontor, esCv.navkontor) && Objects.equals(fritattKandidatsok, esCv.fritattKandidatsok) && Objects.equals(fritattAgKandidatsok, esCv.fritattAgKandidatsok) && Objects.equals(utdanning, esCv.utdanning) && Objects.equals(fagdokumentasjon, esCv.fagdokumentasjon) && Objects.equals(yrkeserfaring, esCv.yrkeserfaring) && Objects.equals(kompetanseObj, esCv.kompetanseObj) && Objects.equals(annenerfaringObj, esCv.annenerfaringObj) && Objects.equals(sertifikatObj, esCv.sertifikatObj) && Objects.equals(forerkort, esCv.forerkort) && Objects.equals(sprak, esCv.sprak) && Objects.equals(kursObj, esCv.kursObj) && Objects.equals(vervObj, esCv.vervObj) && Objects.equals(geografiJobbonsker, esCv.geografiJobbonsker) && Objects.equals(yrkeJobbonskerObj, esCv.yrkeJobbonskerObj) && Objects.equals(omfangJobbonskerObj, esCv.omfangJobbonskerObj) && Objects.equals(ansettelsesformJobbonskerObj, esCv.ansettelsesformJobbonskerObj) && Objects.equals(arbeidstidsordningJobbonskerObj, esCv.arbeidstidsordningJobbonskerObj) && Objects.equals(arbeidsdagerJobbonskerObj, esCv.arbeidsdagerJobbonskerObj) && Objects.equals(arbeidstidJobbonskerObj, esCv.arbeidstidJobbonskerObj) && Objects.equals(samletKompetanseObj, esCv.samletKompetanseObj) && Objects.equals(synligForArbeidsgiverSok, esCv.synligForArbeidsgiverSok) && Objects.equals(synligForVeilederSok, esCv.synligForVeilederSok) && Objects.equals(oppstartKode, esCv.oppstartKode) && Objects.equals(veileder, esCv.veileder) && Objects.equals(godkjenninger, esCv.godkjenninger) && Objects.equals(perioderMedInaktivitet, esCv.perioderMedInaktivitet);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(fritekst, aktorId, fodselsnummer, fornavn, etternavn, fodselsdato, fodselsdatoErDnr, formidlingsgruppekode, epostadresse, mobiltelefon, harKontaktinformasjon, telefon, statsborgerskap, kandidatnr, arenaKandidatnr, beskrivelse, samtykkeStatus, samtykkeDato, adresselinje1, adresselinje2, adresselinje3, postnummer, poststed, landkode, kommunenummer, kommunenummerkw, kommunenummerstring, fylkeNavn, kommuneNavn, disponererBil, tidsstempel, doed, frKode, kvalifiseringsgruppekode, hovedmaalkode, orgenhet, navkontor, fritattKandidatsok, fritattAgKandidatsok, utdanning, fagdokumentasjon, yrkeserfaring, kompetanseObj, annenerfaringObj, sertifikatObj, forerkort, sprak, kursObj, vervObj, geografiJobbonsker, yrkeJobbonskerObj, omfangJobbonskerObj, ansettelsesformJobbonskerObj, arbeidstidsordningJobbonskerObj, arbeidsdagerJobbonskerObj, arbeidstidJobbonskerObj, samletKompetanseObj, totalLengdeYrkeserfaring, synligForArbeidsgiverSok, synligForVeilederSok, oppstartKode, veileder, inkluderingsbehov, tilretteleggingsbehov, veilTilretteleggingsbehovObj, godkjenninger, perioderMedInaktivitet);
+        return Objects.hash(fritekst, aktorId, fodselsnummer, fornavn, etternavn, fodselsdato, fodselsdatoErDnr, formidlingsgruppekode, epostadresse, mobiltelefon, harKontaktinformasjon, telefon, statsborgerskap, kandidatnr, arenaKandidatnr, beskrivelse, samtykkeStatus, samtykkeDato, adresselinje1, adresselinje2, adresselinje3, postnummer, poststed, landkode, kommunenummer, kommunenummerkw, kommunenummerstring, fylkeNavn, kommuneNavn, disponererBil, tidsstempel, doed, frKode, kvalifiseringsgruppekode, hovedmaalkode, orgenhet, navkontor, fritattKandidatsok, fritattAgKandidatsok, utdanning, fagdokumentasjon, yrkeserfaring, kompetanseObj, annenerfaringObj, sertifikatObj, forerkort, sprak, kursObj, vervObj, geografiJobbonsker, yrkeJobbonskerObj, omfangJobbonskerObj, ansettelsesformJobbonskerObj, arbeidstidsordningJobbonskerObj, arbeidsdagerJobbonskerObj, arbeidstidJobbonskerObj, samletKompetanseObj, totalLengdeYrkeserfaring, synligForArbeidsgiverSok, synligForVeilederSok, oppstartKode, veileder, godkjenninger, perioderMedInaktivitet);
     }
 
     @Override
@@ -759,9 +734,6 @@ public class EsCv {
                 .add("synligForVeilederSok=" + synligForVeilederSok)
                 .add("oppstartKode='" + oppstartKode + "'")
                 .add("veileder='" + veileder + "'")
-                .add("inkluderingsbehov=" + inkluderingsbehov)
-                .add("tilretteleggingsbehov=" + tilretteleggingsbehov)
-                .add("veilTilretteleggingsbehovObj=" + veilTilretteleggingsbehovObj)
                 .add("godkjenninger=" + godkjenninger)
                 .add("perioderMedInaktivitet=" + perioderMedInaktivitet)
                 .toString();
