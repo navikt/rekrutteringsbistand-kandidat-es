@@ -617,9 +617,6 @@
     "veileder": {
       "type": "keyword"
     },
-    "inkluderingsbehov": {
-      "type": "boolean"
-    },
     "perioderMedInaktivitet": {
       "properties": {
         "startdatoForInnevarendeInaktivePeriode": {
