@@ -20,7 +20,7 @@ public class EsCv {
 
     private String etternavn;
 
-    private Date fodselsdato;
+    private String fodselsdato;
 
     private Boolean fodselsdatoErDnr;
 
@@ -147,7 +147,7 @@ public class EsCv {
             String fodselsnummer,
             String fornavn,
             String etternavn,
-            Date fodselsdato,
+            String fodselsdato,
 
             Boolean fodselsdatoErDnr,
             String formidlingsgruppekode,
@@ -406,7 +406,7 @@ public class EsCv {
         return etternavn;
     }
 
-    public Date getFodselsdato() {
+    public String getFodselsdato() {
         return fodselsdato;
     }
 

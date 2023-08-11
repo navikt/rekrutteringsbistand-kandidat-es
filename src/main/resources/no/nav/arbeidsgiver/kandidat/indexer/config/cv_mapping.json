@@ -18,7 +18,8 @@
       "type": "text"
     },
     "fodselsdato": {
-      "type": "date"
+      "type": "date",
+      "format": "yyyy-MM-dd"
     },
     "fodselsdatoErDnr": {
       "type": "boolean"

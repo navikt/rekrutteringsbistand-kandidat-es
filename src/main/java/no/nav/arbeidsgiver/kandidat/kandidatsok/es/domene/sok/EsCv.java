@@ -16,7 +16,7 @@ public class EsCv {
 
     private String etternavn;
 
-    private Date fodselsdato;
+    private String fodselsdato;
 
     private Boolean fodselsdatoErDnr;
 
@@ -55,7 +55,7 @@ public class EsCv {
     public EsCv() {
     }
 
-    public EsCv(String aktorId, String fodselsnummer, String fornavn, String etternavn, Date fodselsdato, Boolean fodselsdatoErDnr,
+    public EsCv(String aktorId, String fodselsnummer, String fornavn, String etternavn, String fodselsdato, Boolean fodselsdatoErDnr,
                 String poststed, String epostadresse, String telefon, String mobiltelefon,
                 String formidlingsgruppekode, String kandidatnr,
                 int totalLengdeYrkeserfaring, String kvalifiseringsgruppekode, String hovedmaalkode, List<EsUtdanning> utdanning,
@@ -158,7 +158,7 @@ public class EsCv {
         return etternavn;
     }
 
-    public Date getFodselsdato() {
+    public String getFodselsdato() {
         return fodselsdato;
     }
 

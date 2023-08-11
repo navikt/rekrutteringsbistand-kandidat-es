@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static java.lang.Boolean.FALSE;
@@ -20,6 +21,8 @@ import static no.nav.arbeidsgiver.kandidat.kandidatsok.Kvalifiseringsgruppekode.
 import static no.nav.arbeidsgiver.kandidat.kandidatsok.Stillingstittel.anleggsmaskinfører;
 
 public class EsCvObjectMother {
+
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EsCvObjectMother.class);
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -42,8 +45,8 @@ public class EsCvObjectMother {
         return Date.from(then.atZone(ZoneId.systemDefault()).toInstant());
     }
 
-    private static Date fodselsdatoForAlder(int alder) {
-        return Date.from(LocalDate.now().minusYears(alder).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+    private static String fodselsdatoForAlder(int alder) {
+        return LocalDate.now().minusYears(alder).format(formatter);
     }
 
     private static Date nåMinusÅr(int antallÅr) {
@@ -229,7 +232,7 @@ public class EsCvObjectMother {
         arbeidsdagerJobbonskerList.add(arbeidsdagerJobbonskerLoerdag);
         arbeidsdagerJobbonskerList.add(arbeidsdagerJobbonskerSoendag);
 
-        EsCv esCv = new EsCv(nteAktorId(1), "01016012345", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "JOBBS",
+        EsCv esCv = new EsCv(nteAktorId(1), "01016012345", "OLA", "NORDMANN", "1960-01-01", false, "JOBBS",
                 "unnasluntrer@mailinator.com", "(+47) 22334455", "12345678", "NO", "1L",
                 "hererjeg", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 5001, false,
                 antallDagerTilbakeFraNow(0), 301, FALSE, null, ikval, null, "0220 NAV Asker", "0220", FALSE, FALSE,
@@ -614,7 +617,7 @@ public class EsCvObjectMother {
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
 
-        EsCv esCv = new EsCv(nteAktorId(3), "04265983651", "HANS", "NORDMANN", fraIsoDato("1955-11-04"), false, "RARBS",
+        EsCv esCv = new EsCv(nteAktorId(3), "04265983651", "HANS", "NORDMANN", "1955-11-04", false, "RARBS",
                 "alltidmed@mailinator.com", "(+47) 22334455", "12345678", "NO", "3L",
                 "Jeg jobber like godt selvstendig som i team",
                 "J", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "2323", "INGEBERG", "NO", 301, false,
@@ -788,7 +791,7 @@ public class EsCvObjectMother {
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
 
-        EsCv esCv = new EsCv(nteAktorId(4), "09568410230", "HANNE", "NORDMANN", fraIsoDato("2002-06-04"), false, "ARBS",
+        EsCv esCv = new EsCv(nteAktorId(4), "09568410230", "HANNE", "NORDMANN", "2002-06-04", false, "ARBS",
                 "erjegmed@mailinator.com", "(+47) 22334455", "12345678", "NO", "4L", "",
                 "J", fraIsoDato("2016-05-30"), "Noensvei 1", "", "", "9730", "KARASJOK", "NO", 2021, false,
                 antallDagerTilbakeFraNow(8), 2021, FALSE, null, "VURDI", null, "0602 NAV Drammen", "0602", FALSE, FALSE,
@@ -962,7 +965,7 @@ public class EsCvObjectMother {
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
 
-        EsCv esCv = new EsCv(nteAktorId(5), "03050316895", "BOB", "NORDMANN", fraIsoDato("1964-09-01"), false, "ARBS",
+        EsCv esCv = new EsCv(nteAktorId(5), "03050316895", "BOB", "NORDMANN", "1964-09-01", false, "ARBS",
                 "bobob@mailinator.com", "(+47) 22334455", "12345678", "NO", "5L", "", "J",
                 fraIsoDato("2016-05-30"), "Minvei 90", "", "", "0219", "Bærum", "NO", 219, false, antallDagerTilbakeFraNow(10),
                 219, FALSE, null, null, null, "0215 NAV Drøbak", "0215", FALSE, FALSE,
@@ -1113,7 +1116,7 @@ public class EsCvObjectMother {
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
 
-        EsCv esCv = new EsCv(nteAktorId(5), "03050316895", "BOB", "NORDMANN", fraIsoDato("1964-09-01"), false, "ARBS",
+        EsCv esCv = new EsCv(nteAktorId(5), "03050316895", "BOB", "NORDMANN", "1964-09-01", false, "ARBS",
                 "bobob@mailinator.com", "(+47) 22334455", "12345678", "NO", "5L", "", "J",
                 fraIsoDato("2016-05-30"), "Minvei 90", "", "", "0565", "OSLO", "NO", 301, false, new Date(),
                 301, FALSE, null, null, null, null, null, FALSE, FALSE,
@@ -1284,7 +1287,7 @@ public class EsCvObjectMother {
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
 
-        EsCv esCv = new EsCv(nteAktorId(1), "02016012345", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
+        EsCv esCv = new EsCv(nteAktorId(1), "02016012345", "OLA", "NORDMANN", "1960-01-01", false, "ARBS",
                 "unnasluntrer@mailinator.com", "(+47) 22334455", "12345678", "NO", "1L",
                 "", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, FALSE, null, null, null, null, null, FALSE, FALSE,
@@ -1461,7 +1464,7 @@ public class EsCvObjectMother {
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
 
-        EsCv esCv = new EsCv(nteAktorId(6), "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
+        EsCv esCv = new EsCv(nteAktorId(6), "01016034215", "OLA", "NORDMANN", "1960-01-01", false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "6L",
                 "", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 antallDagerTilbakeFraNow(10), 301, FALSE, "5", null, null, null, null, FALSE, FALSE,
@@ -1637,7 +1640,7 @@ public class EsCvObjectMother {
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
 
-        EsCv esCv = new EsCv(nteAktorId(7), "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
+        EsCv esCv = new EsCv(nteAktorId(7), "01016034215", "OLA", "NORDMANN", "1960-01-01", false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "7L",
                 "", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, TRUE, null, null, null, null, null, FALSE, FALSE,
@@ -1814,7 +1817,7 @@ public class EsCvObjectMother {
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
 
-        EsCv esCv = new EsCv(nteAktorId(8), "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
+        EsCv esCv = new EsCv(nteAktorId(8), "01016034215", "OLA", "NORDMANN", "1960-01-01", false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "8L",
                 "", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, FALSE, "6", null, null, null, null, FALSE, FALSE,
@@ -1990,7 +1993,7 @@ public class EsCvObjectMother {
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
 
-        EsCv esCv = new EsCv(nteAktorId(9), "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
+        EsCv esCv = new EsCv(nteAktorId(9), "01016034215", "OLA", "NORDMANN", "1960-01-01", false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "9L",
                 "", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, FALSE, "7", null, null, null, null, FALSE, FALSE,
@@ -2166,7 +2169,7 @@ public class EsCvObjectMother {
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
 
-        EsCv esCv = new EsCv(nteAktorId(10), "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
+        EsCv esCv = new EsCv(nteAktorId(10), "01016034215", "OLA", "NORDMANN", "1960-01-01", false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "10L",
                 "", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, FALSE, null, ikval, null, null, null, TRUE, FALSE,
@@ -2342,7 +2345,7 @@ public class EsCvObjectMother {
                 new EsArbeidstidsordningJobbonsker("Arbeidstidsordning Kode",
                         "Arbeidstidsordning Kode Tekst");
 
-        EsCv esCv = new EsCv(nteAktorId(11), "01016034215", "OLA", "NORDMANN", fraIsoDato("1960-01-01"), false, "ARBS",
+        EsCv esCv = new EsCv(nteAktorId(11), "01016034215", "OLA", "NORDMANN", "1960-01-01", false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "11L",
                 "", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 antallDagerTilbakeFraNow(8), 301, FALSE, null, null, null, null, null, FALSE, TRUE,
@@ -2361,7 +2364,7 @@ public class EsCvObjectMother {
     }
 
     public static EsCv giveMeCvFritattForAgKandidatsok2() {
-        return new EsCv(nteAktorId(12), "01016134217", "AAGE", "USYNLIG", fraIsoDato("1961-01-01"), false, "ARBS",
+        return new EsCv(nteAktorId(12), "01016134217", "AAGE", "USYNLIG", "1961-01-01", false, "ARBS",
                 "22339155@mailinator.com", "(+47) 22339155", "22339155", "NO", "12L",
                 "", "N", fraIsoDato("2016-05-30"), "Minvei 1", "", "", "0654", "OSLO", "NO", 301, false,
                 new Date(), 301, FALSE, null, null, null, null, null, FALSE, TRUE,

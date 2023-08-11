@@ -288,7 +288,7 @@ class HullICvIT {
             "01016012345",
             "JENS",
             "NORDMANN",
-            Date.from(Instant.now()),
+            "1961-08-25",
             false,
             "JOBBS",
             "måpussetenna@mamma.com",
