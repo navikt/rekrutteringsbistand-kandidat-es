@@ -322,6 +322,8 @@ class HullICvIT {
             "LEDIG_NAA",
             "5001",
             "H149390",
+            "Ola Nordmann",
+            "Ola@normann.no",
             "Viken",
             "Lier"
         ).apply {
