@@ -618,6 +618,15 @@
     "veileder": {
       "type": "keyword"
     },
+    "veilederIdent": {
+      "type": "keyword"
+    },
+    "veilederVisningsnavn": {
+      "type": "keyword"
+    },
+    "veilederEpost": {
+      "type": "keyword"
+    },
     "perioderMedInaktivitet": {
       "properties": {
         "startdatoForInnevarendeInaktivePeriode": {
